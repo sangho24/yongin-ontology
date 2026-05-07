@@ -1,26 +1,88 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Background — warm off-white */
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --surface-2: #f5f5f0;
+
+  /* Lines */
+  --line: #e7e5dc;
+  --line-strong: #d6d3c9;
+
+  /* Text */
+  --text: #1a1a1a;
+  --text-2: #44403c;
+  --text-3: #78716c;
+  --text-4: #a8a29e;
+
+  /* Brand teal — 용인공원 */
+  --teal: #0095A9;          /* main */
+  --teal-2: #65B3B1;        /* secondary */
+  --teal-deep: #007a8c;     /* hover/dark accent */
+  --teal-soft: #e6f4f6;     /* very light bg */
+  --teal-soft-2: #ccebee;   /* mid light */
+  --teal-line: #b3dde0;     /* border */
+
+  /* Status (절제된 톤) */
+  --warn: #b45309;          /* amber-800 */
+  --warn-soft: #fef7ed;
+  --bad: #9a3412;           /* orange-800, brick */
+  --bad-soft: #fef2f0;
+  --ok: #0095A9;
+  --ok-soft: #e6f4f6;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", Roboto, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", Roboto, sans-serif;
+  font-feature-settings: "ss03", "ss02";
+  letter-spacing: -0.01em;
 }
+
+.tnum, td, th {
+  font-variant-numeric: tabular-nums;
+}
+
+.headline {
+  font-feature-settings: "tnum";
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+
+/* Section heading - 페이지 내 큰 섹션 */
+.section-h {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+/* Section label - 작은 라벨 (KEY FINDINGS 등) */
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fade-in 0.18s ease-out; }
