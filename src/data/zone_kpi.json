@@ -1,0 +1,1625 @@
+{
+  "meta": {
+    "source": "260401_용인공원 전체 묘역_raw(26년4월 기준).xlsx",
+    "extractedAt": "2026-05-07",
+    "asOf": "2026-04-01",
+    "totalZones": 55711,
+    "notes": [
+      "계약번호 100% 미채움 = 미판매(8173)+이장지(4325)+결손54",
+      "이장지의 과거 계약자 trace 불가",
+      "분양완료=설묘지+계약지+예약지 / 가용재고=미판매+이장지",
+      "잠재가치는 묘역사용료>0인 행의 등급별 평균가를 결손 행에 매핑"
+    ]
+  },
+  "statusDistribution": [
+    {
+      "status": "설묘지",
+      "count": 37301,
+      "share": 0.6695,
+      "contractFilledRate": 0.9999,
+      "category": "분양완료"
+    },
+    {
+      "status": "계약지",
+      "count": 5753,
+      "share": 0.1033,
+      "contractFilledRate": 0.9918,
+      "category": "분양완료"
+    },
+    {
+      "status": "예약지",
+      "count": 159,
+      "share": 0.0029,
+      "contractFilledRate": 0.9686,
+      "category": "분양완료"
+    },
+    {
+      "status": "이장지",
+      "count": 4325,
+      "share": 0.0776,
+      "contractFilledRate": 0.0,
+      "category": "가용재고"
+    },
+    {
+      "status": "미판매",
+      "count": 8173,
+      "share": 0.1467,
+      "contractFilledRate": 0.0,
+      "category": "가용재고"
+    }
+  ],
+  "potentialValue": {
+    "availableInventoryCount": 12498,
+    "totalSaleableValue": 259353045860.0,
+    "avgPriceOverall": 15351521.0,
+    "avgPriceByGrade": [
+      {
+        "grade": "A",
+        "avgPrice": 14504276.0,
+        "count": 48102
+      },
+      {
+        "grade": "C",
+        "avgPrice": 27007372.0,
+        "count": 2306
+      },
+      {
+        "grade": "D",
+        "avgPrice": 29703297.0,
+        "count": 728
+      },
+      {
+        "grade": "E",
+        "avgPrice": 22977528.0,
+        "count": 89
+      },
+      {
+        "grade": "F",
+        "avgPrice": 46129032.0,
+        "count": 62
+      },
+      {
+        "grade": "B",
+        "avgPrice": 44344828.0,
+        "count": 29
+      }
+    ],
+    "byDistrict": [
+      {
+        "district": "1ROYAL_ROOM",
+        "districtType": "봉안당",
+        "availableCount": 1099,
+        "potentialValue": 42388000000.0
+      },
+      {
+        "district": "1NOBEL_ROOM",
+        "districtType": "봉안당",
+        "availableCount": 950,
+        "potentialValue": 19963504276.0
+      },
+      {
+        "district": "2ROYAL_ROOM",
+        "districtType": "봉안당",
+        "availableCount": 300,
+        "potentialValue": 14675000000.0
+      },
+      {
+        "district": "1NOBEL_NEST",
+        "districtType": "봉안당",
+        "availableCount": 628,
+        "potentialValue": 14307000000.0
+      },
+      {
+        "district": "1ROYAL_CENTRAL",
+        "districtType": "봉안당",
+        "availableCount": 431,
+        "potentialValue": 10769000000.0
+      },
+      {
+        "district": "가3",
+        "districtType": "자연지",
+        "availableCount": 415,
+        "potentialValue": 9115791352.0
+      },
+      {
+        "district": "가1",
+        "districtType": "자연지",
+        "availableCount": 346,
+        "potentialValue": 9033999952.0
+      },
+      {
+        "district": "2ROYAL_CENTRAL",
+        "districtType": "봉안당",
+        "availableCount": 211,
+        "potentialValue": 8225000000.0
+      },
+      {
+        "district": "명가여연5",
+        "districtType": "계단식",
+        "availableCount": 545,
+        "potentialValue": 7904830420.0
+      },
+      {
+        "district": "가2",
+        "districtType": "자연지",
+        "availableCount": 288,
+        "potentialValue": 7249281536.0
+      },
+      {
+        "district": "가6",
+        "districtType": "자연지",
+        "availableCount": 273,
+        "potentialValue": 6979608844.0
+      },
+      {
+        "district": "가5",
+        "districtType": "자연지",
+        "availableCount": 297,
+        "potentialValue": 6966090744.0
+      },
+      {
+        "district": "가7",
+        "districtType": "자연지",
+        "availableCount": 283,
+        "potentialValue": 6425373640.0
+      },
+      {
+        "district": "69-1",
+        "districtType": "계단식",
+        "availableCount": 375,
+        "potentialValue": 5586709976.0
+      },
+      {
+        "district": "정남지",
+        "districtType": "계단식",
+        "availableCount": 213,
+        "potentialValue": 5258150904.0
+      }
+    ]
+  },
+  "districtMatrix": [
+    {
+      "district": "3HONOR_ROOM",
+      "districtType": "봉안당",
+      "totalCount": 3065,
+      "soldCount": 2969,
+      "availableCount": 96,
+      "soldRate": 0.9687,
+      "avgPrice": 12256444.0,
+      "potentialValue": 853000000.0
+    },
+    {
+      "district": "3NOBLE_ROOM",
+      "districtType": "봉안당",
+      "totalCount": 2521,
+      "soldCount": 2397,
+      "availableCount": 124,
+      "soldRate": 0.9508,
+      "avgPrice": 16155891.0,
+      "potentialValue": 1474000000.0
+    },
+    {
+      "district": "69-1",
+      "districtType": "계단식",
+      "totalCount": 1597,
+      "soldCount": 1222,
+      "availableCount": 375,
+      "soldRate": 0.7652,
+      "avgPrice": 11015428.0,
+      "potentialValue": 5586709976.0
+    },
+    {
+      "district": "정남지",
+      "districtType": "계단식",
+      "totalCount": 1550,
+      "soldCount": 1337,
+      "availableCount": 213,
+      "soldRate": 0.8626,
+      "avgPrice": 18588062.0,
+      "potentialValue": 5258150904.0
+    },
+    {
+      "district": "69-2",
+      "districtType": "계단식",
+      "totalCount": 1240,
+      "soldCount": 1038,
+      "availableCount": 202,
+      "soldRate": 0.8371,
+      "avgPrice": 8685577.0,
+      "potentialValue": 2277501944.0
+    },
+    {
+      "district": "63-5",
+      "districtType": "계단식",
+      "totalCount": 1162,
+      "soldCount": 1050,
+      "availableCount": 112,
+      "soldRate": 0.9036,
+      "avgPrice": 10134311.0,
+      "potentialValue": 1474142420.0
+    },
+    {
+      "district": "1ROYAL_ROOM",
+      "districtType": "봉안당",
+      "totalCount": 1159,
+      "soldCount": 60,
+      "availableCount": 1099,
+      "soldRate": 0.0518,
+      "avgPrice": 39286454.0,
+      "potentialValue": 42388000000.0
+    },
+    {
+      "district": "63-6",
+      "districtType": "계단식",
+      "totalCount": 1088,
+      "soldCount": 974,
+      "availableCount": 114,
+      "soldRate": 0.8952,
+      "avgPrice": 9756923.0,
+      "potentialValue": 1491174864.0
+    },
+    {
+      "district": "1NOBEL_ROOM",
+      "districtType": "봉안당",
+      "totalCount": 1057,
+      "soldCount": 107,
+      "availableCount": 950,
+      "soldRate": 0.1012,
+      "avgPrice": 20973485.0,
+      "potentialValue": 19963504276.0
+    },
+    {
+      "district": "2NOBLE_ROOM",
+      "districtType": "봉안당",
+      "totalCount": 1051,
+      "soldCount": 932,
+      "availableCount": 119,
+      "soldRate": 0.8868,
+      "avgPrice": 21521408.0,
+      "potentialValue": 2922000000.0
+    },
+    {
+      "district": "63-3",
+      "districtType": "계단식",
+      "totalCount": 1031,
+      "soldCount": 951,
+      "availableCount": 80,
+      "soldRate": 0.9224,
+      "avgPrice": 11707766.0,
+      "potentialValue": 973368416.0
+    },
+    {
+      "district": "63-9",
+      "districtType": "계단식",
+      "totalCount": 1001,
+      "soldCount": 843,
+      "availableCount": 158,
+      "soldRate": 0.8422,
+      "avgPrice": 10285710.0,
+      "potentialValue": 2413664276.0
+    },
+    {
+      "district": "69-3",
+      "districtType": "계단식",
+      "totalCount": 995,
+      "soldCount": 855,
+      "availableCount": 140,
+      "soldRate": 0.8593,
+      "avgPrice": 9571765.0,
+      "potentialValue": 1634206560.0
+    },
+    {
+      "district": "가3",
+      "districtType": "자연지",
+      "totalCount": 968,
+      "soldCount": 553,
+      "availableCount": 415,
+      "soldRate": 0.5713,
+      "avgPrice": 38334219.0,
+      "potentialValue": 9115791352.0
+    },
+    {
+      "district": "63-1",
+      "districtType": "계단식",
+      "totalCount": 959,
+      "soldCount": 841,
+      "availableCount": 118,
+      "soldRate": 0.877,
+      "avgPrice": 11897217.0,
+      "potentialValue": 1618509524.0
+    },
+    {
+      "district": "63-2",
+      "districtType": "계단식",
+      "totalCount": 955,
+      "soldCount": 909,
+      "availableCount": 46,
+      "soldRate": 0.9518,
+      "avgPrice": 10056952.0,
+      "potentialValue": 464708552.0
+    },
+    {
+      "district": "가1",
+      "districtType": "자연지",
+      "totalCount": 922,
+      "soldCount": 576,
+      "availableCount": 346,
+      "soldRate": 0.6247,
+      "avgPrice": 32259783.0,
+      "potentialValue": 9033999952.0
+    },
+    {
+      "district": "정담원6납",
+      "districtType": "계단식",
+      "totalCount": 827,
+      "soldCount": 826,
+      "availableCount": 1,
+      "soldRate": 0.9988,
+      "avgPrice": 12224927.0,
+      "potentialValue": 22935000.0
+    },
+    {
+      "district": "정남3납",
+      "districtType": "계단식",
+      "totalCount": 804,
+      "soldCount": 801,
+      "availableCount": 3,
+      "soldRate": 0.9963,
+      "avgPrice": 4543657.0,
+      "potentialValue": 9900000.0
+    },
+    {
+      "district": "2ROYAL_ROOM",
+      "districtType": "봉안당",
+      "totalCount": 792,
+      "soldCount": 492,
+      "availableCount": 300,
+      "soldRate": 0.6212,
+      "avgPrice": 51426768.0,
+      "potentialValue": 14675000000.0
+    },
+    {
+      "district": "63-7",
+      "districtType": "계단식",
+      "totalCount": 767,
+      "soldCount": 688,
+      "availableCount": 79,
+      "soldRate": 0.897,
+      "avgPrice": 11042450.0,
+      "potentialValue": 1030056312.0
+    },
+    {
+      "district": "69-4",
+      "districtType": "계단식",
+      "totalCount": 758,
+      "soldCount": 626,
+      "availableCount": 132,
+      "soldRate": 0.8259,
+      "avgPrice": 10692434.0,
+      "potentialValue": 1718466424.0
+    },
+    {
+      "district": "가5",
+      "districtType": "자연지",
+      "totalCount": 758,
+      "soldCount": 461,
+      "availableCount": 297,
+      "soldRate": 0.6082,
+      "avgPrice": 27398331.0,
+      "potentialValue": 6966090744.0
+    },
+    {
+      "district": "명당1납",
+      "districtType": "계단식",
+      "totalCount": 749,
+      "soldCount": 741,
+      "availableCount": 8,
+      "soldRate": 0.9893,
+      "avgPrice": 4427904.0,
+      "potentialValue": 28875000.0
+    },
+    {
+      "district": "3ROYAL_ROOM",
+      "districtType": "봉안당",
+      "totalCount": 740,
+      "soldCount": 672,
+      "availableCount": 68,
+      "soldRate": 0.9081,
+      "avgPrice": 40756757.0,
+      "potentialValue": 1705000000.0
+    },
+    {
+      "district": "명당",
+      "districtType": "계단식",
+      "totalCount": 738,
+      "soldCount": 550,
+      "availableCount": 188,
+      "soldRate": 0.7453,
+      "avgPrice": 13859159.0,
+      "potentialValue": 2661606220.0
+    },
+    {
+      "district": "가7",
+      "districtType": "자연지",
+      "totalCount": 727,
+      "soldCount": 444,
+      "availableCount": 283,
+      "soldRate": 0.6107,
+      "avgPrice": 27489225.0,
+      "potentialValue": 6425373640.0
+    },
+    {
+      "district": "1NOBEL_NEST",
+      "districtType": "봉안당",
+      "totalCount": 720,
+      "soldCount": 92,
+      "availableCount": 628,
+      "soldRate": 0.1278,
+      "avgPrice": 21937500.0,
+      "potentialValue": 14307000000.0
+    },
+    {
+      "district": "2NOBLE_NEST",
+      "districtType": "봉안당",
+      "totalCount": 720,
+      "soldCount": 667,
+      "availableCount": 53,
+      "soldRate": 0.9264,
+      "avgPrice": 13933333.0,
+      "potentialValue": 1247000000.0
+    },
+    {
+      "district": "정담원7납",
+      "districtType": "계단식",
+      "totalCount": 702,
+      "soldCount": 655,
+      "availableCount": 47,
+      "soldRate": 0.933,
+      "avgPrice": 16071132.0,
+      "potentialValue": 537930000.0
+    },
+    {
+      "district": "가2",
+      "districtType": "자연지",
+      "totalCount": 647,
+      "soldCount": 359,
+      "availableCount": 288,
+      "soldRate": 0.5549,
+      "avgPrice": 31295108.0,
+      "potentialValue": 7249281536.0
+    },
+    {
+      "district": "명가여연5",
+      "districtType": "계단식",
+      "totalCount": 634,
+      "soldCount": 89,
+      "availableCount": 545,
+      "soldRate": 0.1404,
+      "avgPrice": 0.0,
+      "potentialValue": 7904830420.0
+    },
+    {
+      "district": "가6",
+      "districtType": "자연지",
+      "totalCount": 629,
+      "soldCount": 356,
+      "availableCount": 273,
+      "soldRate": 0.566,
+      "avgPrice": 32163654.0,
+      "potentialValue": 6979608844.0
+    },
+    {
+      "district": "63-8",
+      "districtType": "계단식",
+      "totalCount": 618,
+      "soldCount": 502,
+      "availableCount": 116,
+      "soldRate": 0.8123,
+      "avgPrice": 9786272.0,
+      "potentialValue": 1642331380.0
+    },
+    {
+      "district": "정담원4납",
+      "districtType": "계단식",
+      "totalCount": 608,
+      "soldCount": 607,
+      "availableCount": 1,
+      "soldRate": 0.9984,
+      "avgPrice": 10371834.0,
+      "potentialValue": 7000000.0
+    },
+    {
+      "district": "하늘담재가",
+      "districtType": "납골식",
+      "totalCount": 546,
+      "soldCount": 509,
+      "availableCount": 37,
+      "soldRate": 0.9322,
+      "avgPrice": 4647253.0,
+      "potentialValue": 148700000.0
+    },
+    {
+      "district": "하늘담재나",
+      "districtType": "납골식",
+      "totalCount": 546,
+      "soldCount": 495,
+      "availableCount": 51,
+      "soldRate": 0.9066,
+      "avgPrice": 4647253.0,
+      "potentialValue": 205600000.0
+    },
+    {
+      "district": "정담원5납",
+      "districtType": "계단식",
+      "totalCount": 529,
+      "soldCount": 529,
+      "availableCount": 0,
+      "soldRate": 1.0,
+      "avgPrice": 11554112.0,
+      "potentialValue": 0.0
+    },
+    {
+      "district": "명당1",
+      "districtType": "계단식",
+      "totalCount": 511,
+      "soldCount": 506,
+      "availableCount": 5,
+      "soldRate": 0.9902,
+      "avgPrice": 10584265.0,
+      "potentialValue": 54104276.0
+    },
+    {
+      "district": "2ROYAL_CENTRAL",
+      "districtType": "봉안당",
+      "totalCount": 510,
+      "soldCount": 299,
+      "availableCount": 211,
+      "soldRate": 0.5863,
+      "avgPrice": 38950980.0,
+      "potentialValue": 8225000000.0
+    },
+    {
+      "district": "정담원1납",
+      "districtType": "계단식",
+      "totalCount": 501,
+      "soldCount": 500,
+      "availableCount": 1,
+      "soldRate": 0.998,
+      "avgPrice": 7670918.0,
+      "potentialValue": 6125000.0
+    },
+    {
+      "district": "정남1납",
+      "districtType": "계단식",
+      "totalCount": 490,
+      "soldCount": 489,
+      "availableCount": 1,
+      "soldRate": 0.998,
+      "avgPrice": 5828357.0,
+      "potentialValue": 8250000.0
+    },
+    {
+      "district": "정남2납",
+      "districtType": "계단식",
+      "totalCount": 470,
+      "soldCount": 470,
+      "availableCount": 0,
+      "soldRate": 1.0,
+      "avgPrice": 5402872.0,
+      "potentialValue": 0.0
+    },
+    {
+      "district": "하늘담재다",
+      "districtType": "납골식",
+      "totalCount": 468,
+      "soldCount": 301,
+      "availableCount": 167,
+      "soldRate": 0.6432,
+      "avgPrice": 4755769.0,
+      "potentialValue": 735600000.0
+    },
+    {
+      "district": "하늘담재라",
+      "districtType": "납골식",
+      "totalCount": 468,
+      "soldCount": 281,
+      "availableCount": 187,
+      "soldRate": 0.6004,
+      "avgPrice": 4776923.0,
+      "potentialValue": 843500000.0
+    },
+    {
+      "district": "3NOBLE_NEST",
+      "districtType": "봉안당",
+      "totalCount": 459,
+      "soldCount": 459,
+      "availableCount": 0,
+      "soldRate": 1.0,
+      "avgPrice": 7215686.0,
+      "potentialValue": 0.0
+    },
+    {
+      "district": "66번지",
+      "districtType": "계단식",
+      "totalCount": 458,
+      "soldCount": 343,
+      "availableCount": 115,
+      "soldRate": 0.7489,
+      "avgPrice": 9891406.0,
+      "potentialValue": 1495716424.0
+    },
+    {
+      "district": "63-10",
+      "districtType": "계단식",
+      "totalCount": 447,
+      "soldCount": 439,
+      "availableCount": 8,
+      "soldRate": 0.9821,
+      "avgPrice": 8480068.0,
+      "potentialValue": 83112828.0
+    },
+    {
+      "district": "1ROYAL_CENTRAL",
+      "districtType": "봉안당",
+      "totalCount": 444,
+      "soldCount": 13,
+      "availableCount": 431,
+      "soldRate": 0.0293,
+      "avgPrice": 25022523.0,
+      "potentialValue": 10769000000.0
+    },
+    {
+      "district": "63-4",
+      "districtType": "계단식",
+      "totalCount": 421,
+      "soldCount": 374,
+      "availableCount": 47,
+      "soldRate": 0.8884,
+      "avgPrice": 9501485.0,
+      "potentialValue": 669540000.0
+    }
+  ],
+  "districtGradeMatrix": [
+    {
+      "district": "3HONOR_ROOM",
+      "grade": "A",
+      "totalCount": 3006,
+      "soldCount": 2964,
+      "availableCount": 42,
+      "avgPrice": 12332003.0
+    },
+    {
+      "district": "3NOBLE_ROOM",
+      "grade": "A",
+      "totalCount": 2395,
+      "soldCount": 2390,
+      "availableCount": 5,
+      "avgPrice": 16361587.0
+    },
+    {
+      "district": "69-1",
+      "grade": "A",
+      "totalCount": 1597,
+      "soldCount": 1222,
+      "availableCount": 375,
+      "avgPrice": 11015428.0
+    },
+    {
+      "district": "정남지",
+      "grade": "A",
+      "totalCount": 1550,
+      "soldCount": 1337,
+      "availableCount": 213,
+      "avgPrice": 18588062.0
+    },
+    {
+      "district": "69-2",
+      "grade": "A",
+      "totalCount": 1240,
+      "soldCount": 1038,
+      "availableCount": 202,
+      "avgPrice": 8685577.0
+    },
+    {
+      "district": "63-5",
+      "grade": "A",
+      "totalCount": 1162,
+      "soldCount": 1050,
+      "availableCount": 112,
+      "avgPrice": 10134311.0
+    },
+    {
+      "district": "63-6",
+      "grade": "A",
+      "totalCount": 1088,
+      "soldCount": 974,
+      "availableCount": 114,
+      "avgPrice": 9756923.0
+    },
+    {
+      "district": "63-3",
+      "grade": "A",
+      "totalCount": 1031,
+      "soldCount": 951,
+      "availableCount": 80,
+      "avgPrice": 11707766.0
+    },
+    {
+      "district": "63-9",
+      "grade": "A",
+      "totalCount": 1001,
+      "soldCount": 843,
+      "availableCount": 158,
+      "avgPrice": 10285710.0
+    },
+    {
+      "district": "69-3",
+      "grade": "A",
+      "totalCount": 995,
+      "soldCount": 855,
+      "availableCount": 140,
+      "avgPrice": 9571765.0
+    },
+    {
+      "district": "가3",
+      "grade": "A",
+      "totalCount": 968,
+      "soldCount": 553,
+      "availableCount": 415,
+      "avgPrice": 38334219.0
+    },
+    {
+      "district": "2NOBLE_ROOM",
+      "grade": "A",
+      "totalCount": 965,
+      "soldCount": 911,
+      "availableCount": 54,
+      "avgPrice": 20765803.0
+    },
+    {
+      "district": "63-1",
+      "grade": "A",
+      "totalCount": 959,
+      "soldCount": 841,
+      "availableCount": 118,
+      "avgPrice": 11897217.0
+    },
+    {
+      "district": "63-2",
+      "grade": "A",
+      "totalCount": 955,
+      "soldCount": 909,
+      "availableCount": 46,
+      "avgPrice": 10056952.0
+    },
+    {
+      "district": "가1",
+      "grade": "A",
+      "totalCount": 922,
+      "soldCount": 576,
+      "availableCount": 346,
+      "avgPrice": 32259783.0
+    },
+    {
+      "district": "정담원6납",
+      "grade": "A",
+      "totalCount": 827,
+      "soldCount": 826,
+      "availableCount": 1,
+      "avgPrice": 12224927.0
+    },
+    {
+      "district": "정남3납",
+      "grade": "A",
+      "totalCount": 804,
+      "soldCount": 801,
+      "availableCount": 3,
+      "avgPrice": 4543657.0
+    },
+    {
+      "district": "63-7",
+      "grade": "A",
+      "totalCount": 767,
+      "soldCount": 688,
+      "availableCount": 79,
+      "avgPrice": 11042450.0
+    },
+    {
+      "district": "69-4",
+      "grade": "A",
+      "totalCount": 758,
+      "soldCount": 626,
+      "availableCount": 132,
+      "avgPrice": 10692434.0
+    },
+    {
+      "district": "가5",
+      "grade": "A",
+      "totalCount": 758,
+      "soldCount": 461,
+      "availableCount": 297,
+      "avgPrice": 27398331.0
+    },
+    {
+      "district": "1NOBEL_ROOM",
+      "grade": "C",
+      "totalCount": 750,
+      "soldCount": 20,
+      "availableCount": 730,
+      "avgPrice": 23825333.0
+    },
+    {
+      "district": "명당1납",
+      "grade": "A",
+      "totalCount": 749,
+      "soldCount": 741,
+      "availableCount": 8,
+      "avgPrice": 4427904.0
+    },
+    {
+      "district": "3ROYAL_ROOM",
+      "grade": "A",
+      "totalCount": 740,
+      "soldCount": 672,
+      "availableCount": 68,
+      "avgPrice": 40756757.0
+    },
+    {
+      "district": "명당",
+      "grade": "A",
+      "totalCount": 738,
+      "soldCount": 550,
+      "availableCount": 188,
+      "avgPrice": 13859159.0
+    },
+    {
+      "district": "1ROYAL_ROOM",
+      "grade": "A",
+      "totalCount": 728,
+      "soldCount": 59,
+      "availableCount": 669,
+      "avgPrice": 39732143.0
+    },
+    {
+      "district": "가7",
+      "grade": "A",
+      "totalCount": 727,
+      "soldCount": 444,
+      "availableCount": 283,
+      "avgPrice": 27489225.0
+    },
+    {
+      "district": "정담원7납",
+      "grade": "A",
+      "totalCount": 702,
+      "soldCount": 655,
+      "availableCount": 47,
+      "avgPrice": 16071132.0
+    },
+    {
+      "district": "2ROYAL_ROOM",
+      "grade": "A",
+      "totalCount": 671,
+      "soldCount": 482,
+      "availableCount": 189,
+      "avgPrice": 51251863.0
+    },
+    {
+      "district": "2NOBLE_NEST",
+      "grade": "A",
+      "totalCount": 665,
+      "soldCount": 659,
+      "availableCount": 6,
+      "avgPrice": 13048120.0
+    },
+    {
+      "district": "가2",
+      "grade": "A",
+      "totalCount": 647,
+      "soldCount": 359,
+      "availableCount": 288,
+      "avgPrice": 31295108.0
+    },
+    {
+      "district": "명가여연5",
+      "grade": "A",
+      "totalCount": 634,
+      "soldCount": 89,
+      "availableCount": 545,
+      "avgPrice": 0.0
+    },
+    {
+      "district": "가6",
+      "grade": "A",
+      "totalCount": 629,
+      "soldCount": 356,
+      "availableCount": 273,
+      "avgPrice": 32163654.0
+    },
+    {
+      "district": "63-8",
+      "grade": "A",
+      "totalCount": 618,
+      "soldCount": 502,
+      "availableCount": 116,
+      "avgPrice": 9786272.0
+    },
+    {
+      "district": "정담원4납",
+      "grade": "A",
+      "totalCount": 608,
+      "soldCount": 607,
+      "availableCount": 1,
+      "avgPrice": 10371834.0
+    },
+    {
+      "district": "1NOBEL_NEST",
+      "grade": "C",
+      "totalCount": 551,
+      "soldCount": 13,
+      "availableCount": 538,
+      "avgPrice": 24889292.0
+    },
+    {
+      "district": "하늘담재가",
+      "grade": "A",
+      "totalCount": 546,
+      "soldCount": 509,
+      "availableCount": 37,
+      "avgPrice": 4647253.0
+    },
+    {
+      "district": "하늘담재나",
+      "grade": "A",
+      "totalCount": 546,
+      "soldCount": 495,
+      "availableCount": 51,
+      "avgPrice": 4647253.0
+    },
+    {
+      "district": "정담원5납",
+      "grade": "A",
+      "totalCount": 529,
+      "soldCount": 529,
+      "availableCount": 0,
+      "avgPrice": 11554112.0
+    },
+    {
+      "district": "명당1",
+      "grade": "A",
+      "totalCount": 511,
+      "soldCount": 506,
+      "availableCount": 5,
+      "avgPrice": 10584265.0
+    },
+    {
+      "district": "정담원1납",
+      "grade": "A",
+      "totalCount": 501,
+      "soldCount": 500,
+      "availableCount": 1,
+      "avgPrice": 7670918.0
+    },
+    {
+      "district": "정남1납",
+      "grade": "A",
+      "totalCount": 490,
+      "soldCount": 489,
+      "availableCount": 1,
+      "avgPrice": 5828357.0
+    },
+    {
+      "district": "정남2납",
+      "grade": "A",
+      "totalCount": 470,
+      "soldCount": 470,
+      "availableCount": 0,
+      "avgPrice": 5402872.0
+    },
+    {
+      "district": "하늘담재다",
+      "grade": "A",
+      "totalCount": 468,
+      "soldCount": 301,
+      "availableCount": 167,
+      "avgPrice": 4755769.0
+    },
+    {
+      "district": "하늘담재라",
+      "grade": "A",
+      "totalCount": 468,
+      "soldCount": 281,
+      "availableCount": 187,
+      "avgPrice": 4776923.0
+    },
+    {
+      "district": "3NOBLE_NEST",
+      "grade": "A",
+      "totalCount": 459,
+      "soldCount": 459,
+      "availableCount": 0,
+      "avgPrice": 7215686.0
+    },
+    {
+      "district": "66번지",
+      "grade": "A",
+      "totalCount": 458,
+      "soldCount": 343,
+      "availableCount": 115,
+      "avgPrice": 9891406.0
+    },
+    {
+      "district": "63-10",
+      "grade": "A",
+      "totalCount": 447,
+      "soldCount": 439,
+      "availableCount": 8,
+      "avgPrice": 8480068.0
+    },
+    {
+      "district": "63-4",
+      "grade": "A",
+      "totalCount": 421,
+      "soldCount": 374,
+      "availableCount": 47,
+      "avgPrice": 9501485.0
+    },
+    {
+      "district": "정담원3납",
+      "grade": "A",
+      "totalCount": 411,
+      "soldCount": 410,
+      "availableCount": 1,
+      "avgPrice": 14300766.0
+    },
+    {
+      "district": "1ROYAL_ROOM",
+      "grade": "C",
+      "totalCount": 402,
+      "soldCount": 1,
+      "availableCount": 401,
+      "avgPrice": 38114428.0
+    },
+    {
+      "district": "특1",
+      "grade": "A",
+      "totalCount": 399,
+      "soldCount": 281,
+      "availableCount": 118,
+      "avgPrice": 11870690.0
+    },
+    {
+      "district": "매화단지",
+      "grade": "A",
+      "totalCount": 368,
+      "soldCount": 290,
+      "availableCount": 78,
+      "avgPrice": 6991441.0
+    },
+    {
+      "district": "명당1평",
+      "grade": "A",
+      "totalCount": 363,
+      "soldCount": 340,
+      "availableCount": 23,
+      "avgPrice": 11848774.0
+    },
+    {
+      "district": "명가여연3",
+      "grade": "A",
+      "totalCount": 353,
+      "soldCount": 145,
+      "availableCount": 208,
+      "avgPrice": 0.0
+    },
+    {
+      "district": "제2G",
+      "grade": "A",
+      "totalCount": 328,
+      "soldCount": 277,
+      "availableCount": 51,
+      "avgPrice": 5408638.0
+    },
+    {
+      "district": "하늘담재마",
+      "grade": "A",
+      "totalCount": 312,
+      "soldCount": 226,
+      "availableCount": 86,
+      "avgPrice": 4776923.0
+    },
+    {
+      "district": "하늘담재바",
+      "grade": "A",
+      "totalCount": 312,
+      "soldCount": 108,
+      "availableCount": 204,
+      "avgPrice": 2967308.0
+    },
+    {
+      "district": "하늘담재사",
+      "grade": "A",
+      "totalCount": 312,
+      "soldCount": 293,
+      "availableCount": 19,
+      "avgPrice": 4776923.0
+    },
+    {
+      "district": "공원",
+      "grade": "A",
+      "totalCount": 309,
+      "soldCount": 229,
+      "availableCount": 80,
+      "avgPrice": 13469925.0
+    },
+    {
+      "district": "1NOBEL_ROOM",
+      "grade": "A",
+      "totalCount": 307,
+      "soldCount": 87,
+      "availableCount": 220,
+      "avgPrice": 13983660.0
+    },
+    {
+      "district": "가8",
+      "grade": "A",
+      "totalCount": 307,
+      "soldCount": 160,
+      "availableCount": 147,
+      "avgPrice": 31513578.0
+    },
+    {
+      "district": "2NOBLE_ROOM_1",
+      "grade": "A",
+      "totalCount": 306,
+      "soldCount": 306,
+      "availableCount": 0,
+      "avgPrice": 5000000.0
+    },
+    {
+      "district": "공원1평",
+      "grade": "A",
+      "totalCount": 305,
+      "soldCount": 303,
+      "availableCount": 2,
+      "avgPrice": 6232164.0
+    },
+    {
+      "district": "명가여연",
+      "grade": "A",
+      "totalCount": 304,
+      "soldCount": 45,
+      "availableCount": 259,
+      "avgPrice": 0.0
+    },
+    {
+      "district": "명가여연2",
+      "grade": "A",
+      "totalCount": 303,
+      "soldCount": 52,
+      "availableCount": 251,
+      "avgPrice": 0.0
+    },
+    {
+      "district": "명가여연4",
+      "grade": "A",
+      "totalCount": 294,
+      "soldCount": 48,
+      "availableCount": 246,
+      "avgPrice": 0.0
+    },
+    {
+      "district": "3HONOR_NEST_1",
+      "grade": "A",
+      "totalCount": 289,
+      "soldCount": 288,
+      "availableCount": 1,
+      "avgPrice": 12332180.0
+    },
+    {
+      "district": "2ROYAL_CENTRAL",
+      "grade": "A",
+      "totalCount": 281,
+      "soldCount": 281,
+      "availableCount": 0,
+      "avgPrice": 38274021.0
+    },
+    {
+      "district": "3HONOR_NEST_3",
+      "grade": "A",
+      "totalCount": 279,
+      "soldCount": 206,
+      "availableCount": 73,
+      "avgPrice": 11405018.0
+    },
+    {
+      "district": "국화1납",
+      "grade": "A",
+      "totalCount": 240,
+      "soldCount": 240,
+      "availableCount": 0,
+      "avgPrice": 11090250.0
+    },
+    {
+      "district": "교회",
+      "grade": "A",
+      "totalCount": 239,
+      "soldCount": 193,
+      "availableCount": 46,
+      "avgPrice": 5025688.0
+    },
+    {
+      "district": "장미",
+      "grade": "A",
+      "totalCount": 235,
+      "soldCount": 163,
+      "availableCount": 72,
+      "avgPrice": 11112324.0
+    },
+    {
+      "district": "국화",
+      "grade": "A",
+      "totalCount": 231,
+      "soldCount": 190,
+      "availableCount": 41,
+      "avgPrice": 9434716.0
+    },
+    {
+      "district": "명당2",
+      "grade": "A",
+      "totalCount": 226,
+      "soldCount": 225,
+      "availableCount": 1,
+      "avgPrice": 20814619.0
+    },
+    {
+      "district": "정담원1평",
+      "grade": "A",
+      "totalCount": 218,
+      "soldCount": 213,
+      "availableCount": 5,
+      "avgPrice": 4097248.0
+    },
+    {
+      "district": "1ROYAL_CENTRAL",
+      "grade": "C",
+      "totalCount": 215,
+      "soldCount": 2,
+      "availableCount": 213,
+      "avgPrice": 25255814.0
+    },
+    {
+      "district": "1NOBEL_ROOM_A",
+      "grade": "A",
+      "totalCount": 208,
+      "soldCount": 12,
+      "availableCount": 196,
+      "avgPrice": 13875000.0
+    },
+    {
+      "district": "1ROYAL_CENTRAL",
+      "grade": "D",
+      "totalCount": 204,
+      "soldCount": 0,
+      "availableCount": 204,
+      "avgPrice": 24754902.0
+    },
+    {
+      "district": "2ROYAL_FAMILY",
+      "grade": "A",
+      "totalCount": 202,
+      "soldCount": 41,
+      "availableCount": 161,
+      "avgPrice": 122727273.0
+    },
+    {
+      "district": "3ROYAL_CENTRAL",
+      "grade": "A",
+      "totalCount": 200,
+      "soldCount": 200,
+      "availableCount": 0,
+      "avgPrice": 19200000.0
+    }
+  ],
+  "salesVelocity": {
+    "byYear": [
+      {
+        "year": 2021,
+        "contractCount": 2720
+      },
+      {
+        "year": 2022,
+        "contractCount": 3294
+      },
+      {
+        "year": 2023,
+        "contractCount": 2820
+      },
+      {
+        "year": 2024,
+        "contractCount": 3069
+      },
+      {
+        "year": 2025,
+        "contractCount": 2652
+      },
+      {
+        "year": 2026,
+        "contractCount": 511
+      }
+    ],
+    "byDistrictRecent3Y": [
+      {
+        "district": "3HONOR_ROOM",
+        "recent3YContracts": 1393,
+        "currentlyAvailable": 96
+      },
+      {
+        "district": "2NOBLE_ROOM",
+        "recent3YContracts": 888,
+        "currentlyAvailable": 119
+      },
+      {
+        "district": "3NOBLE_ROOM",
+        "recent3YContracts": 789,
+        "currentlyAvailable": 124
+      },
+      {
+        "district": "2NOBLE_NEST",
+        "recent3YContracts": 654,
+        "currentlyAvailable": 53
+      },
+      {
+        "district": "정담원7납",
+        "recent3YContracts": 601,
+        "currentlyAvailable": 47
+      },
+      {
+        "district": "정담원6납",
+        "recent3YContracts": 577,
+        "currentlyAvailable": 1
+      },
+      {
+        "district": "2ROYAL_ROOM",
+        "recent3YContracts": 453,
+        "currentlyAvailable": 300
+      },
+      {
+        "district": "2NOBLE_ROOM_1",
+        "recent3YContracts": 301,
+        "currentlyAvailable": 0
+      },
+      {
+        "district": "2ROYAL_CENTRAL",
+        "recent3YContracts": 273,
+        "currentlyAvailable": 211
+      },
+      {
+        "district": "3ROYAL_ROOM",
+        "recent3YContracts": 263,
+        "currentlyAvailable": 68
+      },
+      {
+        "district": "명당1평",
+        "recent3YContracts": 227,
+        "currentlyAvailable": 23
+      },
+      {
+        "district": "3HONOR_NEST_3",
+        "recent3YContracts": 192,
+        "currentlyAvailable": 73
+      },
+      {
+        "district": "정남지",
+        "recent3YContracts": 180,
+        "currentlyAvailable": 213
+      },
+      {
+        "district": "정담원8납",
+        "recent3YContracts": 177,
+        "currentlyAvailable": 0
+      },
+      {
+        "district": "3NOBLE_NEST",
+        "recent3YContracts": 152,
+        "currentlyAvailable": 0
+      }
+    ],
+    "stagnantDistricts": [
+      {
+        "district": "가5",
+        "lastContractYear": 2022,
+        "availableCount": 297
+      },
+      {
+        "district": "가2",
+        "lastContractYear": 2016,
+        "availableCount": 288
+      },
+      {
+        "district": "가7",
+        "lastContractYear": 2018,
+        "availableCount": 283
+      },
+      {
+        "district": "가6",
+        "lastContractYear": 2017,
+        "availableCount": 273
+      },
+      {
+        "district": "69-2",
+        "lastContractYear": 2018,
+        "availableCount": 202
+      },
+      {
+        "district": "63-9",
+        "lastContractYear": 2007,
+        "availableCount": 158
+      },
+      {
+        "district": "가8",
+        "lastContractYear": 2017,
+        "availableCount": 147
+      },
+      {
+        "district": "69-3",
+        "lastContractYear": 2012,
+        "availableCount": 140
+      },
+      {
+        "district": "69-4",
+        "lastContractYear": 2014,
+        "availableCount": 132
+      },
+      {
+        "district": "특1",
+        "lastContractYear": 2016,
+        "availableCount": 118
+      },
+      {
+        "district": "63-8",
+        "lastContractYear": 2005,
+        "availableCount": 116
+      },
+      {
+        "district": "66번지",
+        "lastContractYear": 2014,
+        "availableCount": 115
+      },
+      {
+        "district": "공원",
+        "lastContractYear": 2019,
+        "availableCount": 80
+      },
+      {
+        "district": "매화단지",
+        "lastContractYear": 2012,
+        "availableCount": 78
+      },
+      {
+        "district": "장미",
+        "lastContractYear": 2011,
+        "availableCount": 72
+      }
+    ]
+  },
+  "transferZones": {
+    "totalTransfer": 4325,
+    "byDistrict": [
+      {
+        "district": "가3",
+        "transferCount": 409,
+        "totalCount": 968,
+        "transferRate": 0.4225
+      },
+      {
+        "district": "가1",
+        "transferCount": 334,
+        "totalCount": 922,
+        "transferRate": 0.3623
+      },
+      {
+        "district": "가5",
+        "transferCount": 297,
+        "totalCount": 758,
+        "transferRate": 0.3918
+      },
+      {
+        "district": "가2",
+        "transferCount": 284,
+        "totalCount": 647,
+        "transferRate": 0.4389
+      },
+      {
+        "district": "가7",
+        "transferCount": 281,
+        "totalCount": 727,
+        "transferRate": 0.3865
+      },
+      {
+        "district": "가6",
+        "transferCount": 269,
+        "totalCount": 629,
+        "transferRate": 0.4277
+      },
+      {
+        "district": "69-2",
+        "transferCount": 198,
+        "totalCount": 1240,
+        "transferRate": 0.1597
+      },
+      {
+        "district": "명당",
+        "transferCount": 188,
+        "totalCount": 738,
+        "transferRate": 0.2547
+      },
+      {
+        "district": "69-1",
+        "transferCount": 157,
+        "totalCount": 1597,
+        "transferRate": 0.0983
+      },
+      {
+        "district": "가8",
+        "transferCount": 147,
+        "totalCount": 307,
+        "transferRate": 0.4788
+      },
+      {
+        "district": "69-3",
+        "transferCount": 140,
+        "totalCount": 995,
+        "transferRate": 0.1407
+      },
+      {
+        "district": "69-4",
+        "transferCount": 121,
+        "totalCount": 758,
+        "transferRate": 0.1596
+      },
+      {
+        "district": "특1",
+        "transferCount": 117,
+        "totalCount": 399,
+        "transferRate": 0.2932
+      },
+      {
+        "district": "63-5",
+        "transferCount": 91,
+        "totalCount": 1162,
+        "transferRate": 0.0783
+      },
+      {
+        "district": "63-6",
+        "transferCount": 85,
+        "totalCount": 1088,
+        "transferRate": 0.0781
+      }
+    ],
+    "byGrade": [
+      {
+        "grade": "A",
+        "transferCount": 4324,
+        "totalCount": 52497,
+        "transferRate": 0.0824
+      },
+      {
+        "grade": "C",
+        "transferCount": 1,
+        "totalCount": 2306,
+        "transferRate": 0.0004
+      }
+    ]
+  },
+  "wowMetrics": {
+    "potentialFromAvailable": 183717117228.0,
+    "potentialFromTransfer": 75635928632.0,
+    "soldRateOverall": 0.7757,
+    "topPotentialDistrict": {
+      "district": "1ROYAL_ROOM",
+      "potentialValue": 42388000000.0
+    },
+    "stagnantInventoryWarning": 2499
+  }
+}

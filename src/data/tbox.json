@@ -1,0 +1,1603 @@
+{
+  "meta": {
+    "version": "v0.1",
+    "domain": "용인공원그룹 관리손익 (장지+상조 VC)",
+    "createdAt": "2026-05-07",
+    "satisfiedColor": "#10b981",
+    "partialColor": "#f59e0b",
+    "missingColor": "#ef4444",
+    "entities": [
+      "용인공원",
+      "YPL",
+      "라이프"
+    ],
+    "description": "용인공원재단·YPL(장지 VC) + 용인공원라이프(상조 VC)를 아우르는 관리손익 PI를 위한 mini T-Box. 결손 노드/엣지는 RFI 자동 생성기 역할."
+  },
+  "classes": [
+    {
+      "id": "Member",
+      "label": "Member (회원·계약자)",
+      "definition": "VC의 최종 고객. 라이프는 상조 회원, 장지는 묘역 계약자.",
+      "status": "partiallyMissing",
+      "satisfiedFor": [
+        "라이프"
+      ],
+      "missingFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "instanceCountByEntity": {
+        "라이프": 9930,
+        "용인공원": null,
+        "YPL": null
+      },
+      "note": "라이프는 35열 회원DB master 수령. 장지는 계약자 master 부재 — 묘역raw 27열에 계약자 정보 0열."
+    },
+    {
+      "id": "SalesAgent",
+      "label": "SalesAgent (영업사원·설계사)",
+      "definition": "회원 모집·계약 체결을 담당한 인적 자원. 라이프=모집/담당설계사, 장지=영업사원.",
+      "status": "partiallyMissing",
+      "satisfiedFor": [
+        "라이프"
+      ],
+      "missingFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "instanceCountByEntity": {
+        "라이프": "모집·담당설계사 컬럼 보유",
+        "용인공원": null,
+        "YPL": null
+      },
+      "note": "라이프 회원DB에 모집설계사·담당설계사 컬럼 존재. 장지는 영업사원 master·매칭 부재 → 영업사원 생산성/CAC 산출 불가."
+    },
+    {
+      "id": "Contract",
+      "label": "Contract (계약)",
+      "definition": "Member가 체결한 묘역/상조 상품 계약. 매출 인식 단위.",
+      "status": "partiallyMissing",
+      "satisfiedFor": [
+        "라이프"
+      ],
+      "missingFor": [
+        "용인공원-부분",
+        "YPL-부분"
+      ],
+      "instanceCountByEntity": {
+        "라이프": "회원DB 1:1 대응",
+        "용인공원": "묘역raw 77.5%만 계약번호",
+        "YPL": "묘역raw 77.5%만 계약번호"
+      },
+      "note": "장지는 묘역raw 77.5%에만 계약번호 박혀있고 22.5%는 미채움(이장지 4325 포함). Member ID와 매핑테이블 부재."
+    },
+    {
+      "id": "Zone",
+      "label": "Zone (구역·묘역)",
+      "definition": "장지 VC의 물리적 묘역 단위. 세수연/정명지/아너스톤 등 10개 주요 + 기타구역.",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "missingFor": [],
+      "instanceCountByEntity": {
+        "용인공원": 27,
+        "YPL": 27,
+        "라이프": "N/A"
+      },
+      "note": "묘역raw 27열 master 풀 수령. 장법별 분류 체계 확정(아너스톤 1R/2R/3R, 1N/2N/3N, 3H prefix)."
+    },
+    {
+      "id": "BurialMethod",
+      "label": "BurialMethod (장법)",
+      "definition": "매장/봉안/수목/기타 등 안치 방식. Zone의 분류축.",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "missingFor": [],
+      "instanceCountByEntity": {
+        "용인공원": "매장·봉안·수목·기타",
+        "YPL": "매장·봉안·수목·기타",
+        "라이프": "N/A"
+      },
+      "note": "구역명-장법 매핑 확정. 봉안당 등급(로얄/노블/아너) 코드 prefix로 구분."
+    },
+    {
+      "id": "RevenueStream",
+      "label": "RevenueStream (매출스트림)",
+      "definition": "사용료수입(일반)/이장비/사용료(아너)/관리비/장례비/석축비/임대료/사초비/안치료/기타수입 10종.",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "instanceCountByEntity": {
+        "용인공원": 10,
+        "YPL": 10,
+        "라이프": "상조 매출 1종"
+      },
+      "note": "10개 매출계정 전부 25년 원장 0원 차이 검증 완료. 합계 62,850,511,923원."
+    },
+    {
+      "id": "Account",
+      "label": "Account (계정과목)",
+      "definition": "ERP 계정과목 (매출·제조원가·판관비). 0~118번 시트로 보유.",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "instanceCountByEntity": {
+        "용인공원": 119,
+        "YPL": "유사",
+        "라이프": 52
+      },
+      "note": "xlsm 수정9 기준 119개 계정 시트. 매출 10개·제조원가/판관비 모두 존재."
+    },
+    {
+      "id": "Transaction",
+      "label": "Transaction (거래/원장 행)",
+      "definition": "계정별원장의 일자별 차변·대변 거래 1행. 적요·금액·거래처 보유.",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "instanceCountByEntity": {
+        "용인공원": "25년 원장 풀",
+        "YPL": "원장 풀",
+        "라이프": "원장 풀"
+      },
+      "note": "ERP 원장 raw 보유. 마감분개·이월·부가세 대체 등 SKIP 패턴 식별 완료."
+    },
+    {
+      "id": "Vendor",
+      "label": "Vendor (거래처)",
+      "definition": "Transaction에 등장하는 외부 거래처 또는 내부 3사.",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "instanceCountByEntity": {
+        "용인공원": "원장 거래처 컬럼",
+        "YPL": "원장 거래처 컬럼",
+        "라이프": "원장 거래처 컬럼"
+      },
+      "note": "원장 거래처 컬럼·법인카드 사용자 구분으로 식별. 내부거래는 3사 대사 완료."
+    },
+    {
+      "id": "Activity",
+      "label": "Activity (활동)",
+      "definition": "ABC 관점의 비용 활동. 인건비·지급수수료·광고선전비 등 23개 비용 시트로 정의.",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "instanceCountByEntity": {
+        "용인공원": "활동정의 진행중",
+        "YPL": "활동정의 진행중",
+        "라이프": "23개 분석 시트"
+      },
+      "note": "라이프_분석.xlsx 23개 xx_분석 비용 시트로 활동 도출. 7p PPT 작업 진행중."
+    },
+    {
+      "id": "CostDriver",
+      "label": "CostDriver (원가동인)",
+      "definition": "Activity의 배부기준. Time Report·면적·인원수·매출비율 등.",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "instanceCountByEntity": {
+        "용인공원": "배부기준 시트 보유",
+        "YPL": "배부기준 시트 보유",
+        "라이프": "상조ERP설계 17~20열 채널배부"
+      },
+      "note": "외연 가용성은 동인별 상이 — 일부 동인(Time Report·시설별 면적·계량기 검침)은 ERP 외연 결손."
+    },
+    {
+      "id": "Entity",
+      "label": "Entity (3사)",
+      "definition": "용인공원재단(공익재단)/YPL(장지 영리)/용인공원라이프(상조).",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "instanceCountByEntity": {
+        "용인공원": 1,
+        "YPL": 1,
+        "라이프": 1
+      },
+      "note": "그룹 관리손익 통합 시 3사 내부거래 양방향 매칭 완료."
+    },
+    {
+      "id": "FiscalPeriod",
+      "label": "FiscalPeriod (회계기간)",
+      "definition": "월·분기·연 단위 회계 마감 기간. 25년·26년 기준.",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "instanceCountByEntity": {
+        "용인공원": "25/26년",
+        "YPL": "25/26년",
+        "라이프": "25/26년"
+      },
+      "note": "25년 마감 데이터 기준. 26년 4월 시점 묘역 master 동시 보유."
+    }
+  ],
+  "properties": [
+    {
+      "id": "Member-contracts-Contract",
+      "label": "contracts",
+      "kind": "object",
+      "source": "Member",
+      "target": "Contract",
+      "status": "partiallyMissing",
+      "satisfiedFor": [
+        "라이프"
+      ],
+      "missingFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "rfiMapping": "RFI-NEW-001",
+      "definition": "Member가 체결한 Contract들. 라이프 1:1 대응, 장지는 매핑테이블 부재."
+    },
+    {
+      "id": "Member-assignedTo-SalesAgent",
+      "label": "assignedTo",
+      "kind": "object",
+      "source": "Member",
+      "target": "SalesAgent",
+      "status": "partiallyMissing",
+      "satisfiedFor": [
+        "라이프"
+      ],
+      "missingFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "rfiMapping": "RFI-NEW-002",
+      "definition": "Member의 담당/모집 영업사원. 라이프는 회원DB 컬럼 보유, 장지는 부재."
+    },
+    {
+      "id": "Contract-uses-Zone",
+      "label": "uses",
+      "kind": "object",
+      "source": "Contract",
+      "target": "Zone",
+      "status": "partiallyMissing",
+      "satisfiedFor": [
+        "라이프-N/A",
+        "용인공원-77.5%",
+        "YPL-77.5%"
+      ],
+      "missingFor": [
+        "용인공원-22.5%",
+        "YPL-22.5%"
+      ],
+      "rfiMapping": "RFI-NEW-003",
+      "definition": "Contract가 사용하는 묘역. 묘역raw 22.5% 미채움분 사유 미확인(이장지 4325의 history 포함)."
+    },
+    {
+      "id": "Contract-hasRevenueStream-RevenueStream",
+      "label": "hasRevenueStream",
+      "kind": "object",
+      "source": "Contract",
+      "target": "RevenueStream",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "Contract에서 발생하는 매출스트림 종류. 적요/계정으로 직접추적 가능."
+    },
+    {
+      "id": "Zone-locatedIn-BurialMethod",
+      "label": "locatedIn",
+      "kind": "object",
+      "source": "Zone",
+      "target": "BurialMethod",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "missingFor": [],
+      "definition": "Zone이 속한 장법(매장·봉안·수목 등)."
+    },
+    {
+      "id": "Account-allocatesTo-RevenueStream",
+      "label": "allocatesTo",
+      "kind": "object",
+      "source": "Account",
+      "target": "RevenueStream",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "매출 Account가 어느 매출스트림에 귀속되는지. 10개 매출계정 매핑 확정."
+    },
+    {
+      "id": "Account-hasDriver-CostDriver",
+      "label": "hasDriver",
+      "kind": "object",
+      "source": "Account",
+      "target": "CostDriver",
+      "status": "partiallyMissing",
+      "satisfiedFor": [
+        "매출비율·면적·인원수 동인"
+      ],
+      "missingFor": [
+        "Time Report",
+        "시설별 면적",
+        "계량기 검침"
+      ],
+      "rfiMapping": "RFI-NEW-004",
+      "definition": "비용 Account의 배부 동인. 일부 동인은 ERP 외연 결손 → A5' Default rule 발동."
+    },
+    {
+      "id": "Account-tracesTo-Zone",
+      "label": "tracesTo",
+      "kind": "object",
+      "source": "Account",
+      "target": "Zone",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "missingFor": [],
+      "definition": "매출·묘지조성비 등 직접추적 가능 계정의 Zone 귀속. 적요 PRD/zone 코드로 추적."
+    },
+    {
+      "id": "Transaction-debitedTo-Account",
+      "label": "debitedTo",
+      "kind": "object",
+      "source": "Transaction",
+      "target": "Account",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "Transaction의 차변 계정과목."
+    },
+    {
+      "id": "Transaction-involves-Vendor",
+      "label": "involves",
+      "kind": "object",
+      "source": "Transaction",
+      "target": "Vendor",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "Transaction에 관여한 거래처."
+    },
+    {
+      "id": "Transaction-occursIn-FiscalPeriod",
+      "label": "occursIn",
+      "kind": "object",
+      "source": "Transaction",
+      "target": "FiscalPeriod",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "Transaction 발생 회계기간."
+    },
+    {
+      "id": "Transaction-incurredBy-Entity",
+      "label": "incurredBy",
+      "kind": "object",
+      "source": "Transaction",
+      "target": "Entity",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "Transaction이 발생한 법인 주체."
+    },
+    {
+      "id": "RevenueStream-supportedBy-BurialMethod",
+      "label": "supportedBy",
+      "kind": "object",
+      "source": "RevenueStream",
+      "target": "BurialMethod",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "missingFor": [],
+      "definition": "매출스트림이 지원하는 장법(예: 안치료수입 → 봉안)."
+    },
+    {
+      "id": "Vendor-performs-Activity",
+      "label": "performs",
+      "kind": "object",
+      "source": "Vendor",
+      "target": "Activity",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "외주 Vendor가 수행하는 활동(석축·조경·운구·시신처리 등)."
+    },
+    {
+      "id": "Activity-hasDriver-CostDriver",
+      "label": "hasDriver",
+      "kind": "object",
+      "source": "Activity",
+      "target": "CostDriver",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "Activity의 배부 동인. 라이프 상조ERP설계 17~20열 채널배부 기준."
+    },
+    {
+      "id": "SalesAgent-belongsTo-Entity",
+      "label": "belongsTo",
+      "kind": "object",
+      "source": "SalesAgent",
+      "target": "Entity",
+      "status": "partiallyMissing",
+      "satisfiedFor": [
+        "라이프"
+      ],
+      "missingFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "definition": "영업사원 소속 법인."
+    },
+    {
+      "id": "Member-hasFamily-string",
+      "label": "hasFamily",
+      "kind": "attribute",
+      "source": "Member",
+      "target": "string",
+      "status": "partiallyMissing",
+      "satisfiedFor": [
+        "라이프"
+      ],
+      "missingFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "definition": "회원의 가족관계 정보. 라이프 회원DB에만 존재."
+    },
+    {
+      "id": "Member-hasJoinDate-date",
+      "label": "hasJoinDate",
+      "kind": "attribute",
+      "source": "Member",
+      "target": "date",
+      "status": "partiallyMissing",
+      "satisfiedFor": [
+        "라이프"
+      ],
+      "missingFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "definition": "회원 가입일. LTV·코호트 분석의 핵심."
+    },
+    {
+      "id": "Contract-hasContractDate-date",
+      "label": "hasContractDate",
+      "kind": "attribute",
+      "source": "Contract",
+      "target": "date",
+      "status": "partiallyMissing",
+      "satisfiedFor": [
+        "라이프"
+      ],
+      "missingFor": [
+        "용인공원-부분",
+        "YPL-부분"
+      ],
+      "definition": "계약체결일. 장지는 묘역raw에 일부 존재."
+    },
+    {
+      "id": "Contract-hasAmount-money",
+      "label": "hasAmount",
+      "kind": "attribute",
+      "source": "Contract",
+      "target": "money",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "계약 금액. 원장으로 검증 가능."
+    },
+    {
+      "id": "Transaction-hasAmount-money",
+      "label": "hasAmount",
+      "kind": "attribute",
+      "source": "Transaction",
+      "target": "money",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "거래 금액(차변·대변)."
+    },
+    {
+      "id": "Transaction-hasDescription-string",
+      "label": "hasDescription",
+      "kind": "attribute",
+      "source": "Transaction",
+      "target": "string",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "원장 적요. 매출 추적성(A1)·zone 코드(A2) 식별의 핵심 텍스트."
+    },
+    {
+      "id": "Zone-hasCode-string",
+      "label": "hasCode",
+      "kind": "attribute",
+      "source": "Zone",
+      "target": "string",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL"
+      ],
+      "missingFor": [],
+      "definition": "묘역 코드(아너스톤 1R/2R/3R, 1N/2N/3N, 3H 등)."
+    },
+    {
+      "id": "Activity-hasName-string",
+      "label": "hasName",
+      "kind": "attribute",
+      "source": "Activity",
+      "target": "string",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "활동명(인건비·지급수수료·광고선전비 등)."
+    },
+    {
+      "id": "CostDriver-hasUnit-string",
+      "label": "hasUnit",
+      "kind": "attribute",
+      "source": "CostDriver",
+      "target": "string",
+      "status": "partiallyMissing",
+      "satisfiedFor": [
+        "기본 동인"
+      ],
+      "missingFor": [
+        "Time Report 시간단위",
+        "시설별 면적 m²"
+      ],
+      "rfiMapping": "RFI-NEW-004",
+      "definition": "동인 측정 단위. 외연 결손 동인은 단위 정의 자체가 미확정."
+    },
+    {
+      "id": "FiscalPeriod-hasYear-int",
+      "label": "hasYear",
+      "kind": "attribute",
+      "source": "FiscalPeriod",
+      "target": "int",
+      "status": "satisfied",
+      "satisfiedFor": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ],
+      "missingFor": [],
+      "definition": "회계연도(2025/2026)."
+    }
+  ],
+  "axioms": [
+    {
+      "id": "A1",
+      "label": "매출 추적성",
+      "definition": "매출계정의 모든 Transaction은 적요 PRD 또는 zone 코드를 통해 Contract→Zone→RevenueStream으로 직접추적 가능.",
+      "status": "satisfied",
+      "checkedAgainst": "용인공원 25년 원장 10개 매출계정, 합계 62,850,511,923원, xlsm수정9 vs 원장 0원 차이",
+      "appliesTo": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ]
+    },
+    {
+      "id": "A2",
+      "label": "조성비 zone 추적",
+      "definition": "묘지조성비는 Transaction 적요에 zone 코드가 박혀있어 Zone에 직접추적 가능.",
+      "status": "satisfied",
+      "checkedAgainst": "장지 VC 묘지조성비 100% zone 추적",
+      "appliesTo": [
+        "용인공원",
+        "YPL"
+      ]
+    },
+    {
+      "id": "A3",
+      "label": "인건비 동인 의존",
+      "definition": "인건비는 Transaction 적요로 직접추적 불가 → Account.hasDriver(CostDriver) 필수.",
+      "status": "satisfied",
+      "checkedAgainst": "복리후생비·여비교통비·접대비 판관비 잔액 0, 전액 제조원가 대체 확인",
+      "appliesTo": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ]
+    },
+    {
+      "id": "A4",
+      "label": "내부거래 양방향 매칭",
+      "definition": "3사 간 Transaction은 양방향 ID·금액 일치해야 함.",
+      "status": "satisfied",
+      "checkedAgainst": "2025년 내부거래 제거 최종 파일로 양방향 대사 완료",
+      "appliesTo": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ]
+    },
+    {
+      "id": "A5",
+      "label": "외연 가용성",
+      "definition": "AllocatedCost의 hasDriver 값은 ERP에 외연(extension) 데이터로 존재해야 함.",
+      "status": "partiallyMissing",
+      "checkedAgainst": "Time Report·시설별 면적·계량기 검침 등 일부 동인 외연 결손",
+      "appliesTo": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ]
+    },
+    {
+      "id": "A5p",
+      "label": "Default rule (외연 결손 fallback)",
+      "definition": "A5 외연 결손 시 매출비율 fallback + 회사 리뷰로 대체.",
+      "status": "satisfied",
+      "checkedAgainst": "기타구역·동인 결손 항목에 매출비율 배부 적용",
+      "appliesTo": [
+        "용인공원",
+        "YPL",
+        "라이프"
+      ]
+    }
+  ],
+  "rfiItems": [
+    {
+      "id": "RFI-NEW-001",
+      "priority": "P0",
+      "title": "용인공원·YPL 계약자 master + 묘역raw 매칭테이블",
+      "rationale": "Member-contracts-Contract property가 장지 VC에서 결손. 회원 LTV·CAC·재계약률·영업사원 생산성 산출 불가.",
+      "linkedProperties": [
+        "Member-contracts-Contract",
+        "Member-hasFamily-string",
+        "Member-hasJoinDate-date"
+      ],
+      "expectedColumns": [
+        "계약번호 (FK)",
+        "계약자ID",
+        "이름",
+        "가입일",
+        "묘역코드",
+        "담당영업사원ID",
+        "가족관계",
+        "연락처"
+      ],
+      "currentSourceCheck": "묘역 raw 27열에 계약자 정보 0열, RFI r74 미수령. 라이프 회원DB(35열) 대비 비대칭.",
+      "askTo": "용인공원·YPL 영업팀·고객센터팀"
+    },
+    {
+      "id": "RFI-NEW-002",
+      "priority": "P0",
+      "title": "장지 VC 영업사원 master + 묘역-영업사원 매칭",
+      "rationale": "Member-assignedTo-SalesAgent 결손. 장지 영업사원 생산성·CAC·인센티브 PI 불가능.",
+      "linkedProperties": [
+        "Member-assignedTo-SalesAgent",
+        "SalesAgent-belongsTo-Entity"
+      ],
+      "expectedColumns": [
+        "영업사원ID",
+        "이름",
+        "소속(용인공원/YPL)",
+        "입사일",
+        "직급",
+        "담당구역",
+        "담당계약번호 리스트"
+      ],
+      "currentSourceCheck": "라이프 회원DB에 모집·담당설계사 컬럼 존재. 장지측은 영업사원 master 존재 여부 자체 미확인.",
+      "askTo": "용인공원·YPL 영업팀·인사팀"
+    },
+    {
+      "id": "RFI-NEW-003",
+      "priority": "P1",
+      "title": "묘역raw 22.5% 계약번호 미채움 사유 (이장지 4325 history)",
+      "rationale": "Contract-uses-Zone 22.5% 미채움. 매출 zone 귀속률은 100%이나 객체 측면에서 향후 점유율·회전율 계산에 영향.",
+      "linkedProperties": [
+        "Contract-uses-Zone",
+        "Contract-hasContractDate-date"
+      ],
+      "expectedColumns": [
+        "묘역코드",
+        "현재상태(미사용/이장/공실/특수)",
+        "이전 계약번호(이장의 경우)",
+        "history"
+      ],
+      "currentSourceCheck": "묘역 raw 27열 master 중 계약번호 컬럼 22.5% 공란. 이장지 4325개 별도 식별됨.",
+      "askTo": "용인공원·YPL 운영팀"
+    },
+    {
+      "id": "RFI-NEW-004",
+      "priority": "P1",
+      "title": "비용 동인 외연 데이터 (Time Report·시설별 면적·계량기 검침)",
+      "rationale": "Account-hasDriver-CostDriver 일부 동인 외연 결손 → A5 미충족 → A5' Default rule(매출비율 fallback) 발동중. 정밀 ABC 위해 외연 필요.",
+      "linkedProperties": [
+        "Account-hasDriver-CostDriver",
+        "CostDriver-hasUnit-string"
+      ],
+      "expectedColumns": [
+        "직원ID·활동·시간(Time Report)",
+        "시설코드·면적m²",
+        "계량기ID·기간·검침량"
+      ],
+      "currentSourceCheck": "용인공원 배부기준 시트에 일부 동인 정의되어 있으나 외연 raw 미수령. 라이프 상조ERP설계 17~20열은 채널배부 한정.",
+      "askTo": "3사 인사팀·시설팀·총무팀"
+    },
+    {
+      "id": "RFI-NEW-005",
+      "priority": "P1",
+      "title": "라이프 회원DB와 장지 계약자 ID 통합 매핑(그룹 단일 고객뷰)",
+      "rationale": "그룹 관점에서 상조→장지 cross-sell·동일 가족 식별 불가. Entity 간 Member 통합 ID 부재.",
+      "linkedProperties": [
+        "Member-contracts-Contract",
+        "Member-assignedTo-SalesAgent"
+      ],
+      "expectedColumns": [
+        "통합고객ID",
+        "라이프회원ID",
+        "장지계약자ID",
+        "동일가족 그룹ID"
+      ],
+      "currentSourceCheck": "라이프 9930명 회원DB와 장지 계약자 master 자체가 부재 → 통합 매핑 작업 미착수.",
+      "askTo": "그룹 전략팀"
+    }
+  ],
+  "reactFlow": {
+    "nodes": [
+      {
+        "id": "Member",
+        "type": "classNode",
+        "position": {
+          "x": 100,
+          "y": 150
+        },
+        "data": {
+          "label": "Member (회원·계약자)",
+          "status": "partiallyMissing",
+          "definition": "VC의 최종 고객. 라이프는 상조 회원, 장지는 묘역 계약자.",
+          "satisfiedFor": [
+            "라이프"
+          ],
+          "missingFor": [
+            "용인공원",
+            "YPL"
+          ],
+          "note": "라이프는 35열 회원DB master 수령. 장지는 계약자 master 부재 — 묘역raw 27열에 계약자 정보 0열."
+        }
+      },
+      {
+        "id": "SalesAgent",
+        "type": "classNode",
+        "position": {
+          "x": 100,
+          "y": 380
+        },
+        "data": {
+          "label": "SalesAgent (영업사원·설계사)",
+          "status": "partiallyMissing",
+          "definition": "회원 모집·계약 체결을 담당한 인적 자원. 라이프=모집/담당설계사, 장지=영업사원.",
+          "satisfiedFor": [
+            "라이프"
+          ],
+          "missingFor": [
+            "용인공원",
+            "YPL"
+          ],
+          "note": "라이프 회원DB에 모집설계사·담당설계사 컬럼 존재. 장지는 영업사원 master·매칭 부재 → 영업사원 생산성/CAC 산출 불가."
+        }
+      },
+      {
+        "id": "Contract",
+        "type": "classNode",
+        "position": {
+          "x": 350,
+          "y": 250
+        },
+        "data": {
+          "label": "Contract (계약)",
+          "status": "partiallyMissing",
+          "definition": "Member가 체결한 묘역/상조 상품 계약. 매출 인식 단위.",
+          "satisfiedFor": [
+            "라이프"
+          ],
+          "missingFor": [
+            "용인공원-부분",
+            "YPL-부분"
+          ],
+          "note": "장지는 묘역raw 77.5%에만 계약번호 박혀있고 22.5%는 미채움(이장지 4325 포함). Member ID와 매핑테이블 부재."
+        }
+      },
+      {
+        "id": "Zone",
+        "type": "classNode",
+        "position": {
+          "x": 600,
+          "y": 150
+        },
+        "data": {
+          "label": "Zone (구역·묘역)",
+          "status": "satisfied",
+          "definition": "장지 VC의 물리적 묘역 단위. 세수연/정명지/아너스톤 등 10개 주요 + 기타구역.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL"
+          ],
+          "missingFor": [],
+          "note": "묘역raw 27열 master 풀 수령. 장법별 분류 체계 확정(아너스톤 1R/2R/3R, 1N/2N/3N, 3H prefix)."
+        }
+      },
+      {
+        "id": "BurialMethod",
+        "type": "classNode",
+        "position": {
+          "x": 600,
+          "y": 380
+        },
+        "data": {
+          "label": "BurialMethod (장법)",
+          "status": "satisfied",
+          "definition": "매장/봉안/수목/기타 등 안치 방식. Zone의 분류축.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL"
+          ],
+          "missingFor": [],
+          "note": "구역명-장법 매핑 확정. 봉안당 등급(로얄/노블/아너) 코드 prefix로 구분."
+        }
+      },
+      {
+        "id": "RevenueStream",
+        "type": "classNode",
+        "position": {
+          "x": 850,
+          "y": 250
+        },
+        "data": {
+          "label": "RevenueStream (매출스트림)",
+          "status": "satisfied",
+          "definition": "사용료수입(일반)/이장비/사용료(아너)/관리비/장례비/석축비/임대료/사초비/안치료/기타수입 10종.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": [],
+          "note": "10개 매출계정 전부 25년 원장 0원 차이 검증 완료. 합계 62,850,511,923원."
+        }
+      },
+      {
+        "id": "Account",
+        "type": "classNode",
+        "position": {
+          "x": 850,
+          "y": 480
+        },
+        "data": {
+          "label": "Account (계정과목)",
+          "status": "satisfied",
+          "definition": "ERP 계정과목 (매출·제조원가·판관비). 0~118번 시트로 보유.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": [],
+          "note": "xlsm 수정9 기준 119개 계정 시트. 매출 10개·제조원가/판관비 모두 존재."
+        }
+      },
+      {
+        "id": "Transaction",
+        "type": "classNode",
+        "position": {
+          "x": 1100,
+          "y": 250
+        },
+        "data": {
+          "label": "Transaction (거래/원장 행)",
+          "status": "satisfied",
+          "definition": "계정별원장의 일자별 차변·대변 거래 1행. 적요·금액·거래처 보유.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": [],
+          "note": "ERP 원장 raw 보유. 마감분개·이월·부가세 대체 등 SKIP 패턴 식별 완료."
+        }
+      },
+      {
+        "id": "Vendor",
+        "type": "classNode",
+        "position": {
+          "x": 1100,
+          "y": 480
+        },
+        "data": {
+          "label": "Vendor (거래처)",
+          "status": "satisfied",
+          "definition": "Transaction에 등장하는 외부 거래처 또는 내부 3사.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": [],
+          "note": "원장 거래처 컬럼·법인카드 사용자 구분으로 식별. 내부거래는 3사 대사 완료."
+        }
+      },
+      {
+        "id": "Activity",
+        "type": "classNode",
+        "position": {
+          "x": 600,
+          "y": 620
+        },
+        "data": {
+          "label": "Activity (활동)",
+          "status": "satisfied",
+          "definition": "ABC 관점의 비용 활동. 인건비·지급수수료·광고선전비 등 23개 비용 시트로 정의.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": [],
+          "note": "라이프_분석.xlsx 23개 xx_분석 비용 시트로 활동 도출. 7p PPT 작업 진행중."
+        }
+      },
+      {
+        "id": "CostDriver",
+        "type": "classNode",
+        "position": {
+          "x": 850,
+          "y": 700
+        },
+        "data": {
+          "label": "CostDriver (원가동인)",
+          "status": "satisfied",
+          "definition": "Activity의 배부기준. Time Report·면적·인원수·매출비율 등.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": [],
+          "note": "외연 가용성은 동인별 상이 — 일부 동인(Time Report·시설별 면적·계량기 검침)은 ERP 외연 결손."
+        }
+      },
+      {
+        "id": "Entity",
+        "type": "classNode",
+        "position": {
+          "x": 1100,
+          "y": 700
+        },
+        "data": {
+          "label": "Entity (3사)",
+          "status": "satisfied",
+          "definition": "용인공원재단(공익재단)/YPL(장지 영리)/용인공원라이프(상조).",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": [],
+          "note": "그룹 관리손익 통합 시 3사 내부거래 양방향 매칭 완료."
+        }
+      },
+      {
+        "id": "FiscalPeriod",
+        "type": "classNode",
+        "position": {
+          "x": 1300,
+          "y": 480
+        },
+        "data": {
+          "label": "FiscalPeriod (회계기간)",
+          "status": "satisfied",
+          "definition": "월·분기·연 단위 회계 마감 기간. 25년·26년 기준.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": [],
+          "note": "25년 마감 데이터 기준. 26년 4월 시점 묘역 master 동시 보유."
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e-Member-contracts-Contract",
+        "source": "Member",
+        "target": "Contract",
+        "type": "smoothstep",
+        "label": "contracts",
+        "data": {
+          "status": "partiallyMissing",
+          "rfiId": "RFI-NEW-001",
+          "definition": "Member가 체결한 Contract들. 라이프 1:1 대응, 장지는 매핑테이블 부재.",
+          "satisfiedFor": [
+            "라이프"
+          ],
+          "missingFor": [
+            "용인공원",
+            "YPL"
+          ]
+        },
+        "animated": true,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2,
+          "strokeDasharray": "5 5"
+        },
+        "labelStyle": {
+          "fill": "#f59e0b",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Member-assignedTo-SalesAgent",
+        "source": "Member",
+        "target": "SalesAgent",
+        "type": "smoothstep",
+        "label": "assignedTo",
+        "data": {
+          "status": "partiallyMissing",
+          "rfiId": "RFI-NEW-002",
+          "definition": "Member의 담당/모집 영업사원. 라이프는 회원DB 컬럼 보유, 장지는 부재.",
+          "satisfiedFor": [
+            "라이프"
+          ],
+          "missingFor": [
+            "용인공원",
+            "YPL"
+          ]
+        },
+        "animated": true,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2,
+          "strokeDasharray": "5 5"
+        },
+        "labelStyle": {
+          "fill": "#f59e0b",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Contract-uses-Zone",
+        "source": "Contract",
+        "target": "Zone",
+        "type": "smoothstep",
+        "label": "uses",
+        "data": {
+          "status": "partiallyMissing",
+          "rfiId": "RFI-NEW-003",
+          "definition": "Contract가 사용하는 묘역. 묘역raw 22.5% 미채움분 사유 미확인(이장지 4325의 history 포함).",
+          "satisfiedFor": [
+            "라이프-N/A",
+            "용인공원-77.5%",
+            "YPL-77.5%"
+          ],
+          "missingFor": [
+            "용인공원-22.5%",
+            "YPL-22.5%"
+          ]
+        },
+        "animated": true,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2,
+          "strokeDasharray": "5 5"
+        },
+        "labelStyle": {
+          "fill": "#f59e0b",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Contract-hasRevenueStream-RevenueStream",
+        "source": "Contract",
+        "target": "RevenueStream",
+        "type": "smoothstep",
+        "label": "hasRevenueStream",
+        "data": {
+          "status": "satisfied",
+          "rfiId": null,
+          "definition": "Contract에서 발생하는 매출스트림 종류. 적요/계정으로 직접추적 가능.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": []
+        },
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2
+        },
+        "labelStyle": {
+          "fill": "#10b981",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Zone-locatedIn-BurialMethod",
+        "source": "Zone",
+        "target": "BurialMethod",
+        "type": "smoothstep",
+        "label": "locatedIn",
+        "data": {
+          "status": "satisfied",
+          "rfiId": null,
+          "definition": "Zone이 속한 장법(매장·봉안·수목 등).",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL"
+          ],
+          "missingFor": []
+        },
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2
+        },
+        "labelStyle": {
+          "fill": "#10b981",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Account-allocatesTo-RevenueStream",
+        "source": "Account",
+        "target": "RevenueStream",
+        "type": "smoothstep",
+        "label": "allocatesTo",
+        "data": {
+          "status": "satisfied",
+          "rfiId": null,
+          "definition": "매출 Account가 어느 매출스트림에 귀속되는지. 10개 매출계정 매핑 확정.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": []
+        },
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2
+        },
+        "labelStyle": {
+          "fill": "#10b981",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Account-hasDriver-CostDriver",
+        "source": "Account",
+        "target": "CostDriver",
+        "type": "smoothstep",
+        "label": "hasDriver",
+        "data": {
+          "status": "partiallyMissing",
+          "rfiId": "RFI-NEW-004",
+          "definition": "비용 Account의 배부 동인. 일부 동인은 ERP 외연 결손 → A5' Default rule 발동.",
+          "satisfiedFor": [
+            "매출비율·면적·인원수 동인"
+          ],
+          "missingFor": [
+            "Time Report",
+            "시설별 면적",
+            "계량기 검침"
+          ]
+        },
+        "animated": true,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2,
+          "strokeDasharray": "5 5"
+        },
+        "labelStyle": {
+          "fill": "#f59e0b",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Account-tracesTo-Zone",
+        "source": "Account",
+        "target": "Zone",
+        "type": "smoothstep",
+        "label": "tracesTo",
+        "data": {
+          "status": "satisfied",
+          "rfiId": null,
+          "definition": "매출·묘지조성비 등 직접추적 가능 계정의 Zone 귀속. 적요 PRD/zone 코드로 추적.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL"
+          ],
+          "missingFor": []
+        },
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2
+        },
+        "labelStyle": {
+          "fill": "#10b981",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Transaction-debitedTo-Account",
+        "source": "Transaction",
+        "target": "Account",
+        "type": "smoothstep",
+        "label": "debitedTo",
+        "data": {
+          "status": "satisfied",
+          "rfiId": null,
+          "definition": "Transaction의 차변 계정과목.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": []
+        },
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2
+        },
+        "labelStyle": {
+          "fill": "#10b981",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Transaction-involves-Vendor",
+        "source": "Transaction",
+        "target": "Vendor",
+        "type": "smoothstep",
+        "label": "involves",
+        "data": {
+          "status": "satisfied",
+          "rfiId": null,
+          "definition": "Transaction에 관여한 거래처.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": []
+        },
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2
+        },
+        "labelStyle": {
+          "fill": "#10b981",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Transaction-occursIn-FiscalPeriod",
+        "source": "Transaction",
+        "target": "FiscalPeriod",
+        "type": "smoothstep",
+        "label": "occursIn",
+        "data": {
+          "status": "satisfied",
+          "rfiId": null,
+          "definition": "Transaction 발생 회계기간.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": []
+        },
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2
+        },
+        "labelStyle": {
+          "fill": "#10b981",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Transaction-incurredBy-Entity",
+        "source": "Transaction",
+        "target": "Entity",
+        "type": "smoothstep",
+        "label": "incurredBy",
+        "data": {
+          "status": "satisfied",
+          "rfiId": null,
+          "definition": "Transaction이 발생한 법인 주체.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": []
+        },
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2
+        },
+        "labelStyle": {
+          "fill": "#10b981",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-RevenueStream-supportedBy-BurialMethod",
+        "source": "RevenueStream",
+        "target": "BurialMethod",
+        "type": "smoothstep",
+        "label": "supportedBy",
+        "data": {
+          "status": "satisfied",
+          "rfiId": null,
+          "definition": "매출스트림이 지원하는 장법(예: 안치료수입 → 봉안).",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL"
+          ],
+          "missingFor": []
+        },
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2
+        },
+        "labelStyle": {
+          "fill": "#10b981",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Vendor-performs-Activity",
+        "source": "Vendor",
+        "target": "Activity",
+        "type": "smoothstep",
+        "label": "performs",
+        "data": {
+          "status": "satisfied",
+          "rfiId": null,
+          "definition": "외주 Vendor가 수행하는 활동(석축·조경·운구·시신처리 등).",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": []
+        },
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2
+        },
+        "labelStyle": {
+          "fill": "#10b981",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-Activity-hasDriver-CostDriver",
+        "source": "Activity",
+        "target": "CostDriver",
+        "type": "smoothstep",
+        "label": "hasDriver",
+        "data": {
+          "status": "satisfied",
+          "rfiId": null,
+          "definition": "Activity의 배부 동인. 라이프 상조ERP설계 17~20열 채널배부 기준.",
+          "satisfiedFor": [
+            "용인공원",
+            "YPL",
+            "라이프"
+          ],
+          "missingFor": []
+        },
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2
+        },
+        "labelStyle": {
+          "fill": "#10b981",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      },
+      {
+        "id": "e-SalesAgent-belongsTo-Entity",
+        "source": "SalesAgent",
+        "target": "Entity",
+        "type": "smoothstep",
+        "label": "belongsTo",
+        "data": {
+          "status": "partiallyMissing",
+          "rfiId": null,
+          "definition": "영업사원 소속 법인.",
+          "satisfiedFor": [
+            "라이프"
+          ],
+          "missingFor": [
+            "용인공원",
+            "YPL"
+          ]
+        },
+        "animated": true,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2,
+          "strokeDasharray": "5 5"
+        },
+        "labelStyle": {
+          "fill": "#f59e0b",
+          "fontWeight": 600
+        },
+        "labelBgStyle": {
+          "fill": "#ffffff",
+          "fillOpacity": 0.85
+        }
+      }
+    ]
+  }
+}

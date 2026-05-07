@@ -1,0 +1,524 @@
+{
+  "meta": {
+    "source": "라이프_회원DB_backdata.xlsx / 25년말 DB",
+    "extractedAt": "2026-05-07",
+    "totalMembers": 9930,
+    "totalRevenueSum": 27764964000,
+    "totalProductValueSum": 40472301300,
+    "notes": [
+      "오프라인/오프라인  라벨 통합 (strip 적용, 9315+152=9467)",
+      "가입경로 컬럼은 0.7%만 채워져 사용 안 함",
+      "모집설계사명 NaN은 (미상)으로 통일",
+      "Top10 설계사명은 첫글자만 노출 (개인정보 마스킹)"
+    ]
+  },
+  "channelMatrix": [
+    {
+      "channel": "오프라인",
+      "memberCount": 9467,
+      "revenueSum": 27673363300,
+      "avgRevenue": 2923140,
+      "matureCount": 4142,
+      "matureRate": 0.4375,
+      "delinquentRate": 0.1975
+    },
+    {
+      "channel": "온라인",
+      "memberCount": 434,
+      "revenueSum": 37534000,
+      "avgRevenue": 86484,
+      "matureCount": 276,
+      "matureRate": 0.6359,
+      "delinquentRate": 0.0161
+    },
+    {
+      "channel": "법인",
+      "memberCount": 29,
+      "revenueSum": 54066700,
+      "avgRevenue": 1864369,
+      "matureCount": 15,
+      "matureRate": 0.5172,
+      "delinquentRate": 0.1724
+    }
+  ],
+  "memberStatus": [
+    {
+      "status": "납부만기(YF)",
+      "code": "YF",
+      "count": 4433,
+      "revenueSum": 16835918500,
+      "shareOfRevenue": 0.6064,
+      "shareOfMembers": 0.4464
+    },
+    {
+      "status": "정상(YY)",
+      "code": "YY",
+      "count": 3574,
+      "revenueSum": 9587155700,
+      "shareOfRevenue": 0.3453,
+      "shareOfMembers": 0.3599
+    },
+    {
+      "status": "3회연체(YB)",
+      "code": "YB",
+      "count": 1882,
+      "revenueSum": 1242785800,
+      "shareOfRevenue": 0.0448,
+      "shareOfMembers": 0.1895
+    },
+    {
+      "status": "오류(YE)",
+      "code": "YE",
+      "count": 41,
+      "revenueSum": 99104000,
+      "shareOfRevenue": 0.0036,
+      "shareOfMembers": 0.0041
+    }
+  ],
+  "channelStatusMatrix": [
+    {
+      "channel": "오프라인",
+      "status": "납부만기(YF)",
+      "count": 4142,
+      "revenueSum": 16761737700
+    },
+    {
+      "channel": "오프라인",
+      "status": "정상(YY)",
+      "count": 3417,
+      "revenueSum": 9572400700
+    },
+    {
+      "channel": "오프라인",
+      "status": "3회연체(YB)",
+      "count": 1870,
+      "revenueSum": 1240372900
+    },
+    {
+      "channel": "오프라인",
+      "status": "오류(YE)",
+      "count": 38,
+      "revenueSum": 98852000
+    },
+    {
+      "channel": "온라인",
+      "status": "납부만기(YF)",
+      "count": 276,
+      "revenueSum": 27600000
+    },
+    {
+      "channel": "온라인",
+      "status": "정상(YY)",
+      "count": 148,
+      "revenueSum": 9100000
+    },
+    {
+      "channel": "온라인",
+      "status": "3회연체(YB)",
+      "count": 7,
+      "revenueSum": 582000
+    },
+    {
+      "channel": "온라인",
+      "status": "오류(YE)",
+      "count": 3,
+      "revenueSum": 252000
+    },
+    {
+      "channel": "법인",
+      "status": "납부만기(YF)",
+      "count": 15,
+      "revenueSum": 46580800
+    },
+    {
+      "channel": "법인",
+      "status": "정상(YY)",
+      "count": 9,
+      "revenueSum": 5655000
+    },
+    {
+      "channel": "법인",
+      "status": "3회연체(YB)",
+      "count": 5,
+      "revenueSum": 1830900
+    },
+    {
+      "channel": "법인",
+      "status": "오류(YE)",
+      "count": 0,
+      "revenueSum": 0
+    }
+  ],
+  "cohort": [
+    {
+      "joinYear": 2018,
+      "memberCount": 577,
+      "matureRate": 0.0416,
+      "avgLTV": 2471640
+    },
+    {
+      "joinYear": 2019,
+      "memberCount": 744,
+      "matureRate": 0.0282,
+      "avgLTV": 2164329
+    },
+    {
+      "joinYear": 2020,
+      "memberCount": 608,
+      "matureRate": 0.0148,
+      "avgLTV": 1963119
+    },
+    {
+      "joinYear": 2021,
+      "memberCount": 126,
+      "matureRate": 0.3095,
+      "avgLTV": 2118246
+    },
+    {
+      "joinYear": 2022,
+      "memberCount": 392,
+      "matureRate": 0.7219,
+      "avgLTV": 2900750
+    },
+    {
+      "joinYear": 2023,
+      "memberCount": 495,
+      "matureRate": 0.9556,
+      "avgLTV": 3916388
+    },
+    {
+      "joinYear": 2024,
+      "memberCount": 443,
+      "matureRate": 0.8758,
+      "avgLTV": 4067806
+    },
+    {
+      "joinYear": 2025,
+      "memberCount": 1390,
+      "matureRate": 0.8799,
+      "avgLTV": 3326629
+    }
+  ],
+  "productMix": [
+    {
+      "productName": "통합 정성의 깊이 399만(3만*133회)",
+      "memberCount": 2319,
+      "revenueSum": 6486270000,
+      "avgPrice": 3990000
+    },
+    {
+      "productName": "New Thanks Life 399(3만*133회)",
+      "memberCount": 1059,
+      "revenueSum": 2155920000,
+      "avgPrice": 3990000
+    },
+    {
+      "productName": "Thanks Life 399(3만*133회)",
+      "memberCount": 988,
+      "revenueSum": 2361720000,
+      "avgPrice": 3990000
+    },
+    {
+      "productName": "아너스타498",
+      "memberCount": 583,
+      "revenueSum": 2601390000,
+      "avgPrice": 4980000
+    },
+    {
+      "productName": "온유 HONORSTONE 480",
+      "memberCount": 446,
+      "revenueSum": 2140800000,
+      "avgPrice": 4800000
+    },
+    {
+      "productName": "통합 정성의 깊이 399만(3.99만*100회)",
+      "memberCount": 441,
+      "revenueSum": 1292081700,
+      "avgPrice": 3990000
+    },
+    {
+      "productName": "온유 HONORSTONE 490",
+      "memberCount": 430,
+      "revenueSum": 2084509000,
+      "avgPrice": 4900000
+    },
+    {
+      "productName": "New 정성의깊이 350(2.8만*125회)",
+      "memberCount": 394,
+      "revenueSum": 882924000,
+      "avgPrice": 3500000
+    },
+    {
+      "productName": "아너스타350",
+      "memberCount": 394,
+      "revenueSum": 1227492000,
+      "avgPrice": 3500000
+    },
+    {
+      "productName": "360만(30,000*120)",
+      "memberCount": 388,
+      "revenueSum": 789870000,
+      "avgPrice": 3600000
+    }
+  ],
+  "salesAgentDistribution": {
+    "totalAgents": 1227,
+    "top10ShareOfRevenue": 0.2168,
+    "giniCoefficient": 0.6903,
+    "top10": [
+      {
+        "agentId": "2021090001",
+        "agentName": "장**",
+        "memberCount": 234,
+        "revenueSum": 918532000
+      },
+      {
+        "agentId": "2024010002",
+        "agentName": "최**",
+        "memberCount": 169,
+        "revenueSum": 797800000
+      },
+      {
+        "agentId": "2024040003",
+        "agentName": "이**",
+        "memberCount": 167,
+        "revenueSum": 784552000
+      },
+      {
+        "agentId": "2024100004",
+        "agentName": "서***",
+        "memberCount": 135,
+        "revenueSum": 653592000
+      },
+      {
+        "agentId": "25030003",
+        "agentName": "박***",
+        "memberCount": 114,
+        "revenueSum": 561800000
+      },
+      {
+        "agentId": "2024100002",
+        "agentName": "장**",
+        "memberCount": 113,
+        "revenueSum": 522200000
+      },
+      {
+        "agentId": "2024100003",
+        "agentName": "박***",
+        "memberCount": 104,
+        "revenueSum": 499100000
+      },
+      {
+        "agentId": "2021080002",
+        "agentName": "김**",
+        "memberCount": 139,
+        "revenueSum": 458564000
+      },
+      {
+        "agentId": "2022120003",
+        "agentName": "박**",
+        "memberCount": 109,
+        "revenueSum": 457323000
+      },
+      {
+        "agentId": "2015178",
+        "agentName": "박**",
+        "memberCount": 114,
+        "revenueSum": 366150000
+      }
+    ]
+  },
+  "matureAnalysis": {
+    "totalMatureMembers": 4433,
+    "matureRate": 0.4464,
+    "byJoinYear": [
+      {
+        "joinYear": 2010,
+        "matureCount": 52,
+        "totalCount": 58,
+        "matureRate": 0.8966
+      },
+      {
+        "joinYear": 2011,
+        "matureCount": 82,
+        "totalCount": 100,
+        "matureRate": 0.82
+      },
+      {
+        "joinYear": 2012,
+        "matureCount": 154,
+        "totalCount": 273,
+        "matureRate": 0.5641
+      },
+      {
+        "joinYear": 2013,
+        "matureCount": 122,
+        "totalCount": 276,
+        "matureRate": 0.442
+      },
+      {
+        "joinYear": 2014,
+        "matureCount": 229,
+        "totalCount": 374,
+        "matureRate": 0.6123
+      },
+      {
+        "joinYear": 2015,
+        "matureCount": 929,
+        "totalCount": 1754,
+        "matureRate": 0.5296
+      },
+      {
+        "joinYear": 2016,
+        "matureCount": 258,
+        "totalCount": 1311,
+        "matureRate": 0.1968
+      },
+      {
+        "joinYear": 2017,
+        "matureCount": 147,
+        "totalCount": 1009,
+        "matureRate": 0.1457
+      },
+      {
+        "joinYear": 2018,
+        "matureCount": 24,
+        "totalCount": 577,
+        "matureRate": 0.0416
+      },
+      {
+        "joinYear": 2019,
+        "matureCount": 21,
+        "totalCount": 744,
+        "matureRate": 0.0282
+      },
+      {
+        "joinYear": 2020,
+        "matureCount": 9,
+        "totalCount": 608,
+        "matureRate": 0.0148
+      },
+      {
+        "joinYear": 2021,
+        "matureCount": 39,
+        "totalCount": 126,
+        "matureRate": 0.3095
+      },
+      {
+        "joinYear": 2022,
+        "matureCount": 283,
+        "totalCount": 392,
+        "matureRate": 0.7219
+      },
+      {
+        "joinYear": 2023,
+        "matureCount": 473,
+        "totalCount": 495,
+        "matureRate": 0.9556
+      },
+      {
+        "joinYear": 2024,
+        "matureCount": 388,
+        "totalCount": 443,
+        "matureRate": 0.8758
+      },
+      {
+        "joinYear": 2025,
+        "matureCount": 1223,
+        "totalCount": 1390,
+        "matureRate": 0.8799
+      }
+    ],
+    "byProduct": [
+      {
+        "productName": "통합 정성의 깊이 399만(3만*133회)",
+        "matureCount": 854,
+        "totalCount": 2319,
+        "matureRate": 0.3683
+      },
+      {
+        "productName": "New Thanks Life 399(3만*133회)",
+        "matureCount": 14,
+        "totalCount": 1059,
+        "matureRate": 0.0132
+      },
+      {
+        "productName": "Thanks Life 399(3만*133회)",
+        "matureCount": 41,
+        "totalCount": 988,
+        "matureRate": 0.0415
+      },
+      {
+        "productName": "아너스타498",
+        "matureCount": 572,
+        "totalCount": 583,
+        "matureRate": 0.9811
+      },
+      {
+        "productName": "온유 HONORSTONE 480",
+        "matureCount": 446,
+        "totalCount": 446,
+        "matureRate": 1.0
+      },
+      {
+        "productName": "통합 정성의 깊이 399만(3.99만*100회)",
+        "matureCount": 296,
+        "totalCount": 441,
+        "matureRate": 0.6712
+      },
+      {
+        "productName": "온유 HONORSTONE 490",
+        "matureCount": 425,
+        "totalCount": 430,
+        "matureRate": 0.9884
+      },
+      {
+        "productName": "New 정성의깊이 350(2.8만*125회)",
+        "matureCount": 139,
+        "totalCount": 394,
+        "matureRate": 0.3528
+      },
+      {
+        "productName": "아너스타350",
+        "matureCount": 354,
+        "totalCount": 394,
+        "matureRate": 0.8985
+      },
+      {
+        "productName": "360만(30,000*120)",
+        "matureCount": 202,
+        "totalCount": 388,
+        "matureRate": 0.5206
+      }
+    ],
+    "byChannel": [
+      {
+        "channel": "오프라인",
+        "matureCount": 4142,
+        "totalCount": 9467,
+        "matureRate": 0.4375
+      },
+      {
+        "channel": "온라인",
+        "matureCount": 276,
+        "totalCount": 434,
+        "matureRate": 0.6359
+      },
+      {
+        "channel": "법인",
+        "matureCount": 15,
+        "totalCount": 29,
+        "matureRate": 0.5172
+      }
+    ]
+  },
+  "wowMetrics": {
+    "totalLifecycleRevenue": 27764964000,
+    "potentialFromMature": 16835918500,
+    "ltvByChannel": {
+      "오프라인": 2923140,
+      "온라인": 86484,
+      "법인": 1864369
+    }
+  }
+}
