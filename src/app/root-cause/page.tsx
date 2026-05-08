@@ -152,7 +152,7 @@ export default function RootCausePage() {
       }
     >
       {/* Top KPIs */}
-      <section className="grid gap-3 sm:grid-cols-3">
+      <section className="grid gap-6 sm:grid-cols-3">
         <StatCard
           label="라이프 만기 회원 매출 비중"
           value={formatPct(lifeKpi.memberStatus[0].shareOfRevenue)}
@@ -176,14 +176,14 @@ export default function RootCausePage() {
       </section>
 
       {/* 상조 root cause */}
-      <section className="mt-10">
+      <section className="mt-12">
         <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
           <h2 className="section-h">
             상조 VC — 영업손실 3년 연속의 원인 가설
           </h2>
           <span className="text-[12px] tracking-wider text-stone-400">FY23–25</span>
         </div>
-        <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+        <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
           <Card title="가입 코호트 × 만기율" subtitle="2022~2025년 가입자의 만기율 급등 — 단기 수익실현 패턴 강함">
             <ResponsiveContainer width="100%" height={300}>
               <ComposedChart data={cohortChart}>
@@ -224,7 +224,7 @@ export default function RootCausePage() {
       </section>
 
       {/* 장지 root cause */}
-      <section className="mt-12">
+      <section className="mt-14">
         <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
           <h2 className="section-h">
             장지 VC — 정체·미활용 자원의 원인 가설
@@ -266,12 +266,12 @@ export default function RootCausePage() {
 
       {/* 통합 인사이트 */}
       <section className="mt-12">
-        <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
+        <div className="mb-5 flex items-baseline justify-between border-b border-stone-200 pb-2">
           <h2 className="section-h">
             통합 인사이트 — 그룹 관점
           </h2>
         </div>
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2">
           <InsightBox type="warn" title="회계 손익 ≠ 경제 손익">
             상조 VC의 "손실"은 회비정산차익 영업외 분류로 인한 시각적 효과가 큼.
             <strong> 영업이익 + 회비정산차익 view</strong>로 재해석 시 그룹 의사결정 근거 강화.
@@ -290,7 +290,7 @@ export default function RootCausePage() {
       </section>
 
       {/* 다음 단계 */}
-      <section className="mt-10 rounded-md bg-[#0095A9] p-6 text-sm text-[#ccebee]">
+      <section className="mt-12 rounded-md bg-[#0095A9] p-8 text-sm text-[#ccebee]">
         <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#b3dde0]">Next Steps</div>
         <ul className="mt-3 space-y-2">
           <li className="flex gap-3">

@@ -148,7 +148,7 @@ export default function DataModelPage() {
         </div>
       </section>
 
-      <section className="mt-6 grid gap-4 lg:grid-cols-[1.6fr_1fr]">
+      <section className="mt-10 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <Card title="T-Box 그래프" subtitle="노드/엣지 클릭으로 상세 확인 · 마우스 휠 줌 · 드래그 이동">
           <div className="h-[600px] rounded border border-slate-200 bg-slate-50">
             <ReactFlowProvider>
@@ -273,7 +273,7 @@ export default function DataModelPage() {
         </div>
       </section>
 
-      <section className="mt-8 rounded-md bg-[#0095A9] p-6 text-sm text-[#ccebee]">
+      <section className="mt-12 rounded-md bg-[#0095A9] p-8 text-sm text-[#ccebee]">
         <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#b3dde0]">Core Message</div>
         <div className="mt-3 grid gap-4 sm:grid-cols-2">
           <div>
@@ -291,7 +291,7 @@ export default function DataModelPage() {
         </div>
       </section>
 
-      <section className="mt-6 border-t border-stone-200 pt-5">
+      <section className="mt-10 border-t border-stone-200 pt-6">
         <h3 className="section-label mb-3">DATA LINEAGE</h3>
         <div className="space-y-2">
           <SourceCaption>13 Class · 26 Property · 6 Axiom — tbox.json (Phase 0 정의서 기반 수동 정의)</SourceCaption>

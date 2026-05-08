@@ -3,6 +3,24 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, ReactNode } from "react";
+import {
+  LayoutDashboard,
+  Users,
+  MapPin,
+  GitBranch,
+  Database,
+  Search,
+  type LucideIcon,
+} from "lucide-react";
+
+// 경로별 아이콘 매핑 (Dribbble Shopeers 톤)
+const ICON_MAP: Record<string, LucideIcon> = {
+  "/": LayoutDashboard,
+  "/mutual": Users,
+  "/cemetery": MapPin,
+  "/root-cause": GitBranch,
+  "/data-model": Database,
+};
 
 const NAV: { group: string; items: { path: string; label: string; sub?: string; badge?: string }[] }[] = [
   {
@@ -65,14 +83,18 @@ export function AppLayout({
         </div>
 
         <nav className="px-3 py-5">
-          {NAV.map((group) => (
-            <div key={group.group} className="mb-6">
+          {NAV.map((group, gIdx) => (
+            <div
+              key={group.group}
+              className={`mb-8 ${gIdx > 0 ? "border-t border-stone-100 pt-4" : ""}`}
+            >
               <div className="px-2 pb-2 text-[11px] font-semibold tracking-[0.14em] text-stone-400">
                 {group.group}
               </div>
               <div className="space-y-px">
                 {group.items.map((item) => {
                   const active = pathname === item.path;
+                  const Icon = ICON_MAP[item.path];
                   return (
                     <Link
                       key={item.path}
@@ -83,20 +105,30 @@ export function AppLayout({
                           : "text-stone-600 hover:bg-[#e6f4f6] hover:text-stone-900"
                       }`}
                     >
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-medium tracking-tight">{item.label}</span>
-                          {item.badge && (
-                            <span className={`text-[10px] ${active ? "text-[#b3dde0]" : "text-[#0095A9]"}`}>
-                              {item.badge}
-                            </span>
+                      <div className="flex min-w-0 items-start gap-2.5">
+                        {Icon && (
+                          <Icon
+                            className={`mt-0.5 h-4 w-4 shrink-0 ${
+                              active ? "text-white" : "text-stone-500 group-hover:text-stone-700"
+                            }`}
+                            strokeWidth={1.75}
+                          />
+                        )}
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-medium tracking-tight">{item.label}</span>
+                            {item.badge && (
+                              <span className={`text-[10px] ${active ? "text-[#b3dde0]" : "text-[#0095A9]"}`}>
+                                {item.badge}
+                              </span>
+                            )}
+                          </div>
+                          {item.sub && (
+                            <div className={`mt-0.5 text-[11px] truncate ${active ? "text-[#b3dde0]" : "text-stone-400"}`}>
+                              {item.sub}
+                            </div>
                           )}
                         </div>
-                        {item.sub && (
-                          <div className={`mt-0.5 text-[11px] truncate ${active ? "text-[#b3dde0]" : "text-stone-400"}`}>
-                            {item.sub}
-                          </div>
-                        )}
                       </div>
                     </Link>
                   );
@@ -114,27 +146,59 @@ export function AppLayout({
 
       {/* Main */}
       <div className="ml-56">
-        <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-stone-200/80 bg-[#fafaf7]/85 px-10 backdrop-blur-md">
-          <div className="flex items-baseline gap-3">
-            <h2 className="text-[18px] font-semibold tracking-tight text-stone-900">
+        <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-6 border-b border-stone-200/80 bg-[#fafaf7]/85 px-12 backdrop-blur-md">
+          <div className="flex min-w-0 items-baseline gap-3">
+            <h2 className="truncate text-[18px] font-semibold tracking-tight text-stone-900">
               {pageTitle ?? current?.label}
             </h2>
             {current?.sub && (
-              <span className="text-[12px] text-stone-400">— {current.sub}</span>
+              <span className="hidden truncate text-[12px] text-stone-400 lg:inline">— {current.sub}</span>
             )}
           </div>
-          <div className="flex items-center gap-4 text-[11px]">
+
+          {/* 중앙: 검색 (UI placeholder) */}
+          <div className="hidden flex-1 justify-center md:flex">
+            <div className="group relative w-72">
+              <Search
+                className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-stone-400"
+                strokeWidth={2}
+              />
+              <input
+                type="text"
+                readOnly
+                placeholder="구역·계정·KPI 검색"
+                aria-label="검색"
+                className="h-9 w-full rounded-md border border-stone-200 bg-white/60 pl-9 pr-14 text-[12px] text-stone-700 placeholder:text-stone-400 focus:border-[#65B3B1] focus:outline-none focus:ring-2 focus:ring-[#0095A9]/15"
+              />
+              <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-stone-200 bg-stone-50 px-1.5 py-0.5 text-[10px] font-medium tracking-wide text-stone-500">
+                ⌘K
+              </kbd>
+            </div>
+          </div>
+
+          {/* 우측: Period · v0.1 · user */}
+          <div className="flex shrink-0 items-center gap-4 text-[11px]">
             <div className="text-stone-500">
               <span className="text-stone-400">Period</span>
               <span className="ml-1.5 font-medium text-stone-700 tnum">FY 2025</span>
             </div>
+            <div className="hidden h-3 w-px bg-stone-200 sm:block" />
+            <div className="hidden text-stone-500 sm:block">v0.1</div>
             <div className="h-3 w-px bg-stone-200" />
-            <div className="text-stone-500">v0.1</div>
+            <div className="flex items-center gap-2">
+              <div className="hidden text-right leading-tight md:block">
+                <div className="text-[11px] font-medium text-stone-700">Sangho Eum</div>
+                <div className="text-[10px] text-stone-400">PwC</div>
+              </div>
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-100 text-[11px] font-medium text-stone-600">
+                SE
+              </div>
+            </div>
           </div>
         </header>
 
-        <main className="px-10 py-10">
-          <div className="grid gap-10 xl:grid-cols-[1fr_260px]">
+        <main className="px-12 py-10">
+          <div className="grid gap-12 xl:grid-cols-[1fr_260px]">
             <div className="min-w-0 fade-in">
               {pageSubtitle && (
                 <p className="mb-8 max-w-3xl text-[14px] leading-relaxed text-stone-600">{pageSubtitle}</p>
@@ -156,6 +220,73 @@ export function AppLayout({
           </div>
         </main>
       </div>
+    </div>
+  );
+}
+
+// =============================================================
+// SubNav — 페이지 내부 섹션 점프 (sticky horizontal tab)
+// AppLayout과는 독립. 페이지에서 직접 import 하여 사용.
+// =============================================================
+
+export type SubNavItem = { id: string; label: string; href?: string };
+
+interface SubNavProps {
+  items: SubNavItem[];
+  activeId?: string;
+  onSelect?: (id: string) => void;
+  className?: string;
+}
+
+export function SubNav({ items, activeId, onSelect, className }: SubNavProps) {
+  return (
+    <div
+      className={`sticky top-16 z-[5] -mx-12 border-b border-stone-200/80 bg-[#fafaf7]/85 px-12 backdrop-blur-md ${
+        className ?? ""
+      }`}
+    >
+      <nav className="flex items-center gap-1 overflow-x-auto" aria-label="섹션 탐색">
+        {items.map((item) => {
+          const active = item.id === activeId;
+          const baseCls = `relative whitespace-nowrap px-3 py-3 text-[12.5px] font-medium tracking-tight transition-colors ${
+            active
+              ? "text-stone-900"
+              : "text-stone-500 hover:text-stone-800"
+          }`;
+          const underline = (
+            <span
+              className={`pointer-events-none absolute inset-x-2 -bottom-px h-[2px] rounded-full transition-opacity ${
+                active ? "bg-[#0095A9] opacity-100" : "opacity-0"
+              }`}
+            />
+          );
+
+          if (item.href) {
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                className={baseCls}
+                onClick={() => onSelect?.(item.id)}
+              >
+                {item.label}
+                {underline}
+              </Link>
+            );
+          }
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onSelect?.(item.id)}
+              className={baseCls}
+            >
+              {item.label}
+              {underline}
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 }

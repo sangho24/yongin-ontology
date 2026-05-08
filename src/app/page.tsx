@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { ArrowUpRight, Sparkles } from "lucide-react";
-import { AppLayout } from "@/components/AppLayout";
+import { AppLayout, SubNav } from "@/components/AppLayout";
 import { SourceCaption } from "@/components/Card";
+import { NumberCell } from "@/components/NumberCell";
 import lifeKpi from "@/data/life_kpi.json";
 import zoneKpi from "@/data/zone_kpi.json";
 import deptKpi from "@/data/dept_kpi.json";
-import { autoUnit } from "@/lib/format";
+import type { NumberLineage } from "@/types";
 
 const SECTIONS = [
   { href: "/mutual", tag: "MUTUAL", title: "상조 VC 분석", desc: "회원 9,930명 lifecycle · 채널 LTV" },
@@ -20,6 +21,78 @@ export default function Home() {
   const totalLifecycle = lifeKpi.wowMetrics.totalLifecycleRevenue;
   const totalPotential = zoneKpi.wowMetrics.potentialFromAvailable;
   const totalCost = deptKpi.channelCostAlloc.totals.reduce((a, b) => a + b, 0);
+  // 채널 배부 합계는 천원 단위(JSON spec)이므로 "원"으로 환산 시 ×1000
+  const totalCostKRW = totalCost * 1000;
+
+  // -------------------------------------------------------------------
+  // Hero 3카드 lineage 정의
+  // -------------------------------------------------------------------
+  const lifecycleLineage: NumberLineage = {
+    source: "라이프_회원DB_backdata.xlsx / 매출합계",
+    formula: "Σ 매출합계 (전체 회원 9,930명)",
+    verified: true,
+    unit: "원",
+    asOf: "2025-12-31",
+    steps: [
+      {
+        label: "회원 master 로드",
+        detail: "라이프_회원DB_backdata.xlsx · 35열 × 9,930행",
+        rowCount: 9930,
+      },
+      {
+        label: "매출합계 컬럼 합산",
+        detail: "가입 이후 25년말까지 누적 매출",
+        amount: totalLifecycle,
+      },
+    ],
+    notes: "회원 lifecycle (가입~25년말) 누적 기준",
+  };
+
+  const potentialLineage: NumberLineage = {
+    source: "260401_용인공원 전체 묘역_raw.xlsx",
+    formula: "(미판매 8,173 + 이장지 4,325) × 등급 평균가",
+    verified: false,
+    unit: "원",
+    asOf: "2026-04-01",
+    steps: [
+      {
+        label: "묘역 master 로드",
+        detail: "전체 묘역 raw · 27열 × 55,711행",
+        rowCount: 55711,
+      },
+      {
+        label: "가용재고 필터",
+        detail: "미판매 8,173기 + 이장지 4,325기 = 12,498기",
+        rowCount: 12498,
+      },
+      {
+        label: "등급 평균가 적용",
+        detail: "각 구역·등급별 평균 단가로 환산 (proxy)",
+        amount: totalPotential,
+      },
+    ],
+    notes: "proxy 추정 — 실제 판매가는 거래 시점 단가에 따라 변동",
+  };
+
+  const channelCostLineage: NumberLineage = {
+    source: "PPT 41p 채널 배부 표",
+    formula: "Σ 인건비+지급수수료+광고선전비 채널별 배부값",
+    verified: true,
+    unit: "원",
+    asOf: "2025-12-31",
+    steps: [
+      {
+        label: "원장 비용 추출",
+        detail: "인건비 · 지급수수료 · 광고선전비 (FY25)",
+      },
+      {
+        label: "채널 배부 적용",
+        detail: "① 직접 귀속 ② 채널 전담 ③ 매출 기준 간접 배부",
+        amount: totalCostKRW,
+      },
+    ],
+    notes: "단위 환산: 원장 합계(원) = 채널 합계(천원) × 1,000",
+  };
 
   return (
     <AppLayout
@@ -37,41 +110,85 @@ export default function Home() {
         </div>
       }
     >
-      {/* 1줄 헤드라인 — slim */}
-      <section className="grid gap-px overflow-hidden rounded-md border border-stone-200/80 bg-stone-200/60 md:grid-cols-3">
-        <div className="bg-white p-5">
+      {/* SubNav — 페이지 내부 섹션 점프 */}
+      <SubNav
+        items={[
+          { id: "headline", label: "그룹 현황" },
+          { id: "department", label: "부서별 KPI" },
+          { id: "channel-cost", label: "채널 배부" },
+          { id: "sections", label: "세부 분석" },
+        ]}
+        className="mb-8"
+      />
+
+      {/* 1줄 헤드라인 — slim hero (NumberCell 적용) */}
+      <section
+        id="headline"
+        className="grid gap-px overflow-hidden rounded-md border border-stone-200/80 bg-stone-200/60 md:grid-cols-3"
+      >
+        {/* 카드 1: 라이프 lifecycle 매출 */}
+        <div className="bg-white p-6">
           <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-stone-500">
             라이프 lifecycle 매출
           </div>
-          <div className="headline mt-2 text-[26px] leading-none text-stone-900 tnum">
-            {autoUnit(totalLifecycle)}
+          <div className="mt-2.5">
+            <NumberCell
+              value={totalLifecycle}
+              unit="원"
+              lineage={lifecycleLineage}
+              size="lg"
+            />
           </div>
-          <div className="mt-1.5 text-[12px] text-stone-500">9,930명 회원의 가입~25년말 누적</div>
+          <div className="mt-2 text-[12px] text-stone-500">
+            9,930명 회원의 가입~25년말 누적
+          </div>
         </div>
-        <div className="bg-white p-5">
+
+        {/* 카드 2: 장지 가용재고 잠재가치 */}
+        <div className="bg-white p-6">
           <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-stone-500">
             장지 가용재고 잠재가치
           </div>
-          <div className="headline mt-2 text-[26px] leading-none text-stone-900 tnum">
-            {autoUnit(totalPotential)}
+          <div className="mt-2.5">
+            <NumberCell
+              value={totalPotential}
+              unit="원"
+              lineage={potentialLineage}
+              size="lg"
+            />
           </div>
-          <div className="mt-1.5 text-[12px] text-stone-500">미판매 8,173 + 이장지 4,325기</div>
+          <div className="mt-2 text-[12px] text-stone-500">
+            미판매 8,173 + 이장지 4,325기 (proxy)
+          </div>
         </div>
-        <div className="bg-[#0095A9] p-5 text-white">
+
+        {/* 카드 3: 라이프 채널 배부 비용 (mint card) */}
+        {/* mint card에서는 흰 박스 NumberCell이 톤을 깨므로 emphasis 미사용,
+            대신 숫자 옆 ⓘ 아이콘 hover 패턴이 아닌 큰 숫자 표기 유지 +
+            카드 하단에 작은 NumberCell(sm) lineage 트리거 노출 */}
+        <div className="bg-[#0095A9] p-6 text-white">
           <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#b3dde0]">
             라이프 채널 배부 비용 (FY25)
           </div>
-          <div className="headline mt-2 text-[26px] leading-none text-white tnum">
+          <div className="headline mt-2.5 text-[26px] leading-none text-white tnum">
             {(totalCost / 1000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}백만원
           </div>
-          <div className="mt-1.5 text-[12px] text-[#ccebee]">
-            인건비 · 지급수수료 · 광고선전비 합산
+          <div className="mt-2 flex items-center justify-between gap-2 text-[12px] text-[#ccebee]">
+            <span>인건비 · 지급수수료 · 광고선전비 합산</span>
+            <span className="shrink-0">
+              <NumberCell
+                value={totalCostKRW}
+                lineage={channelCostLineage}
+                size="sm"
+                formatter={() => "ⓘ lineage"}
+              />
+            </span>
           </div>
         </div>
       </section>
 
       {/* 부서별 KPI 매핑 — 메인 컨텐츠 */}
-      <section className="mt-10">
+      <section id="department" className="mt-10 scroll-mt-32">
         <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
           <h2 className="section-h">부서별 KPI 매핑 — 상조 VC</h2>
           <span className="text-[11px] tracking-wider text-stone-400">PPT 23p</span>
@@ -80,25 +197,31 @@ export default function Home() {
           현행 KPI 체계에서 포착되지 않는 수익성 관리 영역을 보완하기 위해 4가지 신규 KPI를 추가 설정.
           각 부서의 손익 그룹·기존 KPI·신규 KPI를 매핑.
         </p>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2">
           {deptKpi.deptKpiMatrix.map((d) => (
-            <div
+            <Link
               key={d.id}
-              className="group rounded-md border border-stone-200/80 bg-white p-5 transition-colors hover:border-[#0095A9]/30"
+              href={`/dept/${d.id}`}
+              className="group block rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-[#0095A9]/30 hover:bg-[#fafaf7]"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-400">
                     {d.revenueGroup}
                   </div>
-                  <h3 className="mt-1 text-[15px] font-semibold text-stone-900">{d.dept}</h3>
+                  <h3 className="mt-1 text-[15px] font-semibold text-stone-900 group-hover:text-[#007a8c]">
+                    {d.dept}
+                  </h3>
                 </div>
-                {d.newKpi.length > 0 && (
-                  <span className="flex items-center gap-1 rounded-sm bg-[#e6f4f6] px-1.5 py-0.5 text-[10px] font-semibold text-[#0095A9]">
-                    <Sparkles className="h-3 w-3" />
-                    NEW
-                  </span>
-                )}
+                <div className="flex shrink-0 items-center gap-2">
+                  {d.newKpi.length > 0 && (
+                    <span className="flex items-center gap-1 rounded-sm bg-[#e6f4f6] px-1.5 py-0.5 text-[10px] font-semibold text-[#0095A9]">
+                      <Sparkles className="h-3 w-3" />
+                      NEW
+                    </span>
+                  )}
+                  <ArrowUpRight className="h-4 w-4 text-stone-300 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#0095A9]" />
+                </div>
               </div>
 
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -141,13 +264,13 @@ export default function Home() {
               <div className="mt-4 border-t border-stone-100 pt-3 text-[11px] leading-relaxed text-stone-500">
                 {d.rationale}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
 
       {/* 채널별 비용 배부 결과 — Heatmap-like table */}
-      <section className="mt-10">
+      <section id="channel-cost" className="mt-10 scroll-mt-32">
         <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
           <h2 className="section-h">채널별 비용 배부 결과 — 상조 VC</h2>
           <span className="text-[11px] tracking-wider text-stone-400">PPT 41p · FY25 · 천원</span>
@@ -159,14 +282,14 @@ export default function Home() {
           <table className="w-full text-sm">
             <thead className="bg-stone-50/60 text-[11px] uppercase tracking-[0.08em] text-stone-500">
               <tr>
-                <th className="p-3 text-left font-medium">계정</th>
-                <th className="p-3 text-left font-medium">배부 원칙</th>
+                <th className="p-4 text-left font-medium">계정</th>
+                <th className="p-4 text-left font-medium">배부 원칙</th>
                 {deptKpi.channelCostAlloc.headers.map((h) => (
-                  <th key={h} className="p-3 text-right font-medium tnum">
+                  <th key={h} className="p-4 text-right font-medium tnum">
                     {h}
                   </th>
                 ))}
-                <th className="p-3 text-right font-medium tnum">합계</th>
+                <th className="p-4 text-right font-medium tnum">합계</th>
               </tr>
             </thead>
             <tbody>
@@ -175,15 +298,15 @@ export default function Home() {
                 const max = Math.max(...row.values);
                 return (
                   <tr key={row.account} className="border-t border-stone-100 transition-colors hover:bg-[#fafaf7]">
-                    <td className="p-3 font-semibold text-stone-900">{row.account}</td>
-                    <td className="p-3 text-[12px] text-stone-500">{row.principle}</td>
+                    <td className="p-4 font-semibold text-stone-900">{row.account}</td>
+                    <td className="p-4 text-[12px] text-stone-500">{row.principle}</td>
                     {row.values.map((v, i) => {
                       const ratio = max > 0 ? v / max : 0;
                       const intensity = v > 0 ? Math.max(0.08, ratio * 0.45) : 0;
                       return (
                         <td
                           key={i}
-                          className="p-3 text-right tnum text-stone-800"
+                          className="p-4 text-right tnum text-stone-800"
                           style={{
                             backgroundColor:
                               v > 0 ? `rgba(0, 149, 169, ${intensity})` : "transparent",
@@ -193,22 +316,22 @@ export default function Home() {
                         </td>
                       );
                     })}
-                    <td className="p-3 text-right font-semibold tnum text-stone-900">
+                    <td className="p-4 text-right font-semibold tnum text-stone-900">
                       {sum.toLocaleString()}
                     </td>
                   </tr>
                 );
               })}
               <tr className="border-t-2 border-stone-300 bg-stone-50">
-                <td className="p-3 text-[12px] font-semibold uppercase tracking-[0.06em] text-stone-700" colSpan={2}>
+                <td className="p-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-stone-700" colSpan={2}>
                   채널 합계
                 </td>
                 {deptKpi.channelCostAlloc.totals.map((t, i) => (
-                  <td key={i} className="p-3 text-right font-bold tnum text-stone-900">
+                  <td key={i} className="p-4 text-right font-bold tnum text-stone-900">
                     {t.toLocaleString()}
                   </td>
                 ))}
-                <td className="p-3 text-right font-bold tnum text-[#0095A9]">
+                <td className="p-4 text-right font-bold tnum text-[#0095A9]">
                   {deptKpi.channelCostAlloc.totals.reduce((a, b) => a + b, 0).toLocaleString()}
                 </td>
               </tr>
@@ -234,7 +357,7 @@ export default function Home() {
       </section>
 
       {/* Sections */}
-      <section className="mt-10">
+      <section id="sections" className="mt-10 scroll-mt-32">
         <h3 className="section-label mb-3">SECTIONS</h3>
         <div className="grid gap-px overflow-hidden rounded-md bg-stone-200/60 md:grid-cols-2">
           {SECTIONS.map((q) => (
