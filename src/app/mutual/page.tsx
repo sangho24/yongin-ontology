@@ -20,7 +20,7 @@ import {
 } from "recharts";
 import { ArrowUpRight, ChevronDown, ChevronUp, GitBranch } from "lucide-react";
 import { AppLayout, SubNav } from "@/components/AppLayout";
-import { Card, StatCard, WowCard, InsightBox, SourceCaption } from "@/components/Card";
+import { Card, WowCard, InsightBox, SourceCaption } from "@/components/Card";
 import { NumberCell } from "@/components/NumberCell";
 import { ChannelActivityCostExplorer } from "@/components/ChannelActivityCostExplorer";
 import lifeKpi from "@/data/life_kpi.json";
@@ -157,17 +157,30 @@ export default function MutualPage() {
     notes: "YF 회원의 매출합계는 영업외 '회비정산차익' 계정으로 인식 — 영업이익 view에서는 보이지 않음.",
   };
 
-  const lineagePotentialFromMature: NumberLineage = {
-    source: "라이프_회원DB_backdata.xlsx / 매출합계 (회원상태=YF)",
-    formula: "Σ 매출합계 (회원상태=YF만 필터)",
+  const lineageTotalMembers: NumberLineage = {
+    source: "라이프_회원DB_backdata.xlsx",
+    formula: "회원 master row count (FY25 12월 말 기준)",
     verified: true,
-    unit: "원",
+    unit: "명",
     asOf: "2025-12-31",
     steps: [
-      { label: "회원상태=YF 필터", rowCount: lifeKpi.matureAnalysis.totalMatureMembers },
-      { label: "매출합계 sum", amount: lifeKpi.wowMetrics.potentialFromMature },
+      { label: "회원 master 로드 — 35열 × N행", rowCount: lifeKpi.meta.totalMembers },
+      { label: "FY25 12월 말 시점 snapshot" },
     ],
-    notes: "영업외수익으로 인식되지만 경제적으로는 매출의 일부 — 조정후이익 view 시 합산 검토.",
+    notes: "본 수치는 row count. 회원상태별 분포는 만기해약율 카드 참고.",
+  };
+
+  const lineageTotalAgents: NumberLineage = {
+    source: "라이프_회원DB_backdata.xlsx / 모집설계사 + 담당설계사 컬럼",
+    formula: "DISTINCT(모집설계사 ∪ 담당설계사)",
+    verified: true,
+    unit: "명",
+    asOf: "2025-12-31",
+    steps: [
+      { label: "모집설계사·담당설계사 컬럼 union" },
+      { label: "DISTINCT", rowCount: lifeKpi.salesAgentDistribution.totalAgents },
+    ],
+    notes: `Top10이 매출 ${formatPct(lifeKpi.salesAgentDistribution.top10ShareOfRevenue)} 점유 · Gini ${lifeKpi.salesAgentDistribution.giniCoefficient}`,
   };
 
   // -------------------------------------------------------------------------
@@ -205,63 +218,84 @@ export default function MutualPage() {
       {/* H1~H4: 라이프 영업손실 3년 연속 핵심 가설 */}
 
       {/* ===================================================================
-           HERO — 핵심 KPI 3개 (NumberCell · lineage 부착)
+           HERO — 핵심 KPI 4개 (분리된 box, NumberCell · lineage 부착)
          =================================================================== */}
       <section id="overview" className="mt-10 scroll-mt-32">
         <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
           <h2 className="section-h">핵심 KPI</h2>
-          <span className="text-[11px] tracking-wider text-stone-400">
-            CLICK 박스 → lineage 패널
-          </span>
+          <span className="text-[11px] tracking-wider text-stone-400">CLICK 숫자 → lineage</span>
         </div>
-        <div className="grid gap-8 rounded-md border border-stone-200/80 bg-white p-8 md:grid-cols-3">
-          <NumberCell
-            label="lifecycle 매출"
-            value={lifeKpi.wowMetrics.totalLifecycleRevenue}
-            unit="원"
-            size="lg"
-            emphasis
-            lineage={lineageLifecycleRevenue}
-            sub="9,930명 회원의 가입~25년말 누적 매출합계"
-          />
-          <NumberCell
-            label="만기해약율"
-            value={lifeKpi.matureAnalysis.matureRate * 100}
-            unit="%"
-            size="lg"
-            lineage={lineageMatureRate}
-            formatter={(v) => v.toFixed(1)}
-            sub={`${lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명 / 9,930명 — 회비정산차익으로 흘러감`}
-          />
-          <NumberCell
-            label="회비정산차익 잠재"
-            value={lifeKpi.wowMetrics.potentialFromMature}
-            unit="원"
-            size="lg"
-            lineage={lineagePotentialFromMature}
-            sub="YF 회원 매출합계 — 영업외수익으로 인식되나 경제적 매출"
-          />
-        </div>
-      </section>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
+              총 회원
+            </div>
+            <div className="mt-2.5">
+              <NumberCell
+                value={lifeKpi.meta.totalMembers}
+                unit="명"
+                lineage={lineageTotalMembers}
+                size="lg"
+              />
+            </div>
+            <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
+              FY25 12월 말 기준 · 35열 풀 master
+            </div>
+          </div>
 
-      {/* ===================================================================
-           기존 StatCard 4개 — 보존 (gap-3 → gap-6)
-         =================================================================== */}
-      <section className="mt-10 grid gap-6 sm:grid-cols-4">
-        <StatCard label="총 회원" value={lifeKpi.meta.totalMembers.toLocaleString() + "명"} />
-        <StatCard label="lifecycle 매출" value={autoUnit(lifeKpi.wowMetrics.totalLifecycleRevenue)} />
-        <StatCard
-          label="만기해약율"
-          value={formatPct(lifeKpi.matureAnalysis.matureRate)}
-          sub={`${lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명`}
-          trend="up"
-          trendValue="회비정산차익 인식"
-        />
-        <StatCard
-          label="설계사 수"
-          value={lifeKpi.salesAgentDistribution.totalAgents.toLocaleString() + "명"}
-          sub={`Top10이 매출 ${formatPct(lifeKpi.salesAgentDistribution.top10ShareOfRevenue)}`}
-        />
+          <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
+              lifecycle 매출
+            </div>
+            <div className="mt-2.5">
+              <NumberCell
+                value={lifeKpi.wowMetrics.totalLifecycleRevenue}
+                unit="원"
+                lineage={lineageLifecycleRevenue}
+                size="lg"
+                emphasis
+              />
+            </div>
+            <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
+              9,930명 가입~25년말 누적 매출합계
+            </div>
+          </div>
+
+          <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
+              만기해약율
+            </div>
+            <div className="mt-2.5">
+              <NumberCell
+                value={lifeKpi.matureAnalysis.matureRate * 100}
+                unit="%"
+                lineage={lineageMatureRate}
+                size="lg"
+                formatter={(v) => v.toFixed(1)}
+              />
+            </div>
+            <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
+              {lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명 — 회비정산차익으로 흘러감
+            </div>
+          </div>
+
+          <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
+              설계사 수
+            </div>
+            <div className="mt-2.5">
+              <NumberCell
+                value={lifeKpi.salesAgentDistribution.totalAgents}
+                unit="명"
+                lineage={lineageTotalAgents}
+                size="lg"
+              />
+            </div>
+            <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
+              Top10이 매출 {formatPct(lifeKpi.salesAgentDistribution.top10ShareOfRevenue)} 점유
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ===================================================================

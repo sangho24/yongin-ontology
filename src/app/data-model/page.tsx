@@ -190,9 +190,9 @@ export default function DataModelPage() {
         </div>
       </section>
 
-      <section className="mt-10 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+      <section className={`mt-10 grid gap-6 ${detail ? "lg:grid-cols-[2.4fr_1fr]" : "grid-cols-1"}`}>
         <Card title="T-Box 그래프" subtitle="노드/엣지 클릭으로 상세 확인 · 마우스 휠 줌 · 드래그 이동">
-          <div className="h-[600px] rounded border border-slate-200 bg-slate-50">
+          <div className="h-[640px] rounded border border-slate-200 bg-slate-50">
             <ReactFlowProvider>
               <ReactFlow
                 nodes={initialNodes}
@@ -223,31 +223,25 @@ export default function DataModelPage() {
               </ReactFlow>
             </ReactFlowProvider>
           </div>
+
+          {/* 그래프 아래 안내 caption — 보고서 카드가 아니라 inline 설명 */}
+          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[12px] leading-relaxed text-stone-500">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+              <strong className="text-stone-700">Member · SalesAgent · Contract</strong> 라이프 풀 master / 장지 결손
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+              장지 결손이 만드는 비즈니스 질문 <strong className="text-stone-700">5건</strong>이 RFI로 자동 도출
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-stone-400" />
+              이 그래프 자체가 ERP팀에 전달되는 spec
+            </span>
+          </div>
         </Card>
 
-        <div className="space-y-4">
-          {!detail && (
-            <Card title="안내" subtitle="결손 노드/엣지를 클릭해주세요">
-              <ul className="space-y-2 text-sm text-slate-600">
-                <li className="flex items-start gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
-                  <span>
-                    <strong>Member, SalesAgent, Contract</strong> — 라이프엔 풀 master, 장지엔 결손
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
-                  <span>
-                    <strong>장지 결손</strong>이 만드는 비즈니스 질문 5가지를 RFI로 자동 도출
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
-                  <span>이 그래프 자체가 ERP팀에 전달되는 spec</span>
-                </li>
-              </ul>
-            </Card>
-          )}
+        {detail && (<div className="space-y-4">
 
           {detail?.kind === "class" && (
             <Card
@@ -326,6 +320,7 @@ export default function DataModelPage() {
             </Card>
           )}
         </div>
+        )}
       </section>
 
       <section className="mt-12">

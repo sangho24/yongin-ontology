@@ -140,11 +140,11 @@ export function NumberCell({
               </span>
             </button>
 
-            {/* Hover tooltip */}
+            {/* Hover tooltip — z-50으로 박스 외부에서도 보이게 */}
             {interactive && hover && lineage && (
               <span
                 role="tooltip"
-                className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-stone-200 bg-white px-3 py-2 text-[11px] leading-relaxed text-stone-700 shadow-lg fade-in"
+                className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-stone-200 bg-white px-3 py-2 text-[11px] leading-relaxed text-stone-700 shadow-lg fade-in"
               >
                 <span className="block font-semibold text-stone-900">{lineage.source}</span>
                 {lineage.formula && (

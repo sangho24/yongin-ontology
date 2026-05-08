@@ -144,7 +144,6 @@ export default function CemeteryPage() {
   return (
     <AppLayout
       pageTitle="장지 VC 분석 — 용인공원·YPL"
-      pageSubtitle="묘역 55,711기 객체 master · 계약자 master는 결손 (Root Cause·데이터 모델 참조)"
       narration={
         <div className="space-y-2">
           <p>
@@ -511,6 +510,13 @@ export default function CemeteryPage() {
           <SourceCaption>잠재가치 = 가용재고 행에 등급별 평균 묘역사용료 매핑 후 sum (proxy 추정)</SourceCaption>
           <SourceCaption>정체 단지 = 단지별 최근 계약 연도 ≤ 2021 + 가용재고 보유</SourceCaption>
         </div>
+        <p className="mt-6 max-w-3xl text-[11px] leading-relaxed text-stone-400">
+          ※ 묘역 55,711기 객체 master는 풀 수령됐으나 계약자 master는 결손 — 회원 LTV·재계약·영업사원 생산성 분석 불가. 자동 도출된 RFI는{" "}
+          <Link href="/data-model" className="text-[#007a8c] underline-offset-2 hover:underline">
+            Data Model
+          </Link>
+          {" "}페이지에서 확인.
+        </p>
       </section>
     </AppLayout>
   );

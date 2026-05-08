@@ -85,6 +85,33 @@
 
 ## 2026-05-08 · 2차 피드백
 
+### F13. Overview·상조 hero를 장지 스타일 4-카드 분리 박스로 통일
+- **요지**: 장지 VC의 4-StatCard 톤(분리된 박스)을 reference로 Overview·상조 hero도 같은 스타일로
+- **반영**:
+  - `src/app/page.tsx` Overview hero: `gap-px` 1px divider 컨테이너 → `gap-6 lg:grid-cols-4` 분리 박스 (4번째 카드 "자동 도출 RFI · T-Box" 추가, mint accent로 Data Model 진입) ✅
+  - `src/app/mutual/page.tsx` 상조 hero: NumberCell 3개 단일 박스 묶음 + 별도 StatCard 4개 → 분리된 4-카드 그리드(총 회원·lifecycle 매출·만기해약율·설계사 수, 모두 NumberCell + lineage) ✅
+  - 미사용 `StatCard`/`lineagePotentialFromMature` 제거
+
+### F14. 장지 VC pageSubtitle을 페이지 끝 disclaimer로 이동
+- **요지**: "묘역 55,711기 객체 master · 계약자 master는 결손..." 문구는 disclaimer 톤이라 상단이 아니라 페이지 끝에 작게
+- **반영**: `src/app/cemetery/page.tsx`
+  - AppLayout `pageSubtitle` 제거 ✅
+  - DATA LINEAGE 섹션 끝에 `text-[11px] text-stone-400` disclaimer 한 단락 추가 (Data Model 페이지 링크 포함) ✅
+
+### F15. T-Box 그래프 가로 확장 + 안내 카드 inline caption화
+- **요지**: 그래프가 더 길어야 함. 우측 안내 카드는 그래프 밑에 설명으로
+- **반영**: `src/app/data-model/page.tsx`
+  - 미선택 시 그래프 full width(`grid-cols-1`), detail 선택 시에만 `lg:grid-cols-[2.4fr_1fr]` split ✅
+  - 그래프 height 600 → 640 ✅
+  - 우측 안내 Card 폐기 → 그래프 아래 `mt-4 flex flex-wrap` inline caption 3개로 교체 (amber/red/stone dot + 핵심 설명) ✅
+
+### F16. NumberCell hover tooltip이 박스 경계에서 잘림 + mint card ⓘ 트리거 어색
+- **요지**: Overview의 mint 카드 안 ⓘ lineage 트리거가 어색. 다른 카드처럼 큰 숫자 자체에 hover. tooltip이 박스 넘어가도 잘 보이게.
+- **반영**:
+  - `src/components/NumberCell.tsx`: tooltip z-index `z-20 → z-50` ✅
+  - `src/app/page.tsx`: 라이프 채널 배부 비용 카드를 mint → white로 통일, 큰 숫자에 NumberCell 직접 적용 (ⓘ 트리거 폐기) ✅
+  - Overview hero `overflow-hidden` 제거하여 tooltip이 박스 경계 자유롭게 넘어가게 ✅
+
 ### F11. 장지 VC "가용재고 잠재가치" 정보 중복 제거
 - **요지**: WowCard(mint hero) + 핵심 KPI lineage row(NumberCell)에서 같은 숫자가 두 번 노출 + WowCard 톤이 너무 강조됨
 - **반영**:

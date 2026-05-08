@@ -120,14 +120,14 @@ export default function Home() {
         className="mb-8"
       />
 
-      {/* 1줄 헤드라인 — slim hero (NumberCell 적용) */}
+      {/* 1줄 헤드라인 — 4 KPI hero (분리 박스 톤, 모두 white) */}
       <section
         id="headline"
-        className="grid gap-px overflow-hidden rounded-md border border-stone-200/80 bg-stone-200/60 scroll-mt-32 md:grid-cols-3"
+        className="grid gap-6 scroll-mt-32 sm:grid-cols-2 lg:grid-cols-4"
       >
         {/* 카드 1: 라이프 lifecycle 매출 */}
-        <div className="bg-white p-6">
-          <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-stone-500">
+        <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
+          <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
             라이프 lifecycle 매출
           </div>
           <div className="mt-2.5">
@@ -136,16 +136,17 @@ export default function Home() {
               unit="원"
               lineage={lifecycleLineage}
               size="lg"
+              emphasis
             />
           </div>
-          <div className="mt-2 text-[12px] text-stone-500">
+          <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
             9,930명 회원의 가입~25년말 누적
           </div>
         </div>
 
         {/* 카드 2: 장지 가용재고 잠재가치 */}
-        <div className="bg-white p-6">
-          <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-stone-500">
+        <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
+          <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
             장지 가용재고 잠재가치
           </div>
           <div className="mt-2.5">
@@ -156,34 +157,48 @@ export default function Home() {
               size="lg"
             />
           </div>
-          <div className="mt-2 text-[12px] text-stone-500">
+          <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
             미판매 8,173 + 이장지 4,325기 (proxy)
           </div>
         </div>
 
-        {/* 카드 3: 라이프 채널 배부 비용 (mint card) */}
-        {/* mint card에서는 흰 박스 NumberCell이 톤을 깨므로 emphasis 미사용,
-            대신 숫자 옆 ⓘ 아이콘 hover 패턴이 아닌 큰 숫자 표기 유지 +
-            카드 하단에 작은 NumberCell(sm) lineage 트리거 노출 */}
-        <div className="bg-[#0095A9] p-6 text-white">
-          <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#b3dde0]">
+        {/* 카드 3: 라이프 채널 배부 비용 (white로 통일) */}
+        <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
+          <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
             라이프 채널 배부 비용 (FY25)
           </div>
-          <div className="headline mt-2.5 text-[26px] leading-none text-white tnum">
-            {(totalCost / 1000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}백만원
+          <div className="mt-2.5">
+            <NumberCell
+              value={totalCostKRW}
+              unit="원"
+              lineage={channelCostLineage}
+              size="lg"
+            />
           </div>
-          <div className="mt-2 flex items-center justify-between gap-2 text-[12px] text-[#ccebee]">
-            <span>인건비 · 지급수수료 · 광고선전비 합산</span>
-            <span className="shrink-0">
-              <NumberCell
-                value={totalCostKRW}
-                lineage={channelCostLineage}
-                size="sm"
-                formatter={() => "ⓘ lineage"}
-              />
-            </span>
+          <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
+            인건비 · 지급수수료 · 광고선전비 합산
           </div>
         </div>
+
+        {/* 카드 4: 자동 도출 RFI (Data Model 진입) */}
+        <Link
+          href="/data-model"
+          className="group rounded-md border border-[#0095A9]/30 bg-[#e6f4f6]/40 p-6 transition-colors hover:border-[#0095A9]/50 hover:bg-[#e6f4f6]"
+        >
+          <div className="flex items-center justify-between">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#007a8c]">
+              자동 도출 RFI · T-Box
+            </div>
+            <ArrowUpRight className="h-3.5 w-3.5 text-[#0095A9] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </div>
+          <div className="mt-2.5 flex items-baseline gap-1">
+            <span className="headline text-[24px] leading-none text-[#007a8c] tnum">5</span>
+            <span className="text-[12px] font-medium text-stone-500">건</span>
+          </div>
+          <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
+            13 Class · 26 Property · 결손 9건 → RFI 자동
+          </div>
+        </Link>
       </section>
 
       {/* 부서별 KPI 매핑 — 메인 컨텐츠 */}
