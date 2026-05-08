@@ -11,9 +11,8 @@ import deptKpi from "@/data/dept_kpi.json";
 import type { NumberLineage } from "@/types";
 
 const SECTIONS = [
-  { href: "/mutual", tag: "MUTUAL", title: "상조 VC 분석", desc: "회원 9,930명 lifecycle · 채널 LTV" },
-  { href: "/cemetery", tag: "CEMETERY", title: "장지 VC 분석", desc: "묘역 55,711기 · 잠재가치" },
-  { href: "/root-cause", tag: "ROOT-CAUSE", title: "Root Cause 분석", desc: "원인 가설 분해" },
+  { href: "/mutual", tag: "MUTUAL", title: "상조 VC 분석", desc: "회원 9,930명 lifecycle · 채널 LTV · Root Cause" },
+  { href: "/cemetery", tag: "CEMETERY", title: "장지 VC 분석", desc: "묘역 55,711기 · 잠재가치 · Root Cause" },
   { href: "/data-model", tag: "DATA-MODEL", title: "Data Model (T-Box)", desc: "결손 → RFI 자동 도출" },
 ];
 
@@ -124,7 +123,7 @@ export default function Home() {
       {/* 1줄 헤드라인 — slim hero (NumberCell 적용) */}
       <section
         id="headline"
-        className="grid gap-px overflow-hidden rounded-md border border-stone-200/80 bg-stone-200/60 md:grid-cols-3"
+        className="grid gap-px overflow-hidden rounded-md border border-stone-200/80 bg-stone-200/60 scroll-mt-32 md:grid-cols-3"
       >
         {/* 카드 1: 라이프 lifecycle 매출 */}
         <div className="bg-white p-6">

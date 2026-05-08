@@ -18,13 +18,75 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { AppLayout, SubNav } from "@/components/AppLayout";
 import { Card, StatCard, WowCard, InsightBox, SourceCaption } from "@/components/Card";
 import { NumberCell } from "@/components/NumberCell";
+import { ChannelActivityCostExplorer } from "@/components/ChannelActivityCostExplorer";
 import lifeKpi from "@/data/life_kpi.json";
 import deptKpi from "@/data/dept_kpi.json";
 import { autoUnit, formatPct } from "@/lib/format";
 import type { NumberLineage } from "@/types";
+
+// -----------------------------------------------------------------------------
+// Root Cause inline 가설 카드 (root-cause 페이지 H1~H4 컴팩트 버전)
+// LLM 분석·추천 액션 같은 고급 인터랙션은 root-cause 페이지에서만 — 본 페이지는
+// 사용자가 상조 VC 흐름 안에서 가설 시그널을 빠르게 파악할 수 있게 핵심만.
+// -----------------------------------------------------------------------------
+
+type InlineHypothesis = {
+  id: string;
+  title: string;
+  evidence: string;
+  signal: "high" | "medium" | "low";
+};
+
+function InlineHypothesisCard({
+  h,
+  defaultOpen,
+}: {
+  h: InlineHypothesis;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen ?? false);
+  const dotColor =
+    h.signal === "high" ? "bg-[#9a3412]" : h.signal === "medium" ? "bg-[#b45309]" : "bg-stone-400";
+  const signalLabel =
+    h.signal === "high" ? "STRONG" : h.signal === "medium" ? "MEDIUM" : "WEAK";
+  return (
+    <div className="overflow-hidden rounded-md border border-stone-200 bg-white transition-colors hover:border-stone-300">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-stone-50"
+      >
+        <span className={`h-2 w-2 shrink-0 rounded-full ${dotColor}`} />
+        <span className="w-8 text-[11px] font-semibold tracking-wider text-stone-500">{h.id}</span>
+        <div className="min-w-0 flex-1">
+          <div className="text-[13.5px] font-medium leading-snug text-stone-900">{h.title}</div>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-[10.5px] font-semibold tracking-wider text-stone-400">
+            {signalLabel}
+          </span>
+          {open ? (
+            <ChevronUp className="h-3.5 w-3.5 text-stone-400" />
+          ) : (
+            <ChevronDown className="h-3.5 w-3.5 text-stone-400" />
+          )}
+        </div>
+      </button>
+      {open && (
+        <div className="border-t border-stone-100 bg-stone-50/50 px-4 py-3 pl-[3.25rem] text-[12px] leading-relaxed text-stone-700">
+          <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-stone-400">
+            증거
+          </div>
+          {h.evidence}
+        </div>
+      )}
+    </div>
+  );
+}
 
 // 용인공원 mint 톤 + 절제된 강조
 const STATUS_COLOR: Record<string, string> = {
@@ -133,14 +195,19 @@ export default function MutualPage() {
           { id: "overview", label: "회원 KPI" },
           { id: "channel", label: "채널·코호트" },
           { id: "agents", label: "설계사" },
+          { id: "activity-cost", label: "채널별 활동원가" },
+          { id: "root-cause", label: "Root Cause" },
           { id: "department", label: "부서별 KPI" },
         ]}
       />
 
+      {/* Root Cause inline 가설 데이터 — 본 페이지 자체에서 정의 (root-cause 페이지와 별도) */}
+      {/* H1~H4: 라이프 영업손실 3년 연속 핵심 가설 */}
+
       {/* ===================================================================
            HERO — 핵심 KPI 3개 (NumberCell · lineage 부착)
          =================================================================== */}
-      <section id="overview" className="mt-10">
+      <section id="overview" className="mt-10 scroll-mt-32">
         <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
           <h2 className="section-h">핵심 KPI</h2>
           <span className="text-[11px] tracking-wider text-stone-400">
@@ -200,8 +267,8 @@ export default function MutualPage() {
       {/* ===================================================================
            채널 LTV · 회원상태 (mt-6 → mt-12, gap-4 → gap-8)
          =================================================================== */}
-      <section id="channel" className="mt-12 grid gap-8 lg:grid-cols-2">
-        <Card title="채널별 회원당 LTV" subtitle="평균 매출(원) 기준 · 호버하여 상세">
+      <section id="channel" className="mt-12 grid gap-8 scroll-mt-32 lg:grid-cols-2">
+        <Card title="채널별 회원당 LTV" subtitle="평균 매출(원) 기준">
           <ResponsiveContainer width="100%" height={260}>
             <BarChart
               data={channelChartData}
@@ -284,7 +351,7 @@ export default function MutualPage() {
       {/* ===================================================================
            설계사 · 채널별 만기율
          =================================================================== */}
-      <section id="agents" className="mt-12 grid gap-8 lg:grid-cols-2">
+      <section id="agents" className="mt-12 grid gap-8 scroll-mt-32 lg:grid-cols-2">
         <Card title="상위 10 설계사" subtitle={`전체 ${lifeKpi.salesAgentDistribution.totalAgents}명 · Top10이 매출 ${formatPct(lifeKpi.salesAgentDistribution.top10ShareOfRevenue)} · Gini ${lifeKpi.salesAgentDistribution.giniCoefficient}`}>
           <div className="overflow-hidden rounded border border-slate-200">
             <table className="w-full text-sm">
@@ -327,6 +394,77 @@ export default function MutualPage() {
       </section>
 
       {/* ===================================================================
+           NEW — 채널별 활동원가 (Phase 5C)
+           장지의 ActivityCostExplorer 채널 버전. ZoneSelector·NumberCell·
+           lineage 패널·FinanceActions 모두 동일하게 작동.
+         =================================================================== */}
+      <section id="activity-cost" className="mt-12 scroll-mt-32">
+        <ChannelActivityCostExplorer
+          side="mutual"
+          defaultChannelIds={["ch-offline"]}
+          title="채널별 활동원가"
+          subtitle="채널을 선택하면 매출·비용 항목과 lineage가 펼쳐집니다 · 다중 선택 가능"
+        />
+      </section>
+
+      {/* ===================================================================
+           NEW — Root Cause 가설 inline (Phase 5C)
+           본 페이지에서 가설 4개 시그널·증거만 컴팩트하게 노출.
+           LLM 분석·추천 액션 같은 풀 인터랙션은 root-cause 페이지에서.
+         =================================================================== */}
+      <section id="root-cause" className="mt-12 scroll-mt-32">
+        <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
+          <h2 className="section-h">원인 가설 — 상조 VC 영업손실 3년 연속</h2>
+          <span className="text-[11px] tracking-wider text-stone-400">CLICK 카드 → 증거 펼침</span>
+        </div>
+        <p className="mb-6 max-w-3xl text-[13px] leading-relaxed text-stone-600">
+          매출은 23~25년 21→36→46억으로 성장 중이나 영업손실이 3년 연속 누적. 가설 4개 — 회비정산차익
+          회계 흐름·코호트 만기율·채널 LTV 격차·설계사 집중도 — 가 강한·중간 신호로 데이터에서 관측됨.
+        </p>
+        <div className="space-y-2.5">
+          {(
+            [
+              {
+                id: "H1",
+                title:
+                  "회비정산차익이 영업외수익으로 흡수되어 영업이익 view에서 손실 과대 표시",
+                evidence: `만기해약 ${lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명의 정산차익 ${autoUnit(lifeKpi.wowMetrics.potentialFromMature)} → 영업외 인식. 매출의 ${formatPct(lifeKpi.memberStatus[0].shareOfRevenue)} 비중. 조정후이익(영업이익+회비정산차익) view에서 재해석 필요.`,
+                signal: "high" as const,
+              },
+              {
+                id: "H2",
+                title: "최근 가입 코호트의 만기율 급등 — 단기 수익실현·해약 패턴",
+                evidence:
+                  "2022~2025년 만기율 72%·96%·88%·88% (2018~2020년 1.5~4% 대비 약 30배). 신규 가입자가 짧은 주기로 만기 처리되는 구조 — 영업비용 회수 전 매출이 영업외로 이전.",
+                signal: "high" as const,
+              },
+              {
+                id: "H3",
+                title: "온라인 채널의 회원당 매출이 오프라인의 약 3% — 광고 ROI 의심",
+                evidence: `온라인 LTV ${autoUnit(lifeKpi.wowMetrics.ltvByChannel.온라인)} vs 오프라인 ${autoUnit(lifeKpi.wowMetrics.ltvByChannel.오프라인)} (격차 약 34배). 광고선전비 전액(약 10억)이 온라인 신규 가입자 driver로 귀속되나 매출 회수율 매우 낮음.`,
+                signal: "medium" as const,
+              },
+              {
+                id: "H4",
+                title: "설계사 매출 집중도(Gini 0.69) — 하위 설계사 생산성·이탈 risk",
+                evidence: `전체 ${lifeKpi.salesAgentDistribution.totalAgents}명 중 Top10이 매출 ${formatPct(lifeKpi.salesAgentDistribution.top10ShareOfRevenue)} 점유. 하위 설계사 생산성 저하·이탈 시 단기 매출 충격 큼.`,
+                signal: "medium" as const,
+              },
+            ] satisfies InlineHypothesis[]
+          ).map((h, i) => (
+            <InlineHypothesisCard key={h.id} h={h} defaultOpen={i === 0} />
+          ))}
+        </div>
+        <div className="mt-4 text-[11px] tracking-wide text-stone-400">
+          상세 분해(채널 LTV 차트·코호트 만기율·산점도·LLM 분석·추천 액션)는{" "}
+          <a href="/root-cause" className="text-[#0095A9] underline-offset-2 hover:underline">
+            Root Cause 페이지
+          </a>
+          에서 확인.
+        </div>
+      </section>
+
+      {/* ===================================================================
            WowCard · InsightBox
          =================================================================== */}
       <section className="mt-12">
@@ -348,7 +486,7 @@ export default function MutualPage() {
       {/* ===================================================================
            NEW — 부서별 KPI 매핑 (상조 VC 4개 부서)
          =================================================================== */}
-      <section id="department" className="mt-12">
+      <section id="department" className="mt-12 scroll-mt-32">
         <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
           <h2 className="section-h">부서별 KPI 매핑 — 상조 VC</h2>
           <span className="text-[11px] tracking-wider text-stone-400">PPT 23p</span>

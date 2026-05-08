@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, ReactNode } from "react";
@@ -7,18 +8,17 @@ import {
   LayoutDashboard,
   Users,
   MapPin,
-  GitBranch,
   Database,
   Search,
   type LucideIcon,
 } from "lucide-react";
 
 // 경로별 아이콘 매핑 (Dribbble Shopeers 톤)
+// Root Cause는 사이드바에서 제거 — 각 VC 페이지의 SubNav 하위 기능으로 통합
 const ICON_MAP: Record<string, LucideIcon> = {
   "/": LayoutDashboard,
   "/mutual": Users,
   "/cemetery": MapPin,
-  "/root-cause": GitBranch,
   "/data-model": Database,
 };
 
@@ -29,7 +29,6 @@ const NAV: { group: string; items: { path: string; label: string; sub?: string; 
       { path: "/", label: "Overview" },
       { path: "/mutual", label: "상조 VC", sub: "라이프 · 회원 master" },
       { path: "/cemetery", label: "장지 VC", sub: "용인공원·YPL · 객체 master" },
-      { path: "/root-cause", label: "Root Cause", sub: "원인 분해" },
     ],
   },
   {
@@ -72,14 +71,21 @@ export function AppLayout({
     <div className="min-h-screen bg-[#fafaf7] text-stone-900">
       {/* Sidebar */}
       <aside className="fixed inset-y-0 left-0 z-20 w-56 border-r border-stone-200/80 bg-white">
-        <div className="flex h-16 items-center gap-2.5 border-b border-stone-100 px-5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-[#0095A9] text-[10px] font-semibold text-white tracking-wider">
-            YP
-          </div>
-          <div className="leading-tight">
-            <div className="text-[13px] font-semibold tracking-tight text-stone-900">용인공원 그룹</div>
-            <div className="text-[10px] tracking-[0.08em] text-stone-400 uppercase mt-0.5">Cost Mgmt BI</div>
-          </div>
+        <div className="flex h-16 items-center gap-3 border-b border-stone-100 px-5">
+          <Link href="/" className="flex items-center gap-3" aria-label="용인공원 그룹 홈">
+            <Image
+              src="/logo.png"
+              alt="용인공원 YONGIN MEMORIAL PARK"
+              width={36}
+              height={36}
+              priority
+              className="h-9 w-auto object-contain"
+            />
+            <div className="leading-tight">
+              <div className="text-[12px] font-semibold tracking-tight text-stone-900">용인공원 그룹</div>
+              <div className="text-[10px] tracking-[0.08em] text-stone-400 uppercase mt-0.5">Cost Mgmt BI</div>
+            </div>
+          </Link>
         </div>
 
         <nav className="px-3 py-5">
@@ -239,6 +245,21 @@ interface SubNavProps {
 }
 
 export function SubNav({ items, activeId, onSelect, className }: SubNavProps) {
+  // SubNav 기본 동작: button 클릭 시 해당 id의 섹션으로 anchor scroll
+  // onSelect 외부에서 override하면 그것만 호출
+  const handleSelect = (id: string) => {
+    if (onSelect) {
+      onSelect(id);
+      return;
+    }
+    if (typeof document !== "undefined") {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
+
   return (
     <div
       className={`sticky top-16 z-[5] -mx-12 border-b border-stone-200/80 bg-[#fafaf7]/85 px-12 backdrop-blur-md ${
@@ -278,7 +299,7 @@ export function SubNav({ items, activeId, onSelect, className }: SubNavProps) {
             <button
               key={item.id}
               type="button"
-              onClick={() => onSelect?.(item.id)}
+              onClick={() => handleSelect(item.id)}
               className={baseCls}
             >
               {item.label}

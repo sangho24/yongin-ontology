@@ -19,3 +19,11 @@
 - [Phase 3A · 상조 VC 보강] (2026-05-08) — 핵심 KPI에 NumberCell 적용, 부서별 KPI 그리드 추가, spacing 보강(gap-3→gap-6, mt-6→mt-12).
 - [Phase 3C · Overview 정비] (2026-05-08) — 상단 hero 3카드에 NumberCell 적용, 부서 KPI 카드 클릭 시 /dept/[id] 라우트 link, SubNav, spacing 보강(gap-4→gap-6, p-3→p-4).
 - [Build 검증] (2026-05-08) — `next build` 성공. 5개 라우트 모두 정적 prerender (○ Static): `/` · `/cemetery` · `/data-model` · `/mutual` · `/root-cause`. tsc 사전 존재 에러(next/link declaration·recharts Formatter)는 `ignoreBuildErrors: true`로 통과.
+
+## 2026-05-08 · 1차 피드백 반영 (Phase 5)
+
+- [Phase 5 · 메인 통합] (2026-05-08) — 사이드바 로고 이미지(`public/logo.png`) 적용, 사이드바 NAV에서 Root Cause 항목 제거, SubNav default scroll behavior 내장, `tbox.json` askTo 5건 PPT 조직도 기준으로 수정, `/dept/[id]` 라우트 신규(준비중 안내), `FEEDBACK.md` 신규.
+- [Phase 5D · 장지·Overview 보강] (2026-05-08) — cemetery 페이지: SubNav에 Root Cause 추가, Z1~Z4 가설 inline 섹션 신규, 호버 문구 제거(`subtitle="설묘·계약·예약·이장·미판매"`), 모든 `<section id>`에 `scroll-mt-32`. Overview: SECTIONS 배열에서 root-cause 제거, headline 섹션 `scroll-mt-32`.
+- [Phase 5A · Data Model 강화] (2026-05-08) — MiniMap nodeColor·strokeWidth로 T-Box 노드 가시화, Core Message 섹션 삭제, "필요한 RFI 미리보기" 섹션 추가(5개 RFI mock 표 + askTo 표기).
+- [Phase 5B · Root Cause 강화] (2026-05-08) — 상단 3 StatCard NumberCell + 원장/ERP 버튼, 가설 카드별 LLM 원인 분석·추천 액션 토글 mock, 산점도 단지 라벨, Next Steps 섹션 폐기 후 InsightBox로 흡수.
+- [Phase 5C · 상조 채널별 활동원가 + Root Cause inline] (2026-05-08) — channel_activity_cost.json·ChannelActivityCostExplorer 신규, 상조 페이지에 채널별 활동원가/Root Cause 가설(inline) 섹션 추가, SubNav 6개로 확장(Root Cause 포함), 호버 문구 제거, scroll-mt 보강.

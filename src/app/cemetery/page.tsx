@@ -71,6 +71,41 @@ const CEMETERY_DEPT_TAGS: Record<string, "관련" | "전사 공통"> = {
   "customer-care": "전사 공통",
 };
 
+// Root Cause — 장지 가설 (root-cause page와 동일한 정의이지만 inline 표시용 간단 버전)
+type Hypothesis = {
+  id: string;
+  title: string;
+  evidence: string;
+  signal: "high" | "medium" | "low";
+};
+
+const ZONE_HYPOTHESES: Hypothesis[] = [
+  {
+    id: "Z1",
+    title: "정체단지 잠재가치 누적 — 영업 우선순위 미설정",
+    evidence: "2022년 이후 계약 없는 정체 단지의 가용재고가 전체 가용재고의 약 20%. 단지별 전략 부재로 잠재가치가 자연 실현되지 못함.",
+    signal: "high",
+  },
+  {
+    id: "Z2",
+    title: "이장지 4,325기의 재분양 자원이 활용 안 됨",
+    evidence: "이장지 잠재가치 약 660억원, 전체 가용재고 잠재의 29% 비중. 이장 history 추적 부재로 재분양 candidates 식별 불가.",
+    signal: "high",
+  },
+  {
+    id: "Z3",
+    title: "단지·등급별 평균가 격차 큼 — 가격조정 여지",
+    evidence: "등급 F 평균가 vs 등급 A 평균가 격차 다수 단지에서 관찰. 시장 수요·등급 조정·번호변경 통한 분양 활성화 여지 존재.",
+    signal: "medium",
+  },
+  {
+    id: "Z4",
+    title: "계약자 master 부재 → 회원 LTV·재계약·가족 cross-sell 분석 불가",
+    evidence: "묘역 raw 27열에 계약번호는 77.5%이지만 계약자 정보 컬럼 0열. RFI r74·NEW-001로 자동 도출됨.",
+    signal: "high",
+  },
+];
+
 export default function CemeteryPage() {
   const [hoveredStatus, setHoveredStatus] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<string>("overview");
@@ -124,6 +159,7 @@ export default function CemeteryPage() {
           { id: "overview", label: "묘역 현황" },
           { id: "potential", label: "잠재가치" },
           { id: "activity-cost", label: "구역별 활동원가" },
+          { id: "root-cause", label: "Root Cause" },
           { id: "department", label: "부서별 KPI" },
         ]}
         activeId={activeSection}
@@ -131,7 +167,7 @@ export default function CemeteryPage() {
       />
 
       {/* ───────────────────────── 묘역 현황 ───────────────────────── */}
-      <section id="overview" className="mt-8 grid gap-6 sm:grid-cols-4">
+      <section id="overview" className="mt-8 grid gap-6 scroll-mt-32 sm:grid-cols-4">
         <StatCard label="총 묘역" value={zoneKpi.meta.totalZones.toLocaleString() + "기"} />
         <StatCard
           label="분양완료율"
@@ -151,7 +187,7 @@ export default function CemeteryPage() {
       </section>
 
       {/* ───────────────────────── 잠재가치 ───────────────────────── */}
-      <section id="potential" className="mt-12">
+      <section id="potential" className="mt-12 scroll-mt-32">
         <WowCard
           variant="mint"
           label="가용재고 잠재가치"
@@ -189,7 +225,7 @@ export default function CemeteryPage() {
       </section>
 
       <section className="mt-12 grid gap-8 lg:grid-cols-2">
-        <Card title="분양상태 분포" subtitle="호버하여 카테고리 확인">
+        <Card title="분양상태 분포" subtitle="설묘·계약·예약·이장·미판매">
           <ResponsiveContainer width="100%" height={280}>
             <PieChart>
               <Pie
@@ -303,7 +339,7 @@ export default function CemeteryPage() {
       </section>
 
       {/* ───────────────────────── 구역별 활동원가 (핵심 인터랙션) ───────────────────────── */}
-      <section id="activity-cost" className="mt-12">
+      <section id="activity-cost" className="mt-12 scroll-mt-32">
         <ActivityCostExplorer
           side="cemetery"
           defaultZoneIds={["honor-royal-1R"]}
@@ -318,8 +354,56 @@ export default function CemeteryPage() {
         </InsightBox>
       </section>
 
+      {/* ───────────────────────── Root Cause — 장지 가설 inline ───────────────────────── */}
+      <section id="root-cause" className="mt-12 scroll-mt-32">
+        <div className="mb-5 flex items-baseline justify-between border-b border-stone-200 pb-2">
+          <h2 className="section-h">원인 가설 — 장지 VC 정체·미활용 자원</h2>
+          <span className="text-[11px] tracking-wider text-stone-400">26.04 기준</span>
+        </div>
+        <p className="mb-6 max-w-3xl text-[13px] leading-relaxed text-stone-600">
+          잠재가치는 충분하나 정체 단지·이장지 미활용·계약자 master 부재로 PI 깊이가 제한됨. 강한 신호 위주 가설 4개.
+        </p>
+        <div className="grid gap-4">
+          {ZONE_HYPOTHESES.map((h) => {
+            const dotColor =
+              h.signal === "high"
+                ? "bg-[#9a3412]"
+                : h.signal === "medium"
+                  ? "bg-[#b45309]"
+                  : "bg-stone-400";
+            const signalLabel =
+              h.signal === "high" ? "STRONG" : h.signal === "medium" ? "MEDIUM" : "WEAK";
+            return (
+              <div
+                key={h.id}
+                className="rounded-md border border-stone-200/80 bg-white px-5 py-4 transition-colors hover:border-stone-300"
+              >
+                <div className="flex items-start gap-3">
+                  <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${dotColor}`} />
+                  <span className="mt-0.5 w-8 shrink-0 text-[11px] font-semibold tracking-wider text-stone-500">
+                    {h.id}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[14px] font-medium text-stone-900">{h.title}</div>
+                    <div className="mt-2 text-[12px] leading-relaxed text-stone-600">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-stone-400">
+                        증거
+                      </span>{" "}
+                      {h.evidence}
+                    </div>
+                  </div>
+                  <span className="shrink-0 text-[10px] font-semibold tracking-wider text-stone-400">
+                    {signalLabel}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
       {/* ───────────────────────── 부서별 KPI 매핑 ───────────────────────── */}
-      <section id="department" className="mt-12">
+      <section id="department" className="mt-12 scroll-mt-32">
         <div className="mb-5 flex items-baseline justify-between border-b border-stone-200 pb-2">
           <h2 className="section-h">부서별 KPI 매핑</h2>
           <span className="text-[11px] tracking-wider text-stone-400">PPT 23p · 장지 VC 매핑</span>

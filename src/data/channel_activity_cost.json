@@ -1,0 +1,375 @@
+{
+  "meta": {
+    "extractedAt": "2026-05-08",
+    "fiscalYear": 2025,
+    "unit": "원",
+    "note": "상조 VC 채널 단위 활동원가 mock seed. dept_kpi.json channelCostAlloc(천원 단위) × 1000 환산 + life_kpi.json channelMatrix 기반 매출 정합. 일부 항목 proxy 추정 포함."
+  },
+  "channelGroups": [
+    {
+      "category": "외부 채널",
+      "side": "mutual",
+      "subZones": [
+        { "id": "ch-corp", "code": "CORP", "label": "법인", "side": "mutual", "category": "외부 채널" },
+        { "id": "ch-online", "code": "ONL", "label": "온라인", "side": "mutual", "category": "외부 채널" },
+        { "id": "ch-offline", "code": "OFF", "label": "오프라인", "side": "mutual", "category": "외부 채널" }
+      ]
+    },
+    {
+      "category": "기타",
+      "side": "mutual",
+      "subZones": [
+        { "id": "ch-etc", "code": "ETC", "label": "기타", "side": "mutual", "category": "기타" }
+      ]
+    }
+  ],
+  "activityCosts": [
+    {
+      "zoneId": "ch-offline",
+      "category": "외부 채널",
+      "side": "mutual",
+      "fiscalYear": 2025,
+      "items": [
+        {
+          "account": "상품매출",
+          "kind": "revenue",
+          "amount": 27673363300,
+          "series": [2150000000, 2080000000, 2310000000, 2270000000, 2280000000, 2330000000, 2340000000, 2240000000, 2330000000, 2360000000, 2310000000, 2273363300],
+          "source": "ledger",
+          "lineageId": "ln-rev-offline-product"
+        },
+        {
+          "account": "상향매출",
+          "kind": "revenue",
+          "amount": 1840000000,
+          "series": [142000000, 138000000, 158000000, 152000000, 155000000, 160000000, 156000000, 148000000, 155000000, 159000000, 154000000, 163000000],
+          "driver": "행사 건당 부가매출",
+          "source": "allocated"
+        },
+        {
+          "account": "장지수수료",
+          "kind": "revenue",
+          "amount": 720000000,
+          "series": [55000000, 53000000, 62000000, 60000000, 61000000, 63000000, 61000000, 58000000, 60000000, 62000000, 61000000, 64000000],
+          "driver": "장지 알선 건수",
+          "source": "allocated"
+        },
+        {
+          "account": "법인장례전환",
+          "kind": "revenue",
+          "amount": 280000000,
+          "series": [22000000, 21000000, 24000000, 23000000, 23500000, 24500000, 23800000, 22500000, 23500000, 24000000, 23700000, 24500000],
+          "driver": "법인→오프라인 행사 전환 건",
+          "source": "estimated"
+        },
+        {
+          "account": "인건비",
+          "kind": "cost",
+          "amount": 1399472000,
+          "series": [115000000, 115000000, 116500000, 116500000, 116500000, 117000000, 117000000, 116500000, 117000000, 117500000, 117000000, 117972000],
+          "driver": "부서별 활동·채널 직접/공통 배부",
+          "driverShare": 0.74,
+          "source": "allocated",
+          "lineageId": "ln-cost-offline-인건비"
+        },
+        {
+          "account": "지급수수료",
+          "kind": "cost",
+          "amount": 2219045000,
+          "series": [180000000, 175000000, 192000000, 188000000, 189000000, 192000000, 189000000, 182000000, 188000000, 191000000, 187000000, 166045000],
+          "driver": "행사수수료(고객명 직접) + 채널 운영비 안분",
+          "driverShare": 0.61,
+          "source": "allocated"
+        },
+        {
+          "account": "DB운영비",
+          "kind": "cost",
+          "amount": 125487000,
+          "series": [10200000, 10300000, 10500000, 10450000, 10470000, 10500000, 10460000, 10380000, 10460000, 10500000, 10450000, 10817000],
+          "driver": "고객상담팀 DB수 비례",
+          "driverShare": 0.96,
+          "source": "allocated"
+        },
+        {
+          "account": "고객상담비",
+          "kind": "cost",
+          "amount": 100370000,
+          "series": [8200000, 8250000, 8400000, 8350000, 8360000, 8400000, 8370000, 8300000, 8350000, 8400000, 8360000, 8630000],
+          "driver": "행사매출 비례(행사관리·행사서비스)",
+          "driverShare": 0.86,
+          "source": "allocated"
+        }
+      ]
+    },
+    {
+      "zoneId": "ch-online",
+      "category": "외부 채널",
+      "side": "mutual",
+      "fiscalYear": 2025,
+      "items": [
+        {
+          "account": "상품매출",
+          "kind": "revenue",
+          "amount": 37534000,
+          "series": [2900000, 2780000, 3200000, 3100000, 3120000, 3200000, 3150000, 3000000, 3120000, 3170000, 3130000, 3664000],
+          "source": "ledger",
+          "lineageId": "ln-rev-online-product"
+        },
+        {
+          "account": "상향매출",
+          "kind": "revenue",
+          "amount": 4200000,
+          "series": [320000, 310000, 360000, 350000, 350000, 360000, 350000, 340000, 350000, 355000, 350000, 405000],
+          "driver": "행사 건당 부가매출",
+          "source": "estimated"
+        },
+        {
+          "account": "장지수수료",
+          "kind": "revenue",
+          "amount": 1100000,
+          "series": [85000, 80000, 95000, 90000, 92000, 95000, 92000, 88000, 92000, 94000, 93000, 104000],
+          "driver": "장지 알선 건수",
+          "source": "estimated"
+        },
+        {
+          "account": "인건비",
+          "kind": "cost",
+          "amount": 109509000,
+          "series": [9000000, 9000000, 9100000, 9100000, 9100000, 9200000, 9150000, 9100000, 9150000, 9200000, 9150000, 9259000],
+          "driver": "온라인마케팅팀 직접 + 공통 안분",
+          "driverShare": 0.40,
+          "source": "allocated",
+          "lineageId": "ln-cost-online-인건비"
+        },
+        {
+          "account": "지급수수료",
+          "kind": "cost",
+          "amount": 179037000,
+          "series": [14500000, 14200000, 15500000, 15200000, 15300000, 15500000, 15300000, 14700000, 15200000, 15500000, 15200000, 12937000],
+          "driver": "홈페이지 유지비·결제대행수수료",
+          "driverShare": 0.14,
+          "source": "allocated"
+        },
+        {
+          "account": "광고선전비",
+          "kind": "cost",
+          "amount": 1006611000,
+          "series": [82000000, 80500000, 87000000, 85500000, 86000000, 87500000, 86000000, 83000000, 86000000, 87500000, 86000000, 79611000],
+          "driver": "온라인 채널 신규 가입자 수 비례",
+          "driverShare": 1.00,
+          "source": "allocated",
+          "lineageId": "ln-cost-online-광고선전비"
+        },
+        {
+          "account": "DB운영비",
+          "kind": "cost",
+          "amount": 5753000,
+          "series": [470000, 470000, 480000, 480000, 480000, 480000, 480000, 478000, 480000, 480000, 478000, 497000],
+          "driver": "고객상담팀 DB수 비례",
+          "driverShare": 0.04,
+          "source": "allocated"
+        },
+        {
+          "account": "고객상담비",
+          "kind": "cost",
+          "amount": 6212000,
+          "series": [510000, 505000, 520000, 518000, 518000, 520000, 518000, 510000, 518000, 520000, 518000, 537000],
+          "driver": "행사매출 비례",
+          "driverShare": 0.05,
+          "source": "allocated"
+        }
+      ]
+    },
+    {
+      "zoneId": "ch-corp",
+      "category": "외부 채널",
+      "side": "mutual",
+      "fiscalYear": 2025,
+      "items": [
+        {
+          "account": "상품매출",
+          "kind": "revenue",
+          "amount": 54066700,
+          "series": [4200000, 4050000, 4600000, 4500000, 4500000, 4630000, 4570000, 4350000, 4500000, 4570000, 4500000, 5096700],
+          "source": "ledger",
+          "lineageId": "ln-rev-corp-product"
+        },
+        {
+          "account": "법인장례전환",
+          "kind": "revenue",
+          "amount": 320000000,
+          "series": [25000000, 24000000, 27500000, 26500000, 26800000, 27500000, 27000000, 25800000, 26800000, 27500000, 27000000, 28600000],
+          "driver": "법인 가입자 행사 전환율",
+          "source": "estimated"
+        },
+        {
+          "account": "장지수수료",
+          "kind": "revenue",
+          "amount": 95000000,
+          "series": [7400000, 7150000, 8200000, 7900000, 8000000, 8200000, 8050000, 7700000, 8000000, 8200000, 8050000, 8150000],
+          "driver": "법인 알선 장지 건수",
+          "source": "estimated"
+        },
+        {
+          "account": "인건비",
+          "kind": "cost",
+          "amount": 386497000,
+          "series": [31700000, 31700000, 32200000, 32100000, 32200000, 32300000, 32200000, 32000000, 32200000, 32400000, 32200000, 33297000],
+          "driver": "법인영업팀 직접 + 공통 안분",
+          "driverShare": 0.27,
+          "source": "allocated",
+          "lineageId": "ln-cost-corp-인건비"
+        },
+        {
+          "account": "지급수수료",
+          "kind": "cost",
+          "amount": 717813000,
+          "series": [58500000, 57000000, 62000000, 61000000, 61300000, 62000000, 61500000, 59000000, 61300000, 62000000, 61300000, 50913000],
+          "driver": "법인장례 알선수수료(고객명 직접)",
+          "driverShare": 0.39,
+          "source": "ledger"
+        },
+        {
+          "account": "DB운영비",
+          "kind": "cost",
+          "amount": 385000,
+          "series": [31000, 31000, 32500, 32000, 32200, 32500, 32200, 32000, 32200, 32500, 32200, 32500],
+          "driver": "고객상담팀 DB수 비례",
+          "driverShare": 0.003,
+          "source": "allocated"
+        },
+        {
+          "account": "고객상담비",
+          "kind": "cost",
+          "amount": 27815000,
+          "series": [2270000, 2230000, 2330000, 2320000, 2320000, 2330000, 2320000, 2300000, 2320000, 2330000, 2320000, 2425000],
+          "driver": "행사매출 비례",
+          "driverShare": 0.24,
+          "source": "allocated"
+        }
+      ]
+    },
+    {
+      "zoneId": "ch-etc",
+      "category": "기타",
+      "side": "mutual",
+      "fiscalYear": 2025,
+      "items": [
+        {
+          "account": "기타수입",
+          "kind": "revenue",
+          "amount": 18500000,
+          "series": [1450000, 1400000, 1580000, 1530000, 1540000, 1580000, 1550000, 1480000, 1540000, 1580000, 1550000, 1720000],
+          "driver": "회비정산차익 외 잡수입",
+          "source": "estimated"
+        },
+        {
+          "account": "지급수수료",
+          "kind": "cost",
+          "amount": 21786000,
+          "series": [1750000, 1720000, 1850000, 1820000, 1820000, 1850000, 1820000, 1780000, 1820000, 1850000, 1820000, 1886000],
+          "driver": "공통 운영비 잔여",
+          "driverShare": 1.00,
+          "source": "allocated"
+        }
+      ]
+    }
+  ],
+  "lineages": {
+    "ln-rev-offline-product": {
+      "source": "라이프_회원DB_backdata.xlsx / 채널=오프라인 매출합계",
+      "formula": "Σ 매출합계 (channel='오프라인', 9,467명)",
+      "verified": true,
+      "unit": "원",
+      "asOf": "2025-12-31",
+      "steps": [
+        { "label": "회원 master 추출", "rowCount": 9930 },
+        { "label": "채널=오프라인 필터(공백 normalize 포함)", "rowCount": 9467 },
+        { "label": "매출합계 sum", "amount": 27673363300 }
+      ],
+      "notes": "lifecycle 누적 매출 — FY25 단년 행사매출 ≠ 본 수치. 채널 라벨 'offline'/'오프라인 ' 통합 처리."
+    },
+    "ln-rev-online-product": {
+      "source": "라이프_회원DB_backdata.xlsx / 채널=온라인 매출합계",
+      "formula": "Σ 매출합계 (channel='온라인', 434명)",
+      "verified": true,
+      "unit": "원",
+      "asOf": "2025-12-31",
+      "steps": [
+        { "label": "채널=온라인 필터", "rowCount": 434 },
+        { "label": "매출합계 sum", "amount": 37534000 }
+      ],
+      "notes": "온라인 회원당 매출 약 86,484원으로 오프라인 대비 약 3% 수준 — 광고 ROI 재검토 근거."
+    },
+    "ln-rev-corp-product": {
+      "source": "라이프_회원DB_backdata.xlsx / 채널=법인 매출합계",
+      "formula": "Σ 매출합계 (channel='법인', 29명)",
+      "verified": true,
+      "unit": "원",
+      "asOf": "2025-12-31",
+      "steps": [
+        { "label": "채널=법인 필터", "rowCount": 29 },
+        { "label": "매출합계 sum", "amount": 54066700 }
+      ],
+      "notes": "회원수 적으나 행사 전환 시 법인장례 매출이 별도 계상."
+    },
+    "ln-cost-offline-인건비": {
+      "source": "dept_kpi.json / channelCostAlloc 인건비 row · 부서별 활동 배부",
+      "formula": "Σ(부서별 인건비 × 채널 배부 share)",
+      "verified": false,
+      "unit": "원",
+      "asOf": "2025-12-31",
+      "steps": [
+        { "label": "공통배부(CEO·경영지원·재무 등)", "amount": 864402000 },
+        { "label": "마케팅팀 직접", "amount": 309213000 },
+        { "label": "DB수 비례(고객상담)", "amount": 125487000 },
+        { "label": "행사매출 비례(행사관리·서비스)", "amount": 100370000 },
+        { "label": "오프라인 인건비 합계", "amount": 1399472000 }
+      ],
+      "notes": "Driver 정의 호석쌤 인터뷰 + 상조ERP설계 17~20열. 부서·채널 매트릭스 정밀 검증 RFI 필요."
+    },
+    "ln-cost-online-인건비": {
+      "source": "dept_kpi.json / channelCostAlloc 인건비 row",
+      "formula": "Σ(부서별 인건비 × 온라인 share)",
+      "verified": false,
+      "unit": "원",
+      "asOf": "2025-12-31",
+      "steps": [
+        { "label": "공통배부", "amount": 53497000 },
+        { "label": "온라인마케팅팀 직접", "amount": 44047000 },
+        { "label": "DB수 비례", "amount": 5753000 },
+        { "label": "행사매출 비례", "amount": 6212000 },
+        { "label": "온라인 인건비 합계", "amount": 109509000 }
+      ],
+      "notes": "온라인마케팅팀 직접 배부분과 공통 안분의 합. DB수 비례는 고객상담 활동 기준."
+    },
+    "ln-cost-online-광고선전비": {
+      "source": "라이프 ERP / 광고선전비 계정 (온라인 신규 가입자 driver)",
+      "formula": "광고선전비 100% × 온라인 신규 가입자 수 비례",
+      "verified": false,
+      "unit": "원",
+      "asOf": "2025-12-31",
+      "steps": [
+        { "label": "광고선전비 총액", "amount": 1006611000 },
+        { "label": "Driver: 온라인 채널 신규 가입자 비례", "detail": "온유프리·온유상조 광고 모두 온라인 귀속" },
+        { "label": "온라인 광고선전비", "amount": 1006611000 }
+      ],
+      "notes": "광고선전비는 전액 온라인 채널로 귀속(온유프리·온유상조 브랜드 광고 모두 온라인 신규 가입자 유도용). 온라인 매출 37,534천원 대비 광고비 1,006,611천원 = ROI 0.04 (음수 영업기여)."
+    },
+    "ln-cost-corp-인건비": {
+      "source": "dept_kpi.json / channelCostAlloc 인건비 row",
+      "formula": "Σ(부서별 인건비 × 법인 share)",
+      "verified": false,
+      "unit": "원",
+      "asOf": "2025-12-31",
+      "steps": [
+        { "label": "공통배부", "amount": 239552000 },
+        { "label": "법인영업팀 직접", "amount": 118745000 },
+        { "label": "DB수 비례", "amount": 385000 },
+        { "label": "행사매출 비례", "amount": 27815000 },
+        { "label": "법인 인건비 합계", "amount": 386497000 }
+      ],
+      "notes": "법인영업팀 직접 + 공통 안분. 법인 회원 29명 대비 인건비 비중이 매우 큼 — 회원 자체 매출보다 법인장례전환·장지수수료가 핵심."
+    }
+  }
+}
