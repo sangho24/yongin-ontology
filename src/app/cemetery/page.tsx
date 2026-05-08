@@ -14,9 +14,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Sparkles } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, GitBranch, Sparkles } from "lucide-react";
 import { AppLayout, SubNav } from "@/components/AppLayout";
-import { Card, StatCard, WowCard, InsightBox, SourceCaption } from "@/components/Card";
+import { Card, StatCard, InsightBox, SourceCaption } from "@/components/Card";
 import { NumberCell } from "@/components/NumberCell";
 import { ActivityCostExplorer } from "@/components/ActivityCostExplorer";
 import zoneKpi from "@/data/zone_kpi.json";
@@ -186,31 +187,22 @@ export default function CemeteryPage() {
         <StatCard label="평균 묘역사용료" value={autoUnit(zoneKpi.potentialValue.avgPriceOverall)} />
       </section>
 
-      {/* ───────────────────────── 잠재가치 ───────────────────────── */}
+      {/* ───────────────────────── 잠재가치 (NumberCell hero · lineage 클릭 가능) ───────────────────────── */}
       <section id="potential" className="mt-12 scroll-mt-32">
-        <WowCard
-          variant="mint"
-          label="가용재고 잠재가치"
-          value={autoUnit(zoneKpi.wowMetrics.potentialFromAvailable)}
-          sub={`Top 단지 = ${zoneKpi.wowMetrics.topPotentialDistrict?.district} (${autoUnit(zoneKpi.wowMetrics.topPotentialDistrict?.potentialValue ?? 0)}) · 영업 우선순위·가격조정의 정량 근거`}
-          footnote="가용재고(미판매+이장지) × 등급별 평균 묘역사용료 — proxy 추정. 실제 분양가는 옵션·할인·시장 변수로 ±변동"
-        />
-      </section>
-
-      {/* 핵심 KPI lineage — NumberCell로 클릭하여 산식·단계 확인 */}
-      <section className="mt-8">
         <div className="grid gap-6 rounded-md border border-stone-200/80 bg-white px-8 py-6 lg:grid-cols-[auto_1fr_auto_1fr] lg:items-center">
           <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-stone-500">
             가용재고 잠재가치
           </div>
-          <NumberCell
-            value={zoneKpi.wowMetrics.potentialFromAvailable}
-            unit="원"
-            lineage={POTENTIAL_LINEAGE}
-            size="lg"
-            emphasis
-            sub="proxy 추정 · 클릭하여 산식 확인"
-          />
+          <div>
+            <NumberCell
+              value={zoneKpi.wowMetrics.potentialFromAvailable}
+              unit="원"
+              lineage={POTENTIAL_LINEAGE}
+              size="lg"
+              emphasis
+              sub={`Top 단지 = ${zoneKpi.wowMetrics.topPotentialDistrict?.district} (${autoUnit(zoneKpi.wowMetrics.topPotentialDistrict?.potentialValue ?? 0)}) · proxy 추정 · 클릭하여 산식 확인`}
+            />
+          </div>
           <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-stone-500 lg:border-l lg:border-stone-200 lg:pl-8">
             평균 묘역사용료
           </div>
@@ -400,6 +392,27 @@ export default function CemeteryPage() {
             );
           })}
         </div>
+
+        {/* Root Cause 상세 분석 CTA — 산점도·LLM 분석·추천 액션은 별도 페이지에서 */}
+        <Link
+          href="/root-cause"
+          className="group mt-6 flex items-center justify-between gap-6 rounded-md bg-[#0095A9] px-8 py-6 text-white transition-colors hover:bg-[#007a8c]"
+        >
+          <div className="flex items-center gap-5">
+            <GitBranch className="h-7 w-7 shrink-0 text-[#b3dde0]" strokeWidth={1.75} />
+            <div className="min-w-0">
+              <div className="text-[15px] font-semibold leading-tight">
+                Root Cause 상세 분석 보기
+              </div>
+              <div className="mt-1.5 text-[12px] leading-relaxed text-[#ccebee]">
+                산점도(단지 라벨) · 잠재가치 분포 · LLM 원인 분석 · 가설별 추천 액션
+              </div>
+            </div>
+          </div>
+          <ArrowUpRight
+            className="h-5 w-5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+          />
+        </Link>
       </section>
 
       {/* ───────────────────────── 부서별 KPI 매핑 ───────────────────────── */}

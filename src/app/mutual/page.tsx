@@ -18,7 +18,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowUpRight, ChevronDown, ChevronUp, GitBranch } from "lucide-react";
 import { AppLayout, SubNav } from "@/components/AppLayout";
 import { Card, StatCard, WowCard, InsightBox, SourceCaption } from "@/components/Card";
 import { NumberCell } from "@/components/NumberCell";
@@ -455,13 +455,26 @@ export default function MutualPage() {
             <InlineHypothesisCard key={h.id} h={h} defaultOpen={i === 0} />
           ))}
         </div>
-        <div className="mt-4 text-[11px] tracking-wide text-stone-400">
-          상세 분해(채널 LTV 차트·코호트 만기율·산점도·LLM 분석·추천 액션)는{" "}
-          <a href="/root-cause" className="text-[#0095A9] underline-offset-2 hover:underline">
-            Root Cause 페이지
-          </a>
-          에서 확인.
-        </div>
+        {/* Root Cause 상세 분석 CTA — 차트·LLM 분석·추천 액션은 별도 페이지에서 */}
+        <Link
+          href="/root-cause"
+          className="group mt-6 flex items-center justify-between gap-6 rounded-md bg-[#0095A9] px-8 py-6 text-white transition-colors hover:bg-[#007a8c]"
+        >
+          <div className="flex items-center gap-5">
+            <GitBranch className="h-7 w-7 shrink-0 text-[#b3dde0]" strokeWidth={1.75} />
+            <div className="min-w-0">
+              <div className="text-[15px] font-semibold leading-tight">
+                Root Cause 상세 분석 보기
+              </div>
+              <div className="mt-1.5 text-[12px] leading-relaxed text-[#ccebee]">
+                채널 LTV 차트 · 코호트 만기율 · 산점도 · LLM 원인 분석 · 가설별 추천 액션
+              </div>
+            </div>
+          </div>
+          <ArrowUpRight
+            className="h-5 w-5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+          />
+        </Link>
       </section>
 
       {/* ===================================================================

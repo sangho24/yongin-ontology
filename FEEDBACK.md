@@ -80,3 +80,30 @@
 | Subagent 5B | F3·F4·F6 (Root Cause 페이지 강화 — NumberCell·LLM mock·추천 액션·산점도 라벨·Next Steps 통합) |
 | Subagent 5C | F7 일부 (상조 채널별 활동원가·Root Cause inline·호버 문구 제거) |
 | 메인 (Phase 5D) | 장지·Overview 보강 (Root Cause inline·호버 문구·anchor 점검) |
+
+---
+
+## 2026-05-08 · 2차 피드백
+
+### F11. 장지 VC "가용재고 잠재가치" 정보 중복 제거
+- **요지**: WowCard(mint hero) + 핵심 KPI lineage row(NumberCell)에서 같은 숫자가 두 번 노출 + WowCard 톤이 너무 강조됨
+- **반영**:
+  - `src/app/cemetery/page.tsx`: WowCard 섹션 삭제, NumberCell hero에 sub로 "Top 단지" 정보 흡수 ✅
+  - `WowCard` import 제거
+  - 정보 중복 해소, 인터랙티브 NumberCell 한 곳에서 lineage·산식 확인
+
+### F12. Root Cause 페이지 상세 분석으로 가는 큰 CTA 버튼 (상조·장지 동일)
+- **요지**: 상세 분해(채널 LTV·코호트 만기율·산점도·LLM 분석·추천 액션)는 Root Cause 페이지에서. 양쪽 VC에서 똑같이 클릭 가능한 큰 버튼.
+- **반영**:
+  - `src/app/cemetery/page.tsx`: root-cause 섹션 끝에 mint bg(`#0095A9`) 큰 CTA 카드 추가 (GitBranch 아이콘 + 부설명 + ArrowUpRight) ✅
+  - `src/app/mutual/page.tsx`: 같은 CTA 카드로 기존 작은 텍스트 링크 교체 ✅
+  - 두 페이지에서 동일한 디자인·동작
+
+### F10. 로고 고해상도 교체 + 옆 텍스트 한 줄 정리
+- **요지**: 사용자가 ontology-demo 폴더에 새 로고 png(고해상도) 업로드. 글자 위치 정렬, 옆 텍스트는 "용인공원 그룹 BI" 한 줄만.
+- **반영**:
+  - `public/logo.png` → 고해상도 png로 교체 (13.5KB) ✅
+  - `src/components/AppLayout.tsx`:
+    - `next/image` width/height를 실제 비율에 맞게 (520×200) 갱신해 sharp rendering ✅
+    - 옆 텍스트 2줄(용인공원 그룹 / Cost Mgmt BI) → 한 줄(`용인공원 그룹 BI`) ✅
+    - 로고와 텍스트 `items-center` 정렬, sidebar header padding `px-5 → px-4` 로 폭 여유 확보 ✅

@@ -71,20 +71,23 @@ export function AppLayout({
     <div className="min-h-screen bg-[#fafaf7] text-stone-900">
       {/* Sidebar */}
       <aside className="fixed inset-y-0 left-0 z-20 w-56 border-r border-stone-200/80 bg-white">
-        <div className="flex h-16 items-center gap-3 border-b border-stone-100 px-5">
-          <Link href="/" className="flex items-center gap-3" aria-label="용인공원 그룹 홈">
+        <div className="flex h-16 items-center border-b border-stone-100 px-4">
+          <Link
+            href="/"
+            className="flex items-center gap-3"
+            aria-label="용인공원 그룹 BI 홈"
+          >
             <Image
               src="/logo.png"
               alt="용인공원 YONGIN MEMORIAL PARK"
-              width={36}
-              height={36}
+              width={520}
+              height={200}
               priority
               className="h-9 w-auto object-contain"
             />
-            <div className="leading-tight">
-              <div className="text-[12px] font-semibold tracking-tight text-stone-900">용인공원 그룹</div>
-              <div className="text-[10px] tracking-[0.08em] text-stone-400 uppercase mt-0.5">Cost Mgmt BI</div>
-            </div>
+            <span className="text-[12px] font-semibold tracking-tight text-stone-700">
+              용인공원 그룹 BI
+            </span>
           </Link>
         </div>
 
