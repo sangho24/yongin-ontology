@@ -74,18 +74,18 @@ export function AppLayout({
         <div className="flex h-16 items-center border-b border-stone-100 px-4">
           <Link
             href="/"
-            className="flex items-center gap-3"
+            className="flex items-center gap-2"
             aria-label="용인공원 그룹 BI 홈"
           >
             <Image
               src="/logo.png"
-              alt="용인공원 YONGIN MEMORIAL PARK"
+              alt="용인공원"
               width={520}
               height={200}
               priority
-              className="h-9 w-auto object-contain"
+              className="h-7 w-auto shrink-0 object-contain"
             />
-            <span className="text-[12px] font-semibold tracking-tight text-stone-700">
+            <span className="whitespace-nowrap text-[12px] font-semibold tracking-tight text-stone-700">
               용인공원 그룹 BI
             </span>
           </Link>
