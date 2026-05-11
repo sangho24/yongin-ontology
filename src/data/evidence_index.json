@@ -3357,45 +3357,71 @@
       "title": "용인공원·YPL 계약자 master + 묘역raw 매칭",
       "page": "/data-model",
       "priority": "P0",
-      "reason": "RFI 6.3 (미수령), Q40 (미회신)",
-      "needed_data": "회원 1:1 매핑 가능한 ERP 추출본 + DB관리 프로세스 도식 ↔ ERP 매핑",
-      "placeholder_caveat": "수령 후 보강. 화면 placeholder + caveat로 표시.",
+      "reason": "RFI 6.3 (미수령), Q40 (미회신). B8 검토 권고 반영: 인입경로·인입일자·상담단계·상품유형·결제방식 컬럼 보강.",
+      "needed_data": "계약번호·계약자ID·인입경로(채널)·인입일자·상담단계·가입일·묘역코드·상품유형코드·결제방식·담당설계사ID·연락처·계약상태",
+      "placeholder_caveat": "수령 후 보강. 보강성 컬럼: 가족관계 (RFI 본문 외, r5 통합고객뷰 동일가족 매칭 활용)",
       "rfi_refs": [
         "RFI 6.3",
         "Q40"
       ]
     },
     "tbox_rfi_r2_salesagent_master": {
-      "title": "장지 영업사원 master",
+      "title": "장지 영업사원 master + 판매수수료 지급규정",
       "page": "/data-model",
       "priority": "P0",
-      "reason": "RFI 6.5 미수령 (6.2 일부수령)",
-      "needed_data": "판매수수료 지급규정 + 판매직별 1:1 계약/구매이력",
-      "placeholder_caveat": "수령 후 보강",
+      "reason": "RFI 6.5 미수령 (6.2 일부수령) + Q24 미회신. B8 검토 권고 반영: DB유치/실계약/Conversion 분리, 소속팀·수수료등급 추가.",
+      "needed_data": "영업사원ID·소속법인·소속팀(영업팀/고객센터팀/외부업체)·담당구역·DB유치건수·실계약건수·Conversion%·수수료등급",
+      "placeholder_caveat": "수령 후 보강. 보강성 컬럼: 직급·입사일·퇴사여부 (RFI 본문 외 — HR 정보 별도 RFI)",
       "rfi_refs": [
         "RFI 6.2",
-        "RFI 6.5"
+        "RFI 6.5",
+        "Q24"
       ]
     },
-    "tbox_rfi_r3_zone_history": {
-      "title": "묘역raw 22.5% 미채움 사유",
+    "tbox_rfi_r3a_zone_master": {
+      "title": "(r3a) 구역 master — FY23~25 매출구분별·면적구분별 매출자료",
       "page": "/data-model",
       "priority": "P1",
-      "reason": "RFI 3.6/3.7 미수령",
-      "needed_data": "FY23~25 매출구분별·면적구분별(63-1공구 등) 매출자료",
-      "placeholder_caveat": "수령 후 보강",
+      "reason": "RFI 3.6/3.8/3.9 미수령. B8 검토 결과 r3 구역 master 측 분리 박제.",
+      "needed_data": "묘역코드·장법·매출구분(계정)·면적(m²)·단가·FY23/24/25 매출액·재고명세서 묘원수·분양상태",
+      "placeholder_caveat": "수령 후 보강 — 본문 RFI 3.6 '3개년 매출구분별 및 면적구분별 매출자료' 핵심 결손",
       "rfi_refs": [
         "RFI 3.6",
-        "RFI 3.7"
+        "RFI 3.8",
+        "RFI 3.9"
       ]
     },
-    "tbox_rfi_r4_cost_driver_data": {
-      "title": "비용 동인 외연",
+    "tbox_rfi_r3b_transfer_history": {
+      "title": "(r3b) 이장이력 — 묘역raw 22.5% 미채움 사유",
       "page": "/data-model",
       "priority": "P1",
-      "reason": "RFI 4.3/4.4 미수령",
-      "needed_data": "매출원가 세부 (당기제품제조원가 중 경비, 발생 동인 기재) + 판관비 동인",
-      "placeholder_caveat": "수령 후 보강",
+      "reason": "묘역raw 27열 master 중 계약번호 22.5% 공란, 이장지 4325개 식별. B8 검토 결과 r3 이장이력 측 분리 박제.",
+      "needed_data": "묘역코드·이전계약번호·이장일자·신계약번호·이장사유·공실/회수일·재분양가·특수사유",
+      "placeholder_caveat": "수령 후 보강 — 본문 인터뷰 3일차오전공원(이장 용역비) + 신규야외묘역 시트 raw vs 재고명세서 차이 사유",
+      "rfi_refs": [
+        "RFI 신규야외묘역 시트",
+        "인터뷰 3일차오전공원"
+      ]
+    },
+    "tbox_rfi_r4a_driver_definition": {
+      "title": "(r4a) 동인 정의 — Time Report·시설별 면적·계량기 검침 외연 가용성",
+      "page": "/data-model",
+      "priority": "P1",
+      "reason": "RFI 4.3/4.4 본문 '비용별 주요 발생 동인 기재' 측. B8 검토 결과 r4 동인 정의 측 분리 박제.",
+      "needed_data": "동인ID·동인명·동인유형·측정주체·측정단위·수집주기·소스시스템·수집상태",
+      "placeholder_caveat": "수령 후 보강 — 외연 결손 → A5 partiallyMissing → A5' Default rule(매출비율 fallback) 발동중",
+      "rfi_refs": [
+        "RFI 4.3",
+        "RFI 4.4"
+      ]
+    },
+    "tbox_rfi_r4b_cost_amount_allocation": {
+      "title": "(r4b) 발생금액·배부기준 — FY23~25 매출원가 + 판관비 세부 + 비경상",
+      "page": "/data-model",
+      "priority": "P1",
+      "reason": "RFI 4.3 '당기제품제조원가 중 경비 세부내역 + 비경상' / RFI 4.4 '판관비 세부 + 비경상'. B8 검토 결과 r4 금액·배부 측 분리 박제.",
+      "needed_data": "계정코드·계정명·구분(원가/판관비)·FY23/24/25 발생금액·배부기준·비경상 여부·비경상 사유",
+      "placeholder_caveat": "수령 후 보강 — 동인-금액 페어가 없으면 배부 불가. 25년 합계 검증 완료, 3개년 시계열 + 비경상 분리 미수령",
       "rfi_refs": [
         "RFI 4.3",
         "RFI 4.4"
@@ -3405,11 +3431,12 @@
       "title": "라이프·장지 통합 고객뷰",
       "page": "/data-model",
       "priority": "P1",
-      "reason": "RFI 3.7 부분수령 (25/12~26/03만) + Q40 미회신",
-      "needed_data": "FY23~25 ERP 라이프 고객별 매출 + 마스터 키 정의",
-      "placeholder_caveat": "수령 후 보강",
+      "reason": "RFI 3.7 부분수령 (25/12~26/03만) + Q40 미회신. B8 검토 권고 반영: 라이프/장지 누적매출(억 단위)·매칭confidence 컬럼 보강.",
+      "needed_data": "통합고객ID·라이프회원ID·장지계약자ID·동일가족 그룹ID·최초접점채널·라이프 누적매출(억)·장지 누적매출(억)·Cross-sell·매칭confidence(%)",
+      "placeholder_caveat": "수령 후 보강. 매출은 단위만 안전 표기(억). 영업비밀 raw 박제 X",
       "rfi_refs": [
         "RFI 3.7",
+        "RFI 6.3",
         "Q40"
       ]
     }
