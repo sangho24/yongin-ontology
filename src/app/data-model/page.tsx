@@ -15,40 +15,174 @@ import {
 import "@xyflow/react/dist/style.css";
 import { ExternalLink } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
-import { Card, SourceCaption } from "@/components/Card";
+import { Card, EvidenceButton, SourceCaption } from "@/components/Card";
 import { TBoxNode } from "@/components/TBoxNode";
 import tbox from "@/data/tbox.json";
 
 const nodeTypes = { classNode: TBoxNode };
 
-// 각 RFI가 실제로 도착했을 때 어떤 모양의 표가 될지 보여주는 mock row.
-// expectedColumns 길이에 맞춰 plausible한 sample value 채움. 실제 다운로드 X.
-const RFI_SAMPLE_ROWS: Record<string, string[][]> = {
-  "RFI-NEW-001": [
-    ["C-2024-1182", "MEM-001", "홍길동", "2024-03-15", "1ROYAL-A12", "SA-007", "부", "010-1234-5678"],
-    ["C-2024-1183", "MEM-002", "김순자", "2024-04-02", "정담원-B07", "SA-011", "본인", "010-2345-6789"],
-    ["C-2024-1184", "MEM-003", "이영희", "2024-05-21", "세수연-C03", "SA-007", "모", "010-3456-7890"],
-  ],
-  "RFI-NEW-002": [
-    ["SA-001", "김영업", "용인공원", "2018-04", "대리", "1R 구역", "C-2024-1182, C-2024-1190 …"],
-    ["SA-007", "박장지", "YPL", "2020-09", "주임", "정담원·세수연", "C-2024-1183 …"],
-    ["SA-011", "정매니저", "용인공원", "2015-02", "과장", "명가여연·천명지", "C-2024-1175 …"],
-  ],
-  "RFI-NEW-003": [
-    ["1R-A12", "이장", "1R-B05", "2022 → 2024-08"],
-    ["3H-D07", "공실", "—", "2023-11 회수"],
-    ["정담원-B07", "미사용", "—", "—"],
-  ],
-  "RFI-NEW-004": [
-    ["EMP-007·분양상담·32h", "FAC-A12·4.2 m²", "MTR-105·2024-Q4·3,250 kWh"],
-    ["EMP-014·시설관리·40h", "FAC-B03·8.7 m²", "MTR-208·2024-Q4·1,820 kWh"],
-    ["EMP-022·고객응대·28h", "FAC-C09·5.1 m²", "MTR-114·2024-Q4·2,430 kWh"],
-  ],
-  "RFI-NEW-005": [
-    ["CUST-100", "LIFE-9931", "YP-2287", "FAM-A"],
-    ["CUST-101", "LIFE-9954", "YP-2305", "FAM-A"],
-    ["CUST-102", "—", "YP-2312", "FAM-B"],
-  ],
+// =============================================================================
+// T-Box 노드/엣지/RFI ID → evidence_index slotId 매핑
+// 매핑되지 않는 항목은 undefined 반환 → EvidenceButton 자체가 렌더 SKIP
+// =============================================================================
+const NODE_SLOT_MAP: Record<string, string> = {
+  Member: "tbox_class_member",
+  SalesAgent: "tbox_class_sales_agent",
+  Contract: "tbox_class_contract",
+  Zone: "tbox_class_zone",
+  BurialMethod: "tbox_class_burial_method",
+  RevenueStream: "tbox_class_revenue_stream",
+  Account: "tbox_class_account",
+  Transaction: "tbox_class_transaction",
+  Vendor: "tbox_class_vendor",
+  Activity: "tbox_class_activity",
+  CostDriver: "tbox_class_cost_driver",
+  Entity: "tbox_class_entity",
+  FiscalPeriod: "tbox_class_fiscal_period",
+};
+
+// 엣지 ID → evidence_index slotId. 결손 5개 + satisfied 11개 = 16개 박제.
+// (잔여 10개는 attribute property로, edge 형태로 그래프에 표시되지 않음)
+const EDGE_SLOT_MAP: Record<string, string> = {
+  // partiallyMissing 5개
+  "e-Member-contracts-Contract": "tbox_property_contracts",
+  "e-Member-assignedTo-SalesAgent": "tbox_property_assigned_to",
+  "e-Contract-uses-Zone": "tbox_property_uses_zone",
+  "e-Account-hasDriver-CostDriver": "tbox_property_has_driver_account",
+  "e-SalesAgent-belongsTo-Entity": "tbox_property_belongs_to",
+  // satisfied 11개
+  "e-Contract-hasRevenueStream-RevenueStream": "tbox_property_has_revenue_stream",
+  "e-Zone-locatedIn-BurialMethod": "tbox_property_located_in",
+  "e-Account-allocatesTo-RevenueStream": "tbox_property_allocates_to",
+  "e-Account-tracesTo-Zone": "tbox_property_traces_to",
+  "e-Transaction-debitedTo-Account": "tbox_property_debited_to",
+  "e-Transaction-involves-Vendor": "tbox_property_involves",
+  "e-Transaction-occursIn-FiscalPeriod": "tbox_property_occurs_in",
+  "e-Transaction-incurredBy-Entity": "tbox_property_incurred_by",
+  "e-RevenueStream-supportedBy-BurialMethod": "tbox_property_supported_by",
+  "e-Vendor-performs-Activity": "tbox_property_performs",
+  "e-Activity-hasDriver-CostDriver": "tbox_property_has_driver_activity",
+};
+
+// Axiom ID → evidence_index slotId
+const AXIOM_SLOT_MAP: Record<string, string> = {
+  A1: "tbox_axiom_a1",
+  A2: "tbox_axiom_a2",
+  A3: "tbox_axiom_a3",
+  A4: "tbox_axiom_a4",
+  A5: "tbox_axiom_a5",
+  A5p: "tbox_axiom_a5p",
+};
+
+// RFI 카드 → evidence slotId
+const RFI_SLOT_MAP: Record<string, string> = {
+  "RFI-NEW-001": "tbox_rfi_r1_member_master",
+  "RFI-NEW-002": "tbox_rfi_r2_salesagent_master",
+  "RFI-NEW-003": "tbox_rfi_r3_zone_history",
+  "RFI-NEW-004": "tbox_rfi_r4_cost_driver_data",
+  "RFI-NEW-005": "tbox_rfi_r5_unified_customer_view",
+};
+
+// 각 RFI가 실제로 도착했을 때 어떤 모양의 표가 될지 보여주는 강화 mock.
+// 실 데이터 수령 전이므로 모든 값은 plausible mock — PII·영업비밀 박제 X.
+// (이름은 가명·연락처는 마스킹·금액·연봉·계좌·주민번호 표시 안 함)
+const RFI_MOCK: Record<
+  string,
+  { columns: string[]; rows: string[][]; mockCaveat: string }
+> = {
+  "RFI-NEW-001": {
+    columns: [
+      "계약번호",
+      "계약자ID",
+      "계약자명(가명)",
+      "가입일",
+      "묘역코드",
+      "장법",
+      "담당영업ID",
+      "가족관계",
+      "연락처(마스킹)",
+      "계약상태",
+    ],
+    rows: [
+      ["YP-2024-01182", "MBR-100482", "홍**", "2024-03-15", "1R-A12", "봉안 로얄", "SA-007", "본인", "010-****-5678", "유효"],
+      ["YP-2024-01183", "MBR-100483", "김**", "2024-04-02", "정담원-B07", "매장", "SA-011", "배우자", "010-****-6789", "유효"],
+      ["YP-2024-01184", "MBR-100484", "이**", "2024-05-21", "세수연-C03", "매장", "SA-007", "모(직계존속)", "010-****-7890", "유효"],
+    ],
+    mockCaveat: "※ 수령 시 실 데이터로 교체. 라이프 회원DB 35열 대비 비대칭 — 장지 master 자체 부재.",
+  },
+  "RFI-NEW-002": {
+    columns: [
+      "영업사원ID",
+      "이름(가명)",
+      "소속법인",
+      "입사일",
+      "직급",
+      "담당구역",
+      "담당계약수(FY25)",
+      "신규/이장 구분",
+      "퇴사여부",
+    ],
+    rows: [
+      ["SA-001", "김**", "용인공원", "2018-04-12", "대리", "1R·2R 봉안 로얄", "47", "신규 위주", "재직"],
+      ["SA-007", "박**", "YPL", "2020-09-03", "주임", "정담원·세수연", "32", "혼합", "재직"],
+      ["SA-011", "정**", "용인공원", "2015-02-18", "과장", "명가여연·천명지", "58", "신규 위주", "재직"],
+    ],
+    mockCaveat: "※ 수령 시 실 데이터로 교체. 인센티브·연봉은 별도 RFI(영업비밀 fee_rates 정책 적용).",
+  },
+  "RFI-NEW-003": {
+    columns: [
+      "묘역코드",
+      "장법",
+      "현재상태",
+      "최초계약일",
+      "이전계약번호",
+      "이장사유",
+      "공실/회수일",
+      "특수사유",
+    ],
+    rows: [
+      ["1R-A12", "봉안 로얄", "이장 후 재계약", "2018-06-11", "YP-2018-00742", "가족 합장", "—", "—"],
+      ["3H-D07", "봉안 아너", "공실(회수)", "2017-03-22", "YP-2017-00219", "—", "2023-11-08", "할인분양 대상"],
+      ["정담원-B07", "매장", "미사용(분양가능)", "—", "—", "—", "—", "신규야외묘역 신설 직후"],
+    ],
+    mockCaveat: "※ 수령 시 실 데이터로 교체. 묘역raw 22.5% 미채움분(이장지 4325 포함) 사유 분류 필요.",
+  },
+  "RFI-NEW-004": {
+    columns: [
+      "동인유형",
+      "동인ID",
+      "측정주체",
+      "측정단위",
+      "측정주기",
+      "FY25 측정값",
+      "사용계정",
+      "수집상태",
+    ],
+    rows: [
+      ["Time Report", "TR-EMP-007", "분양상담팀", "시간(h)", "월별", "월평균 138h (32h 분양상담 ABC 활동)", "직원급여(80200)", "수기·미체계화"],
+      ["시설별 면적", "FAC-A12", "시설관리팀", "m²", "연1회 실측", "4.2 m² (사무실 분양상담 부스)", "감가상각비·임차료", "도면존재·디지털 미수령"],
+      ["계량기 검침", "MTR-208-전기", "관리동 전기", "kWh", "분기별", "FY25-Q4 1,820 kWh", "전력비·수도광열비", "한전 청구서·디지털 미수령"],
+    ],
+    mockCaveat: "※ 수령 시 실 데이터로 교체. 외연 결손 → A5 partiallyMissing → A5' Default rule(매출비율 fallback) 발동중.",
+  },
+  "RFI-NEW-005": {
+    columns: [
+      "통합고객ID",
+      "라이프회원ID",
+      "장지계약자ID",
+      "장지계약번호",
+      "동일가족 그룹ID",
+      "최초접점 VC",
+      "Cross-sell 여부",
+      "동일주소 매칭",
+    ],
+    rows: [
+      ["GRP-CUST-00100", "LIFE-09931", "MBR-100482", "YP-2024-01182", "FAM-A-0042", "라이프(상조)", "Y (장지 후속계약)", "Y"],
+      ["GRP-CUST-00101", "LIFE-09954", "MBR-100483", "YP-2024-01183", "FAM-A-0042", "라이프(상조)", "Y (배우자 명의)", "Y"],
+      ["GRP-CUST-00102", "—", "MBR-100484", "YP-2024-01184", "FAM-B-0117", "장지 단독", "N", "—"],
+    ],
+    mockCaveat: "※ 수령 시 실 데이터로 교체. 라이프 9,930명 + 장지 master 부재 → 통합 매핑 작업 미착수.",
+  },
 };
 
 const PRIORITY_BADGE: Record<string, string> = {
@@ -167,31 +301,43 @@ export default function DataModelPage() {
     >
       <section className="grid gap-px overflow-hidden rounded-md border border-stone-200/80 bg-stone-200/60 sm:grid-cols-4">
         <div className="bg-white p-5">
-          <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-stone-500">Class</div>
+          <div className="flex items-start justify-between gap-2">
+            <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-stone-500">Class</div>
+            <EvidenceButton slotId="tbox_stat_total_classes" label="전체 Class" variant="subtle" />
+          </div>
           <div className="headline mt-2 text-[28px] leading-none text-stone-900 tnum">{stats.totalClasses}</div>
           <div className="mt-1.5 text-[12px] text-stone-500">전체 정의된 클래스</div>
         </div>
         <div className="bg-white p-5">
-          <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#b45309]">결손 Class</div>
+          <div className="flex items-start justify-between gap-2">
+            <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#b45309]">결손 Class</div>
+            <EvidenceButton slotId="tbox_stat_missing_classes" label="결손 Class" variant="subtle" />
+          </div>
           <div className="headline mt-2 text-[28px] leading-none text-stone-900 tnum">{stats.classMissing}</div>
           <div className="mt-1.5 text-[12px] text-stone-500">부분결손 또는 미수령</div>
         </div>
         <div className="bg-white p-5">
-          <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#9a3412]">결손 Property</div>
+          <div className="flex items-start justify-between gap-2">
+            <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#9a3412]">결손 Property</div>
+            <EvidenceButton slotId="tbox_stat_missing_properties" label="결손 Property" variant="subtle" />
+          </div>
           <div className="headline mt-2 text-[28px] leading-none text-stone-900 tnum">
             {stats.edgeMissing}<span className="text-stone-400 font-normal"> / {stats.totalEdges}</span>
           </div>
           <div className="mt-1.5 text-[12px] text-stone-500">관계 status ≠ satisfied</div>
         </div>
         <div className="bg-[#0095A9] p-5 text-white">
-          <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#b3dde0]">자동 도출 RFI</div>
+          <div className="flex items-start justify-between gap-2">
+            <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#b3dde0]">자동 도출 RFI</div>
+            <EvidenceButton slotId="tbox_stat_rfi_count" label="자동 도출 RFI" variant="onMint" />
+          </div>
           <div className="headline mt-2 text-[28px] leading-none text-white tnum">{stats.rfiCount}<span className="text-base font-normal text-[#b3dde0] ml-0.5">건</span></div>
           <div className="mt-1.5 text-[12px] text-[#ccebee]">결손 → 비즈니스 질문</div>
         </div>
       </section>
 
       <section className={`mt-10 grid gap-6 ${detail ? "lg:grid-cols-[2.4fr_1fr]" : "grid-cols-1"}`}>
-        <Card title="T-Box 그래프" subtitle="노드/엣지 클릭으로 상세 확인 · 마우스 휠 줌 · 드래그 이동">
+        <Card title="T-Box 그래프" subtitle="노드/엣지 클릭으로 상세 확인 · 마우스 휠 줌 · 드래그 이동" slotId="tbox_graph_main">
           <div className="h-[640px] rounded border border-slate-200 bg-slate-50">
             <ReactFlowProvider>
               <ReactFlow
@@ -248,6 +394,7 @@ export default function DataModelPage() {
               title={detail.data.label}
               subtitle={`status: ${detail.data.status}`}
               highlight={detail.data.status !== "satisfied"}
+              slotId={NODE_SLOT_MAP[detail.data.id]}
             >
               <p className="text-sm text-slate-700">{detail.data.definition}</p>
               {detail.data.note && (
@@ -271,6 +418,7 @@ export default function DataModelPage() {
               title={`${detail.data.source} —${detail.data.label}→ ${detail.data.target}`}
               subtitle={`status: ${detail.data.data?.status ?? "satisfied"}`}
               highlight={detail.data.data?.status !== "satisfied"}
+              slotId={EDGE_SLOT_MAP[detail.data.id]}
             >
               {detail.data.prop && (
                 <p className="text-sm text-slate-700">{detail.data.prop.definition}</p>
@@ -332,7 +480,9 @@ export default function DataModelPage() {
         </div>
         <div className="grid gap-6 md:grid-cols-2">
           {(tbox.rfiItems as RfiItem[]).map((r) => {
-            const sampleRows = RFI_SAMPLE_ROWS[r.id] ?? [];
+            const mock = RFI_MOCK[r.id];
+            const columns = mock?.columns ?? r.expectedColumns;
+            const rows = mock?.rows ?? [];
             const badgeCls = PRIORITY_BADGE[r.priority] ?? "bg-stone-500 text-white";
             return (
               <div
@@ -345,14 +495,22 @@ export default function DataModelPage() {
                     <span className={`rounded px-1.5 py-0.5 text-[10px] font-bold uppercase ${badgeCls}`}>
                       {r.priority}
                     </span>
+                    <span className="rounded border border-stone-200 bg-stone-50 px-1.5 py-0.5 text-[10px] font-medium text-stone-500">
+                      MOCK
+                    </span>
                   </div>
-                  <button
-                    type="button"
-                    className="flex shrink-0 items-center gap-1 text-[10px] font-medium text-stone-400 transition-colors hover:text-[#0095A9]"
-                  >
-                    <ExternalLink className="h-3 w-3" />
-                    샘플 요청서
-                  </button>
+                  <div className="flex shrink-0 items-center gap-1">
+                    {RFI_SLOT_MAP[r.id] && (
+                      <EvidenceButton slotId={RFI_SLOT_MAP[r.id]} label={r.title} variant="subtle" />
+                    )}
+                    <button
+                      type="button"
+                      className="flex shrink-0 items-center gap-1 text-[10px] font-medium text-stone-400 transition-colors hover:text-[#0095A9]"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      샘플 요청서
+                    </button>
+                  </div>
                 </div>
                 <div className="mt-2 text-[14px] font-semibold tracking-tight text-stone-900">{r.title}</div>
                 <p className="mt-2 text-[12px] leading-relaxed text-stone-600">{r.rationale}</p>
@@ -361,7 +519,7 @@ export default function DataModelPage() {
                   <table className="w-full text-[11px] text-stone-700">
                     <thead className="bg-stone-50 text-[10px] font-medium uppercase tracking-[0.04em] text-stone-500">
                       <tr>
-                        {r.expectedColumns.map((col) => (
+                        {columns.map((col) => (
                           <th
                             key={col}
                             className="border-b border-stone-200/80 px-2 py-1.5 text-left whitespace-nowrap"
@@ -372,10 +530,10 @@ export default function DataModelPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {sampleRows.length > 0 ? (
-                        sampleRows.map((row, ri) => (
+                      {rows.length > 0 ? (
+                        rows.map((row, ri) => (
                           <tr key={ri} className="border-b border-stone-100 last:border-b-0">
-                            {r.expectedColumns.map((_, ci) => (
+                            {columns.map((_, ci) => (
                               <td key={ci} className="px-2 py-1.5 align-top text-stone-600 whitespace-nowrap">
                                 {row[ci] ?? "—"}
                               </td>
@@ -384,7 +542,7 @@ export default function DataModelPage() {
                         ))
                       ) : (
                         <tr>
-                          {r.expectedColumns.map((_, ci) => (
+                          {columns.map((_, ci) => (
                             <td key={ci} className="px-2 py-1.5 text-stone-300">
                               —
                             </td>
@@ -395,6 +553,12 @@ export default function DataModelPage() {
                   </table>
                 </div>
 
+                {mock?.mockCaveat && (
+                  <div className="mt-2 rounded border border-amber-200/60 bg-amber-50/40 px-2 py-1.5 text-[10.5px] leading-relaxed text-amber-900/80">
+                    {mock.mockCaveat}
+                  </div>
+                )}
+
                 <div className="mt-4 space-y-1.5 border-t border-stone-100 pt-3 text-[11px] leading-relaxed">
                   <div className="text-stone-500">
                     <span className="font-semibold text-stone-600">현황: </span>
@@ -403,6 +567,78 @@ export default function DataModelPage() {
                   <div className="text-stone-500">
                     <span className="font-semibold text-stone-600">요청 대상: </span>
                     <span className="text-[#0095A9]">{r.askTo}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <div className="mb-6">
+          <h3 className="text-[16px] font-semibold tracking-tight text-stone-900">Axioms (공리)</h3>
+          <p className="mt-1.5 text-[12px] text-stone-500">
+            T-Box 6개 공리 — 매출 추적성·조성비 zone 추적·인건비 동인 의존·내부거래 양방향 매칭·외연 가용성·Default rule
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {tbox.axioms.map((ax) => {
+            const isMissing = ax.status !== "satisfied";
+            const slotId = AXIOM_SLOT_MAP[ax.id];
+            return (
+              <div
+                key={ax.id}
+                className={`relative rounded-md border bg-white p-5 transition-colors ${
+                  isMissing
+                    ? "border-amber-300/70 bg-amber-50/30"
+                    : "border-stone-200/80 hover:border-[#0095A9]/40"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                        isMissing ? "bg-amber-600 text-white" : "bg-[#0095A9] text-white"
+                      }`}
+                    >
+                      {ax.id}
+                    </span>
+                    <span className="text-[13px] font-semibold tracking-tight text-stone-900">
+                      {ax.label}
+                    </span>
+                  </div>
+                  {slotId && <EvidenceButton slotId={slotId} label={`Axiom ${ax.id}`} variant="subtle" />}
+                </div>
+                <p className="mt-3 text-[12px] leading-relaxed text-stone-600">{ax.definition}</p>
+
+                <div className="mt-3 flex items-center gap-1.5">
+                  <span
+                    className={`inline-block h-1.5 w-1.5 rounded-full ${
+                      isMissing ? "bg-amber-500" : "bg-emerald-500"
+                    }`}
+                  />
+                  <span
+                    className={`text-[11px] font-medium ${
+                      isMissing ? "text-amber-700" : "text-emerald-700"
+                    }`}
+                  >
+                    {ax.status === "satisfied"
+                      ? "충족"
+                      : ax.status === "partiallyMissing"
+                      ? "부분결손"
+                      : "결손"}
+                  </span>
+                </div>
+
+                <div className="mt-3 border-t border-stone-100 pt-2.5 text-[11px] leading-relaxed">
+                  <div className="text-stone-500">
+                    <span className="font-semibold text-stone-600">검증: </span>
+                    <span className="text-stone-600">{ax.checkedAgainst}</span>
+                  </div>
+                  <div className="mt-1 text-stone-500">
+                    <span className="font-semibold text-stone-600">적용: </span>
+                    <span className="text-stone-600">{ax.appliesTo.join(" · ")}</span>
                   </div>
                 </div>
               </div>
