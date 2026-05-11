@@ -20,7 +20,7 @@ import {
 } from "recharts";
 import { ArrowUpRight, ChevronDown, ChevronUp, GitBranch } from "lucide-react";
 import { AppLayout, SubNav } from "@/components/AppLayout";
-import { Card, WowCard, InsightBox, SourceCaption } from "@/components/Card";
+import { Card, EvidenceButton, WowCard, InsightBox, SourceCaption } from "@/components/Card";
 import { NumberCell } from "@/components/NumberCell";
 import { ChannelActivityCostExplorer } from "@/components/ChannelActivityCostExplorer";
 import lifeKpi from "@/data/life_kpi.json";
@@ -44,9 +44,11 @@ type InlineHypothesis = {
 function InlineHypothesisCard({
   h,
   defaultOpen,
+  slotId,
 }: {
   h: InlineHypothesis;
   defaultOpen?: boolean;
+  slotId?: string;
 }) {
   const [open, setOpen] = useState(defaultOpen ?? false);
   const dotColor =
@@ -55,27 +57,30 @@ function InlineHypothesisCard({
     h.signal === "high" ? "STRONG" : h.signal === "medium" ? "MEDIUM" : "WEAK";
   return (
     <div className="overflow-hidden rounded-md border border-stone-200 bg-white transition-colors hover:border-stone-300">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-stone-50"
-      >
-        <span className={`h-2 w-2 shrink-0 rounded-full ${dotColor}`} />
-        <span className="w-8 text-[11px] font-semibold tracking-wider text-stone-500">{h.id}</span>
-        <div className="min-w-0 flex-1">
-          <div className="text-[13.5px] font-medium leading-snug text-stone-900">{h.title}</div>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-[10.5px] font-semibold tracking-wider text-stone-400">
-            {signalLabel}
-          </span>
-          {open ? (
-            <ChevronUp className="h-3.5 w-3.5 text-stone-400" />
-          ) : (
-            <ChevronDown className="h-3.5 w-3.5 text-stone-400" />
-          )}
-        </div>
-      </button>
+      <div className="flex w-full items-center gap-3 px-4 py-3.5 transition-colors hover:bg-stone-50">
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className="flex flex-1 items-center gap-3 text-left"
+        >
+          <span className={`h-2 w-2 shrink-0 rounded-full ${dotColor}`} />
+          <span className="w-8 text-[11px] font-semibold tracking-wider text-stone-500">{h.id}</span>
+          <div className="min-w-0 flex-1">
+            <div className="text-[13.5px] font-medium leading-snug text-stone-900">{h.title}</div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10.5px] font-semibold tracking-wider text-stone-400">
+              {signalLabel}
+            </span>
+            {open ? (
+              <ChevronUp className="h-3.5 w-3.5 text-stone-400" />
+            ) : (
+              <ChevronDown className="h-3.5 w-3.5 text-stone-400" />
+            )}
+          </div>
+        </button>
+        {slotId && <EvidenceButton slotId={slotId} variant="subtle" label={h.title} />}
+      </div>
       {open && (
         <div className="border-t border-stone-100 bg-stone-50/50 px-4 py-3 pl-[3.25rem] text-[12px] leading-relaxed text-stone-700">
           <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-stone-400">
@@ -140,7 +145,7 @@ export default function MutualPage() {
       { label: "채널 라벨 통합 (오프라인/오프라인  → 오프라인)", detail: "strip 적용, 9315+152=9467" },
       { label: "매출합계 컬럼 sum", amount: lifeKpi.wowMetrics.totalLifecycleRevenue },
     ],
-    notes: "FY25 행사매출 ≠ lifecycle 매출. 본 수치는 가입~25년말 누적 매출합계.",
+    notes: "FY25 행사매출(4,624M) ≠ 회원 누적 납입액(스냅샷). 본 수치는 가입~25년말 누적 매출합계 — 회원입장 누적 납입액. 회사 손익 인식 매출은 PRIMARY 4,624M 별도 참조.",
   };
 
   const lineageMatureRate: NumberLineage = {
@@ -167,7 +172,7 @@ export default function MutualPage() {
       { label: "회원 master 로드 — 35열 × N행", rowCount: lifeKpi.meta.totalMembers },
       { label: "FY25 12월 말 시점 snapshot" },
     ],
-    notes: "본 수치는 row count. 회원상태별 분포는 만기해약율 카드 참고.",
+    notes: "본 수치는 row count. 회원상태별 분포는 납부만기 도달율 카드 참고.",
   };
 
   const lineageTotalAgents: NumberLineage = {
@@ -245,7 +250,7 @@ export default function MutualPage() {
 
           <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
             <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
-              lifecycle 매출
+              회원 누적 납입액 (스냅샷)
             </div>
             <div className="mt-2.5">
               <NumberCell
@@ -263,7 +268,7 @@ export default function MutualPage() {
 
           <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
             <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
-              만기해약율
+              납부만기 도달율
             </div>
             <div className="mt-2.5">
               <NumberCell
@@ -302,7 +307,7 @@ export default function MutualPage() {
            채널 LTV · 회원상태 (mt-6 → mt-12, gap-4 → gap-8)
          =================================================================== */}
       <section id="channel" className="mt-12 grid gap-8 scroll-mt-32 lg:grid-cols-2">
-        <Card title="채널별 회원당 LTV" subtitle="평균 매출(원) 기준">
+        <Card title="채널별 회원당 LTV" subtitle="평균 매출(원) 기준" slotId="mutual_channel_ltv_chart">
           <ResponsiveContainer width="100%" height={260}>
             <BarChart
               data={channelChartData}
@@ -341,7 +346,7 @@ export default function MutualPage() {
           </div>
         </Card>
 
-        <Card title="회원상태 분포" subtitle="납부만기/정상/연체/오류 — 만기 비중에 주목">
+        <Card title="회원상태 분포" subtitle="납부만기/정상/연체/오류 — 만기 비중에 주목" slotId="mutual_member_status_pie">
           <ResponsiveContainer width="100%" height={260}>
             <PieChart>
               <Pie data={statusPie} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label paddingAngle={2}>
@@ -365,7 +370,7 @@ export default function MutualPage() {
            가입연도별 코호트
          =================================================================== */}
       <section className="mt-12">
-        <Card title="가입연도별 코호트" subtitle="회원수·만기율·평균 LTV — 2022년 이후 만기율 급등">
+        <Card title="가입연도별 코호트" subtitle="회원수·만기율·평균 LTV — 2022년 이후 만기율 급등" slotId="mutual_cohort_linechart">
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={cohort}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -383,10 +388,10 @@ export default function MutualPage() {
       </section>
 
       {/* ===================================================================
-           설계사 · 채널별 만기율
+           설계사 · 채널별 납부만기 도달율
          =================================================================== */}
       <section id="agents" className="mt-12 grid gap-8 scroll-mt-32 lg:grid-cols-2">
-        <Card title="상위 10 설계사" subtitle={`전체 ${lifeKpi.salesAgentDistribution.totalAgents}명 · Top10이 매출 ${formatPct(lifeKpi.salesAgentDistribution.top10ShareOfRevenue)} · Gini ${lifeKpi.salesAgentDistribution.giniCoefficient}`}>
+        <Card title="상위 10 설계사" subtitle={`전체 ${lifeKpi.salesAgentDistribution.totalAgents}명 · Top10이 매출 ${formatPct(lifeKpi.salesAgentDistribution.top10ShareOfRevenue)} · Gini ${lifeKpi.salesAgentDistribution.giniCoefficient}`} slotId="mutual_top_agents_table">
           <div className="overflow-hidden rounded border border-slate-200">
             <table className="w-full text-sm">
               <thead className="bg-slate-50 text-xs text-slate-600">
@@ -414,7 +419,7 @@ export default function MutualPage() {
           </div>
         </Card>
 
-        <Card title="채널별 만기해약율" subtitle="만기율 ↑ = 회비정산차익 비중 ↑ = 영업외수익 비중 ↑">
+        <Card title="채널별 납부만기 도달율" subtitle="회원상태=납부만기(YF) / 채널 전체. 해약율 아님 — 정상 납부완료 비율" slotId="mutual_mature_by_channel">
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={lifeKpi.matureAnalysis.byChannel}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -438,6 +443,7 @@ export default function MutualPage() {
           defaultChannelIds={["ch-offline"]}
           title="채널별 활동원가"
           subtitle="채널을 선택하면 매출·비용 항목과 lineage가 펼쳐집니다 · 다중 선택 가능"
+          slotId="mutual_channel_explorer"
         />
       </section>
 
@@ -486,7 +492,12 @@ export default function MutualPage() {
               },
             ] satisfies InlineHypothesis[]
           ).map((h, i) => (
-            <InlineHypothesisCard key={h.id} h={h} defaultOpen={i === 0} />
+            <InlineHypothesisCard
+              key={h.id}
+              h={h}
+              defaultOpen={i === 0}
+              slotId={`mutual_hypothesis_h${i + 1}`}
+            />
           ))}
         </div>
         {/* Root Cause 상세 분석 CTA — 차트·LLM 분석·추천 액션은 별도 페이지에서 */}
@@ -516,6 +527,7 @@ export default function MutualPage() {
          =================================================================== */}
       <section className="mt-12">
         <WowCard
+          slotId="mutual_wow_mature_benefit"
           variant="mint"
           label="회계 ≠ 경제"
           value={autoUnit(lifeKpi.wowMetrics.potentialFromMature)}
@@ -525,7 +537,7 @@ export default function MutualPage() {
       </section>
 
       <section className="mt-6">
-        <InsightBox type="warn" title="만기해약 비중과 영업손실의 관계">
+        <InsightBox type="warn" title="만기해약 비중과 영업손실의 관계" slotId="mutual_insight_mature">
           매출은 23~25년 21→36→46억으로 성장 중이나, 최근 가입 회원의 만기율(2022년 72%, 2023년 96%)이 높아 회비정산차익(영업외)으로 흘러감. 영업이익 view에선 손실 trend가 보이나, 조정후이익(영업이익+회비정산차익) view에서 재평가 필요.
         </InsightBox>
       </section>
@@ -534,8 +546,11 @@ export default function MutualPage() {
            NEW — 부서별 KPI 매핑 (상조 VC 4개 부서)
          =================================================================== */}
       <section id="department" className="mt-12 scroll-mt-32">
-        <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
-          <h2 className="section-h">부서별 KPI 매핑 — 상조 VC</h2>
+        <div className="mb-4 flex items-baseline justify-between gap-2 border-b border-stone-200 pb-2">
+          <div className="flex items-center gap-2">
+            <h2 className="section-h">부서별 KPI 매핑 — 상조 VC</h2>
+            <EvidenceButton slotId="mutual_dept_kpi_cards" label="부서별 KPI 매핑 — 상조 VC" variant="subtle" />
+          </div>
           <span className="text-[11px] tracking-wider text-stone-400">PPT 23p</span>
         </div>
         <p className="mb-6 max-w-3xl text-[13px] leading-relaxed text-stone-600">
@@ -616,8 +631,8 @@ export default function MutualPage() {
         <h3 className="section-label mb-3">DATA LINEAGE</h3>
         <div className="space-y-2">
           <SourceCaption>총 회원 9,930명 = 회원DB 25년말 시트 row count</SourceCaption>
-          <SourceCaption>lifecycle 매출 = 매출합계 컬럼 sum (가입~25년말 누적, ≠ FY25 행사매출)</SourceCaption>
-          <SourceCaption>만기해약율 = 회원상태=YF count(4,433) / total(9,930)</SourceCaption>
+          <SourceCaption>회원 누적 납입액 (스냅샷) = 매출합계 컬럼 sum (가입~25년말 누적). FY25 회사 손익 인식 매출 4,624M과 정의 다름.</SourceCaption>
+          <SourceCaption>납부만기 도달율 = 회원상태=YF count(4,433) / total(9,930)</SourceCaption>
           <SourceCaption>채널 LTV = 채널별 매출합계 sum / 채널별 회원수</SourceCaption>
           <SourceCaption>설계사 1,227명 / Top10 21.7% / Gini 0.69 = 모집설계사 groupby + 표준 Gini</SourceCaption>
           <SourceCaption>가입 코호트 만기율 = 가입연도별 회원상태=YF count / 해당 연도 가입수</SourceCaption>

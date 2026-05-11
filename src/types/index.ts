@@ -127,6 +127,134 @@ export type NumberDriver = {
 };
 
 // -----------------------------------------------------------------------------
+// Evidence Index (evidence_index.json 박제 스키마, v0.1)
+// SPO 분석시트·재무제표·PPT·인터뷰·RFI·계약서를 슬롯 단위로 묶은 lineage 보강체
+// -----------------------------------------------------------------------------
+
+export type EvidenceMethod =
+  | "RAW"
+  | "ANALYSIS"
+  | "DEFINITION"
+  | "NARRATIVE_PPT"
+  | "INTERVIEW"
+  | "RFI"
+  | "META"
+  | "MISSING";
+
+export type EvidenceRank = "PRIMARY" | "SECONDARY" | "NARRATIVE";
+
+export type EvidenceEntry = {
+  rank: EvidenceRank;
+  source_file: string;
+  sheet?: string;
+  range?: string;
+  slide?: number;
+  method: EvidenceMethod;
+  computed_value?: number;
+  computed_unit?: string;
+  as_of?: string;
+  verified?: boolean;
+  notes?: string;
+};
+
+export type SlotEvidence = {
+  title: string;
+  page: string;
+  kind: string;
+  evidence: EvidenceEntry[];
+  narrative?: string;
+  caveats?: string[];
+  verified?: boolean;
+  missing?: boolean;
+  alias_of?: string;
+};
+
+export type EvidencePolicies = Record<string, string>;
+
+export type MissingSlotMeta = {
+  title: string;
+  reason: string;
+  needed_data?: string;
+  placeholder_caveat: string;
+  alias_of?: string;
+};
+
+export type DynamicPattern = {
+  pattern: string;
+  primary_source: string;
+  secondary_source?: string;
+  narrative: string;
+};
+
+export type EvidenceIndex = {
+  $schema: string;
+  generated_at: string;
+  version: string;
+  policies: EvidencePolicies;
+  slots: Record<string, SlotEvidence>;
+  dynamic_patterns?: Record<string, DynamicPattern>;
+  missing_slots?: Record<string, MissingSlotMeta>;
+};
+
+// -----------------------------------------------------------------------------
+// Data Catalog (data_catalog.json — 회사 발표용 자료 인벤토리)
+// 파일경로·영업비밀·PII 노출 X. 자료명·성격·컬럼·매핑만.
+// -----------------------------------------------------------------------------
+
+export type DataCatalogCategoryKey =
+  | "raw-master"
+  | "raw-ledger"
+  | "raw-ops"
+  | "analysis"
+  | "report"
+  | "transcript"
+  | "governance";
+
+export type DataCatalogCategory = {
+  key: DataCatalogCategoryKey;
+  label: string;
+  description?: string;
+  color: string;
+};
+
+export type DatasetCategoricalSummary = {
+  column: string;
+  topValues: { value: string; count: number }[];
+};
+
+export type DatasetLinkedDataset = {
+  id: string;
+  relation: string;
+};
+
+export type Dataset = {
+  id: string;
+  name: string;
+  category: DataCatalogCategoryKey;
+  natureCode: string;
+  scope?: string;
+  shape?: string;
+  owner?: string;
+  primaryKeys?: string[];
+  keyColumns?: string[];
+  categoricalSummary?: DatasetCategoricalSummary[];
+  linkedKpiCount?: number;
+  linkedKpis?: string[];
+  linkedDatasetIds?: DatasetLinkedDataset[];
+  caveats?: string[];
+  piiNote?: string;
+  presentationSafe: boolean;
+};
+
+export type DataCatalog = {
+  $schema: string;
+  generated_at: string;
+  version: string;
+  categories: DataCatalogCategory[];
+  datasets: Dataset[];
+};
+
+// -----------------------------------------------------------------------------
 // Period (월/연 토글)
 // -----------------------------------------------------------------------------
 

@@ -1,0 +1,3417 @@
+{
+  "$schema": "evidence_index_v0.1",
+  "generated_at": "2026-05-11",
+  "version": "0.1",
+  "policies": {
+    "fee_rates": "수수료율(묘지 27.5%, 봉안당 50%, 상조 10%, 광고 마크업 15%, 정액 6억) — 영업비밀. 화면 박제 시 '구간 표기' 또는 '비공개' 검토. 본 evidence_index의 source_file 경로는 박제하되 raw 수치는 노출 X.",
+    "pii": "직급별 연봉·계좌번호·고객 성명·휴대폰·주민번호·주소 raw 박제 X. 화면은 인원·총액·평균만 노출. 외주인력(누보이엔지·에코비엠) 직급별 raw는 비공개.",
+    "ypl_business_model": "YPL = 장지 VC 종속 마케팅 대행사. FY25 매출 19.76억 대부분이 용인공원 마케팅 대행비. 외부 vendor X, 그룹 내부거래 위주. 김현호 대표 라이프·YPL 겸직 + 동일 사무실. cemetery_*·ovw_dept_kpi_cards narrative에 'YPL=용인공원 광고예산 흡수' 명시.",
+    "lifecycle_revenue_caveat": "회원DB '매출합계' 컬럼 sum(27,765M)은 가입~25년말 누적 (2010~25). FY25 행사매출 4,624M(라이프 손익계산서)와 정의 다름 — F-2 caveat. 화면 카드 라벨 '스냅샷 기준 누적 매출' 명시 필수.",
+    "channel_normalization": "회원DB 채널구분 '오프라인 ' (trailing space) 152건은 '오프라인'으로 정규화 후 표시.",
+    "data_period_asymmetry": "회원DB(25년말 누적 9,930) ≠ ERP(23-25 신규 4,437) ≠ 일일보고(25.12-26.04 신규 1,246, 온유 위주). 단순 합산 금지. 시점·범위 비대칭 caveat 필수. 누적 KPI(스냅샷)와 단년 KPI(FY25)·3년 누적 KPI는 라벨에 기간 prefix 명시 필수.",
+    "intercompany_elimination": "그룹 3사(용인공원·YPL·라이프) 매출 단순 합산 금지. B3 §4-1 기준 2025 P&L 내부거래 9건 = 20,773,260,866원(약 20.8억) 제거 후 통합 매출 산출. 주요 항목: 용인공원→YPL 지급수수료 18,744,994,618원(P-1), YPL→용인공원 판매수수료 534,655,910원(P-2) 등. B/S 내부거래 4건 1,379,133,071원 별도. tbox_axiom_a4 양방향매칭 공리 cross-link.",
+    "lifecycle_revenue_split": "회원DB 누적 매출합계(스냅샷, 27,765M)와 회사 손익계산서상 인식 매출(FY25 행사매출, 4,624M)은 정의가 다름. 누적은 회원입장 납입액, 인식매출은 회사 손익 PL anchor. 화면 PRIMARY는 회사 손익 인식 매출, SECONDARY는 회원DB 스냅샷."
+  },
+  "slots": {
+    "ovw_lifecycle_revenue": {
+      "title": "회원 누적 납입액 (스냅샷)",
+      "page": "/",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025손익계산서_용인공원라이프.xls",
+          "sheet": "손익계산서",
+          "method": "RAW",
+          "computed_value": 4623872231,
+          "computed_unit": "원 (FY25 행사매출 / 회사 손익 인식 매출)",
+          "verified": true,
+          "notes": "P0-4 정정 (2026-05-11): 회사 손익 인식 매출(GAAP)을 PRIMARY로 승격. 라이프 PL 행사매출 라인."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "computed_value": 27764964000,
+          "computed_unit": "원 (회원DB 누적 / 회원입장 납입액)",
+          "as_of": "2026-04-20",
+          "verified": true,
+          "notes": "P0-4 정정: 회원DB 매출합계 컬럼 sum (가입~25년말 누적, 2010~25). 9,930 회원. 회사 손익 인식 매출과 정의 다름 — 회원입장 누적 납입액 스냅샷."
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 4,
+          "method": "DEFINITION",
+          "notes": "Executive Summary p.4. 매출 정의 불일치 — F-2 caveat."
+        }
+      ],
+      "narrative": "P0-4 정정: 라벨 'lifecycle 매출' → '회원 누적 납입액 (스냅샷)'. PRIMARY는 회사 손익 인식 매출(FY25 4,624M), SECONDARY는 회원DB 누적 납입액(27,765M, 2010~25 가입자 누적). 두 anchor 정의 다름 — 합산·비교 금지. 그룹 통합 매출 산출 시 3사 단순합산 금지 (내부거래 20.8억 제거).",
+      "caveats": [
+        "lifecycle_revenue_caveat",
+        "lifecycle_revenue_split",
+        "data_period_asymmetry",
+        "intercompany_elimination"
+      ],
+      "verified": true
+    },
+    "ovw_potential_inventory": {
+      "title": "장지 가용재고 잠재가치",
+      "page": "/",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "재고_View",
+          "method": "ANALYSIS",
+          "as_of": "2026-04-20",
+          "verified": true,
+          "notes": "PROXY (가용재고 12,498기 × 등급별 평균가). 최대치 추정 — 분양 가능률·할인율·할증 미반영, 100% 분양 가정 X. 단가는 영업비밀(fee_rates)."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "25년 묘지재고 명세",
+          "method": "RAW"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025재무상태표_용인공원라이프.xls",
+          "sheet": "재무상태표",
+          "method": "RAW",
+          "computed_value": 28045558858,
+          "computed_unit": "원 (BS 비유동부채 / deferred revenue)",
+          "verified": true,
+          "notes": "P0-6 정정 (2026-05-11): 라이프 행사예수금 — 회계 성격이 다른 별개 anchor (BS 부채 ≠ 미래 수익 추정). 행사 발생 시 매출 인식 / 해약 시 회비정산차익(영업외) 인식 / 100% 매출 전환 가정 X."
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 59,
+          "notes": "p.59~62 묘지조성비 narrative",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P0-6 정정: 두 anchor 회계 성격 다름 — (1) 묘역 가용재고 잠재가치(미래 수익 추정, PROXY, 최대치, 분양가능률·할인율 미반영) (2) 라이프 행사예수금 28,045M(현재 BS 부채). 합산 X, 분리 해석 필수.",
+      "caveats": [
+        "fee_rates",
+        "lifecycle_revenue_caveat",
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "ovw_channel_cost": {
+      "title": "라이프 채널 배부 비용 (FY25)",
+      "page": "/",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025손익계산서_용인공원라이프.xls",
+          "sheet": "손익계산서",
+          "method": "RAW",
+          "verified": true,
+          "notes": "P1-1 정정 (2026-05-11): 라이프 PL raw — 매출원가 0 / 판관비 7,471M 전액 (B3 §1-3). 채널귀속 가능 비용은 판관비 한정."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "비용23개_분석 합산",
+          "method": "ANALYSIS",
+          "verified": true,
+          "notes": "P1-1 정정: PRIMARY → SECONDARY 강등. F2 비용23개 _분석 시트군 합산 (가공본). 채널귀속 가능 비용 = 인건비+수수료+광고선전비"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "3대비용",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "매출원가계산_ppt",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/광고선전비_배부분석_FY25.xlsx",
+          "sheet": "광고선전비_배부분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 32,
+          "notes": "p.32, p.68 — 전체 판관비 88%가 인건비/지급수수료/광고선전비",
+          "method": "NARRATIVE_PPT"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "notes": "0403 17:55 (참석자4 PwC) — 활동기준 배부 정의"
+        }
+      ],
+      "narrative": "P1-2 정정: 채널귀속 가능 비용 (인건비+수수료+광고선전비). 라이프 = 판관비 한정 (매출원가 0) / 용인공원 = 제조원가+판관비 합산 후 채널 귀속 (CLAUDE.md L77~78). YPL=용인공원 광고예산 흡수 구조.",
+      "caveats": [
+        "ypl_business_model",
+        "channel_normalization"
+      ],
+      "verified": true
+    },
+    "ovw_rfi_count": {
+      "title": "자동 도출 RFI · T-Box",
+      "page": "/",
+      "kind": "Card",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RAW",
+          "computed_value": 5,
+          "computed_unit": "건 (P0 표출)",
+          "verified": true,
+          "notes": "RFI 110건 중 미수령 87건 (79%). P0 우선순위 5건 표출."
+        }
+      ],
+      "narrative": "P2-1 sync 룰 명시: RFI 110건 중 미수령 87건. P0 5건 화면 노출. tbox_stat_rfi_count(/data-model)와 동일 단일 source-of-truth (RFI_260507.xlsx:RFI List) — 두 화면 수치 일치 보장. computed_value 동기화 의무.",
+      "verified": true
+    },
+    "ovw_dept_kpi_cards": {
+      "title": "부서별 KPI 매핑 — 상조 VC",
+      "page": "/",
+      "kind": "CardGroup",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "KPI",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "Summary",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "notes": "0403 36:39 — ERP 외 엑셀 의존"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 18,
+          "notes": "p.18, p.27, p.115~116 KPI matrix",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P1-6 정정: deptKpiMatrix 반복. dept master 미정의 — Phase F에서 보강. ⚠ 부서별 KPI 합계 vs PL 합계 reconcile 미실시 — RFI r1·r4 보강 후 검증 필요.",
+      "caveats": [
+        "ypl_business_model",
+        "intercompany_elimination"
+      ],
+      "verified": false
+    },
+    "ovw_channel_cost_table": {
+      "title": "채널별 비용 배부 결과 (Heatmap)",
+      "page": "/",
+      "kind": "Table",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "매출원가계산_ppt",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "상조ERP설계",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/광고선전비_배부분석_FY25.xlsx",
+          "sheet": "광고선전비_배부분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용역비_배부분석_FY25.xlsx",
+          "sheet": "용역비_배부분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 10,
+          "notes": "p.10~13 배부 결과표",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P2-2 정정: 계정×채널 매트릭스. 채널구분 '오프라인 ' (trailing space, 152건) 정규화 caveat. 'oo오프라인' 표기는 오타였음.",
+      "caveats": [
+        "channel_normalization"
+      ],
+      "verified": true
+    },
+    "ovw_new_kpi_rationale": {
+      "title": "NEW KPI · 도입 사유",
+      "page": "/",
+      "kind": "InfoBox",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "KPI",
+          "method": "ANALYSIS",
+          "verified": false
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "FY25_Summary_Clean",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 18,
+          "notes": "p.18, p.24, p.27, p.115~116 신규 KPI 도입 근거 narrative",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "deptKpi.newKpiRationale — Skeleton 슬라이드 추가 narrative 필요",
+      "verified": false
+    },
+    "mutual_total_members": {
+      "title": "총 회원 (스냅샷, 활성+비활성 누적)",
+      "page": "/mutual",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "computed_value": 9930,
+          "computed_unit": "명 (활성 8,007 + 비활성 1,923)",
+          "as_of": "2026-04-20",
+          "verified": true,
+          "notes": "P1-4 정정 (2026-05-11): 회원상태 4분포 = 납부만기(YF) 4,433 + 정상(YY) 3,574 → 활성 8,007 / 3회연체(YB) 1,882 + 오류(YE) 41 → 비활성 1,923. row count 9,930."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/일일보고/일일보고_라이프_이정인보고용_04월01일.xlsx",
+          "sheet": "회원",
+          "method": "RAW",
+          "computed_value": 1246,
+          "computed_unit": "명 (25.12-26.04 신규)",
+          "notes": "분리 마스터 — 단순 합산 금지"
+        }
+      ],
+      "narrative": "P1-4 정정: 9,930명 (25년말 누적, 활성 8,007 + 비활성 1,923). 활성 = 납부만기(YF) 4,433 + 정상(YY) 3,574, 비활성 = 3회연체(YB) 1,882 + 오류(YE) 41. 일일보고 1,246건은 25.12-26.04 신규 (온유 위주, 분리 마스터).",
+      "caveats": [
+        "data_period_asymmetry"
+      ],
+      "verified": true
+    },
+    "mutual_lifecycle_revenue": {
+      "title": "회원 누적 납입액 (스냅샷)",
+      "page": "/mutual",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025손익계산서_용인공원라이프.xls",
+          "sheet": "손익계산서",
+          "method": "RAW",
+          "computed_value": 4623872231,
+          "computed_unit": "원 (FY25 행사매출 / 회사 손익 인식 매출)",
+          "verified": true,
+          "notes": "P0-4 정정 (2026-05-11): 회사 손익 인식 매출(GAAP)을 PRIMARY로 승격. 회원DB 누적 27,765M은 SECONDARY로 강등."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "computed_value": 27764964000,
+          "computed_unit": "원 (회원DB 누적, 2010~25 가입자)",
+          "as_of": "2026-04-20",
+          "verified": true,
+          "notes": "P0-4 정정: 회원입장 누적 납입액 스냅샷. 회사 손익 매출과 정의 다름."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/2. 와이피엘/[와이피엘] 2025 손익계산서.xlsx",
+          "sheet": "손익계산서",
+          "method": "DEFINITION",
+          "computed_value": 19758763395,
+          "computed_unit": "원 (YPL FY25 매출, 내부거래 18.74억 포함)",
+          "verified": true,
+          "notes": "YPL FY25 매출 19.76억 중 18.74억(P-1 내부거래)이 용인공원→YPL 지급수수료. 외부매출은 약 1,000M. 그룹 합산 시 제거 필수."
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 4,
+          "notes": "Executive Summary",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P0-3·P0-4 정정: 라벨 'lifecycle 매출' → '회원 누적 납입액 (스냅샷)'. PRIMARY는 FY25 회사 손익 인식 매출(라이프 4,624M), SECONDARY는 회원DB 누적(27,765M)·YPL FY25(19,759M, 내부거래 포함). **3사 합산 시 내부거래 20.8억(B3 §4-1 P&L 9건) 제거 필수, 단순합산 금지** — tbox_axiom_a4 양방향매칭 참조.",
+      "caveats": [
+        "lifecycle_revenue_caveat",
+        "lifecycle_revenue_split",
+        "intercompany_elimination",
+        "data_period_asymmetry",
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "mutual_mature_rate": {
+      "title": "납부만기 도달율",
+      "page": "/mutual",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "computed_value": 0.446,
+          "computed_unit": "비율 (4,433/9,930)",
+          "verified": true,
+          "notes": "회원상태=납부만기(YF) / 전체"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 7,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P1-5 정정: title '만기해약율' → '납부만기 도달율' (회원상태 YF는 납부완료 만기, 해약 아님). 납부만기 4,433명 / 전체 9,930명 = 44.6%. 해약은 별도 — 해약-RAW 13,251건 중 만기해약 979건만 정상 만기.",
+      "caveats": [
+        "data_period_asymmetry"
+      ],
+      "verified": true
+    },
+    "mutual_sales_agents": {
+      "title": "설계사 수",
+      "page": "/mutual",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "모집설계사 distinct count"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/일일보고/일일보고_라이프_이정인보고용_04월01일.xlsx",
+          "sheet": "회원",
+          "method": "RAW",
+          "notes": "3개월 분포 — '온유 홈페이지' 869건 자동 등록 제외 caveat"
+        }
+      ],
+      "narrative": "모집설계사 DISTINCT.",
+      "caveats": [
+        "pii"
+      ],
+      "verified": true
+    },
+    "mutual_channel_ltv_chart": {
+      "title": "채널별 회원당 LTV",
+      "page": "/mutual",
+      "kind": "BarChart",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "채널구분 × 매출합계/회원수. 채널구분 4분포 (오프 9,315/온 434/오프공백 152/법인 29)"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 20,
+          "notes": "3개 채널: 법인/온라인/오프라인",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "채널×LTV. 누적 매출 caveat + trailing space 정규화 필수.",
+      "caveats": [
+        "lifecycle_revenue_caveat",
+        "channel_normalization"
+      ],
+      "verified": true
+    },
+    "mutual_member_status_pie": {
+      "title": "회원상태 분포",
+      "page": "/mutual",
+      "kind": "PieChart",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "회원상태 4분포 (납부만기 4,433/정상 3,574/3회연체 1,882/오류 41)"
+        }
+      ],
+      "narrative": "4종 분류 (YF/YY/YB/YE)",
+      "verified": true
+    },
+    "mutual_cohort_linechart": {
+      "title": "가입연도별 코호트 (3-axis)",
+      "page": "/mutual",
+      "kind": "LineChart",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "가입일자 2010~2025 코호트"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_2023-25 ERP 자료.xlsx",
+          "sheet": "회원",
+          "method": "RAW",
+          "notes": "23-25 신규 4,437건"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "라이프_PL",
+          "method": "ANALYSIS",
+          "notes": "FY23~25 시계열"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 27,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "3개 축: 회원수/LTV/만기율. 시점 비대칭 caveat.",
+      "caveats": [
+        "data_period_asymmetry"
+      ],
+      "verified": true
+    },
+    "mutual_top_agents_table": {
+      "title": "상위 10 설계사",
+      "page": "/mutual",
+      "kind": "Table",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "모집설계사명 + 매출합계 groupby TOP-N"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/일일보고/일일보고_라이프_이정인보고용_04월01일.xlsx",
+          "sheet": "회원",
+          "method": "RAW",
+          "notes": "TOP: 김지숙 362 / 이영옥2 324 (3개월 신규)"
+        }
+      ],
+      "narrative": "익명화 필수 (PII). 단순 익명코드 권장.",
+      "caveats": [
+        "pii"
+      ],
+      "verified": true
+    },
+    "mutual_mature_by_channel": {
+      "title": "채널별 납부만기 도달율",
+      "page": "/mutual",
+      "kind": "BarChart",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "B7 부수발견 정정 (2026-05-11): 채널×회원상태 crosstab. 회원상태=납부만기(YF) / 채널 전체 비율. 해약율 아님 — 회원상태 YF는 납부완료 정상 만기."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회비정산차익계산_backdata.xlsx",
+          "sheet": "해약-RAW",
+          "method": "RAW",
+          "notes": "별도 마스터 — 해약율 산출용 (채널 분포 오프 12,459/온 90/법인 27). 본 슬롯과 정의 다름."
+        }
+      ],
+      "narrative": "B7 부수발견 정정: title '채널별 만기해약율' → '채널별 납부만기 도달율' (회원상태 YF 기준, B2_master §1.7). 해약율과 정의 다름. NARRATIVE — 0422 p.20 channel narrative 활용.",
+      "caveats": [
+        "channel_normalization",
+        "data_period_asymmetry"
+      ],
+      "verified": false
+    },
+    "mutual_channel_explorer": {
+      "title": "채널별 활동원가 (복합 위젯)",
+      "page": "/mutual",
+      "kind": "ComplexWidget",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "상조ERP설계",
+          "method": "ANALYSIS",
+          "verified": true,
+          "notes": "사용자 confirm: F2가 master, F9는 SECONDARY (교차검증)"
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "채널별 손익",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "비용23개_분석",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/광고선전비_배부분석_FY25.xlsx",
+          "sheet": "광고선전비_배부분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용역비_배부분석_FY25.xlsx",
+          "sheet": "용역비_배부분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "상조ERP설계",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 20,
+          "notes": "p.20~26, p.68~69 채널 활동원가",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "채널×계정 활동원가. F2 PRIMARY + F4·F5·F9 SECONDARY 교차검증. 광고채널은 vendor → 매체사 → 채널 2단계 분해.",
+      "caveats": [
+        "channel_normalization",
+        "fee_rates",
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "mutual_hypothesis_h1": {
+      "title": "H1 회비정산차익 영업외수익 흡수",
+      "page": "/mutual",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회비정산차익계산_backdata.xlsx",
+          "sheet": "해약-RAW",
+          "method": "RAW",
+          "computed_value": 2812594408,
+          "computed_unit": "원 (3년 누적 해약수입금)",
+          "verified": true,
+          "notes": "해약유형 만기해약 979 vs 일반해약 11,174"
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025손익계산서_용인공원라이프.xls",
+          "sheet": "손익계산서",
+          "method": "RAW",
+          "computed_value": 550265950,
+          "computed_unit": "원 (FY25 영업외수익 회비정산차익)",
+          "verified": true,
+          "notes": "FY24 1,734M, FY25 550M"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "회비정산차익_분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "notes": "0403 43:16 (참석자1 라이프) '이익도 아닌데'; 2일차오전 07:48 (참석자4) '장례 발생 시점부터 매출 변환'"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 25,
+          "notes": "p.4, p.7~8, p.25",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "signal=HIGH. F-2 caveat 핵심 evidence.",
+      "verified": true
+    },
+    "mutual_hypothesis_h2": {
+      "title": "H2 최근 코호트 만기율 급등",
+      "page": "/mutual",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "가입연도×회원상태 (납부만기 4,433/9,930=44.6%)"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_2023-25 ERP 자료.xlsx",
+          "sheet": "회원",
+          "method": "RAW",
+          "notes": "행사완료 1,399/4,437=31.5%"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "Q&A",
+          "method": "RFI",
+          "notes": "Q38 (4-17 이호석) 만기해약 자동처리 + 회원DB 잔류 — 미회신"
+        }
+      ],
+      "narrative": "P1-7 정정: title '72→96→88→88%'의 4개 값(코호트 정의)이 evidence_index에 미박제. RFI Q38 (만기해약 자동처리 + 회원DB 잔류 로직) 미회신으로 만기율 정의 자체 미확정 → computed_value 산출 불가. Q38 답변 후 코호트별(가입연도) 만기율 정확 추출 예정.",
+      "caveats": [
+        "data_period_asymmetry"
+      ],
+      "verified": false
+    },
+    "mutual_hypothesis_h3": {
+      "title": "H3 온라인 채널 회원당 매출 3%",
+      "page": "/mutual",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "채널×매출합계"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/온유상조_Performance_Report_new_260417.xlsx",
+          "sheet": "RD_플랫폼",
+          "method": "RAW",
+          "notes": "온유=그룹 자회사 (D-5 답)"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/260416_25년 잠재고객.xlsx",
+          "sheet": "03. 전체 잠재고객",
+          "method": "RAW",
+          "notes": "DB구분 아너스톤 19,320 / 용인공원 3,774"
+        }
+      ],
+      "narrative": "P2-4 정정: signal=MEDIUM. 온유=그룹 자회사 caveat. 채널구분 trailing space 정규화 적용.",
+      "caveats": [
+        "channel_normalization",
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "mutual_hypothesis_h4": {
+      "title": "H4 설계사 매출 집중도 Gini 0.69",
+      "page": "/mutual",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "모집설계사명×매출합계 groupby (Gini 산출)"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/일일보고/일일보고_라이프_이정인보고용_04월01일.xlsx",
+          "sheet": "회원",
+          "method": "RAW",
+          "notes": "모집설계사명 김지숙 362/이영옥2 324"
+        }
+      ],
+      "narrative": "P2-7 정정: signal=MEDIUM. RFI 6.2/6.5 일부수령 — 설계사 master 부분결손. Gini 0.69 산출 base = 회원DB 모집설계사명 distinct N (라이프_회원DB_backdata.xlsx:25년말 DB), 분포변수 = 설계사별 매출합계 sum. Lorenz 곡선 기반.",
+      "caveats": [
+        "pii",
+        "lifecycle_revenue_caveat"
+      ],
+      "verified": false
+    },
+    "mutual_wow_mature_benefit": {
+      "title": "WowCard 회계≠경제",
+      "page": "/mutual",
+      "kind": "WowCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회비정산차익계산_backdata.xlsx",
+          "sheet": "해약-RAW",
+          "method": "RAW",
+          "computed_value": 2812594408,
+          "computed_unit": "원 (3년 누적 해약수입금)",
+          "as_of": "2023-09-27 ~ 2025-12-31 (3년 누적)",
+          "verified": true,
+          "notes": "P0-5 정정 (2026-05-11): as_of 기간 명시. 3년 누적 해약수입금. FY25 단년 회비정산차익은 별도 SECONDARY 참조."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025손익계산서_용인공원라이프.xls",
+          "sheet": "손익계산서",
+          "method": "RAW",
+          "computed_value": 550265950,
+          "computed_unit": "원 (FY25 단년 회비정산차익 / 영업외수익)",
+          "as_of": "2025-12-31 (FY25 단년)",
+          "verified": true,
+          "notes": "P0-5 추가: FY25 단년 회비정산차익(영업외수익 92900). B3 §1-3. 3년 누적과 분리 표기."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "60_회비정산차익(92900)",
+          "method": "RAW"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 87,
+          "notes": "p.6, p.18, p.27, p.87, p.88",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P0-5 정정: 해약수입금 2,812,594,408원은 2023-09-27~2025-12-31 3년 누적. FY25 단년 회비정산차익(영업외수익)은 550,265,950원. 만기 시 회사 가져가는 차익 — GAAP상 영업외수익으로 영업이익과 분리.",
+      "caveats": [
+        "data_period_asymmetry",
+        "lifecycle_revenue_caveat"
+      ],
+      "verified": true
+    },
+    "mutual_insight_mature": {
+      "title": "만기해약 비중과 영업손실 관계",
+      "page": "/mutual",
+      "kind": "InsightBox",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025손익계산서_용인공원라이프.xls",
+          "sheet": "손익계산서",
+          "method": "RAW",
+          "computed_value": -2847056108,
+          "computed_unit": "원 (FY25 영업손실 / 손익계산서 raw 셀값)",
+          "verified": true,
+          "notes": "P0-1 정정 (2026-05-11): 손익계산서 Sheet1 행43 raw 셀값 직접 추출. 기존 -2,847,056,000원은 천원단위 절사 표기였음. 정확값 -2,847,056,108원."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회비정산차익계산_backdata.xlsx",
+          "sheet": "해약-RAW",
+          "method": "RAW",
+          "notes": "만기해약 979건"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "notes": "0403 43:06 회계 — 해약이 엄청 많은 거"
+        }
+      ],
+      "narrative": "warn — GAAP ≠ 경제적 가치. FY25 영업손실 -2,847,056,108원 vs 행사예수금 28,045M(BS부채). 회계상 손실 ≠ 경제 가치 잠식.",
+      "caveats": [
+        "lifecycle_revenue_caveat",
+        "data_period_asymmetry"
+      ],
+      "verified": true
+    },
+    "mutual_dept_kpi_cards": {
+      "title": "부서별 KPI 매핑 — 상조 VC",
+      "page": "/mutual",
+      "kind": "CardGroup",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "Top3_Low3_View_제작",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "Executive Summary_ppt",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "라이프_PL",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "FY25_Summary_Clean",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 27,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P1-6 정정: mutualDepts 필터. YPL 상조 10% 수수료가 변동비 핵심. ⚠ 부서별 KPI 합계 vs 라이프 PL 합계 reconcile 미실시 — RFI r1·r4 보강 후 검증 필요.",
+      "caveats": [
+        "ypl_business_model",
+        "fee_rates",
+        "intercompany_elimination"
+      ],
+      "verified": true
+    },
+    "cemetery_total_zones": {
+      "title": "총 묘역",
+      "page": "/cemetery",
+      "kind": "StatCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "25년 묘지재고 명세",
+          "method": "RAW",
+          "computed_value": 55711,
+          "computed_unit": "기",
+          "verified": true
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "KPI",
+          "method": "ANALYSIS"
+        }
+      ],
+      "narrative": "P1 정책확장: 55,711기. 장지 KPI 해석 시 YPL 마케팅 대행 매출 흐름 맥락 반영.",
+      "caveats": [
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "cemetery_sold_rate": {
+      "title": "분양완료율",
+      "page": "/cemetery",
+      "kind": "StatCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "25년 묘지재고 명세",
+          "method": "RAW",
+          "computed_value": 0.78,
+          "computed_unit": "비율 (기수 기준 — 분양완료 기수 / 총 기수, 면적·단가가중 X)",
+          "verified": true,
+          "notes": "P2-6 정정 (2026-05-11): 산출 기준 명시. 78% = 분양완료 기수 / 총 묘지재고 기수 (단순 기수 기준). 면적가중·단가가중과 다름."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "KPI",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 5,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P2-6 정정: 78% (기수 기준 — 분양완료 기수 / 총 기수). 면적·단가가중 산출 아님.",
+      "caveats": [
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "cemetery_available_inventory": {
+      "title": "가용재고",
+      "page": "/cemetery",
+      "kind": "StatCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "재고_View",
+          "method": "RAW",
+          "computed_value": 12498,
+          "computed_unit": "기",
+          "verified": true
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "25년재고 T계정 (원본)",
+          "method": "RAW"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 107,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P1 정책확장: 12,498기. 장지 KPI 해석 시 YPL 마케팅 대행 매출 흐름 맥락 반영.",
+      "caveats": [
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "cemetery_avg_price_stat": {
+      "title": "평균 묘역사용료 (StatCard)",
+      "page": "/cemetery",
+      "kind": "StatCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "KPI",
+          "method": "ANALYSIS",
+          "verified": true,
+          "notes": "P1-11 정정 (2026-05-11): cemetery_avg_price_kpi와 동일 source (KPI 시트) 단일 source-of-truth. autoUnit으로 표기단위만 다름 (StatCard=단위포맷, NumberCell=raw)."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "25년 묘지재고 명세",
+          "method": "RAW"
+        }
+      ],
+      "narrative": "P1-11 정정: cemetery_avg_price_kpi와 sync — 동일 PRIMARY (용인공원_분석.xlsm:KPI 시트) 사용으로 수치 일치 보장. StatCard·NumberCell 표기 차이만 존재.",
+      "caveats": [
+        "fee_rates",
+        "ypl_business_model"
+      ],
+      "verified": false
+    },
+    "cemetery_potential_value": {
+      "title": "가용재고 잠재가치",
+      "page": "/cemetery",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "25년 묘지재고 명세",
+          "method": "RAW",
+          "verified": true,
+          "notes": "PROXY (가용재고 12,498기 × 등급별 평균가). 최대치 추정 — 분양 가능률·할인율 미반영, 100% 분양 가정 X. 단가는 영업비밀(fee_rates)."
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "25년신규묘역원가_건설",
+          "method": "RAW"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "사용료수입(아너)(41100)_분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025재무상태표_용인공원라이프.xls",
+          "sheet": "재무상태표",
+          "method": "RAW",
+          "computed_value": 28045558858,
+          "computed_unit": "원 (BS 비유동부채 / deferred revenue, 별개 anchor)",
+          "verified": true,
+          "notes": "P0-6 정정 (2026-05-11): 라이프 행사예수금 — 회계 성격 다른 별개 anchor (BS 부채 ≠ 미래 수익 추정). 묘역 잠재가치와 합산·비교 금지."
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 107,
+          "notes": "p.107~113 단가 재계산 narrative",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P0-6 정정: 두 anchor 회계 성격 다름 — (1) 묘역 가용재고 잠재가치(미래 수익 추정, PROXY, 최대치, 분양 가능률·할인율 미반영) (2) 라이프 행사예수금 28,045M(현재 BS 부채). 합산 X, 분리 해석 필수. 단가는 영업비밀. 잠재가치 산정 매출 anchor는 용인공원 단일사 — 그룹 합산 시 YPL 내부거래 제거.",
+      "caveats": [
+        "fee_rates",
+        "lifecycle_revenue_caveat",
+        "ypl_business_model",
+        "intercompany_elimination"
+      ],
+      "verified": true
+    },
+    "cemetery_avg_price_kpi": {
+      "title": "평균 묘역사용료 (KPI)",
+      "page": "/cemetery",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "KPI",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "구역별매출_ppt",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "봉안당2층_3충기수당 단가_건설",
+          "method": "RAW"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 107,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P1-11 정정: cemetery_avg_price_stat와 sync — 동일 PRIMARY (용인공원_분석.xlsm:KPI 시트) 사용. 원장 대조용 SECONDARY로 25년 묘지재고 명세 raw 활용.",
+      "caveats": [
+        "fee_rates",
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "cemetery_status_distribution": {
+      "title": "분양상태 분포",
+      "page": "/cemetery",
+      "kind": "PieChart",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "25년 묘지재고 명세",
+          "method": "RAW",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "25년봉안함재고_재고",
+          "method": "RAW"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+          "sheet": "장법기준_피벗",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 110,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P1 정책확장: 5종 (제품/재공품/봉안/원재료/저장품). 장지 KPI 해석 시 YPL 마케팅 대행 매출이 그룹 내부거래로 흐른다는 맥락 반영.",
+      "caveats": [
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "cemetery_contract_velocity": {
+      "title": "연도별 계약 건수 추이",
+      "page": "/cemetery",
+      "kind": "BarChart",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/1. 용인공원/용인공원_계정별원장 (2).xls",
+          "method": "RAW",
+          "verified": true,
+          "notes": "PRIMARY 검토 (2026-05-11): 분석본 → 25년 계정별원장 RAW로 PRIMARY 변경. 계약속도는 raw 데이터 직접 표현 (RAW가 PRIMARY 회계학적 정합). FY24 49.23억→FY25 50.24억 +2.05% YoY."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "0_사용료수입(일반)_묘역번호확인_용인공원",
+          "method": "RAW",
+          "notes": "PRIMARY → SECONDARY 강등. 분석본에 매출 10계정 raw + _묘역번호확인 시트(2046행 등) 가공 — 날짜축 집계 근거."
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 103,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P1 정책확장 (2026-05-11): 날짜축 집계로 계약속도 산출. FY24 49.23억→FY25 50.24억 +2.05% YoY. 매출은 용인공원 단일사 기준 (그룹 합산 시 YPL 내부거래 제거 필수).",
+      "caveats": [
+        "intercompany_elimination",
+        "ypl_business_model",
+        "data_period_asymmetry"
+      ],
+      "verified": true
+    },
+    "cemetery_top10_districts": {
+      "title": "잠재가치 Top 10 단지",
+      "page": "/cemetery",
+      "kind": "BarChart",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/매출_피벗테이블.xlsx",
+          "sheet": "대구역_피벗",
+          "method": "ANALYSIS",
+          "verified": true,
+          "notes": "F8 PRIMARY (정제도 가장 높음)"
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "구역별매출_ppt",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+          "sheet": "구역별기준_피벗",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "2025 장지 Plan2",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 15,
+          "notes": "p.15, p.105 수익률 상위 3",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P1 정책확장: F8 master + F1·F7 reconcile. 잠재가치는 PROXY (재고기수 × 단가, 단가 영업비밀). 매출 anchor는 용인공원 단일사 — 그룹 합산 시 YPL 내부거래 제거.",
+      "caveats": [
+        "fee_rates",
+        "ypl_business_model",
+        "intercompany_elimination"
+      ],
+      "verified": true
+    },
+    "cemetery_stagnant_districts": {
+      "title": "정체 단지 (2022 이후 계약 없음)",
+      "page": "/cemetery",
+      "kind": "Table",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "분석결과(top3 low3)_ppt",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/매출_피벗테이블.xlsx",
+          "sheet": "세부구역_피벗",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/구역별매출_기타_미분류_상세.xlsx",
+          "sheet": "기타(미분류) 상세",
+          "method": "RAW"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 106,
+          "notes": "하위 3 구역",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P1 정책확장: 232 세부구역 중 정체 식별. 매출은 용인공원 단일사 — YPL 광고예산 흡수 맥락 caveat.",
+      "caveats": [
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "cemetery_transfer_zones": {
+      "title": "이장지 분포 Top 단지",
+      "page": "/cemetery",
+      "kind": "Table",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "49_이장비수입(40900)_용인공원",
+          "method": "RAW",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "이장비(40900)수입_분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/구역별매출_기타_미분류_상세.xlsx",
+          "sheet": "기타(미분류) 상세",
+          "method": "RAW"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_3일차_오전_공원.xlsx",
+          "method": "INTERVIEW",
+          "notes": "3일차오전 05:46 — 이장 발생 정의"
+        }
+      ],
+      "narrative": "P1 정책확장: 이장 발생 구역 추적. 매출은 용인공원 단일사 — YPL 마케팅 대행 흐름 caveat.",
+      "caveats": [
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "cemetery_zone_explorer": {
+      "title": "구역별 활동원가 (복합 위젯)",
+      "page": "/cemetery",
+      "kind": "ComplexWidget",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "2025 장지 구역별 손익계산서",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+          "sheet": "구역별기준_피벗",
+          "method": "ANALYSIS",
+          "verified": true,
+          "notes": "F7 매핑테이블 SSOT"
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+          "sheet": "아너스톤 구분요청",
+          "method": "ANALYSIS",
+          "notes": "1R/2R/3R / 1N/2N/3N / 3H prefix"
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/매출_피벗테이블.xlsx",
+          "sheet": "대구역_피벗",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용역비_배부분석_FY25.xlsx",
+          "sheet": "용역비_배부분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "장지ERP설계",
+          "method": "ANALYSIS",
+          "notes": "F9 Datapack 공식 cross-validate"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/구역별매출_기타_미분류_상세.xlsx",
+          "sheet": "기타(미분류) 상세",
+          "method": "RAW"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 30,
+          "notes": "p.6~17, p.30~66 계정별 활동정의",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "구역×계정 활동원가. 트리플 시트 (분석본+원장+묘역번호확인). YPL 봉안당 50% 수수료 차감 구조.",
+      "caveats": [
+        "fee_rates",
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "cemetery_insight_master": {
+      "title": "장지 KPI 한계와 보완 경로",
+      "page": "/cemetery",
+      "kind": "InsightBox",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "verified": true,
+          "notes": "RFI 110건 중 r1/r2/r3 P0 미수령"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+          "sheet": "분류기준_안내",
+          "method": "META"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 6,
+          "notes": "p.6~9 구역 매핑 원칙",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "info — KPI 한계는 마스터 결손에서 비롯",
+      "verified": true
+    },
+    "cemetery_hypothesis_z1": {
+      "title": "Z1 정체단지 잠재가치 누적",
+      "page": "/cemetery",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "분석결과(top3 low3)_ppt",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "손익항목에 대한 활동의 정의_ppt",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/매출_피벗테이블.xlsx",
+          "sheet": "세부구역_피벗",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "notes": "0403 1:02:34 (참석자4) '센트럴이 분양이 마감'; 3일차오전 02:04 (참석자1) '관리비 매출이 가장 큼'"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 103,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "HIGH",
+      "verified": true
+    },
+    "cemetery_hypothesis_z2": {
+      "title": "Z2 이장지 4,325기 재분양 자원",
+      "page": "/cemetery",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "49_이장비수입(40900)_용인공원",
+          "method": "RAW",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "이장비(40900)수입_분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/구역별매출_기타_미분류_상세.xlsx",
+          "sheet": "기타(미분류) 상세",
+          "method": "RAW"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "notes": "0403 1:18:09 (참석자5) '오래된 재고지 영업사원 판매 일시 수당'; 3일차오전 05:18 (참석자1) '이장 용역비가 가장 많이 나가요'"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 36,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "HIGH",
+      "verified": true
+    },
+    "cemetery_hypothesis_z3": {
+      "title": "Z3 단지·등급별 평균가 격차",
+      "page": "/cemetery",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "구역별 매출",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+          "sheet": "아너스톤 구분요청",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/매출_피벗테이블.xlsx",
+          "sheet": "대구역_피벗",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 16,
+          "notes": "p.16~17, p.103~104 아너스톤 노블 105억/로얄 59억/아너 22억 = 영업이익 69%",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "MEDIUM",
+      "verified": true
+    },
+    "cemetery_hypothesis_z4": {
+      "title": "Z4 계약자 master 부재",
+      "page": "/cemetery",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "Q&A",
+          "method": "RFI",
+          "verified": false,
+          "notes": "Q40 (4-17 이호석) 미회신 — 결손 자체가 evidence"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "notes": "0403 1:33:06 — '수기로 나누기'"
+        }
+      ],
+      "narrative": "HIGH — RFI r1 (P0) + Q40 미수령이 evidence. 수령 후 보강.",
+      "caveats": [
+        "data_period_asymmetry"
+      ],
+      "verified": false,
+      "missing": true
+    },
+    "cemetery_dept_kpi_cards": {
+      "title": "부서별 KPI 매핑 — 장지 VC",
+      "page": "/cemetery",
+      "kind": "CardGroup",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "KPI",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "용인공원_PL",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "Act_판관",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "2025 장지 Plan2",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 18,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P1-6 정정: CEMETERY_DEPT_TAGS. 시설관리부서 외주비 = 에코비엠 1.5~1.9억/년 + 누보이엔지 사무 6~8억/년. YPL=용인공원 광고예산 흡수. ⚠ 부서별 KPI 합계 vs 용인공원 PL 합계 reconcile 미실시 — RFI r1·r4 보강 후 검증 필요.",
+      "caveats": [
+        "ypl_business_model",
+        "fee_rates",
+        "pii",
+        "intercompany_elimination"
+      ],
+      "verified": true
+    },
+    "rc_stat_mature_member": {
+      "title": "납부만기 회원 누적매출 비중 (스냅샷, 60.6%)",
+      "page": "/root-cause",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "computed_value": 0.606,
+          "computed_unit": "비율 (스냅샷 누적 매출 기준)",
+          "verified": true,
+          "notes": "P1-9 정정 (2026-05-11): 납부만기(YF) 회원 매출합계 16,835M / 전체 27,765M = 60.6%. 회원DB 누적 스냅샷 기준 — FY25 행사매출 기준과 정의 다름."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025손익계산서_용인공원라이프.xls",
+          "sheet": "손익계산서",
+          "method": "RAW",
+          "notes": "라이프 FY25 행사매출 4,624M / 회비정산차익 550M — 별도 산출 권장"
+        }
+      ],
+      "narrative": "P1-9 정정: 스냅샷 기준 만기회원 누적매출 비중 60.6% (16,835M/27,765M). FY25 손익 행사매출 기준 비중과 정의 다름 — 별도 산출 필요.",
+      "caveats": [
+        "lifecycle_revenue_caveat",
+        "data_period_asymmetry"
+      ],
+      "verified": true
+    },
+    "rc_stat_transfer_potential": {
+      "title": "장지 가용재고 정체 잠재",
+      "page": "/root-cause",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "25년 묘지재고 명세",
+          "method": "RAW",
+          "verified": true,
+          "notes": "proxy"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "분석결과(top3 low3)_ppt",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 106,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "proxy",
+      "verified": false
+    },
+    "rc_stat_channel_ltv_gap": {
+      "title": "채널 LTV 격차 (34배, 누적기준)",
+      "page": "/root-cause",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "computed_value": 34,
+          "computed_unit": "배 (오프 2,929k원 / 온 86.5k원, 누적매출 기준)",
+          "verified": true,
+          "notes": "P1-8 정정 (2026-05-11): 오프라인 27,284M/9,315명=2,929k원 vs 온라인 37,534M/434명=86.5k원, gap=33.9배. 누적 매출 기준이며 가입 시점 다른 두 그룹(온라인은 신규 위주) 단순 비교."
+        }
+      ],
+      "narrative": "P1-8 정정: 34배 (누적 LTV gap). ⚠ 온라인은 신규 가입 위주, 오프라인은 2010년부터 누적 — 가입연도 비대칭으로 단순 LTV 비교 caveat 필수.",
+      "caveats": [
+        "channel_normalization",
+        "data_period_asymmetry",
+        "lifecycle_revenue_caveat"
+      ],
+      "verified": true
+    },
+    "rc_h1_card": {
+      "title": "H1 회비정산차익 영업외수익 흡수",
+      "page": "/root-cause",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025손익계산서_용인공원라이프.xls",
+          "sheet": "손익계산서",
+          "method": "RAW",
+          "verified": true,
+          "notes": "영업외수익 회비정산차익"
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회비정산차익계산_backdata.xlsx",
+          "sheet": "해약-RAW",
+          "method": "RAW"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "회비정산차익_분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "notes": "0403 43:16; 2일차오전 07:48"
+        }
+      ],
+      "narrative": "LLM 분석 토글 포함",
+      "verified": true
+    },
+    "rc_h2_card": {
+      "title": "H2 최근 코호트 만기율 급등 (72→96→88→88%)",
+      "page": "/root-cause",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "가입연도×만기율"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "Q&A",
+          "method": "RFI",
+          "notes": "Q38 미회신"
+        }
+      ],
+      "narrative": "Q38 미수령",
+      "caveats": [
+        "data_period_asymmetry"
+      ],
+      "verified": false
+    },
+    "rc_h3_card": {
+      "title": "H3 온라인 회원당 매출 3%",
+      "page": "/root-cause",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "채널 LTV"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/온유상조_Performance_Report_new_260417.xlsx",
+          "sheet": "RD_플랫폼",
+          "method": "RAW"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 100,
+          "notes": "p.20, p.100 광고는 온라인 상품만 진행",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "P2-4 정정: 온유=그룹 자회사. 채널구분 trailing space 정규화 적용.",
+      "caveats": [
+        "channel_normalization",
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "rc_h4_card": {
+      "title": "H4 설계사 Gini 0.69",
+      "page": "/root-cause",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "모집설계사명 + 매출합계 + 해약-RAW 연체해약 60%"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "notes": "6.5 (판매수수료 지급기준 미수령)"
+        }
+      ],
+      "narrative": "RFI 6.5 미수령",
+      "caveats": [
+        "pii",
+        "fee_rates"
+      ],
+      "verified": false
+    },
+    "rc_chart_cohort_maturity": {
+      "title": "가입 코호트 × 만기율 (Composed)",
+      "page": "/root-cause",
+      "kind": "ComposedChart",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "가입연도×회원상태"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_2023-25 ERP 자료.xlsx",
+          "sheet": "회원",
+          "method": "RAW"
+        }
+      ],
+      "narrative": "Bar+Line",
+      "verified": true
+    },
+    "rc_chart_channel_ltv": {
+      "title": "채널별 회원당 매출",
+      "page": "/root-cause",
+      "kind": "BarChart",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "채널구분×매출합계/회원수"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/온유상조_Performance_Report_new_260417.xlsx",
+          "sheet": "RD_플랫폼",
+          "method": "RAW",
+          "notes": "광고비 normalize 시"
+        }
+      ],
+      "narrative": "P2-4 정정: 채널 LTV. 채널구분 trailing space 정규화 적용.",
+      "caveats": [
+        "channel_normalization",
+        "lifecycle_revenue_caveat"
+      ],
+      "verified": true
+    },
+    "rc_zone_hypothesis_z1": {
+      "title": "Z1 정체단지 잠재가치",
+      "page": "/root-cause",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "손익항목에 대한 활동의 정의_ppt",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "분석결과(top3 low3)_ppt",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/매출_피벗테이블.xlsx",
+          "sheet": "세부구역_피벗",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_3일차_오전_공원.xlsx",
+          "method": "INTERVIEW",
+          "notes": "3일차오전 02:04"
+        }
+      ],
+      "narrative": "cemetery_hypothesis_z1 mirror",
+      "verified": true
+    },
+    "rc_zone_hypothesis_z2": {
+      "title": "Z2 이장지 재분양 자원",
+      "page": "/root-cause",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "49_이장비수입(40900)_용인공원",
+          "method": "RAW",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "이장비(40900)수입_분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/구역별매출_기타_미분류_상세.xlsx",
+          "sheet": "기타(미분류) 상세",
+          "method": "RAW"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "notes": "0403 1:18:09"
+        }
+      ],
+      "narrative": "mirror",
+      "verified": true
+    },
+    "rc_zone_hypothesis_z3": {
+      "title": "Z3 등급별 평균가 격차",
+      "page": "/root-cause",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "구역별 매출",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+          "sheet": "아너스톤 구분요청",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/매출_피벗테이블.xlsx",
+          "sheet": "대구역_피벗",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 16,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "mirror",
+      "verified": true
+    },
+    "rc_zone_hypothesis_z4": {
+      "title": "Z4 계약자 master 부재",
+      "page": "/root-cause",
+      "kind": "HypothesisCard",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "Q&A",
+          "method": "RFI",
+          "verified": false,
+          "notes": "RFI r74 / Q40 미회신. 결손 자체가 evidence — narrative만 존재"
+        }
+      ],
+      "narrative": "RFI r74. 결손 자체가 evidence — narrative만 존재. cemetery_hypothesis_z4 alias.",
+      "caveats": [
+        "data_period_asymmetry"
+      ],
+      "verified": false,
+      "missing": true
+    },
+    "rc_chart_scatter_zone": {
+      "title": "단지별 분양률 vs 잠재가치 (3D scatter)",
+      "page": "/root-cause",
+      "kind": "ScatterChart",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "구역별 매출",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "25년 묘지재고 명세",
+          "method": "RAW",
+          "notes": "join (분양률 vs 잠재가치)"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/매출_피벗테이블.xlsx",
+          "sheet": "세부구역_피벗",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 15,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "상위 12 라벨",
+      "verified": true
+    },
+    "rc_insight_gaap_vs_economic": {
+      "title": "회계 손익 ≠ 경제 손익 (warn)",
+      "page": "/root-cause",
+      "kind": "InsightBox",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025손익계산서_용인공원라이프.xls",
+          "sheet": "손익계산서",
+          "method": "RAW",
+          "computed_value": -2847056108,
+          "computed_unit": "원 (FY25 영업손실 / 손익계산서 raw 셀값)",
+          "verified": true,
+          "notes": "P0-1 정정 (2026-05-11): 손익계산서 Sheet1 행43 raw 추출. 기존 -2,847,056,000원은 절사값."
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025재무상태표_용인공원라이프.xls",
+          "sheet": "재무상태표",
+          "method": "RAW",
+          "computed_value": 28045558858,
+          "computed_unit": "원 (행사예수금 BS 비유동부채 / deferred revenue)",
+          "verified": true,
+          "notes": "F-2 정량증거. 행사예수금 = 상조 선납 회비. 행사 발생 시 매출 인식 / 해약 시 일부 회비정산차익(영업외수익) 인식. 100% 매출 전환 가정 X — 만기/해약 시점·해약환급률에 따라 PL 인식 패턴 상이."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회비정산차익계산_backdata.xlsx",
+          "sheet": "해약-RAW",
+          "method": "RAW",
+          "computed_value": 2812594408,
+          "computed_unit": "원 (해약수입금)"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "notes": "B5 §3.5"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 25,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "F-2 정량증거. FY25 영업손실 -2,847,056,108원(약 -28.5억) vs 행사예수금 28,045,558,858원(약 280.5억). 행사예수금 = 행사발생 시 매출 인식 / 해약 시 일부 회비정산차익(영업외) 인식 / 100% 매출 전환 가정 X. 회계 손익(GAAP) ≠ 경제 가치. SECONDARY 해약수입금 2,812M은 2023-09-27~2025-12-31 3년 누적이며 FY25 단년 회비정산차익은 550,265,950원.",
+      "caveats": [
+        "lifecycle_revenue_caveat",
+        "data_period_asymmetry"
+      ],
+      "verified": true
+    },
+    "rc_insight_master_rfi": {
+      "title": "장지 master 결손 → BI 깊이 제한 (danger)",
+      "page": "/root-cause",
+      "kind": "InsightBox",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "verified": true,
+          "notes": "r1/r2/r3/r4/r5 미수령"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "notes": "0403 36:39, 1:33:06, 1:12:06; 1일차YPL 14:13 — 채널/마스터 결손 인용 7건"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 7,
+          "notes": "p.7~9, p.66",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "danger",
+      "verified": true
+    },
+    "rc_insight_channel_roi": {
+      "title": "채널 ROI 재배분 기회",
+      "page": "/root-cause",
+      "kind": "InsightBox",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "광고선전비_분석",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "판매수수료_분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "지급수수료원장_분류정리",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/배부기준/광고선전비_배부분석_FY25.xlsx",
+          "sheet": "광고선전비_배부분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 20,
+          "notes": "p.20~26, p.32, p.34, p.61, p.84",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "info — 정액(차이커뮤니케이션 6억) vs 마크업(마더브레인 15%) 분리. raw 인용 X, fee_rates 정책 참조.",
+      "caveats": [
+        "fee_rates",
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "rc_insight_inventory_activation": {
+      "title": "단기 액션 — 가용재고 활성화",
+      "page": "/root-cause",
+      "kind": "InsightBox",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "분석결과(top3 low3)_ppt",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용인공원_재고자산_분석(FY25명세서).xlsx",
+          "sheet": "25년 묘지재고 명세",
+          "method": "RAW"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/3. 용인공원라이프/2025재무상태표_용인공원라이프.xls",
+          "sheet": "재무상태표",
+          "method": "RAW",
+          "notes": "행사예수금 280억"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 107,
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "success",
+      "verified": true
+    },
+    "rc_action_tracker": {
+      "title": "다음 액션 (3건)",
+      "page": "/root-cause",
+      "kind": "ActionList",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "verified": false,
+          "notes": "RFI 110 미수령 87건 → 액션 후보. A-01~A-03 작가 결정"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 4,
+          "notes": "Executive Summary",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "액션 자체 박제 필요",
+      "verified": false
+    },
+    "rc_lineage_section": {
+      "title": "DATA LINEAGE 묶음",
+      "page": "/root-cause",
+      "kind": "SourceCaptionGroup",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "docs/evidence_mapping_matrix.md",
+          "method": "META",
+          "verified": true,
+          "notes": "메타 — SourceCaption 5건. 본 매트릭스 자체"
+        }
+      ],
+      "narrative": "5건",
+      "verified": true
+    },
+    "tbox_stat_total_classes": {
+      "title": "Class",
+      "page": "/data-model",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "ontology-demo/web/src/data/tbox.json",
+          "method": "META",
+          "computed_value": 13,
+          "computed_unit": "개",
+          "verified": true
+        }
+      ],
+      "narrative": "13 Class",
+      "verified": true
+    },
+    "tbox_stat_missing_classes": {
+      "title": "결손 Class",
+      "page": "/data-model",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "ontology-demo/web/src/data/tbox.json",
+          "method": "META",
+          "computed_value": 3,
+          "computed_unit": "개 (partiallyMissing)",
+          "verified": true,
+          "notes": "member, sales_agent, contract"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "notes": "r1/r2 미수령"
+        }
+      ],
+      "narrative": "partiallyMissing 3개",
+      "verified": false
+    },
+    "tbox_stat_missing_properties": {
+      "title": "결손 Property",
+      "page": "/data-model",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "ontology-demo/web/src/data/tbox.json",
+          "method": "META",
+          "computed_value": 6,
+          "computed_unit": "개 (partiallyMissing)",
+          "verified": true
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "notes": "r1/r3 미수령"
+        }
+      ],
+      "narrative": "partiallyMissing 6개",
+      "verified": false
+    },
+    "tbox_stat_rfi_count": {
+      "title": "자동 도출 RFI",
+      "page": "/data-model",
+      "kind": "NumberCell",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RAW",
+          "computed_value": 5,
+          "computed_unit": "건 (P0 표출, 미수령 87건/110건)",
+          "verified": true
+        }
+      ],
+      "narrative": "P2-1 sync 룰 명시: 5건 P0 표출. ovw_rfi_count(/)와 동일 단일 source-of-truth (RFI_260507.xlsx:RFI List) — 두 화면 수치 일치 보장.",
+      "verified": false
+    },
+    "tbox_graph_main": {
+      "title": "T-Box 그래프",
+      "page": "/data-model",
+      "kind": "ReactFlow",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "ontology-demo/web/src/data/tbox.json",
+          "method": "META",
+          "verified": true
+        }
+      ],
+      "narrative": "ReactFlow",
+      "verified": false
+    },
+    "tbox_class_member": {
+      "title": "Class member",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "마스터 충족 (35열, 9,930) — 단 ERP 채널/상태 속성 결손"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "Q&A",
+          "method": "RFI",
+          "notes": "RFI r1 (P0) + Q40 미회신"
+        }
+      ],
+      "narrative": "partiallyMissing",
+      "caveats": [
+        "pii",
+        "data_period_asymmetry"
+      ],
+      "verified": false
+    },
+    "tbox_class_sales_agent": {
+      "title": "Class sales_agent",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "모집설계사 ID·명·소속 충족 — 단 YPL 소속이나 공원 영업 인력 결손"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "notes": "RFI r2 (P0) + 6.5 미수령"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "notes": "0403 1:24:30 — 공원 상조 영업사원 YPL 소속, 판매액 10% 수수료"
+        }
+      ],
+      "narrative": "partiallyMissing",
+      "caveats": [
+        "pii",
+        "ypl_business_model"
+      ],
+      "verified": false
+    },
+    "tbox_class_contract": {
+      "title": "Class contract",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": false,
+          "notes": "master 없음 — 회원DB·잠재고객 join + ERP 23-25 회원시트로 부분 충족"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "notes": "RFI 6.3 미수령"
+        }
+      ],
+      "narrative": "partiallyMissing",
+      "verified": false
+    },
+    "tbox_class_zone": {
+      "title": "Class zone",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+          "sheet": "구역별기준_피벗",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+          "sheet": "장법기준_피벗",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/매출_피벗테이블.xlsx",
+          "sheet": "대구역_피벗",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "용인공원 지도 명칭 정리",
+          "method": "ANALYSIS",
+          "notes": "226행"
+        }
+      ],
+      "narrative": "satisfied",
+      "verified": true
+    },
+    "tbox_class_burial_method": {
+      "title": "Class burial_method",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+          "sheet": "장법기준_피벗",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "method": "ANALYSIS",
+          "notes": "매출 10계정 분류"
+        }
+      ],
+      "narrative": "satisfied",
+      "verified": true
+    },
+    "tbox_class_revenue_stream": {
+      "title": "Class revenue_stream",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "method": "ANALYSIS",
+          "computed_value": 50240119779,
+          "computed_unit": "원 (영업매출 10계정 순매출)",
+          "verified": true,
+          "notes": "매출 10계정 / B3 영업매출 합계 50.24억 (CLAUDE.md 정정 적용)"
+        }
+      ],
+      "narrative": "satisfied. 부가세 제외·환입 차감 후 순매출. 본 50,240M은 용인공원 단일 회사 매출 — 그룹 통합 매출 산출 시 YPL·라이프 단순 합산 금지(내부거래 20.8억 제거 필수). tbox_axiom_a4 양방향매칭 공리 참조.",
+      "caveats": [
+        "intercompany_elimination"
+      ],
+      "verified": true
+    },
+    "tbox_class_account": {
+      "title": "Class account",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "method": "RAW",
+          "verified": true,
+          "notes": "0~118번 계정 시트 / B3 ERP 119시트"
+        }
+      ],
+      "narrative": "satisfied",
+      "verified": true
+    },
+    "tbox_class_transaction": {
+      "title": "Class transaction",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/1. 용인공원/용인공원_분개장.xls",
+          "method": "RAW",
+          "verified": true,
+          "notes": "매출 raw + 분개장"
+        }
+      ],
+      "narrative": "satisfied",
+      "verified": true
+    },
+    "tbox_class_vendor": {
+      "title": "Class vendor",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "상품별 분류값",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "거래처명_매핑",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/계약서/광고대행_마더브레인_YPL_260301.pdf",
+          "method": "DEFINITION",
+          "notes": "마더브레인 vendor (광고대행). raw 인용 X, fee_rates 정책 참조."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/계약서/광고대행_크리앤비_YPL_260301.pdf",
+          "method": "DEFINITION",
+          "notes": "크리앤비 vendor"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/계약서/광고대행_마더브레인_라이프.docx",
+          "method": "DEFINITION"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/계약서/광고대행_차이커뮤니케이션_라이프.docx",
+          "method": "DEFINITION",
+          "notes": "차이커뮤니케이션 (정액 콘텐츠형)"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/계약서/판매대행_YPL_용인공원.pdf",
+          "method": "DEFINITION",
+          "notes": "YPL 판매대행"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/계약서/판매대행_YPL_라이프.pdf",
+          "method": "DEFINITION",
+          "notes": "YPL 상조 판매대행"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/계약서/외주인력_누보이엔지.pdf",
+          "method": "DEFINITION",
+          "notes": "누보이엔지 — 인원·총액·평균만 박제. 직급별 raw 비공개."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/계약서/외주인력_에코비엠.pdf",
+          "method": "DEFINITION",
+          "notes": "에코비엠 — 동일"
+        }
+      ],
+      "narrative": "satisfied. 6 vendor (광고 4 + 판매 2 + 외주 2). YPL=vertical channel orchestrator.",
+      "caveats": [
+        "fee_rates",
+        "pii",
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "tbox_class_activity": {
+      "title": "Class activity",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "손익항목에 대한 활동의 정의_ppt",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "손익항목에 대한 활동의 정의_ppt",
+          "method": "ANALYSIS"
+        }
+      ],
+      "narrative": "satisfied",
+      "verified": true
+    },
+    "tbox_class_cost_driver": {
+      "title": "Class cost_driver",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "장지ERP설계",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "상조ERP설계",
+          "method": "ANALYSIS"
+        }
+      ],
+      "narrative": "satisfied",
+      "verified": true
+    },
+    "tbox_class_entity": {
+      "title": "Class entity",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "Summary",
+          "method": "ANALYSIS",
+          "verified": true,
+          "notes": "3사 + B3 PL/BS 3사"
+        }
+      ],
+      "narrative": "satisfied",
+      "verified": true
+    },
+    "tbox_class_fiscal_period": {
+      "title": "Class fiscal_period",
+      "page": "/data-model",
+      "kind": "ClassNode",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/",
+          "method": "META",
+          "verified": true,
+          "notes": "FY23/FY24/FY25 시계열. FY23 용인공원 폴더 부재 caveat"
+        }
+      ],
+      "narrative": "satisfied",
+      "caveats": [
+        "data_period_asymmetry"
+      ],
+      "verified": true
+    },
+    "tbox_property_contracts": {
+      "title": "Property contracts",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "NONE",
+          "method": "MISSING",
+          "verified": false,
+          "notes": "P2-5 정정: PRIMARY=NONE (결손). 회원-계약 1:1 매핑 marker가 raw 출처에 부재. 결손 자체가 evidence."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "verified": false,
+          "notes": "RFI 6.3 — 회원-계약 1:1 매핑 회수 요청 (보강 출처)"
+        }
+      ],
+      "narrative": "P2-5 정정: 결손 (PRIMARY=NONE / SECONDARY=RFI 6.3). 결손 자체가 evidence — RFI 회수 후 PRIMARY 박제 예정.",
+      "verified": false
+    },
+    "tbox_property_assigned_to": {
+      "title": "Property assigned_to",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "NONE",
+          "method": "MISSING",
+          "verified": false,
+          "notes": "P2-5 정정: PRIMARY=NONE (결손). sales_agent 배정 master 부재. 결손 자체가 evidence."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "verified": false,
+          "notes": "RFI 6.5, 6.2 — 판매수수료 지급기준 + 영업사원 master 회수 요청"
+        }
+      ],
+      "narrative": "P2-5 정정: 결손 (PRIMARY=NONE / SECONDARY=RFI 6.5·6.2). 결손 자체가 evidence — RFI 회수 후 PRIMARY 박제 예정.",
+      "verified": false
+    },
+    "tbox_property_uses_zone": {
+      "title": "Property uses_zone",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "NONE",
+          "method": "MISSING",
+          "verified": false,
+          "notes": "P2-5 정정: PRIMARY=NONE (결손). 회원-구역 매핑 부재. 결손 자체가 evidence."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "verified": false,
+          "notes": "RFI 3.7, 3.6 — 매출구분별·면적구분별 매출자료 회수 요청"
+        }
+      ],
+      "narrative": "P2-5 정정: 결손 (PRIMARY=NONE / SECONDARY=RFI 3.7·3.6). 결손 자체가 evidence — RFI 회수 후 PRIMARY 박제 예정.",
+      "verified": false
+    },
+    "tbox_property_has_driver_account": {
+      "title": "Property has_driver_account",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "NONE",
+          "method": "MISSING",
+          "verified": false,
+          "notes": "P2-5 정정: PRIMARY=NONE (결손). 비용 동인 외연 미구축. 결손 자체가 evidence."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "verified": false,
+          "notes": "RFI 4.3, 4.4 — 매출원가/판관비 동인 자료 회수 요청"
+        }
+      ],
+      "narrative": "P2-5 정정: 결손 (PRIMARY=NONE / SECONDARY=RFI 4.3·4.4). 결손 자체가 evidence — RFI 회수 후 PRIMARY 박제 예정.",
+      "verified": false
+    },
+    "tbox_property_belongs_to": {
+      "title": "Property belongs_to",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "NONE",
+          "method": "MISSING",
+          "verified": false,
+          "notes": "P2-5 정정: PRIMARY=NONE (결손). 부서-회원/매출 매핑 부재. 결손 자체가 evidence."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "부서 확인 필요",
+          "method": "RFI",
+          "verified": false,
+          "notes": "RFI 부서 확인 — dept master 회수 요청"
+        }
+      ],
+      "narrative": "P2-5 정정: 결손 (PRIMARY=NONE / SECONDARY=RFI 부서). 결손 자체가 evidence — RFI 회수 후 PRIMARY 박제 예정.",
+      "verified": false
+    },
+    "tbox_property_has_family": {
+      "title": "Property has_family",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "ontology-demo/web/src/data/tbox.json",
+          "method": "META",
+          "verified": false,
+          "notes": "스키마 정의만"
+        }
+      ],
+      "narrative": "결손 — 스키마 정의만",
+      "verified": false
+    },
+    "tbox_property_has_join_date": {
+      "title": "Property has_join_date",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/라이프_backdata/라이프_회원DB_backdata.xlsx",
+          "sheet": "25년말 DB",
+          "method": "RAW",
+          "verified": true,
+          "notes": "회원DB 100% 충족이나 ERP 외 미반영. Q40"
+        }
+      ],
+      "narrative": "회원DB 충족 / ERP 미반영",
+      "verified": false
+    },
+    "tbox_property_has_contract_date": {
+      "title": "Property has_contract_date",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "NONE",
+          "method": "MISSING",
+          "verified": false,
+          "notes": "P2-5 정정: PRIMARY=NONE (결손). 계약 master 부재. 결손 자체가 evidence."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "verified": false,
+          "notes": "RFI 6.3 — 계약 master 회수 요청"
+        }
+      ],
+      "narrative": "P2-5 정정: 결손 (PRIMARY=NONE / SECONDARY=RFI 6.3). 결손 자체가 evidence — RFI 회수 후 PRIMARY 박제 예정.",
+      "verified": false
+    },
+    "tbox_property_has_unit_driver": {
+      "title": "Property has_unit_driver",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "verified": false,
+          "notes": "구역 단위 동인 미정의 — RFI 4.3"
+        }
+      ],
+      "narrative": "결손",
+      "verified": false
+    },
+    "tbox_property_has_revenue_stream": {
+      "title": "Property hasRevenueStream (Contract → RevenueStream)",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/1. 용인공원/용인공원_계정별원장 (2).xls",
+          "method": "RAW",
+          "verified": true,
+          "notes": "10개 매출계정(48~57) 적요·계정 직접추적. 합계 50,240,119,779원"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "매출구역 매핑",
+          "method": "ANALYSIS",
+          "notes": "Contract → RevenueStream 매핑 SUMIFS 검증"
+        }
+      ],
+      "narrative": "satisfied — 적요/계정으로 직접추적 가능",
+      "verified": true
+    },
+    "tbox_property_located_in": {
+      "title": "Property locatedIn (Zone → BurialMethod)",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/260401_용인공원 전체 묘역_raw(26년4월 기준).xlsx",
+          "sheet": "묘역raw",
+          "method": "RAW",
+          "verified": true,
+          "notes": "27열 master에서 구역별 장법 분류 (매장·봉안·수목·기타). 봉안당 등급 prefix(1R/2R/3R, 1N/2N/3N, 3H)"
+        }
+      ],
+      "narrative": "satisfied — 구역명-장법 매핑 확정",
+      "verified": true
+    },
+    "tbox_property_allocates_to": {
+      "title": "Property allocatesTo (Account → RevenueStream)",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "Index",
+          "method": "ANALYSIS",
+          "verified": true,
+          "notes": "10개 매출계정 → 10개 매출스트림 1:1 매핑"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/1. 용인공원/용인공원_계정별원장 (2).xls",
+          "method": "RAW",
+          "notes": "원장 0원 차이 검증 완료"
+        }
+      ],
+      "narrative": "satisfied — 10개 매출계정 매핑 확정",
+      "caveats": [
+        "intercompany_elimination"
+      ],
+      "verified": true
+    },
+    "tbox_property_traces_to": {
+      "title": "Property tracesTo (Account → Zone)",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/1. 용인공원/용인공원_계정별원장 (2).xls",
+          "method": "RAW",
+          "verified": true,
+          "notes": "구역코드 적요 직접추적 (10개 매출계정 + 묘지조성비)"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "_묘역번호확인",
+          "method": "ANALYSIS",
+          "notes": "묘역번호확인 시트로 구역 귀속 검증"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+          "method": "ANALYSIS",
+          "notes": "매출 구역 분류체계 master"
+        }
+      ],
+      "narrative": "satisfied — 적요 PRD/zone 코드로 추적",
+      "verified": true
+    },
+    "tbox_property_debited_to": {
+      "title": "Property debitedTo (Transaction → Account)",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/1. 용인공원/용인공원_계정별원장 (2).xls",
+          "method": "RAW",
+          "verified": true,
+          "notes": "원장 119개 계정 시트 차변 집계"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "method": "ANALYSIS",
+          "notes": "라이프 52계정 분석본"
+        }
+      ],
+      "narrative": "satisfied — 원장 차변 계정 매핑 1:1",
+      "verified": true
+    },
+    "tbox_property_involves": {
+      "title": "Property involves (Transaction → Vendor)",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/1. 용인공원/용인공원_계정별원장 (2).xls",
+          "method": "RAW",
+          "verified": true,
+          "notes": "원장 거래처 컬럼"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/내부거래/2025년_내부거래_제거_최종.xlsx",
+          "sheet": "거래처명_매핑",
+          "method": "ANALYSIS",
+          "notes": "내부거래 3사 vendor 식별"
+        }
+      ],
+      "narrative": "satisfied — 거래처 컬럼 + 법인카드 사용자구분으로 식별",
+      "caveats": [
+        "intercompany_elimination"
+      ],
+      "verified": true
+    },
+    "tbox_property_occurs_in": {
+      "title": "Property occursIn (Transaction → FiscalPeriod)",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/1. 용인공원/용인공원_계정별원장 (2).xls",
+          "method": "RAW",
+          "verified": true,
+          "notes": "원장 일자 컬럼 → FY25 구분"
+        }
+      ],
+      "narrative": "satisfied — 원장 일자 컬럼으로 회계기간 식별",
+      "caveats": [
+        "data_period_asymmetry"
+      ],
+      "verified": true
+    },
+    "tbox_property_incurred_by": {
+      "title": "Property incurredBy (Transaction → Entity)",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/",
+          "method": "RAW",
+          "verified": true,
+          "notes": "3사 폴더 구조로 Entity 귀속 (1.용인공원 / 2.YPL / 3.용인공원라이프)"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/내부거래/2025년_내부거래_제거_최종.xlsx",
+          "method": "ANALYSIS",
+          "notes": "3사 양방향 매칭 검증"
+        }
+      ],
+      "narrative": "satisfied — 3사 법인 단위 원장 분리",
+      "caveats": [
+        "intercompany_elimination"
+      ],
+      "verified": true
+    },
+    "tbox_property_supported_by": {
+      "title": "Property supportedBy (RevenueStream → BurialMethod)",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+          "method": "ANALYSIS",
+          "verified": true,
+          "notes": "매출스트림-장법 매핑 (예: 안치료수입 → 봉안)"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "method": "ANALYSIS",
+          "notes": "장법별 매출 집계 검증"
+        }
+      ],
+      "narrative": "satisfied — 매출스트림이 지원하는 장법 매핑 확정",
+      "verified": true
+    },
+    "tbox_property_performs": {
+      "title": "Property performs (Vendor → Activity)",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용역비_배부분석_FY25.xlsx",
+          "sheet": "용역비_배부분석",
+          "method": "ANALYSIS",
+          "verified": true,
+          "notes": "외주 vendor (석축·조경·운구·시신처리) → Activity 매핑"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "지급수수료원장_분류정리",
+          "method": "ANALYSIS",
+          "notes": "2,044행 8 분류로 vendor-activity 매핑"
+        }
+      ],
+      "narrative": "satisfied — 외주 vendor가 수행하는 활동 식별",
+      "verified": true
+    },
+    "tbox_property_has_driver_activity": {
+      "title": "Property hasDriver (Activity → CostDriver)",
+      "page": "/data-model",
+      "kind": "PropertyEdge",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "상조ERP설계",
+          "method": "ANALYSIS",
+          "verified": true,
+          "notes": "17~20열 채널배부 정의로 Activity → CostDriver 매핑"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx",
+          "sheet": "장지ERP설계",
+          "method": "ANALYSIS",
+          "notes": "장지 활동 동인 매핑"
+        }
+      ],
+      "narrative": "satisfied (axiom A5는 partiallyMissing — 외연 결손 시 A5' Default rule 발동)",
+      "caveats": [
+        "ypl_business_model"
+      ],
+      "verified": true
+    },
+    "tbox_axiom_a1": {
+      "title": "Axiom a1 매출 추적성",
+      "page": "/data-model",
+      "kind": "Axiom",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/재무제표 수령본/FY25/1. 용인공원/용인공원_계정별원장 (2).xls",
+          "method": "RAW",
+          "computed_value": 50240119779,
+          "computed_unit": "원 (FY25 영업매출)",
+          "verified": true,
+          "notes": "= xlsm수정9 = Legacy 0원 차이 (D-3 답)"
+        }
+      ],
+      "narrative": "satisfied. 세 파일 매출 합계 0원 차이.",
+      "verified": true
+    },
+    "tbox_axiom_a2": {
+      "title": "Axiom a2 조성비 zone추적",
+      "page": "/data-model",
+      "kind": "Axiom",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/배부기준/용역비_배부분석_FY25.xlsx",
+          "sheet": "용역비_배부분석",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "method": "ANALYSIS",
+          "notes": "매출 10계정"
+        }
+      ],
+      "narrative": "satisfied",
+      "verified": true
+    },
+    "tbox_axiom_a3": {
+      "title": "Axiom a3 인건비 동인의존",
+      "page": "/data-model",
+      "kind": "Axiom",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
+          "sheet": "직원급여(80200)_분석",
+          "method": "ANALYSIS",
+          "verified": true
+        },
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm",
+          "sheet": "급여_분석",
+          "method": "ANALYSIS"
+        },
+        {
+          "rank": "NARRATIVE",
+          "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
+          "slide": 37,
+          "notes": "p.37~48",
+          "method": "NARRATIVE_PPT"
+        }
+      ],
+      "narrative": "satisfied",
+      "verified": true
+    },
+    "tbox_axiom_a4": {
+      "title": "Axiom a4 내부거래 양방향매칭",
+      "page": "/data-model",
+      "kind": "Axiom",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/DataPack/내부거래/2025년_내부거래_제거_최종.xlsx",
+          "sheet": "2025_내부거래매칭",
+          "method": "RAW",
+          "verified": true,
+          "notes": "P1-10 정정 (2026-05-11): 2025 P&L 9건 (합계 20,773M, 지급측 절대값) + B/S 4건 (1,379M). P&L 9건 중 7건 VAT 10% 부과(부가세 일치 확인) / 2건 비과세 거래(P-8/P-9, VAT 0원). B/S 4건은 VAT 무관. 양방향 매칭 최대 오차 1원. 2023 미매칭 19건 별도 caveat."
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/DataPack/내부거래/2025년_내부거래_제거_최종.xlsx",
+          "sheet": "거래처명_매핑",
+          "method": "ANALYSIS"
+        }
+      ],
+      "narrative": "P1-10 정정: satisfied. ⭐ 단독 PRIMARY (다른 파일에 내부거래 백데이터 없음). P&L 9건 중 7건 VAT 10% / 2건 비과세, B/S 4건 VAT 무관. 2023 미매칭 19건은 별도 보강 필요. tbox_class_revenue_stream / mutual_lifecycle_revenue / *_dept_kpi_cards 매출슬롯 cross-link.",
+      "caveats": [
+        "ypl_business_model",
+        "intercompany_elimination"
+      ],
+      "verified": true
+    },
+    "tbox_axiom_a5": {
+      "title": "Axiom a5 외연가용성",
+      "page": "/data-model",
+      "kind": "Axiom",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
+          "method": "INTERVIEW",
+          "verified": true,
+          "notes": "인용 4건: 0403 36:39 '엑셀에 올리면 못 나온다', 1:33:06 '수기 나누기', 1:12:06 '비용 데이터 ERP 결손', 1일차YPL 14:13"
+        },
+        {
+          "rank": "SECONDARY",
+          "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
+          "sheet": "RFI List",
+          "method": "RFI",
+          "notes": "r4 미수령"
+        }
+      ],
+      "narrative": "P2-8 정정: 외연가용성 axiom 검증 자체는 충족(verified=true) — 인터뷰 4건 인용으로 ERP 외연 결손 사실 확인. 데이터 외연은 partiallyMissing(엑셀·수기 의존, RFI r4 미수령) — verified는 axiom 검증 결과, partiallyMissing은 데이터 상태 (두 의미 분리).",
+      "verified": true
+    },
+    "tbox_axiom_a5p": {
+      "title": "Axiom a5p Default rule",
+      "page": "/data-model",
+      "kind": "Axiom",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "ontology-demo/web/src/data/tbox.json",
+          "method": "META",
+          "verified": true,
+          "notes": "axiom 정의 자체"
+        }
+      ],
+      "narrative": "satisfied",
+      "verified": true
+    },
+    "tbox_lineage_section": {
+      "title": "Lineage 섹션",
+      "page": "/data-model",
+      "kind": "SourceCaptionGroup",
+      "evidence": [
+        {
+          "rank": "PRIMARY",
+          "source_file": "docs/evidence_mapping_matrix.md",
+          "method": "META",
+          "verified": true,
+          "notes": "4줄"
+        }
+      ],
+      "narrative": "satisfied",
+      "verified": true
+    }
+  },
+  "dynamic_patterns": {
+    "mutual_channel_explorer": {
+      "pattern": "mutual_channel_explorer__<channelId>__<account>",
+      "primary_source": "spo_evidence/분석파일/용인공원라이프＿분석.xlsm:상조ERP설계",
+      "secondary_sources": [
+        "spo_evidence/DataPack/배부기준/광고선전비_배부분석_FY25.xlsx",
+        "spo_evidence/DataPack/배부기준/용역비_배부분석_FY25.xlsx",
+        "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx:상조ERP설계"
+      ],
+      "data_source": "ontology-demo/web/src/data/channel_activity_cost.json",
+      "narrative": "채널×계정 활동원가. F2 PRIMARY + F4·F5·F9 SECONDARY 교차검증.",
+      "mapping_rules": {
+        "__online__*": "F2 비용23개_분석 (온라인 채널 컬럼) + F4 광고선전비_배부분석 (online 행)",
+        "__offline__*": "F2 비용23개_분석 (오프라인) + 일일보고/회원시트 모집영업소속",
+        "__corp__*": "F2 B2B_장례용품매출배부 (LG CNS, EY, 투썸 등)",
+        "account=광고선전비": "F4 광고선전비_배부분석 PRIMARY",
+        "account=용역비": "F5 용역비_배부분석 PRIMARY",
+        "account=인건비": "F2 급여_분석 + F1 직원급여(80200)_분석 + F9 Summary/Act_판관",
+        "account=지급수수료": "F2 지급수수료원장_분류정리 (2,044행, 8 분류)",
+        "account=판매수수료": "F2 판매수수료_분석 + F9 상조_지급수수료/장지_판매수수료",
+        "account=회비정산차익": "F2 회비정산차익_분석 + 60_회비정산차익 (영업외)"
+      },
+      "caveats": [
+        "channel_normalization",
+        "fee_rates",
+        "ypl_business_model"
+      ]
+    },
+    "cemetery_zone_explorer": {
+      "pattern": "cemetery_zone_explorer__<zoneId>__<account>",
+      "primary_source": "spo_evidence/분석파일/용인공원_분석.xlsm",
+      "secondary_sources": [
+        "spo_evidence/DataPack/배부기준/용역비_배부분석_FY25.xlsx",
+        "spo_evidence/2025_매출_구역_맵핑테이블.xlsx",
+        "spo_evidence/매출_피벗테이블.xlsx",
+        "spo_evidence/DataPack/용인공원_AX_FS_2025_Datapack.xlsx:장지ERP설계"
+      ],
+      "data_source": "ontology-demo/web/src/data/activity_cost.json",
+      "narrative": "구역×계정 활동원가. 트리플 시트 (분석본+원장+묘역번호확인). F1+F7+F8 master + F9 cross-validate.",
+      "mapping_rules": {
+        "zoneId in {sesuyeon,jeongmyeongji,jeongnamji,jeongdamwon,myeongga_yeoyeon,myeongdang,cheonmyeongji}": "F1 2025 장지 구역별 손익계산서 행 + F1 구역별 매출 + F8 대구역_피벗 컬럼",
+        "zoneId=honor_royal/noble/honor": "F1 매출 10계정 (50_사용료수입(아너)) + F7 아너스톤 구분요청 (1R/2R/3R / 1N/2N/3N / 3H prefix)",
+        "zoneId=other": "F6 기타(미분류) 상세 + F1 매출10계정 미분류건",
+        "account=묘지조성비": "F1 묘지조성비(52500)_분석 + RFI 신규야외묘역 질의",
+        "account=용역비": "F5 용역비_배부분석 PRIMARY",
+        "account=인건비": "F1 직원급여 + 제조원가 인건비",
+        "account=감가상각비": "F1 감가상각비_분석 (3단계 배부 — PPT p.51~52)"
+      },
+      "caveats": [
+        "fee_rates",
+        "ypl_business_model"
+      ]
+    }
+  },
+  "missing_slots": {
+    "cemetery_hypothesis_z4": {
+      "title": "Z4 계약자 master 부재",
+      "page": "/cemetery",
+      "reason": "RFI 6.3 미수령 + Q40 미회신",
+      "needed_data": "회원 1:1 매핑 가능한 ERP 추출본 + DB관리 프로세스 도식 ↔ ERP 매핑",
+      "placeholder_caveat": "수령 후 보강. 결손 자체가 evidence — 'master 부재로 KPI 산출 불가'",
+      "alias_of": null,
+      "rfi_refs": [
+        "RFI 6.3",
+        "Q40"
+      ]
+    },
+    "rc_zone_hypothesis_z4": {
+      "title": "Z4 계약자 master 부재 (RC mirror)",
+      "page": "/root-cause",
+      "reason": "RFI 6.3 미수령 + Q40 미회신",
+      "needed_data": "회원 1:1 매핑 가능한 ERP 추출본",
+      "placeholder_caveat": "수령 후 보강",
+      "alias_of": "cemetery_hypothesis_z4",
+      "rfi_refs": [
+        "RFI 6.3",
+        "Q40"
+      ]
+    },
+    "tbox_rfi_r1_member_master": {
+      "title": "용인공원·YPL 계약자 master + 묘역raw 매칭",
+      "page": "/data-model",
+      "priority": "P0",
+      "reason": "RFI 6.3 (미수령), Q40 (미회신)",
+      "needed_data": "회원 1:1 매핑 가능한 ERP 추출본 + DB관리 프로세스 도식 ↔ ERP 매핑",
+      "placeholder_caveat": "수령 후 보강. 화면 placeholder + caveat로 표시.",
+      "rfi_refs": [
+        "RFI 6.3",
+        "Q40"
+      ]
+    },
+    "tbox_rfi_r2_salesagent_master": {
+      "title": "장지 영업사원 master",
+      "page": "/data-model",
+      "priority": "P0",
+      "reason": "RFI 6.5 미수령 (6.2 일부수령)",
+      "needed_data": "판매수수료 지급규정 + 판매직별 1:1 계약/구매이력",
+      "placeholder_caveat": "수령 후 보강",
+      "rfi_refs": [
+        "RFI 6.2",
+        "RFI 6.5"
+      ]
+    },
+    "tbox_rfi_r3_zone_history": {
+      "title": "묘역raw 22.5% 미채움 사유",
+      "page": "/data-model",
+      "priority": "P1",
+      "reason": "RFI 3.6/3.7 미수령",
+      "needed_data": "FY23~25 매출구분별·면적구분별(63-1공구 등) 매출자료",
+      "placeholder_caveat": "수령 후 보강",
+      "rfi_refs": [
+        "RFI 3.6",
+        "RFI 3.7"
+      ]
+    },
+    "tbox_rfi_r4_cost_driver_data": {
+      "title": "비용 동인 외연",
+      "page": "/data-model",
+      "priority": "P1",
+      "reason": "RFI 4.3/4.4 미수령",
+      "needed_data": "매출원가 세부 (당기제품제조원가 중 경비, 발생 동인 기재) + 판관비 동인",
+      "placeholder_caveat": "수령 후 보강",
+      "rfi_refs": [
+        "RFI 4.3",
+        "RFI 4.4"
+      ]
+    },
+    "tbox_rfi_r5_unified_customer_view": {
+      "title": "라이프·장지 통합 고객뷰",
+      "page": "/data-model",
+      "priority": "P1",
+      "reason": "RFI 3.7 부분수령 (25/12~26/03만) + Q40 미회신",
+      "needed_data": "FY23~25 ERP 라이프 고객별 매출 + 마스터 키 정의",
+      "placeholder_caveat": "수령 후 보강",
+      "rfi_refs": [
+        "RFI 3.7",
+        "Q40"
+      ]
+    }
+  }
+}

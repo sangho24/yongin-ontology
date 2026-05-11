@@ -27,7 +27,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
-import { Card, InsightBox, SourceCaption } from "@/components/Card";
+import { Card, EvidenceButton, InsightBox, SourceCaption } from "@/components/Card";
 import { NumberCell } from "@/components/NumberCell";
 import lifeKpi from "@/data/life_kpi.json";
 import zoneKpi from "@/data/zone_kpi.json";
@@ -189,7 +189,7 @@ const matureLineage: NumberLineage = {
     },
     {
       label: "전체 매출합계 산출",
-      detail: "회원상태 무관 전체 lifecycle 매출",
+      detail: "회원상태 무관 전체 회원 누적 납입액 (스냅샷)",
       amount: lifeKpi.wowMetrics.totalLifecycleRevenue,
     },
     {
@@ -254,7 +254,7 @@ const channelGapLineage: NumberLineage = {
 // 가설 카드 — LLM 분석·추천 액션 토글 포함
 // =============================================================================
 
-function HypothesisCard({ h, index }: { h: Hypothesis; index: number }) {
+function HypothesisCard({ h, index, slotId }: { h: Hypothesis; index: number; slotId?: string }) {
   const [open, setOpen] = useState(index === 0);
   const [llmOpen, setLlmOpen] = useState(false);
   const [actionOpen, setActionOpen] = useState(false);
@@ -266,24 +266,28 @@ function HypothesisCard({ h, index }: { h: Hypothesis; index: number }) {
 
   return (
     <div className="overflow-hidden rounded-md border border-stone-200 bg-white transition-colors hover:border-stone-300">
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-stone-50"
-      >
-        <span className={`h-2 w-2 shrink-0 rounded-full ${dotColor}`} />
-        <span className="text-[11px] font-semibold tracking-wider text-stone-500 w-8">{h.id}</span>
-        <div className="min-w-0 flex-1">
-          <div className="text-[14px] font-medium text-stone-900">{h.title}</div>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-[11px] font-semibold tracking-wider text-stone-400">{signalLabel}</span>
-          {open ? (
-            <ChevronUp className="h-3.5 w-3.5 text-stone-400" />
-          ) : (
-            <ChevronDown className="h-3.5 w-3.5 text-stone-400" />
-          )}
-        </div>
-      </button>
+      <div className="flex w-full items-center gap-3 px-4 py-3.5 transition-colors hover:bg-stone-50">
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className="flex flex-1 items-center gap-3 text-left"
+        >
+          <span className={`h-2 w-2 shrink-0 rounded-full ${dotColor}`} />
+          <span className="text-[11px] font-semibold tracking-wider text-stone-500 w-8">{h.id}</span>
+          <div className="min-w-0 flex-1">
+            <div className="text-[14px] font-medium text-stone-900">{h.title}</div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[11px] font-semibold tracking-wider text-stone-400">{signalLabel}</span>
+            {open ? (
+              <ChevronUp className="h-3.5 w-3.5 text-stone-400" />
+            ) : (
+              <ChevronDown className="h-3.5 w-3.5 text-stone-400" />
+            )}
+          </div>
+        </button>
+        {slotId && <EvidenceButton slotId={slotId} label={h.title} variant="subtle" />}
+      </div>
       {open && (
         <div className="border-t border-stone-100 bg-stone-50/50 px-4 py-4 pl-[3.25rem] space-y-3">
           {/* 증거 */}
@@ -369,6 +373,7 @@ function StatCellWithActions({
   sub,
   lineage,
   emphasis = false,
+  slotId,
 }: {
   label: string;
   value: number;
@@ -376,6 +381,7 @@ function StatCellWithActions({
   sub: string;
   lineage: NumberLineage;
   emphasis?: boolean;
+  slotId?: string;
 }) {
   return (
     <div className="rounded-md border border-stone-200/80 bg-white p-5 transition-colors duration-150 hover:border-stone-300">
@@ -386,7 +392,8 @@ function StatCellWithActions({
         <NumberCell
           value={value}
           unit={unit}
-          lineage={lineage}
+          lineage={slotId ? undefined : lineage}
+          slotId={slotId}
           size="lg"
           emphasis={emphasis}
         />
@@ -468,6 +475,7 @@ export default function RootCausePage() {
           unit="%"
           sub={`${lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명 회비정산차익 → 영업외 인식`}
           lineage={matureLineage}
+          slotId="rc_stat_mature_member"
           emphasis
         />
         <StatCellWithActions
@@ -476,6 +484,7 @@ export default function RootCausePage() {
           unit="원"
           sub={`이장지 4,325기 — 가용재고 잠재의 29%`}
           lineage={stagnantLineage}
+          slotId="rc_stat_transfer_potential"
         />
         <StatCellWithActions
           label="채널 LTV 격차 (오프/온)"
@@ -483,6 +492,7 @@ export default function RootCausePage() {
           unit="배"
           sub="광고 ROI 재배분 후보 — product mix 보정 후 재평가"
           lineage={channelGapLineage}
+          slotId="rc_stat_channel_ltv_gap"
           emphasis
         />
       </section>
@@ -497,6 +507,7 @@ export default function RootCausePage() {
           <Card
             title="가입 코호트 × 만기율"
             subtitle="2022~2025년 가입자의 만기율 급등 — 단기 수익실현 패턴 강함"
+            slotId="rc_chart_cohort_maturity"
           >
             <ResponsiveContainer width="100%" height={300}>
               <ComposedChart data={cohortChart}>
@@ -520,7 +531,7 @@ export default function RootCausePage() {
             </ResponsiveContainer>
           </Card>
 
-          <Card title="채널별 회원당 매출" subtitle="온라인 채널 LTV 의심">
+          <Card title="채널별 회원당 매출" subtitle="온라인 채널 LTV 의심" slotId="rc_chart_channel_ltv">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={channelLTV}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -539,7 +550,7 @@ export default function RootCausePage() {
 
         <div className="mt-4 space-y-2">
           {MUTUAL_HYPOTHESES.map((h, i) => (
-            <HypothesisCard key={h.id} h={h} index={i} />
+            <HypothesisCard key={h.id} h={h} index={i} slotId={`rc_h${i + 1}_card`} />
           ))}
         </div>
       </section>
@@ -554,6 +565,7 @@ export default function RootCausePage() {
         <Card
           title="단지별 분양률 vs 잠재가치 산점도"
           subtitle="우상단 → 잠재가치 큰데 분양 잘 됨 / 좌하단 → 정체 위험. 잠재가치 상위 12개 단지 라벨 표시"
+          slotId="rc_chart_scatter_zone"
         >
           <ResponsiveContainer width="100%" height={380}>
             <ScatterChart margin={{ top: 20, right: 30, bottom: 30, left: 10 }}>
@@ -597,7 +609,7 @@ export default function RootCausePage() {
 
         <div className="mt-4 space-y-2">
           {ZONE_HYPOTHESES.map((h, i) => (
-            <HypothesisCard key={h.id} h={h} index={i} />
+            <HypothesisCard key={h.id} h={h} index={i} slotId={`rc_zone_hypothesis_z${i + 1}`} />
           ))}
         </div>
       </section>
@@ -608,20 +620,20 @@ export default function RootCausePage() {
           <h2 className="section-h">통합 인사이트 — 그룹 관점</h2>
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-          <InsightBox type="warn" title="회계 손익 ≠ 경제 손익">
+          <InsightBox type="warn" title="회계 손익 ≠ 경제 손익" slotId="rc_insight_gaap_vs_economic">
             상조 VC의 "손실"은 회비정산차익 영업외 분류로 인한 시각적 효과가 큼.{" "}
             <strong>영업이익 + 회비정산차익 view</strong>로 재해석 시 그룹 의사결정 근거 강화. View 전환은
             분기 IR·내부 경영회의 default 전환부터 시작.
           </InsightBox>
-          <InsightBox type="danger" title="장지 master 결손이 BI 깊이를 제한">
+          <InsightBox type="danger" title="장지 master 결손이 BI 깊이를 제한" slotId="rc_insight_master_rfi">
             정체단지 식별·이장지 분포는 가능하나, <strong>회원·영업사원 단위 분석은 데이터 부재</strong>.
             데이터 모델 페이지의 RFI 5건 자동 도출 → 회신 후 회원 LTV·family cross-sell BI 자동 확장.
           </InsightBox>
-          <InsightBox type="info" title="채널 ROI 재배분의 수익화 기회">
+          <InsightBox type="info" title="채널 ROI 재배분의 수익화 기회" slotId="rc_insight_channel_roi">
             온라인 채널 회원당 매출이 오프라인의 3% 수준. 광고선전비·온유프리 광고 효율 재검토 + product
             mix 차등화 우선.
           </InsightBox>
-          <InsightBox type="success" title="단기 액션 — 가용재고 활성화">
+          <InsightBox type="success" title="단기 액션 — 가용재고 활성화" slotId="rc_insight_inventory_activation">
             이장지 4,325기 + 정체단지 우선 처리 →{" "}
             <strong>{autoUnit(zoneKpi.wowMetrics.potentialFromAvailable)}</strong> 잠재가치 일부 실현
             가능. 가설 검증(H1·H2·Z1·Z4) 인터뷰와 병행.

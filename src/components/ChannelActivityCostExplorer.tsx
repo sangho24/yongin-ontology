@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { TrendingUp, TrendingDown, Package } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 import { NumberCell } from "./NumberCell";
+import { EvidenceButton } from "./Card";
 import ZoneSelector from "./controls/ZoneSelector";
 import PeriodToggle from "./controls/PeriodToggle";
 import FinanceActions from "./controls/FinanceActions";
@@ -30,6 +31,7 @@ interface ChannelActivityCostExplorerProps {
   subtitle?: string;
   showFinanceActions?: boolean;
   className?: string;
+  slotId?: string;
 }
 
 // JSON cast — channel mock seed
@@ -147,6 +149,7 @@ export function ChannelActivityCostExplorer({
   subtitle = "채널을 선택하면 매출·비용 항목과 lineage가 펼쳐집니다",
   showFinanceActions = true,
   className = "",
+  slotId,
 }: ChannelActivityCostExplorerProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>(defaultChannelIds);
   const [period, setPeriod] = useState<Period>("yearly");
@@ -171,7 +174,10 @@ export function ChannelActivityCostExplorer({
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-6 border-b border-stone-100 px-8 py-6">
         <div className="min-w-0 flex-1">
-          {title && <h3 className="section-h">{title}</h3>}
+          <div className="flex items-start gap-2">
+            {title && <h3 className="section-h">{title}</h3>}
+            {slotId && <EvidenceButton slotId={slotId} label={title} />}
+          </div>
           {subtitle && (
             <p className="mt-1.5 text-[12px] leading-relaxed text-stone-500">{subtitle}</p>
           )}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { AppLayout, SubNav } from "@/components/AppLayout";
-import { SourceCaption } from "@/components/Card";
+import { SourceCaption, EvidenceButton } from "@/components/Card";
 import { NumberCell } from "@/components/NumberCell";
 import lifeKpi from "@/data/life_kpi.json";
 import zoneKpi from "@/data/zone_kpi.json";
@@ -125,10 +125,13 @@ export default function Home() {
         id="headline"
         className="grid gap-6 scroll-mt-32 sm:grid-cols-2 lg:grid-cols-4"
       >
-        {/* 카드 1: 라이프 lifecycle 매출 */}
+        {/* 카드 1: 회원 누적 납입액 (스냅샷) — P0-4 정정 (2026-05-11) */}
         <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
-          <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
-            라이프 lifecycle 매출
+          <div className="flex items-start justify-between gap-2">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
+              회원 누적 납입액 (스냅샷)
+            </div>
+            <EvidenceButton slotId="ovw_lifecycle_revenue" label="회원 누적 납입액 (스냅샷)" variant="subtle" />
           </div>
           <div className="mt-2.5">
             <NumberCell
@@ -146,8 +149,11 @@ export default function Home() {
 
         {/* 카드 2: 장지 가용재고 잠재가치 */}
         <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
-          <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
-            장지 가용재고 잠재가치
+          <div className="flex items-start justify-between gap-2">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
+              장지 가용재고 잠재가치
+            </div>
+            <EvidenceButton slotId="ovw_potential_inventory" label="장지 가용재고 잠재가치" variant="subtle" />
           </div>
           <div className="mt-2.5">
             <NumberCell
@@ -164,8 +170,11 @@ export default function Home() {
 
         {/* 카드 3: 라이프 채널 배부 비용 (white로 통일) */}
         <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
-          <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
-            라이프 채널 배부 비용 (FY25)
+          <div className="flex items-start justify-between gap-2">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
+              라이프 채널 배부 비용 (FY25)
+            </div>
+            <EvidenceButton slotId="ovw_channel_cost" label="라이프 채널 배부 비용 (FY25)" variant="subtle" />
           </div>
           <div className="mt-2.5">
             <NumberCell
@@ -181,30 +190,36 @@ export default function Home() {
         </div>
 
         {/* 카드 4: 자동 도출 RFI (Data Model 진입) */}
-        <Link
-          href="/data-model"
-          className="group rounded-md border border-[#0095A9]/30 bg-[#e6f4f6]/40 p-6 transition-colors hover:border-[#0095A9]/50 hover:bg-[#e6f4f6]"
-        >
-          <div className="flex items-center justify-between">
-            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#007a8c]">
-              자동 도출 RFI · T-Box
+        <div className="group relative rounded-md border border-[#0095A9]/30 bg-[#e6f4f6]/40 p-6 transition-colors hover:border-[#0095A9]/50 hover:bg-[#e6f4f6]">
+          <div className="flex items-start justify-between gap-2">
+            <Link
+              href="/data-model"
+              className="flex flex-1 items-center justify-between gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[#007a8c]"
+            >
+              <span>자동 도출 RFI · T-Box</span>
+              <ArrowUpRight className="h-3.5 w-3.5 text-[#0095A9] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </Link>
+            <EvidenceButton slotId="ovw_rfi_count" label="자동 도출 RFI" variant="subtle" />
+          </div>
+          <Link href="/data-model" className="block">
+            <div className="mt-2.5 flex items-baseline gap-1">
+              <span className="headline text-[24px] leading-none text-[#007a8c] tnum">5</span>
+              <span className="text-[12px] font-medium text-stone-500">건</span>
             </div>
-            <ArrowUpRight className="h-3.5 w-3.5 text-[#0095A9] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-          </div>
-          <div className="mt-2.5 flex items-baseline gap-1">
-            <span className="headline text-[24px] leading-none text-[#007a8c] tnum">5</span>
-            <span className="text-[12px] font-medium text-stone-500">건</span>
-          </div>
-          <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
-            13 Class · 26 Property · 결손 9건 → RFI 자동
-          </div>
-        </Link>
+            <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
+              13 Class · 26 Property · 결손 9건 → RFI 자동
+            </div>
+          </Link>
+        </div>
       </section>
 
       {/* 부서별 KPI 매핑 — 메인 컨텐츠 */}
       <section id="department" className="mt-10 scroll-mt-32">
-        <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
-          <h2 className="section-h">부서별 KPI 매핑 — 상조 VC</h2>
+        <div className="mb-4 flex items-baseline justify-between gap-2 border-b border-stone-200 pb-2">
+          <div className="flex items-center gap-2">
+            <h2 className="section-h">부서별 KPI 매핑 — 상조 VC</h2>
+            <EvidenceButton slotId="ovw_dept_kpi_cards" label="부서별 KPI 매핑 — 상조 VC" variant="subtle" />
+          </div>
           <span className="text-[11px] tracking-wider text-stone-400">PPT 23p</span>
         </div>
         <p className="mb-5 max-w-3xl text-[13px] leading-relaxed text-stone-600">
@@ -285,8 +300,11 @@ export default function Home() {
 
       {/* 채널별 비용 배부 결과 — Heatmap-like table */}
       <section id="channel-cost" className="mt-10 scroll-mt-32">
-        <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
-          <h2 className="section-h">채널별 비용 배부 결과 — 상조 VC</h2>
+        <div className="mb-4 flex items-baseline justify-between gap-2 border-b border-stone-200 pb-2">
+          <div className="flex items-center gap-2">
+            <h2 className="section-h">채널별 비용 배부 결과 — 상조 VC</h2>
+            <EvidenceButton slotId="ovw_channel_cost_table" label="채널별 비용 배부 결과" variant="subtle" />
+          </div>
           <span className="text-[11px] tracking-wider text-stone-400">PPT 41p · FY25 · 천원</span>
         </div>
         <p className="mb-5 max-w-3xl text-[13px] leading-relaxed text-stone-600">
@@ -356,7 +374,10 @@ export default function Home() {
 
       {/* 신규 KPI 정당화 */}
       <section className="mt-10">
-        <h3 className="section-label mb-3">NEW KPI · 도입 사유</h3>
+        <div className="mb-3 flex items-center gap-2">
+          <h3 className="section-label">NEW KPI · 도입 사유</h3>
+          <EvidenceButton slotId="ovw_new_kpi_rationale" label="NEW KPI 도입 사유" variant="subtle" />
+        </div>
         <div className="grid gap-px overflow-hidden rounded-md bg-stone-200/60 md:grid-cols-2">
           {deptKpi.newKpiRationale.map((k) => (
             <div key={k.kpi} className="bg-white p-4">

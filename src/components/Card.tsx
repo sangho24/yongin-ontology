@@ -1,5 +1,65 @@
-import { ReactNode } from "react";
-import { ArrowUp, ArrowDown, Minus } from "lucide-react";
+"use client";
+
+import { ReactNode, useState, useMemo } from "react";
+import { ArrowUp, ArrowDown, Minus, Info } from "lucide-react";
+import { EvidenceDrawer } from "./EvidenceDrawer";
+import { getSlot, getMissingSlot, isMissing } from "@/lib/evidence";
+
+// =============================================================================
+// EvidenceButton — slotId 있으면 우상단 'i' 버튼 + EvidenceDrawer 호출
+// Card·StatCard·WowCard·InsightBox 공용
+// =============================================================================
+function EvidenceButton({
+  slotId,
+  label,
+  variant = "default",
+}: {
+  slotId: string;
+  label?: string;
+  variant?: "default" | "onMint" | "subtle";
+}) {
+  const [open, setOpen] = useState(false);
+  const slot = useMemo(() => getSlot(slotId), [slotId]);
+  const missingMeta = useMemo(
+    () => (isMissing(slotId) ? getMissingSlot(slotId) : null),
+    [slotId]
+  );
+  if (!slot && !missingMeta) return null;
+
+  const btnCls =
+    variant === "onMint"
+      ? "text-[#b3dde0] hover:bg-white/10 hover:text-white"
+      : variant === "subtle"
+      ? "text-stone-300 hover:bg-stone-100 hover:text-stone-700"
+      : "text-stone-400 hover:bg-stone-100 hover:text-stone-900";
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label={`${label ?? slot?.title ?? "근거"} 근거 보기`}
+        title="근거·출처 보기"
+        className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-colors duration-150 ${btnCls}`}
+      >
+        <Info className="h-3.5 w-3.5" />
+      </button>
+      <EvidenceDrawer
+        open={open}
+        onClose={() => setOpen(false)}
+        slotId={slotId}
+        title={slot?.title ?? missingMeta?.title ?? label ?? slotId}
+        page={slot?.page}
+        kind={slot?.kind}
+        evidence={slot?.evidence}
+        caveats={slot?.caveats}
+        narrative={slot?.narrative}
+        verified={slot?.verified}
+        missing={missingMeta}
+      />
+    </>
+  );
+}
 
 // =============================================================================
 // Card
@@ -10,12 +70,14 @@ export function Card({
   children,
   highlight = false,
   source,
+  slotId,
 }: {
   title?: string;
   subtitle?: string;
   children: ReactNode;
   highlight?: boolean;
   source?: string;
+  slotId?: string;
 }) {
   return (
     <div
@@ -25,10 +87,15 @@ export function Card({
           : "border-stone-200/80"
       } hover:border-stone-300`}
     >
-      {title && (
-        <div className="mb-4">
-          <h3 className="text-[14px] font-semibold tracking-tight text-stone-900">{title}</h3>
-          {subtitle && <p className="mt-1 text-[12px] text-stone-500">{subtitle}</p>}
+      {(title || slotId) && (
+        <div className="mb-4 flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            {title && (
+              <h3 className="text-[14px] font-semibold tracking-tight text-stone-900">{title}</h3>
+            )}
+            {subtitle && <p className="mt-1 text-[12px] text-stone-500">{subtitle}</p>}
+          </div>
+          {slotId && <EvidenceButton slotId={slotId} label={title} />}
         </div>
       )}
       {children}
@@ -52,6 +119,7 @@ export function StatCard({
   trend,
   trendValue,
   footnote,
+  slotId,
 }: {
   label: string;
   value: string;
@@ -59,6 +127,7 @@ export function StatCard({
   trend?: "up" | "down" | "flat";
   trendValue?: string;
   footnote?: string;
+  slotId?: string;
 }) {
   const TrendIcon = trend === "up" ? ArrowUp : trend === "down" ? ArrowDown : Minus;
   const trendClr =
@@ -66,7 +135,10 @@ export function StatCard({
 
   return (
     <div className="group rounded-md border border-stone-200/80 bg-white p-5 transition-colors duration-150 hover:border-stone-300">
-      <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-stone-500">{label}</div>
+      <div className="flex items-start justify-between gap-2">
+        <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-stone-500">{label}</div>
+        {slotId && <EvidenceButton slotId={slotId} label={label} variant="subtle" />}
+      </div>
       <div className="mt-2 flex items-baseline gap-2">
         <span className="headline text-[28px] leading-none text-stone-900 tnum">{value}</span>
         {trend && trendValue && (
@@ -91,12 +163,14 @@ export function WowCard({
   sub,
   variant = "mint",
   footnote,
+  slotId,
 }: {
   label: string;
   value: string;
   sub?: string;
   variant?: "mint" | "outline" | "muted";
   footnote?: string;
+  slotId?: string;
 }) {
   const styles = {
     mint: {
@@ -105,6 +179,7 @@ export function WowCard({
       value: "text-white",
       sub: "text-[#ccebee]",
       foot: "text-[#65B3B1] border-[#007a8c]",
+      btn: "onMint" as const,
     },
     outline: {
       wrap: "bg-white border border-stone-200/80",
@@ -112,6 +187,7 @@ export function WowCard({
       value: "text-stone-900",
       sub: "text-stone-600",
       foot: "text-stone-400 border-stone-100",
+      btn: "default" as const,
     },
     muted: {
       wrap: "bg-[#fef7f0] border border-[#9a3412]/15",
@@ -119,12 +195,16 @@ export function WowCard({
       value: "text-stone-900",
       sub: "text-stone-700",
       foot: "text-stone-500 border-[#9a3412]/10",
+      btn: "default" as const,
     },
   }[variant];
 
   return (
     <div className={`group rounded-md p-6 transition-colors duration-150 ${styles.wrap}`}>
-      <div className={`text-[12px] font-medium uppercase tracking-[0.08em] ${styles.label}`}>{label}</div>
+      <div className="flex items-start justify-between gap-2">
+        <div className={`text-[12px] font-medium uppercase tracking-[0.08em] ${styles.label}`}>{label}</div>
+        {slotId && <EvidenceButton slotId={slotId} label={label} variant={styles.btn} />}
+      </div>
       <div className={`headline mt-3 text-[36px] leading-none tnum ${styles.value}`}>{value}</div>
       {sub && <div className={`mt-2.5 text-[13px] leading-relaxed ${styles.sub}`}>{sub}</div>}
       {footnote && (
@@ -141,10 +221,12 @@ export function InsightBox({
   type = "info",
   title,
   children,
+  slotId,
 }: {
   type?: "info" | "warn" | "success" | "danger";
   title: string;
   children: ReactNode;
+  slotId?: string;
 }) {
   const accent = {
     info: "border-l-stone-400",
@@ -155,7 +237,10 @@ export function InsightBox({
 
   return (
     <div className={`border-l-2 bg-white px-4 py-3.5 ${accent}`}>
-      <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-stone-500">{title}</div>
+      <div className="flex items-start justify-between gap-2">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-stone-500">{title}</div>
+        {slotId && <EvidenceButton slotId={slotId} label={title} variant="subtle" />}
+      </div>
       <div className="mt-1.5 text-[13px] leading-relaxed text-stone-800">{children}</div>
     </div>
   );
@@ -172,3 +257,8 @@ export function SourceCaption({ children }: { children: ReactNode }) {
     </div>
   );
 }
+
+// =============================================================================
+// EvidenceButton 단독 export — 페이지에서 직접 차트·셀에 부착 가능
+// =============================================================================
+export { EvidenceButton };

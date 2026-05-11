@@ -17,7 +17,7 @@ import {
 import Link from "next/link";
 import { ArrowUpRight, GitBranch, Sparkles } from "lucide-react";
 import { AppLayout, SubNav } from "@/components/AppLayout";
-import { Card, StatCard, InsightBox, SourceCaption } from "@/components/Card";
+import { Card, EvidenceButton, StatCard, InsightBox, SourceCaption } from "@/components/Card";
 import { NumberCell } from "@/components/NumberCell";
 import { ActivityCostExplorer } from "@/components/ActivityCostExplorer";
 import zoneKpi from "@/data/zone_kpi.json";
@@ -168,8 +168,9 @@ export default function CemeteryPage() {
 
       {/* ───────────────────────── 묘역 현황 ───────────────────────── */}
       <section id="overview" className="mt-8 grid gap-6 scroll-mt-32 sm:grid-cols-4">
-        <StatCard label="총 묘역" value={zoneKpi.meta.totalZones.toLocaleString() + "기"} />
+        <StatCard slotId="cemetery_total_zones" label="총 묘역" value={zoneKpi.meta.totalZones.toLocaleString() + "기"} />
         <StatCard
+          slotId="cemetery_sold_rate"
           label="분양완료율"
           value={formatPct(zoneKpi.wowMetrics.soldRateOverall)}
           sub="설묘+계약+예약 / 전체"
@@ -177,13 +178,14 @@ export default function CemeteryPage() {
           trendValue="78%"
         />
         <StatCard
+          slotId="cemetery_available_inventory"
           label="가용재고"
           value={zoneKpi.potentialValue.availableInventoryCount.toLocaleString() + "기"}
           sub="미판매 + 이장지"
           trend="down"
           trendValue="22%"
         />
-        <StatCard label="평균 묘역사용료" value={autoUnit(zoneKpi.potentialValue.avgPriceOverall)} />
+        <StatCard slotId="cemetery_avg_price_stat" label="평균 묘역사용료" value={autoUnit(zoneKpi.potentialValue.avgPriceOverall)} />
       </section>
 
       {/* ───────────────────────── 잠재가치 (NumberCell hero · lineage 클릭 가능) ───────────────────────── */}
@@ -216,7 +218,7 @@ export default function CemeteryPage() {
       </section>
 
       <section className="mt-12 grid gap-8 lg:grid-cols-2">
-        <Card title="분양상태 분포" subtitle="설묘·계약·예약·이장·미판매">
+        <Card slotId="cemetery_status_distribution" title="분양상태 분포" subtitle="설묘·계약·예약·이장·미판매">
           <ResponsiveContainer width="100%" height={280}>
             <PieChart>
               <Pie
@@ -252,7 +254,7 @@ export default function CemeteryPage() {
           )}
         </Card>
 
-        <Card title="연도별 계약 건수 추이" subtitle="장지 분양속도 trend">
+        <Card slotId="cemetery_contract_velocity" title="연도별 계약 건수 추이" subtitle="장지 분양속도 trend">
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={yearVelocity}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -266,7 +268,7 @@ export default function CemeteryPage() {
       </section>
 
       <section className="mt-12">
-        <Card title="잠재가치 Top 10 단지" subtitle="가용재고 × 등급별 평균가 — 영업 우선순위">
+        <Card slotId="cemetery_top10_districts" title="잠재가치 Top 10 단지" subtitle="가용재고 × 등급별 평균가 — 영업 우선순위">
           <ResponsiveContainer width="100%" height={360}>
             <BarChart data={top10Districts} layout="vertical" margin={{ left: 60 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -280,7 +282,7 @@ export default function CemeteryPage() {
       </section>
 
       <section className="mt-12 grid gap-8 lg:grid-cols-2">
-        <Card title="정체 단지 (2022년 이후 계약 없음)" subtitle="우선 처리 후보">
+        <Card slotId="cemetery_stagnant_districts" title="정체 단지 (2022년 이후 계약 없음)" subtitle="우선 처리 후보">
           <div className="max-h-72 overflow-y-auto rounded border border-slate-200">
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-slate-50 text-xs text-slate-600">
@@ -303,7 +305,7 @@ export default function CemeteryPage() {
           </div>
         </Card>
 
-        <Card title="이장지 분포 Top 단지" subtitle="재분양 자원 — 4,325기 reuse 가능">
+        <Card slotId="cemetery_transfer_zones" title="이장지 분포 Top 단지" subtitle="재분양 자원 — 4,325기 reuse 가능">
           <div className="max-h-72 overflow-y-auto rounded border border-slate-200">
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-slate-50 text-xs text-slate-600">
@@ -336,11 +338,12 @@ export default function CemeteryPage() {
           defaultZoneIds={["honor-royal-1R"]}
           title="구역별 활동원가"
           subtitle="구역을 선택하면 매출·비용 항목과 lineage가 펼쳐집니다. 다중 선택 가능."
+          slotId="cemetery_zone_explorer"
         />
       </section>
 
       <section className="mt-12">
-        <InsightBox type="info" title="장지 KPI 한계와 보완 경로">
+        <InsightBox slotId="cemetery_insight_master" type="info" title="장지 KPI 한계와 보완 경로">
           묘역 객체 단위 KPI는 풍부하나, <strong>계약자 master 부재</strong>로 회원 LTV·재계약·영업사원 생산성 산출 불가. Data Model 페이지에서 결손이 어떻게 RFI로 자동 도출되는지 확인 가능.
         </InsightBox>
       </section>
@@ -355,7 +358,7 @@ export default function CemeteryPage() {
           잠재가치는 충분하나 정체 단지·이장지 미활용·계약자 master 부재로 PI 깊이가 제한됨. 강한 신호 위주 가설 4개.
         </p>
         <div className="grid gap-4">
-          {ZONE_HYPOTHESES.map((h) => {
+          {ZONE_HYPOTHESES.map((h, i) => {
             const dotColor =
               h.signal === "high"
                 ? "bg-[#9a3412]"
@@ -364,6 +367,7 @@ export default function CemeteryPage() {
                   : "bg-stone-400";
             const signalLabel =
               h.signal === "high" ? "STRONG" : h.signal === "medium" ? "MEDIUM" : "WEAK";
+            const slotId = `cemetery_hypothesis_z${i + 1}`;
             return (
               <div
                 key={h.id}
@@ -386,6 +390,7 @@ export default function CemeteryPage() {
                   <span className="shrink-0 text-[10px] font-semibold tracking-wider text-stone-400">
                     {signalLabel}
                   </span>
+                  <EvidenceButton slotId={slotId} label={h.title} variant="subtle" />
                 </div>
               </div>
             );
@@ -416,8 +421,11 @@ export default function CemeteryPage() {
 
       {/* ───────────────────────── 부서별 KPI 매핑 ───────────────────────── */}
       <section id="department" className="mt-12 scroll-mt-32">
-        <div className="mb-5 flex items-baseline justify-between border-b border-stone-200 pb-2">
-          <h2 className="section-h">부서별 KPI 매핑</h2>
+        <div className="mb-5 flex items-baseline justify-between gap-2 border-b border-stone-200 pb-2">
+          <div className="flex items-center gap-2">
+            <h2 className="section-h">부서별 KPI 매핑</h2>
+            <EvidenceButton slotId="cemetery_dept_kpi_cards" label="부서별 KPI 매핑 — 장지 VC" variant="subtle" />
+          </div>
           <span className="text-[11px] tracking-wider text-stone-400">PPT 23p · 장지 VC 매핑</span>
         </div>
         <p className="mb-6 max-w-3xl text-[13px] leading-relaxed text-stone-600">

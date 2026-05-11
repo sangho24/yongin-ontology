@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 import type { NumberLineage, NumberDriver } from "@/types";
 import { autoUnit } from "@/lib/format";
 import { LineagePanel } from "./LineagePanel";
+import { EvidenceDrawer } from "./EvidenceDrawer";
+import { getSlot, getMissingSlot, isMissing } from "@/lib/evidence";
 
 // =============================================================================
 // NumberCell — 박스로 감싼 인터랙티브 숫자 셀
@@ -18,7 +20,8 @@ interface NumberCellProps {
   unit?: string; // 박스 외부 표기 단위 (원·명·기·% 등)
   label?: string; // 박스 위 작은 라벨
   sub?: string; // 박스 아래 작은 보조 설명
-  lineage?: NumberLineage;
+  lineage?: NumberLineage; // 단일 lineage 모드 (기존, 백워드 호환)
+  slotId?: string; // evidence_index.json 슬롯 ID 모드 (신규, 우선순위)
   series?: number[]; // inline sparkline용 (월별 등)
   size?: Size;
   emphasis?: boolean; // mint accent 강조
@@ -61,6 +64,7 @@ export function NumberCell({
   label,
   sub,
   lineage,
+  slotId,
   series,
   size = "md",
   emphasis = false,
@@ -72,7 +76,14 @@ export function NumberCell({
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const interactive = Boolean(lineage);
+  // slotId가 있으면 evidence_index 우선, 없으면 기존 lineage 모드
+  const slot = useMemo(() => (slotId ? getSlot(slotId) : null), [slotId]);
+  const missingMeta = useMemo(
+    () => (slotId && isMissing(slotId) ? getMissingSlot(slotId) : null),
+    [slotId]
+  );
+  const useEvidenceMode = Boolean(slotId && (slot || missingMeta));
+  const interactive = useEvidenceMode || Boolean(lineage);
   const fmt = formatter ?? autoUnit;
   const styles = sizeStyles[size];
 
@@ -141,15 +152,33 @@ export function NumberCell({
             </button>
 
             {/* Hover tooltip — z-50으로 박스 외부에서도 보이게 */}
-            {interactive && hover && lineage && (
+            {interactive && hover && (lineage || slot || missingMeta) && (
               <span
                 role="tooltip"
-                className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-stone-200 bg-white px-3 py-2 text-[11px] leading-relaxed text-stone-700 shadow-lg fade-in"
+                className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 -translate-x-1/2 max-w-[260px] whitespace-normal rounded-md border border-stone-200 bg-white px-3 py-2 text-[11px] leading-relaxed text-stone-700 shadow-lg fade-in"
               >
-                <span className="block font-semibold text-stone-900">{lineage.source}</span>
-                {lineage.formula && (
-                  <span className="mt-0.5 block text-stone-500">{lineage.formula}</span>
-                )}
+                {useEvidenceMode && slot ? (
+                  <>
+                    <span className="block font-semibold text-stone-900">
+                      {slot.evidence[0]?.source_file.split("/").pop() ?? slot.title}
+                    </span>
+                    {slot.evidence[0]?.notes && (
+                      <span className="mt-0.5 block text-stone-500">{slot.evidence[0].notes}</span>
+                    )}
+                  </>
+                ) : useEvidenceMode && missingMeta ? (
+                  <>
+                    <span className="block font-semibold text-rose-700">자료 미수령</span>
+                    <span className="mt-0.5 block text-stone-500">{missingMeta.reason}</span>
+                  </>
+                ) : lineage ? (
+                  <>
+                    <span className="block font-semibold text-stone-900">{lineage.source}</span>
+                    {lineage.formula && (
+                      <span className="mt-0.5 block text-stone-500">{lineage.formula}</span>
+                    )}
+                  </>
+                ) : null}
               </span>
             )}
           </span>
@@ -186,7 +215,25 @@ export function NumberCell({
         )}
       </span>
 
-      {interactive && lineage && (
+      {/* slotId 모드 우선, 없으면 기존 lineage 모드 */}
+      {useEvidenceMode && slotId && (
+        <EvidenceDrawer
+          open={open}
+          onClose={() => setOpen(false)}
+          slotId={slotId}
+          title={slot?.title ?? missingMeta?.title ?? label ?? slotId}
+          page={slot?.page}
+          kind={slot?.kind}
+          evidence={slot?.evidence}
+          caveats={slot?.caveats}
+          narrative={slot?.narrative}
+          verified={slot?.verified}
+          missing={missingMeta}
+          value={value}
+          unit={unit}
+        />
+      )}
+      {!useEvidenceMode && lineage && (
         <LineagePanel
           open={open}
           onClose={() => setOpen(false)}
