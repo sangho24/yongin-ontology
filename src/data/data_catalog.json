@@ -1,0 +1,1118 @@
+{
+  "$schema": "data_catalog_v0.1",
+  "generated_at": "2026-05-11",
+  "version": "0.1",
+  "note": "발표용 데이터 인벤토리. SPO에서 수령한 약 110개 자료를 35개 dataset으로 abstraction. 파일경로/PII/영업비밀(수수료율 raw)은 일체 노출하지 않음. 자료명·범위·KPI 연결 정보만 표출.",
+  "categories": [
+    {
+      "key": "raw-master",
+      "label": "마스터 데이터",
+      "description": "회원·계약·자산·구역 식별의 기준이 되는 master 데이터",
+      "color": "#0095A9"
+    },
+    {
+      "key": "raw-ledger",
+      "label": "회계 원장·재무제표",
+      "description": "ERP 원장·분개장·재무제표·계정명세서 (그룹 3사 × FY23~FY25)",
+      "color": "#7c3aed"
+    },
+    {
+      "key": "raw-ops",
+      "label": "운영 데이터",
+      "description": "ERP·일일보고·정산서 등 운영 시스템에서 추출한 raw 백데이터",
+      "color": "#b45309"
+    },
+    {
+      "key": "analysis",
+      "label": "가공·분석",
+      "description": "원장·master를 토대로 작성한 분석 워크북·배부분석·피벗테이블",
+      "color": "#0369a1"
+    },
+    {
+      "key": "report",
+      "label": "보고서",
+      "description": "프로젝트 산출 보고서·메모·외부 사례",
+      "color": "#9a3412"
+    },
+    {
+      "key": "transcript",
+      "label": "인터뷰",
+      "description": "현장 인터뷰 transcript (4월 진행 7회)",
+      "color": "#475569"
+    },
+    {
+      "key": "governance",
+      "label": "RFI·계약",
+      "description": "PwC RFI·주요 계약서",
+      "color": "#65a30d"
+    }
+  ],
+  "datasets": [
+    {
+      "id": "life_member_db",
+      "name": "라이프 회원 마스터DB",
+      "category": "raw-master",
+      "natureCode": "RAW-MASTER",
+      "scope": "FY25 스냅샷 (2025년말 기준)",
+      "shape": "약 9,930행 × 35열",
+      "owner": "(주)용인공원라이프",
+      "primaryKeys": ["회원번호"],
+      "keyColumns": ["회원번호", "회원상태", "가입일자", "모집설계사", "채널구분", "상품구분", "매출합계"],
+      "categoricalSummary": [
+        {
+          "column": "채널구분",
+          "topValues": [
+            {"value": "오프라인", "count": 9315},
+            {"value": "온라인", "count": 434},
+            {"value": "오프라인 (정규화 전)", "count": 152},
+            {"value": "법인", "count": 29}
+          ]
+        },
+        {
+          "column": "회원상태",
+          "topValues": [
+            {"value": "납부만기", "count": 4433},
+            {"value": "정상", "count": 3574},
+            {"value": "3회연체", "count": 1882},
+            {"value": "오류", "count": 41}
+          ]
+        },
+        {
+          "column": "상품구분",
+          "topValues": [
+            {"value": "통합상품", "count": 5696},
+            {"value": "상조상품", "count": 4196},
+            {"value": "공원상품", "count": 29},
+            {"value": "가전결합", "count": 9}
+          ]
+        }
+      ],
+      "linkedKpiCount": 21,
+      "linkedKpis": [
+        "총 회원수",
+        "회원상태 분포",
+        "채널별 회원당 LTV",
+        "채널별 납부만기 도달율",
+        "가입연도별 코호트",
+        "상위 설계사 매출",
+        "설계사 매출 집중도 (Gini)",
+        "납부만기 도달율",
+        "라이프 만기 회원 매출 비중",
+        "회원 누적 납입액 (스냅샷)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "life_erp_2023_2025", "relation": "동일 도메인 다른 시점 (스냅샷 누적 vs 23~25 신규)"},
+        {"id": "life_daily_report", "relation": "동일 도메인 다른 시점 (25년말 vs 25.12~26.04 신규)"},
+        {"id": "potential_customers_master", "relation": "가입 funnel 연결 (잠재 → 회원 마스터)"},
+        {"id": "life_settlement_backdata", "relation": "회원 → 해약 이벤트"},
+        {"id": "life_event_revenue_backdata", "relation": "회원 → 행사 이벤트"}
+      ],
+      "caveats": [
+        "매출합계 컬럼은 가입~25년말 누적 (회사 손익 인식 매출과 정의 다름)",
+        "채널구분 '오프라인 ' (trailing space) 152건 정규화 필요 (P2-2 정정: 'oo오프라인' 표기 오타)",
+        "가입경로 컬럼 채움률 0.7%로 사실상 미사용",
+        "모집영업소속 70%가 (구)용인공원라이프 — 조직개편 caveat"
+      ],
+      "piiNote": "회원명·휴대폰·주소·주민번호 등 raw PII 보유. 화면 노출 시 마스킹 필수.",
+      "presentationSafe": true
+    },
+    {
+      "id": "potential_customers_master",
+      "name": "잠재고객 master (FY25)",
+      "category": "raw-master",
+      "natureCode": "RAW-MASTER",
+      "scope": "FY25 (2025-01-01 ~ 2025-12-31 인입)",
+      "shape": "약 23,220행 × 46열",
+      "owner": "용인공원·아너스톤 영업조직",
+      "primaryKeys": ["잠재고객ID"],
+      "keyColumns": ["진행상태", "DB구분", "팀구분", "고객확보경로", "등급", "고객마스터전환일"],
+      "categoricalSummary": [
+        {
+          "column": "진행상태",
+          "topValues": [
+            {"value": "실패", "count": 11674},
+            {"value": "전환완료", "count": 8261},
+            {"value": "진행중", "count": 3051},
+            {"value": "접수", "count": 233}
+          ]
+        },
+        {
+          "column": "DB구분",
+          "topValues": [
+            {"value": "아너스톤", "count": 19320},
+            {"value": "용인공원", "count": 3774}
+          ]
+        },
+        {
+          "column": "고객마스터전환",
+          "topValues": [
+            {"value": "전환됨 (예)", "count": 7225},
+            {"value": "미전환 (아니요)", "count": 15995}
+          ]
+        }
+      ],
+      "linkedKpiCount": 1,
+      "linkedKpis": [
+        "온라인 채널 회원당 매출",
+        "잠재 → 회원 funnel 전환율"
+      ],
+      "linkedDatasetIds": [
+        {"id": "life_member_db", "relation": "마스터 전환 (잠재 23,220 → 회원 7,225)"}
+      ],
+      "caveats": [
+        "DB구분 83%가 아너스톤 (회원DB는 라이프 위주 — 조직 비대칭)",
+        "등급 컬럼 채움률 36%로 KPI 일부만 가능",
+        "실패사유·device 등 채움률 70~75% 수준"
+      ],
+      "piiNote": "휴대폰·성명·주소 컬럼 다수. 화면 노출 시 마스킹 필수.",
+      "presentationSafe": true
+    },
+    {
+      "id": "cemetery_grave_raw",
+      "name": "묘역 전체 raw (객체 master)",
+      "category": "raw-master",
+      "natureCode": "RAW-MASTER",
+      "scope": "26년 4월 기준 (전체 묘역 객체)",
+      "shape": "묘역 코드·구역·장법·상태 master",
+      "owner": "(재)용인공원",
+      "primaryKeys": ["묘역코드"],
+      "keyColumns": ["묘역코드", "구역", "장법", "상태", "면적", "단가"],
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "묘역 객체 식별 master (직접 KPI 보다는 매출·재고 분석의 join key)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "revenue_zone_mapping", "relation": "구역코드 매핑"},
+        {"id": "cemetery_inventory_fy25", "relation": "재고 명세 join"},
+        {"id": "cemetery_analysis_workbook", "relation": "구역별 매출 분석 join"}
+      ],
+      "caveats": [
+        "묘역 raw에는 회원·계약 master로의 1:1 매핑 컬럼이 없음 → tbox_class_contract 결손의 직접 원인"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "revenue_zone_mapping",
+      "name": "매출 구역 매핑테이블 (FY25)",
+      "category": "raw-master",
+      "natureCode": "ANALYSIS-PIVOT",
+      "scope": "FY25",
+      "shape": "구역기준 피벗 (44 × 230) + 장법기준 피벗 (43 × 230) + 아너스톤 등급 매핑 (78 × 18)",
+      "owner": "프로젝트팀",
+      "primaryKeys": ["구역코드", "장법코드"],
+      "keyColumns": ["구역명", "장법", "아너스톤 등급 prefix"],
+      "linkedKpiCount": 8,
+      "linkedKpis": [
+        "구역 분류 single source of truth",
+        "Top10 단지 잠재가치",
+        "구역별 활동원가",
+        "분양상태 분포",
+        "단지·등급별 평균가 격차"
+      ],
+      "linkedDatasetIds": [
+        {"id": "cemetery_grave_raw", "relation": "구역코드 매핑"},
+        {"id": "revenue_pivot_table", "relation": "구역 pivot 백데이터"},
+        {"id": "cemetery_analysis_workbook", "relation": "분석 워크북의 구역분류 source"}
+      ],
+      "caveats": [
+        "wide pivot 형식 (230컬럼) — melt 처리 필요",
+        "아너스톤 등급은 코드 prefix(1R/1N/3H 등)로 분류"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "corporate_card_user_master",
+      "name": "법인카드 사용자 구분",
+      "category": "raw-master",
+      "natureCode": "RAW-MASTER",
+      "scope": "FY25",
+      "shape": "약 23명 × 5열",
+      "owner": "(재)용인공원 경영지원",
+      "primaryKeys": ["카드번호"],
+      "keyColumns": ["카드번호", "사용자명", "부서", "직급"],
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "법인카드 비용 → 부서 매핑 보조 lineage"
+      ],
+      "linkedDatasetIds": [
+        {"id": "cemetery_analysis_workbook", "relation": "복리후생비·여비교통비·접대비 부서 배부 매핑"}
+      ],
+      "caveats": [
+        "헤더가 'Unnamed' raw 양식 — 헤더 행 스킵 필요"
+      ],
+      "piiNote": "직원 실명 보유. 화면 노출 시 부서·직급 단위로만 집계.",
+      "presentationSafe": true
+    },
+    {
+      "id": "fixed_assets_register",
+      "name": "고정자산 관리대장 (FY23~FY25)",
+      "category": "raw-master",
+      "natureCode": "RAW-LEDGER",
+      "scope": "FY23 ~ FY25",
+      "shape": "자산 코드·취득가·내용연수·사용부서 master (3년치)",
+      "owner": "(재)용인공원",
+      "primaryKeys": ["자산번호"],
+      "keyColumns": ["자산번호", "자산명", "사용부서", "취득가", "감가상각누계"],
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "감가상각비 부서·구역 배부 근거"
+      ],
+      "linkedDatasetIds": [
+        {"id": "cemetery_analysis_workbook", "relation": "감가상각비 시트 source"}
+      ],
+      "caveats": [
+        "차량운반구 대장 vs 차량현황 불일치 사례 존재 (Q19 RFI)"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "salary_master",
+      "name": "급여 마스터 (3사 × 23~25)",
+      "category": "raw-master",
+      "natureCode": "RAW-MASTER",
+      "scope": "FY23 ~ FY25 (3개사)",
+      "shape": "직원 단위 월별 급여 raw (3년치)",
+      "owner": "(재)용인공원·라이프·YPL 경영지원",
+      "primaryKeys": ["사원번호", "지급월"],
+      "keyColumns": ["사원번호", "부서", "직급", "급여", "상여"],
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "인건비 부서별 배부 근거 (mutual·cemetery 인건비 분석)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "cemetery_analysis_workbook", "relation": "인건비 _분석 시트 source"},
+        {"id": "life_analysis_workbook", "relation": "라이프 인건비 _분석 시트 source"}
+      ],
+      "caveats": [
+        "직급·개인별 raw — 발표용 노출 시 부서 단위 합계만 사용"
+      ],
+      "piiNote": "개인별 연봉·성명·주민번호 raw 보유. 화면 노출 시 인원수·총액·평균만.",
+      "presentationSafe": true
+    },
+    {
+      "id": "fs_fy25",
+      "name": "FY25 재무제표 묶음 (3사)",
+      "category": "raw-ledger",
+      "natureCode": "RAW-LEDGER",
+      "scope": "FY25 (3개사: 용인공원·YPL·라이프)",
+      "shape": "계정별원장 + 분개장 + 손익계산서 + 재무상태표 + 계정명세서 + 결산명세서 (3사 × 약 6종)",
+      "owner": "그룹 회계팀",
+      "primaryKeys": ["전표번호", "계정코드", "일자"],
+      "keyColumns": ["일자", "전표번호", "계정코드", "차변", "대변", "적요"],
+      "linkedKpiCount": 12,
+      "linkedKpis": [
+        "회사 손익 인식 매출 (FY25)",
+        "회원 누적 납입액 vs 회사 인식 매출 비교",
+        "장지 가용재고 잠재가치",
+        "라이프 행사예수금 (BS 부채)",
+        "단기 액션 — 가용재고 활성화",
+        "Axiom a1 매출 추적성",
+        "회계 손익 ≠ 경제 손익 anchor"
+      ],
+      "linkedDatasetIds": [
+        {"id": "fs_fy24", "relation": "전기 비교 (YoY)"},
+        {"id": "ax_fs_2025_datapack", "relation": "재무 데이터 정리본"},
+        {"id": "intercompany_elimination", "relation": "내부거래 제거 매트릭스 source"},
+        {"id": "cemetery_analysis_workbook", "relation": "원장이 분석 워크북의 PRIMARY source"}
+      ],
+      "caveats": [
+        "용인공원 매출 10계정 합계 50,240,119,779원 (FY25 영업매출, 부가세 제외, 환입 차감)",
+        "라이프 PL 영업손실 -28억, BS 행사예수금 280억 — 회계 ≠ 경제 caveat",
+        "분개장 파일은 매우 무거움(10MB+) — 별도 처리"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "fs_fy24",
+      "name": "FY24 재무제표 묶음 (3사)",
+      "category": "raw-ledger",
+      "natureCode": "RAW-LEDGER",
+      "scope": "FY24 (3개사)",
+      "shape": "계정별원장 + 분개장 + 손익계산서 + 재무상태표 (3사)",
+      "owner": "그룹 회계팀",
+      "primaryKeys": ["전표번호", "계정코드", "일자"],
+      "keyColumns": ["일자", "계정코드", "차변", "대변"],
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "FY25 vs FY24 YoY 비교의 기준점"
+      ],
+      "linkedDatasetIds": [
+        {"id": "fs_fy25", "relation": "당기 비교"},
+        {"id": "fs_fy23", "relation": "전기 비교"}
+      ],
+      "caveats": [
+        "용인공원 매출 10계정 FY24 합계 49,229,587,273원 → FY25 +2.05% YoY"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "fs_fy23",
+      "name": "FY23 재무제표 묶음 (YPL·라이프)",
+      "category": "raw-ledger",
+      "natureCode": "RAW-LEDGER",
+      "scope": "FY23 (YPL·라이프 — 용인공원 결측)",
+      "shape": "계정별원장 + 손익계산서 + 재무상태표 (2개사)",
+      "owner": "그룹 회계팀",
+      "primaryKeys": ["전표번호", "계정코드", "일자"],
+      "keyColumns": ["일자", "계정코드", "차변", "대변"],
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "3사 시계열의 가장 이른 시점"
+      ],
+      "linkedDatasetIds": [
+        {"id": "fs_fy24", "relation": "당기→차기 비교"}
+      ],
+      "caveats": [
+        "용인공원 FY23 폴더 결측 — 시계열 gap 가장 큼",
+        "FY23 라이프 감사보고서는 PDF만 보유"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "intercompany_elimination",
+      "name": "내부거래 제거 매트릭스 (FY23·FY25)",
+      "category": "raw-ledger",
+      "natureCode": "ANALYSIS-PIVOT",
+      "scope": "FY23, FY25 (그룹 3사간 양방향 매칭)",
+      "shape": "FY25: P&L 9건 + B/S 4건 / FY23: P&L 10건 + B/S 4건 + 미매칭 19건",
+      "owner": "그룹 회계팀",
+      "primaryKeys": ["거래쌍 ID"],
+      "keyColumns": ["지급법인", "수입법인", "계정", "금액", "VAT", "차이"],
+      "linkedKpiCount": 1,
+      "linkedKpis": [
+        "Axiom a4 — 그룹 3사 양방향 매칭"
+      ],
+      "linkedDatasetIds": [
+        {"id": "fs_fy25", "relation": "내부거래 제거 대상 원장"},
+        {"id": "fs_fy23", "relation": "전기 시점 매트릭스"}
+      ],
+      "caveats": [
+        "FY25 9건 = 약 207.7억원 P&L 내부거래, VAT 100% 정확 일치 (최대 오차 1원)",
+        "FY23은 미매칭 19건 잔존 — 그룹 통합관리회계 미숙기 흔적",
+        "FY23→FY25 사이 그룹 회계 정합성 크게 개선"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "account_specification_memo",
+      "name": "FY25 계정명세서·재고 메모",
+      "category": "raw-ledger",
+      "natureCode": "REPORT-MEMO",
+      "scope": "FY25",
+      "shape": "계정명세서 1건 (52시트) + 재고 메모 1건 (9시트)",
+      "owner": "(재)용인공원 회계팀",
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "tbox_class_account 정의 근거",
+        "재고자산 정의 근거"
+      ],
+      "linkedDatasetIds": [
+        {"id": "fs_fy25", "relation": "계정명세서 부속자료"},
+        {"id": "cemetery_inventory_fy25", "relation": "재고 명세 정의 근거"}
+      ],
+      "caveats": [
+        "FY25 폴더의 동일 파일명과 별도 버전 — 어느 것이 최종본인지 사용자 확인 필요"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "life_erp_2023_2025",
+      "name": "라이프 ERP 자료 (FY23~FY25)",
+      "category": "raw-ops",
+      "natureCode": "RAW-OPS",
+      "scope": "FY23 ~ FY25 (23~25년 신규 가입자 위주)",
+      "shape": "회원 4,437행 + 행사 1,783행 + 해약 13,251행",
+      "owner": "(주)용인공원라이프 ERP",
+      "primaryKeys": ["회원번호", "행사번호"],
+      "keyColumns": ["가입일자", "회원상태", "가입경로", "외주업체", "수수료"],
+      "linkedKpiCount": 3,
+      "linkedKpis": [
+        "최근 코호트 만기율 급등",
+        "가입 코호트 × 만기율",
+        "가입연도별 코호트 (3년 시계열)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "life_member_db", "relation": "동일 도메인 다른 시점 (23~25 신규 vs 25년말 누적 스냅샷)"},
+        {"id": "life_settlement_backdata", "relation": "해약 데이터 동일 (13,251건)"}
+      ],
+      "caveats": [
+        "회원시트 4,437건은 23~25 신규 — 회원DB 9,930건(25년말 누적)과 row 차이는 정상이나 합산 시 중복 caveat 필수",
+        "외주업체별 행사 분포 — 예람·다드림·장의사컴퍼니 등"
+      ],
+      "piiNote": "회원·고객 raw 보유. 화면 노출 시 마스킹.",
+      "presentationSafe": true
+    },
+    {
+      "id": "life_daily_report",
+      "name": "라이프 일일보고 (25.12~26.04)",
+      "category": "raw-ops",
+      "natureCode": "RAW-OPS",
+      "scope": "2025-12 ~ 2026-04 (4개월)",
+      "shape": "22시트 — 회원 1,246 / 행사 296 / 입금 13,565 / 해약 299 등",
+      "owner": "(주)용인공원라이프",
+      "primaryKeys": ["회원번호", "행사번호"],
+      "keyColumns": ["회원상태", "모집영업소속", "모집설계사명", "상품명", "가입경로", "납부방법"],
+      "linkedKpiCount": 4,
+      "linkedKpis": [
+        "총 회원수 (신규 추세)",
+        "상위 10 설계사",
+        "설계사 수",
+        "설계사 매출 집중도 (Gini)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "life_member_db", "relation": "동일 도메인 다른 시점·범위 (온유 위주 신규 vs 25년말 누적)"},
+        {"id": "life_event_revenue_backdata", "relation": "행사·정산 매핑"}
+      ],
+      "caveats": [
+        "회원시트 1,246건은 '온유' 자체 상품(온유프리 멤버스·HONORSTONE·온유프리360 등) 위주 신규",
+        "회원DB는 (구)용인공원라이프 위주 — 마스터 키 매칭 시 조직별 분리 필수",
+        "시트별 표준 처리 매뉴얼 필요 (피벗·완성표·raw 혼재)"
+      ],
+      "piiNote": "회원·고인명 raw 보유.",
+      "presentationSafe": true
+    },
+    {
+      "id": "life_monthly_performance",
+      "name": "라이프 월간 성과 집계 (26년 1H)",
+      "category": "raw-ops",
+      "natureCode": "RAW-OPS",
+      "scope": "2026년 상반기 마케팅 KPI 계획·실적",
+      "shape": "월별 KPI 13행 × 24열",
+      "owner": "(주)용인공원라이프 마케팅",
+      "keyColumns": ["월", "유효DB", "계약 전환율", "행사건수", "광고비", "매출"],
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "마케팅 ROAS·CPA 보조 산출"
+      ],
+      "linkedDatasetIds": [
+        {"id": "onyou_marketing_report", "relation": "동일 마케팅 영역 raw"}
+      ],
+      "caveats": [
+        "26년 1H 매출 692M / 광고비 98M (4개월 누적)",
+        "pivot 형태 (컬럼=월, row=KPI) — melt 처리 필요"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "life_funeral_settlement_raw",
+      "name": "라이프 의전행사 정산서 raw",
+      "category": "raw-ops",
+      "natureCode": "RAW-OPS",
+      "scope": "24년12월 ~ 26년1월 (월별 1·2차 정산서, 약 14개월)",
+      "shape": "월별 정산 시트 약 20개",
+      "owner": "(주)용인공원라이프",
+      "keyColumns": ["회원번호", "행사일자", "장례식장", "의전업체", "상품금액", "행사수수료", "지급금액"],
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "지급수수료 채널 배부 보조"
+      ],
+      "linkedDatasetIds": [
+        {"id": "life_event_revenue_backdata", "relation": "행사매출-정산서 정합성"}
+      ],
+      "caveats": [
+        "매월 컬럼 구조가 다름 (22~48 변동) — 표준화 매핑 테이블 필요",
+        "헤더 멀티라인 — 정규화 필요",
+        "의전업체별 분포: 장의사컴퍼니·예람·에프엔에스 등"
+      ],
+      "piiNote": "회원명·고인명·계좌 raw 보유.",
+      "presentationSafe": true
+    },
+    {
+      "id": "life_settlement_backdata",
+      "name": "라이프 회비정산차익 backdata",
+      "category": "raw-ops",
+      "natureCode": "RAW-OPS",
+      "scope": "FY23 ~ FY25 (해약 raw 3년치 13,251건)",
+      "shape": "60_회비정산차익 원장 (255행) + 해약-RAW (13,251 × 36) + 분류 피벗",
+      "owner": "(주)용인공원라이프",
+      "keyColumns": ["해약유형", "해약구분", "채널", "불입금액", "해약수입금"],
+      "categoricalSummary": [
+        {
+          "column": "해약유형",
+          "topValues": [
+            {"value": "일반해약", "count": 11174},
+            {"value": "만기해약", "count": 979},
+            {"value": "직권해지", "count": 909},
+            {"value": "청약철회", "count": 189}
+          ]
+        },
+        {
+          "column": "해약구분",
+          "topValues": [
+            {"value": "연체해약", "count": 8057},
+            {"value": "개인사유", "count": 3412},
+            {"value": "경제적사유", "count": 835},
+            {"value": "만기해약", "count": 423}
+          ]
+        }
+      ],
+      "linkedKpiCount": 5,
+      "linkedKpis": [
+        "회비정산차익 영업외수익 흡수 (H1)",
+        "회계 ≠ 경제 손익 anchor",
+        "만기해약 비중과 영업손실 관계",
+        "채널별 납부만기 도달율"
+      ],
+      "linkedDatasetIds": [
+        {"id": "life_member_db", "relation": "회원 → 해약 이벤트"},
+        {"id": "life_erp_2023_2025", "relation": "해약 데이터 동일 (13,251건)"},
+        {"id": "fs_fy25", "relation": "라이프 영업외수익(회비정산차익) anchor"}
+      ],
+      "caveats": [
+        "해약수입금 합계 약 28억 (3년 누적, 회비정산차익 핵심 KPI)",
+        "60_회비정산차익 시트는 헤더가 'Unnamed' — 행 offset 처리 필요"
+      ],
+      "piiNote": "회원·고객 raw 보유.",
+      "presentationSafe": true
+    },
+    {
+      "id": "life_event_revenue_backdata",
+      "name": "라이프 행사매출·비용 직접배부 backdata",
+      "category": "raw-ops",
+      "natureCode": "RAW-OPS",
+      "scope": "FY23 ~ FY25 (행사 raw 3년치)",
+      "shape": "19시트 — 행사RAW(1,785) + 지급수수료원장(2,044) + B2B 장례용품 배부(236) + 행사매출 Recon(1,530) 등",
+      "owner": "(주)용인공원라이프",
+      "keyColumns": ["행사번호", "회원번호", "분류", "신뢰도", "지급수수료"],
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "라이프 채널 배부 비용 (FY25) 보조 백데이터",
+        "B2B 행사 분류 (LG CNS·EY·투썸 등)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "life_analysis_workbook", "relation": "분석 워크북의 source backdata"},
+        {"id": "life_funeral_settlement_raw", "relation": "행사 정산 detail"}
+      ],
+      "caveats": [
+        "지급수수료원장 분류정리: HIGH 신뢰도 1,394건 / UNKNOWN 637건 (31%)",
+        "행사매출_Recon 합계: 상품 3,106M + 상향1 800M + 상향2 307M + 장지 57M",
+        "잔액 컬럼 sum은 누적잔액 — 합산 의미 없음"
+      ],
+      "piiNote": "고객·B2B 거래처명 일부 raw.",
+      "presentationSafe": true
+    },
+    {
+      "id": "onyou_marketing_report",
+      "name": "그룹사 온라인 마케팅 성과 보고서 (26.04)",
+      "category": "raw-ops",
+      "natureCode": "RAW-OPS",
+      "scope": "2025-11 ~ 2026-04 (6개월)",
+      "shape": "10시트 — RD 67,628행(콜 raw) + RD_플랫폼 7,365 + 채널별·기간별 등",
+      "owner": "그룹사 마케팅 (외부 벤치마크 아님)",
+      "keyColumns": ["플랫폼", "월", "노출", "클릭", "광고비", "유효DB", "계약완료"],
+      "categoricalSummary": [
+        {
+          "column": "광고 플랫폼",
+          "topValues": [
+            {"value": "외부 SNS 플랫폼 A", "count": 3464},
+            {"value": "외부 SNS 플랫폼 B", "count": 3432},
+            {"value": "외부 SNS 플랫폼 C", "count": 285},
+            {"value": "외부 광고 네트워크", "count": 178}
+          ]
+        }
+      ],
+      "linkedKpiCount": 2,
+      "linkedKpis": [
+        "온라인 채널 회원당 매출 (H3)",
+        "채널별 회원당 매출"
+      ],
+      "linkedDatasetIds": [
+        {"id": "life_monthly_performance", "relation": "마케팅 KPI 정합성"},
+        {"id": "potential_customers_master", "relation": "잠재고객 인입 → 광고 캠페인"}
+      ],
+      "caveats": [
+        "그룹 자체 브랜드 채널 마케팅 raw — 외부 벤치마크 아님",
+        "Summary·기간별·연간_Mediamix 시트는 헤더 'Unnamed' raw 양식 — 수동 매핑 필수",
+        "RD 67,628행은 PII 다량 포함 가능 — 직접 노출 금지",
+        "6개월 단기 데이터 — 코호트/LTV에 직접 사용 불가"
+      ],
+      "piiNote": "회원 콜 응대 raw — 휴대폰·성명 다수.",
+      "presentationSafe": true
+    },
+    {
+      "id": "life_analysis_workbook",
+      "name": "라이프 분석 워크북",
+      "category": "analysis",
+      "natureCode": "ANALYSIS-WORKBOOK",
+      "scope": "FY25 (상조 VC 종합 분석)",
+      "shape": "73시트 (top-level View 5 + ERP설계 3 + Backdata 11 + 비용 23개 _분석 트리플 + 메타)",
+      "owner": "프로젝트팀",
+      "keyColumns": ["채널 정의", "활동 정의", "배부 동인", "비용 23계정"],
+      "linkedKpiCount": 11,
+      "linkedKpis": [
+        "라이프 채널 배부 비용 (FY25)",
+        "채널별 활동원가 (복합 위젯)",
+        "채널 ROI 재배분 기회",
+        "채널별 비용 배부 결과 (Heatmap)",
+        "부서별 KPI 매핑 — 상조 VC",
+        "회비정산차익 영업외수익 흡수 (H1)",
+        "회계≠경제 (WowCard)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "life_event_revenue_backdata", "relation": "분석본의 source backdata"},
+        {"id": "life_settlement_backdata", "relation": "회비정산차익 source"},
+        {"id": "fs_fy25", "relation": "라이프 원장이 분석본의 source"},
+        {"id": "advertising_allocation_fy25", "relation": "광고선전비 배부 reconcile"}
+      ],
+      "caveats": [
+        "23개 비용 _분석 트리플 구조 (분석본 + 원장 + 추적)",
+        "급여_분석 시트 max_row가 Excel 최대치(1,048,576) 잡힘 — 빈 셀 오인 가능",
+        "전체지급수수료_분류피벗 1x1 placeholder (사용중단)"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "cemetery_analysis_workbook",
+      "name": "용인공원(장지 VC) 분석 워크북",
+      "category": "analysis",
+      "natureCode": "ANALYSIS-WORKBOOK",
+      "scope": "FY25 (장지 VC 종합 분석)",
+      "shape": "244시트 (Top-level View/PPT 10 + 원장 0~118번 약 47 + 매출 10계정 트리플 30 + 비용 38 + 판관비 50 등)",
+      "owner": "프로젝트팀",
+      "keyColumns": ["구역 분류", "장법", "활동 정의", "배부 동인", "매출 10계정", "비용 N계정"],
+      "linkedKpiCount": 32,
+      "linkedKpis": [
+        "구역별 활동원가 (복합 위젯)",
+        "Top10 단지 잠재가치",
+        "정체 단지 (2022 이후 계약 없음)",
+        "이장지 분포 Top 단지",
+        "단지·등급별 평균가 격차 (Z3)",
+        "분양완료율",
+        "총 묘역",
+        "평균 묘역사용료 (KPI)",
+        "부서별 KPI 매핑 — 장지 VC",
+        "Z1·Z2 정체단지·이장지 가설"
+      ],
+      "linkedDatasetIds": [
+        {"id": "fs_fy25", "relation": "용인공원 25년 원장이 분석본의 source"},
+        {"id": "revenue_zone_mapping", "relation": "구역 분류 single source"},
+        {"id": "cemetery_grave_raw", "relation": "묘역 객체 master"},
+        {"id": "ax_fs_2025_datapack", "relation": "동명 시트 (장지ERP설계) 중복 — Datapack이 공식본"}
+      ],
+      "caveats": [
+        "보험료·차량유지비·운반비 등 4개 시트의 max_row가 Excel 최대치 잡힘 — 빈 셀 오인",
+        "장지ERP설계 시트는 Datapack(공식)이 PRIMARY, 본 워크북은 작업본",
+        "수정9 후속본 — 매출 10계정·구역분류·아너스톤 prefix 적용 완료"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "advertising_allocation_fy25",
+      "name": "광고선전비 배부분석 (FY25)",
+      "category": "analysis",
+      "natureCode": "ANALYSIS-PIVOT",
+      "scope": "FY25",
+      "shape": "광고선전비_배부분석 시트 (100 × 11) + 요약",
+      "owner": "프로젝트팀",
+      "keyColumns": ["광고 vendor", "채널", "배부기준", "금액"],
+      "linkedKpiCount": 4,
+      "linkedKpis": [
+        "라이프 채널 배부 비용 (FY25)",
+        "채널 ROI 재배분 기회",
+        "채널별 비용 배부 결과 (Heatmap)",
+        "채널별 활동원가 (복합 위젯)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "life_analysis_workbook", "relation": "광고선전비_분석 시트와 reconcile"},
+        {"id": "cemetery_analysis_workbook", "relation": "광고선전비_분석 시트와 reconcile"}
+      ],
+      "caveats": [
+        "광고선전비 채널 배부의 single source"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "service_allocation_fy25",
+      "name": "용역비 배부분석 (FY25)",
+      "category": "analysis",
+      "natureCode": "ANALYSIS-PIVOT",
+      "scope": "FY25",
+      "shape": "용역비_배부분석 시트 (103 × 11) + 요약",
+      "owner": "프로젝트팀",
+      "keyColumns": ["용역업체", "구역", "배부기준", "금액"],
+      "linkedKpiCount": 4,
+      "linkedKpis": [
+        "구역별 활동원가 (복합 위젯)",
+        "Axiom a2 조성비 zone추적",
+        "채널별 비용 배부 결과 (Heatmap)",
+        "채널별 활동원가 (복합 위젯)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "cemetery_analysis_workbook", "relation": "용역비(53800) 시트와 reconcile"}
+      ],
+      "caveats": [
+        "용역비 53800 구역배부의 PRIMARY (제조원가측)"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "revenue_pivot_table",
+      "name": "매출 피벗테이블",
+      "category": "analysis",
+      "natureCode": "ANALYSIS-PIVOT",
+      "scope": "FY25",
+      "shape": "대구역 피벗 (18 × 34) + 세부구역 피벗 (19 × 232)",
+      "owner": "프로젝트팀",
+      "keyColumns": ["대구역", "세부구역", "매출"],
+      "linkedKpiCount": 9,
+      "linkedKpis": [
+        "Top10 단지 잠재가치",
+        "정체 단지",
+        "단지·등급별 평균가 격차",
+        "구역별 활동원가",
+        "단지별 분양률 vs 잠재가치 (3D scatter)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "revenue_zone_mapping", "relation": "구역 매핑 single source"},
+        {"id": "cemetery_analysis_workbook", "relation": "구역별 매출과 reconcile"}
+      ],
+      "caveats": [
+        "wide pivot 형식 (232 컬럼) — melt 처리 필요"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "misclassified_zone_detail",
+      "name": "구역별매출 기타·미분류 상세",
+      "category": "analysis",
+      "natureCode": "ANALYSIS-PIVOT",
+      "scope": "FY25",
+      "shape": "기타(미분류) 상세 (106 × 9) + 요약",
+      "owner": "프로젝트팀",
+      "keyColumns": ["구역", "매출 계정", "금액", "분류 사유"],
+      "linkedKpiCount": 5,
+      "linkedKpis": [
+        "이장지 4,325기 재분양 자원 (Z2)",
+        "이장지 분포 Top 단지",
+        "정체 단지",
+        "구역별 활동원가"
+      ],
+      "linkedDatasetIds": [
+        {"id": "cemetery_analysis_workbook", "relation": "기타구역 드릴다운 보충"},
+        {"id": "revenue_zone_mapping", "relation": "구역 분류 정합성 보강"}
+      ],
+      "caveats": [
+        "주요 10개 구역에 매핑되지 않는 케이스 (63구역·봉안담·가구역·임대료 구역 등)"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "cemetery_inventory_fy25",
+      "name": "용인공원 재고자산 분석 (FY25 명세서)",
+      "category": "analysis",
+      "natureCode": "ANALYSIS-PIVOT",
+      "scope": "FY25 (묘지·봉안 재고)",
+      "shape": "9시트 — 재고_View + 25년 묘지재고 명세 (109 × 13) + 봉안함재고 (29 × 11) + 봉안당 1·2층 근거 등",
+      "owner": "(재)용인공원 + 프로젝트팀",
+      "keyColumns": ["구역", "묘역코드", "재고수량", "단가", "원가"],
+      "linkedKpiCount": 11,
+      "linkedKpis": [
+        "가용재고",
+        "가용재고 잠재가치",
+        "장지 가용재고 잠재가치",
+        "장지 가용재고 정체 잠재",
+        "분양상태 분포",
+        "분양완료율",
+        "총 묘역",
+        "평균 묘역사용료 (KPI)",
+        "단지별 분양률 vs 잠재가치 (3D scatter)",
+        "단기 액션 — 가용재고 활성화"
+      ],
+      "linkedDatasetIds": [
+        {"id": "ax_fs_2025_datapack", "relation": "동명 재고 시트와 cross-validate"},
+        {"id": "cemetery_grave_raw", "relation": "묘역 객체 master join"},
+        {"id": "fs_fy25", "relation": "BS 재고자산 / 손익 anchor"}
+      ],
+      "caveats": [
+        "단가는 영업비밀 — 화면 노출 시 합계·평균만",
+        "PROXY 추정치 — 분양가능률·할인율·할증 미반영"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "cemetery_inventory_memo",
+      "name": "용인공원 재고 메모",
+      "category": "analysis",
+      "natureCode": "REPORT-MEMO",
+      "scope": "FY25",
+      "shape": "9시트",
+      "owner": "(재)용인공원 회계팀",
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "재고자산 정의·해석 근거"
+      ],
+      "linkedDatasetIds": [
+        {"id": "cemetery_inventory_fy25", "relation": "분석본의 정의 근거"}
+      ],
+      "caveats": [
+        "FY25 폴더의 25년 재고와 시트수 동일 — 별도 검증 필요"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "ax_fs_2025_datapack",
+      "name": "용인공원 AX FS 2025 Datapack",
+      "category": "analysis",
+      "natureCode": "ANALYSIS-WORKBOOK",
+      "scope": "FY23~FY25 (3사 PL/BS/제조원가 + 내부거래 + ERP 설계)",
+      "shape": "48시트 (Summary 5 + ERP 설계 6 + 3대비용 2 + 매출/구역 3 + 재고 2 + 내부거래 3 + 회사별 PL/BS 11 + 회사별 원장 3 + 메타 13)",
+      "owner": "그룹 회계팀 + 프로젝트팀",
+      "keyColumns": ["3사 PL", "3사 BS", "내부거래 매칭", "장지·상조 ERP 설계"],
+      "linkedKpiCount": 11,
+      "linkedKpis": [
+        "라이프 채널 배부 비용 (FY25)",
+        "구역별 활동원가 (복합 위젯)",
+        "채널별 활동원가 (복합 위젯)",
+        "부서별 KPI 매핑 — 상조 VC",
+        "부서별 KPI 매핑 — 장지 VC",
+        "Top10 단지 잠재가치",
+        "가입연도별 코호트 (3-axis)",
+        "NEW KPI · 도입 사유",
+        "Class entity / vendor / zone"
+      ],
+      "linkedDatasetIds": [
+        {"id": "fs_fy25", "relation": "재무 데이터 정리본"},
+        {"id": "fs_fy24", "relation": "전기 비교"},
+        {"id": "intercompany_elimination", "relation": "내부거래 매칭 매트릭스 source"},
+        {"id": "cemetery_analysis_workbook", "relation": "장지ERP설계 동명 시트 — Datapack이 공식본"}
+      ],
+      "caveats": [
+        "장지ERP설계 16,265 컬럼 super-wide — Datapack을 PRIMARY로",
+        "F1 분석 워크북과 동명 시트 중복 — Datapack 우선"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "pension_allocation",
+      "name": "퇴직급여충당금 배부 (라이프·YPL)",
+      "category": "analysis",
+      "natureCode": "ANALYSIS-PIVOT",
+      "scope": "FY25",
+      "shape": "라이프 + YPL 별도 파일",
+      "owner": "그룹 회계팀",
+      "keyColumns": ["부서", "퇴직금 충당금", "배부기준"],
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "라이프·YPL 인건비 채널 배부 보조"
+      ],
+      "linkedDatasetIds": [
+        {"id": "life_analysis_workbook", "relation": "라이프 인건비 배부"},
+        {"id": "cemetery_analysis_workbook", "relation": "YPL 인건비 배부"}
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "report_draft_0422",
+      "name": "관리손익분석 보고서 Draft (0422)",
+      "category": "report",
+      "natureCode": "REPORT-DECK",
+      "scope": "FY25 분석 결과",
+      "shape": "117 슬라이드 (Activity Definition 62 + Findings(Cemetery) 40 + Methodology 7 + Cover 3 + Exec Summary 1 + Appendix 2 + Other 2)",
+      "owner": "프로젝트팀",
+      "keyColumns": ["슬라이드 제목", "카테고리", "narrative"],
+      "linkedKpiCount": 36,
+      "linkedKpis": [
+        "전 화면의 narrative 근거",
+        "Executive Summary",
+        "장지 VC 구역별 손익 결과",
+        "상조 VC 채널 배부 결과",
+        "활동 정의 (인건비·지급수수료·광고선전비·판매수수료 등)",
+        "T-Box 결손 narrative",
+        "회계≠경제 anchor"
+      ],
+      "linkedDatasetIds": [
+        {"id": "cemetery_analysis_workbook", "relation": "분석 결과 시각화 source"},
+        {"id": "life_analysis_workbook", "relation": "분석 결과 시각화 source"},
+        {"id": "ax_fs_2025_datapack", "relation": "Datapack 결과 시각화"},
+        {"id": "report_skeleton_260413", "relation": "이전 골격본"}
+      ],
+      "caveats": [
+        "회사 합의된 메시지 — 모든 화면의 narrative 근거"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "report_skeleton_260413",
+      "name": "관리손익분석 보고서 Skeleton (260413)",
+      "category": "report",
+      "natureCode": "REPORT-DECK",
+      "scope": "FY25 분석 골격",
+      "shape": "PPT 골격",
+      "owner": "프로젝트팀",
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "슬라이드별 슬롯 매핑 골격"
+      ],
+      "linkedDatasetIds": [
+        {"id": "report_draft_0422", "relation": "Skeleton 발전형"}
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "benchmark_daerim",
+      "name": "외부 사례 — 원가구조 분석 보고서",
+      "category": "report",
+      "natureCode": "REPORT-DECK",
+      "scope": "외부 사례 (방법론 참조용)",
+      "shape": "PPT",
+      "owner": "외부 컨설팅 수행 보고서 (방법론 참조)",
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "방법론 참조 (직접 매핑 없음)"
+      ],
+      "linkedDatasetIds": [],
+      "caveats": [
+        "외부 사례 — 본 프로젝트 데이터 아님"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "interviews_april",
+      "name": "현장 인터뷰 7회 (4월 진행)",
+      "category": "transcript",
+      "natureCode": "TRANSCRIPT",
+      "scope": "2026-03-11 ~ 2026-04-03 (3일차+종합 0403)",
+      "shape": "7회 — 그룹 0403 / YPL 1일차 / 라이프 2일차(오전·오후) / 공원 3일차 오전 / 경영지원·회계 3일차 오후",
+      "owner": "ClovaNote 자동 추출",
+      "keyColumns": ["발언자(익명코드)", "타임스탬프", "발언 내용"],
+      "linkedKpiCount": 14,
+      "linkedKpis": [
+        "회비정산차익 = 회계 이익이지만 경제적 이익 아님 (H1)",
+        "만기해약 비중과 영업손실 관계",
+        "Z1 정체단지 잠재가치 (센트럴 분양 마감)",
+        "Z2 이장지 4,325기 재분양 자원",
+        "Z4 계약자 master 부재",
+        "Axiom a5 외연가용성 (엑셀·수기 의존)",
+        "Class sales_agent 결손",
+        "회계 ≠ 경제 손익 anchor",
+        "장지 master 결손 → BI 깊이 제한"
+      ],
+      "linkedDatasetIds": [
+        {"id": "pwc_rfi_v2", "relation": "인터뷰 결손 → RFI 추가요청"},
+        {"id": "report_draft_0422", "relation": "인터뷰 발언 → 슬라이드 narrative"}
+      ],
+      "caveats": [
+        "총 발화 행수 2,095 / 키워드 hit 397건 / 발언자 슬롯 합 58 (실제 인원 더 적음)",
+        "ClovaNote 폴더와 인터뷰 녹음본 폴더 양쪽에 존재 — 동일 콘텐츠 (한쪽 SKIP)"
+      ],
+      "piiNote": "발언자는 '참석자 N' 익명코드. 실명 노출 X.",
+      "presentationSafe": true
+    },
+    {
+      "id": "pwc_rfi_v2",
+      "name": "PwC RFI v2 (260507)",
+      "category": "governance",
+      "natureCode": "META-RFI",
+      "scope": "프로젝트 누적 자료요청 (260330 ~ 260507 시계열 7개 버전 중 최신)",
+      "shape": "23시트 — RFI List(110 항목) + Q&A + 구역·신규묘역·DB관리·아너스톤 추가 질의 등",
+      "owner": "PwC 프로젝트팀",
+      "keyColumns": ["RFI No.", "주요 요청자료", "성격", "중요도", "해당법인", "수령여부"],
+      "linkedKpiCount": 22,
+      "linkedKpis": [
+        "자동 도출 RFI · T-Box",
+        "결손 Class·Property",
+        "회원 master 결손 (R1)",
+        "판매직 master 결손 (R2)",
+        "통합 고객 view 결손 (R5)",
+        "구역 이력 결손 (R3)",
+        "원가 동인 데이터 결손 (R4)",
+        "Class member·sales_agent·contract 결손",
+        "Property assigned_to·belongs_to·contracts 등 결손",
+        "다음 액션 (3건)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "interviews_april", "relation": "인터뷰 결손 → RFI 항목"},
+        {"id": "life_member_db", "relation": "회원 master 결손 (R1)"},
+        {"id": "cemetery_grave_raw", "relation": "구역 master 결손 (R3)"}
+      ],
+      "caveats": [
+        "총 110건 중 수령 22건 (20%) / 미수령·미기재 87건 (79%)",
+        "Q40 '용인공원 고객 DB 관리 프로세스' 도식·매핑 — 미수령 (rc_insight_master_rfi 핵심)",
+        "Q38 회비정산차익-2 만기해약 자동처리·회원DB 잔류 — 미수령 (mutual_hypothesis_h2 핵심)"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "contracts_advertising",
+      "name": "광고대행 계약 (4건)",
+      "category": "governance",
+      "natureCode": "META-CONTRACT",
+      "scope": "FY25~FY26 (3개월~1년 계약)",
+      "shape": "4건 — YPL 2건(외부 광고대행 A·B, 마크업 정률) + 라이프 2건(외부 광고대행 A·C, 정률 + 정액 콘텐츠형)",
+      "owner": "그룹 마케팅",
+      "keyColumns": ["갑·을", "기간", "광고채널 정의", "수수료 구조 (구간 표기)", "정산"],
+      "linkedKpiCount": 1,
+      "linkedKpis": [
+        "Class vendor (광고대행 vendor narrative)",
+        "광고채널 정의 narrative",
+        "광고비 ROI 분모 산정 (정률 vs 정액)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "advertising_allocation_fy25", "relation": "광고비 vendor 매핑 정합성"},
+        {"id": "life_analysis_workbook", "relation": "광고선전비 _분석 시트와 매핑"}
+      ],
+      "caveats": [
+        "수수료 구조: 3건은 마크업 정률 (구간 표기 — 비공개), 1건은 정액 패키지 (구간 표기 — 비공개)",
+        "광고채널은 계약서상 포괄 정의 (SNS·바이럴·검색·배너·영상) — 구체 매체사명은 광고집행 리포트에서 추출 필요",
+        "vendor 실명 일반화 ('외부 광고대행 A·B·C')"
+      ],
+      "piiNote": "수수료율 raw·계좌번호·대표자명 일체 노출 X.",
+      "presentationSafe": true
+    },
+    {
+      "id": "contracts_sales",
+      "name": "판매대행 계약 (2건)",
+      "category": "governance",
+      "natureCode": "META-CONTRACT",
+      "scope": "FY25~FY26 (자동갱신)",
+      "shape": "2건 — 용인공원↔YPL(묘지·봉안당), 라이프↔YPL(상조)",
+      "owner": "그룹 영업",
+      "keyColumns": ["갑·을", "수수료 구조 (구간 표기)", "환급조항", "예외조항"],
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "Class vendor (YPL — 핵심 판매대행 vendor)",
+        "Property performs (YPL → 영업·마케팅 활동)",
+        "구역별 수수료 narrative",
+        "YPL 통합 channel orchestrator 구조"
+      ],
+      "linkedDatasetIds": [
+        {"id": "ax_fs_2025_datapack", "relation": "YPL FS와 정합성"},
+        {"id": "intercompany_elimination", "relation": "그룹 내부거래 anchor"},
+        {"id": "cemetery_analysis_workbook", "relation": "구역별 수수료 차감 narrative"}
+      ],
+      "caveats": [
+        "수수료 구조: 묘지·봉안당·상조 각각 구간 표기 (영업비밀 — 비공개)",
+        "YPL은 사실상 그룹 계열사 (대표 겸직 + 동일 사무실) — 그룹 내부거래로 처리",
+        "라이프가 용인공원 묘지·봉안당 판매 시 YPL 수수료 미적용 (3자 채널 충돌 방지 조항)"
+      ],
+      "piiNote": "수수료율 raw·대표자명 일체 노출 X.",
+      "presentationSafe": true
+    },
+    {
+      "id": "contracts_outsourcing",
+      "name": "외주인력 계약 (2건)",
+      "category": "governance",
+      "natureCode": "META-CONTRACT",
+      "scope": "FY23~FY25 (3개년 단가표)",
+      "shape": "2건 — 외주인력 A(사무관리, 14→22명) + 외주인력 B(시설관리·청소, 6→7명)",
+      "owner": "(재)용인공원 경영지원",
+      "keyColumns": ["연도", "인원", "직급", "연간 총액 (구간)"],
+      "linkedKpiCount": 0,
+      "linkedKpis": [
+        "Class vendor (외주인력 vendor narrative)",
+        "Property performs (사무관리·시설관리 활동)",
+        "관리·시설부서 외주비 narrative"
+      ],
+      "linkedDatasetIds": [
+        {"id": "cemetery_analysis_workbook", "relation": "외주용역비·시설관리비 매핑"},
+        {"id": "service_allocation_fy25", "relation": "용역비 배부 reconcile"}
+      ],
+      "caveats": [
+        "사무인력(외주 A) 23년 14명 → 25년 22명 (인원 증가)",
+        "시설인력(외주 B) 6명 → 7명 (직무 변동: 소장·시설관리1 빠지고 봉안당 청소 추가)"
+      ],
+      "piiNote": "직급별 연봉 raw 일체 노출 X. 인원·총액·평균만 표출.",
+      "presentationSafe": true
+    }
+  ]
+}

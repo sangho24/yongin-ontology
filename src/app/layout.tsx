@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SiteShell } from "@/components/SiteShell";
 
 export const metadata: Metadata = {
   title: "용인공원 그룹 · 관리손익 BI",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SiteShell>{children}</SiteShell>
+      </body>
     </html>
   );
 }
