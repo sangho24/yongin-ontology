@@ -60,11 +60,10 @@ export default function DataCatalogPage() {
       }
     >
       {/* 상단 통계 */}
-      <section className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+      <section className="mb-8 grid grid-cols-3 gap-4">
         <StatBox label="수령 자료" value={catalog.datasets.length.toString()} sub="그룹화 단위" />
         <StatBox label="자료 카테고리" value={catalog.categories.length.toString()} />
         <StatBox label="연결 KPI 합계" value={totalKpiLinks.toString()} sub="중복 포함 — 자료 × KPI" />
-        <StatBox label="발표 안전" value={`${catalog.datasets.filter((d) => d.presentationSafe).length} / ${catalog.datasets.length}`} sub="파일경로·PII 미노출" />
       </section>
 
       {/* 카테고리 필터 chip */}
