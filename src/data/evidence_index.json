@@ -403,7 +403,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P1-5 정정: title '만기해약율' → '납부만기 도달율' (회원상태 YF는 납부완료 만기, 해약 아님). 납부만기 4,433명 / 전체 9,930명 = 44.6%. 해약은 별도 — 해약-RAW 13,251건 중 만기해약 979건만 정상 만기.",
+      "narrative": "회원상태 YF(납부완료 만기) 비율. 납부만기 4,433명 / 전체 9,930명 = 44.6%. 해약과는 별개 개념 — 해약-RAW 13,251건 중 만기해약 979건은 정상 만기, 나머지는 일반해약.",
       "caveats": [
         "data_period_asymmetry"
       ],
@@ -569,7 +569,7 @@
           "notes": "별도 마스터 — 해약율 산출용 (채널 분포 오프 12,459/온 90/법인 27). 본 슬롯과 정의 다름."
         }
       ],
-      "narrative": "B7 부수발견 정정: title '채널별 만기해약율' → '채널별 납부만기 도달율' (회원상태 YF 기준, B2_master §1.7). 해약율과 정의 다름. NARRATIVE — 0422 p.20 channel narrative 활용.",
+      "narrative": "채널구분(온라인/오프라인/법인) × 회원상태 YF(납부완료 만기) 비율 crosstab. 해약율과 정의 다름 (해약은 별도 마스터). 0422 Draft p.20 channel narrative 활용.",
       "caveats": [
         "channel_normalization",
         "data_period_asymmetry"

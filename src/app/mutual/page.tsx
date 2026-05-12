@@ -319,7 +319,7 @@ export default function MutualPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="채널" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 10000).toLocaleString()}만`} />
-              <Tooltip formatter={(v: number) => v.toLocaleString() + "원"} cursor={{ fill: "rgba(14,165,233,0.05)" }} />
+              <Tooltip formatter={(v) => (typeof v === "number" ? v.toLocaleString() + "원" : String(v ?? ""))} cursor={{ fill: "rgba(14,165,233,0.05)" }} />
               <Bar dataKey="회원당 매출(원)" radius={[3, 3, 0, 0]}>
                 {channelChartData.map((d, i) => (
                   <Cell
@@ -359,7 +359,7 @@ export default function MutualPage() {
                   />
                 ))}
               </Pie>
-              <Tooltip formatter={(v: number) => v.toLocaleString() + "명"} />
+              <Tooltip formatter={(v) => (typeof v === "number" ? v.toLocaleString() + "명" : String(v ?? ""))} />
               <Legend wrapperStyle={{ fontSize: "11px" }} />
             </PieChart>
           </ResponsiveContainer>
@@ -425,7 +425,7 @@ export default function MutualPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="channel" tick={{ fontSize: 12 }} />
               <YAxis tickFormatter={(v) => `${(v * 100).toFixed(0)}%`} tick={{ fontSize: 11 }} />
-              <Tooltip formatter={(v: number) => `${(v * 100).toFixed(1)}%`} cursor={{ fill: "rgba(245,158,11,0.05)" }} />
+              <Tooltip formatter={(v) => (typeof v === "number" ? `${(v * 100).toFixed(1)}%` : String(v ?? ""))} cursor={{ fill: "rgba(245,158,11,0.05)" }} />
               <Bar dataKey="matureRate" fill="#b45309" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>

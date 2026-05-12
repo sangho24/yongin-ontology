@@ -242,7 +242,7 @@ export default function CemeteryPage() {
                   />
                 ))}
               </Pie>
-              <Tooltip formatter={(v: number) => v.toLocaleString() + "기"} />
+              <Tooltip formatter={(v) => (typeof v === "number" ? v.toLocaleString() + "기" : String(v ?? ""))} />
               <Legend wrapperStyle={{ fontSize: "11px" }} />
             </PieChart>
           </ResponsiveContainer>
@@ -260,7 +260,7 @@ export default function CemeteryPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="연도" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 11 }} />
-              <Tooltip formatter={(v: number) => v.toLocaleString() + "건"} cursor={{ fill: "rgba(14,165,233,0.05)" }} />
+              <Tooltip formatter={(v) => (typeof v === "number" ? v.toLocaleString() + "건" : String(v ?? ""))} cursor={{ fill: "rgba(14,165,233,0.05)" }} />
               <Bar dataKey="계약 건수" fill="#0095A9" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
