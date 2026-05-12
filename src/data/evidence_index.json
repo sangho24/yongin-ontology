@@ -10,7 +10,8 @@
     "channel_normalization": "회원DB 채널구분 '오프라인 ' (trailing space) 152건은 '오프라인'으로 정규화 후 표시.",
     "data_period_asymmetry": "회원DB(25년말 누적 9,930) ≠ ERP(23-25 신규 4,437) ≠ 일일보고(25.12-26.04 신규 1,246, 온유 위주). 단순 합산 금지. 시점·범위 비대칭 caveat 필수. 누적 KPI(스냅샷)와 단년 KPI(FY25)·3년 누적 KPI는 라벨에 기간 prefix 명시 필수.",
     "intercompany_elimination": "그룹 3사(용인공원·YPL·라이프) 매출 단순 합산 금지. B3 §4-1 기준 2025 P&L 내부거래 9건 = 20,773,260,866원(약 20.8억) 제거 후 통합 매출 산출. 주요 항목: 용인공원→YPL 지급수수료 18,744,994,618원(P-1), YPL→용인공원 판매수수료 534,655,910원(P-2) 등. B/S 내부거래 4건 1,379,133,071원 별도. tbox_axiom_a4 양방향매칭 공리 cross-link.",
-    "lifecycle_revenue_split": "회원DB 누적 매출합계(스냅샷, 27,765M)와 회사 손익계산서상 인식 매출(FY25 행사매출, 4,624M)은 정의가 다름. 누적은 회원입장 납입액, 인식매출은 회사 손익 PL anchor. 화면 PRIMARY는 회사 손익 인식 매출, SECONDARY는 회원DB 스냅샷."
+    "lifecycle_revenue_split": "회원DB 누적 매출합계(스냅샷, 27,765M)와 회사 손익계산서상 인식 매출(FY25 행사매출, 4,624M)은 정의가 다름. 누적은 회원입장 납입액, 인식매출은 회사 손익 PL anchor. 화면 PRIMARY는 회사 손익 인식 매출, SECONDARY는 회원DB 스냅샷.",
+    "kpi_activation_path": "본 BI는 회사 내부 운영·의사결정 도구. 결손 영역은 PwC 자료 요청 list가 아니라 '회사가 어느 시스템·자료 보강 시 어느 KPI가 활성화되는가'의 활성화 로드맵으로 frame. 미활성 KPI 식별 → 데이터 모델 보강 항목(7건) → 해당 자료 ERP 추출/연동 시 활성화될 KPI 명시. ⚠ 본 화면 narrative·subtitle·tooltip·caveat 작성 시 컨설턴트 톤(예: '결손 → RFI 자동', 'PwC가 자료 받으면 가능', '수령 후 보강', '결손 자체가 evidence') 사용 금지. 회사 내부 톤(예: '데이터 모델 보강 시 KPI 활성화', '회원·영업사원 dimension 추가 시 lifecycle KPI 활성화') 사용."
   },
   "slots": {
     "ovw_lifecycle_revenue": {
@@ -164,7 +165,7 @@
       "verified": true
     },
     "ovw_rfi_count": {
-      "title": "자동 도출 RFI · T-Box",
+      "title": "미활성 KPI · T-Box",
       "page": "/",
       "kind": "Card",
       "evidence": [
@@ -176,10 +177,10 @@
           "computed_value": 5,
           "computed_unit": "건 (P0 표출)",
           "verified": true,
-          "notes": "RFI 110건 중 미수령 87건 (79%). P0 우선순위 5건 표출."
+          "notes": "데이터 보강 항목 110건 중 87건이 회사 ERP 보강 후보. P0 우선순위 5건 표출."
         }
       ],
-      "narrative": "P2-1 sync 룰 명시: RFI 110건 중 미수령 87건. P0 5건 화면 노출. tbox_stat_rfi_count(/data-model)와 동일 단일 source-of-truth (RFI_260507.xlsx:RFI List) — 두 화면 수치 일치 보장. computed_value 동기화 의무.",
+      "narrative": "P2-1 sync 룰 명시: 데이터 보강 항목 중 P0 5건 화면 노출. tbox_stat_rfi_count(/data-model)와 동일 단일 source-of-truth (RFI_260507.xlsx:RFI List) — 두 화면 수치 일치 보장. computed_value 동기화 의무.",
       "verified": true
     },
     "ovw_dept_kpi_cards": {
@@ -1383,7 +1384,7 @@
       "verified": true
     },
     "cemetery_insight_master": {
-      "title": "장지 KPI 한계와 보완 경로",
+      "title": "장지 KPI 활성화 경로 — 계약자 dimension 보강",
       "page": "/cemetery",
       "kind": "InsightBox",
       "evidence": [
@@ -1409,7 +1410,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "info — KPI 한계는 마스터 결손에서 비롯",
+      "narrative": "info — 묘역(객체) master는 풀 셋업이라 객체 단위 KPI는 활성. 계약자 dimension 추가 시 회원 LTV·재계약·가족 cross-sell KPI 활성화 가능.",
       "verified": true
     },
     "cemetery_hypothesis_z1": {
@@ -1528,7 +1529,7 @@
       "verified": true
     },
     "cemetery_hypothesis_z4": {
-      "title": "Z4 계약자 master 부재",
+      "title": "Z4 계약자 dimension 추가 시 회원 lifecycle KPI 활성화",
       "page": "/cemetery",
       "kind": "HypothesisCard",
       "evidence": [
@@ -1538,16 +1539,16 @@
           "sheet": "Q&A",
           "method": "RFI",
           "verified": false,
-          "notes": "Q40 (4-17 이호석) 미회신 — 결손 자체가 evidence"
+          "notes": "Q40 DB관리 프로세스 도식 ↔ ERP 매핑 미정의 — 계약자 dimension 보강 항목"
         },
         {
           "rank": "NARRATIVE",
           "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
           "method": "INTERVIEW",
-          "notes": "0403 1:33:06 — '수기로 나누기'"
+          "notes": "0403 1:33:06 — '수기로 나누기' (현재 ERP 외 운영 단절)"
         }
       ],
-      "narrative": "HIGH — RFI r1 (P0) + Q40 미수령이 evidence. 수령 후 보강.",
+      "narrative": "HIGH — 계약자 dimension 보강 항목(P0). 장지 ERP에 계약자 master 연동 + DB관리 프로세스 ↔ ERP 매핑 정의 시 회원 LTV·재계약율·가족 cross-sell KPI 활성화.",
       "caveats": [
         "data_period_asymmetry"
       ],
@@ -1971,10 +1972,10 @@
           "sheet": "Q&A",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI r74 / Q40 미회신. 결손 자체가 evidence — narrative만 존재"
+          "notes": "Q40 DB관리 프로세스 도식 ↔ ERP 매핑 미정의 — 계약자 dimension 보강 항목 (r74)"
         }
       ],
-      "narrative": "RFI r74. 결손 자체가 evidence — narrative만 존재. cemetery_hypothesis_z4 alias.",
+      "narrative": "데이터 모델 보강 항목 r74. 계약자 master 연동 시 회원 LTV·family cross-sell BI 자동 확장. cemetery_hypothesis_z4 alias.",
       "caveats": [
         "data_period_asymmetry"
       ],
@@ -2070,7 +2071,7 @@
       "verified": true
     },
     "rc_insight_master_rfi": {
-      "title": "장지 master 결손 → BI 깊이 제한 (danger)",
+      "title": "계약자·영업사원 dimension 보강 시 회원 lifecycle BI 활성화",
       "page": "/root-cause",
       "kind": "InsightBox",
       "evidence": [
@@ -2286,7 +2287,7 @@
       "verified": false
     },
     "tbox_stat_rfi_count": {
-      "title": "자동 도출 RFI",
+      "title": "미활성 KPI 식별",
       "page": "/data-model",
       "kind": "NumberCell",
       "evidence": [
@@ -2296,7 +2297,7 @@
           "sheet": "RFI List",
           "method": "RAW",
           "computed_value": 5,
-          "computed_unit": "건 (P0 표출, 미수령 87건/110건)",
+          "computed_unit": "건 (P0 표출, 데이터 보강 후보 87건/110건)",
           "verified": true
         }
       ],
@@ -2678,7 +2679,7 @@
           "source_file": "NONE",
           "method": "MISSING",
           "verified": false,
-          "notes": "P2-5 정정: PRIMARY=NONE (결손). 회원-계약 1:1 매핑 marker가 raw 출처에 부재. 결손 자체가 evidence."
+          "notes": "P2-5 정정: PRIMARY=NONE (현재 미연동). 회원-계약 1:1 매핑 marker가 raw 출처에 부재 — 데이터 모델 보강 항목."
         },
         {
           "rank": "SECONDARY",
@@ -2686,10 +2687,10 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 6.3 — 회원-계약 1:1 매핑 회수 요청 (보강 출처)"
+          "notes": "RFI 6.3 — 회원-계약 1:1 매핑 데이터 보강 항목"
         }
       ],
-      "narrative": "P2-5 정정: 결손 (PRIMARY=NONE / SECONDARY=RFI 6.3). 결손 자체가 evidence — RFI 회수 후 PRIMARY 박제 예정.",
+      "narrative": "P2-5 정정: 현재 미연동 (PRIMARY=NONE / SECONDARY=RFI 6.3). 회원-계약 1:1 매핑 ERP 추출/연동 시 회원 단위 계약 lifecycle KPI 활성화.",
       "verified": false
     },
     "tbox_property_assigned_to": {
@@ -2702,7 +2703,7 @@
           "source_file": "NONE",
           "method": "MISSING",
           "verified": false,
-          "notes": "P2-5 정정: PRIMARY=NONE (결손). sales_agent 배정 master 부재. 결손 자체가 evidence."
+          "notes": "P2-5 정정: PRIMARY=NONE (현재 미연동). sales_agent 배정 master 미체계화 — 데이터 모델 보강 항목."
         },
         {
           "rank": "SECONDARY",
@@ -2710,10 +2711,10 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 6.5, 6.2 — 판매수수료 지급기준 + 영업사원 master 회수 요청"
+          "notes": "RFI 6.5, 6.2 — 판매수수료 지급기준 + 영업사원 master 데이터 보강 항목"
         }
       ],
-      "narrative": "P2-5 정정: 결손 (PRIMARY=NONE / SECONDARY=RFI 6.5·6.2). 결손 자체가 evidence — RFI 회수 후 PRIMARY 박제 예정.",
+      "narrative": "P2-5 정정: 현재 미연동 (PRIMARY=NONE / SECONDARY=RFI 6.5·6.2). 영업사원 master + 판매수수료 지급규정 ERP 등록 시 영업사원별 ROI·생산성 KPI 활성화.",
       "verified": false
     },
     "tbox_property_uses_zone": {
@@ -2726,7 +2727,7 @@
           "source_file": "NONE",
           "method": "MISSING",
           "verified": false,
-          "notes": "P2-5 정정: PRIMARY=NONE (결손). 회원-구역 매핑 부재. 결손 자체가 evidence."
+          "notes": "P2-5 정정: PRIMARY=NONE (현재 미연동). 회원-구역 매핑 미체계화 — 데이터 모델 보강 항목."
         },
         {
           "rank": "SECONDARY",
@@ -2734,10 +2735,10 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 3.7, 3.6 — 매출구분별·면적구분별 매출자료 회수 요청"
+          "notes": "RFI 3.7, 3.6 — 매출구분별·면적구분별 매출자료 데이터 보강 항목"
         }
       ],
-      "narrative": "P2-5 정정: 결손 (PRIMARY=NONE / SECONDARY=RFI 3.7·3.6). 결손 자체가 evidence — RFI 회수 후 PRIMARY 박제 예정.",
+      "narrative": "P2-5 정정: 현재 미연동 (PRIMARY=NONE / SECONDARY=RFI 3.7·3.6). 회원-구역 매핑 ERP 추출/연동 시 구역 단위 매출 KPI 활성화.",
       "verified": false
     },
     "tbox_property_has_driver_account": {
@@ -2750,7 +2751,7 @@
           "source_file": "NONE",
           "method": "MISSING",
           "verified": false,
-          "notes": "P2-5 정정: PRIMARY=NONE (결손). 비용 동인 외연 미구축. 결손 자체가 evidence."
+          "notes": "P2-5 정정: PRIMARY=NONE (현재 미연동). 비용 동인 외연 디지털 미체계화 — 데이터 모델 보강 항목."
         },
         {
           "rank": "SECONDARY",
@@ -2758,10 +2759,10 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 4.3, 4.4 — 매출원가/판관비 동인 자료 회수 요청"
+          "notes": "RFI 4.3, 4.4 — 매출원가/판관비 동인 자료 데이터 보강 항목"
         }
       ],
-      "narrative": "P2-5 정정: 결손 (PRIMARY=NONE / SECONDARY=RFI 4.3·4.4). 결손 자체가 evidence — RFI 회수 후 PRIMARY 박제 예정.",
+      "narrative": "P2-5 정정: 현재 미연동 (PRIMARY=NONE / SECONDARY=RFI 4.3·4.4). 비용 동인 외연 디지털화(Time Report·계량기·면적) 시 정밀 ABC KPI 활성화.",
       "verified": false
     },
     "tbox_property_belongs_to": {
@@ -2774,7 +2775,7 @@
           "source_file": "NONE",
           "method": "MISSING",
           "verified": false,
-          "notes": "P2-5 정정: PRIMARY=NONE (결손). 부서-회원/매출 매핑 부재. 결손 자체가 evidence."
+          "notes": "P2-5 정정: PRIMARY=NONE (현재 미연동). 부서-회원/매출 매핑 미체계화 — 데이터 모델 보강 항목."
         },
         {
           "rank": "SECONDARY",
@@ -2782,10 +2783,10 @@
           "sheet": "부서 확인 필요",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 부서 확인 — dept master 회수 요청"
+          "notes": "RFI 부서 확인 — dept master 데이터 보강 항목"
         }
       ],
-      "narrative": "P2-5 정정: 결손 (PRIMARY=NONE / SECONDARY=RFI 부서). 결손 자체가 evidence — RFI 회수 후 PRIMARY 박제 예정.",
+      "narrative": "P2-5 정정: 현재 미연동 (PRIMARY=NONE / SECONDARY=RFI 부서). 부서 master + KPI matrix ERP 연동 시 부서별 KPI 드릴다운 활성화.",
       "verified": false
     },
     "tbox_property_has_family": {
@@ -2831,7 +2832,7 @@
           "source_file": "NONE",
           "method": "MISSING",
           "verified": false,
-          "notes": "P2-5 정정: PRIMARY=NONE (결손). 계약 master 부재. 결손 자체가 evidence."
+          "notes": "P2-5 정정: PRIMARY=NONE (현재 미연동). 계약 master 미체계화 — 데이터 모델 보강 항목."
         },
         {
           "rank": "SECONDARY",
@@ -2839,10 +2840,10 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 6.3 — 계약 master 회수 요청"
+          "notes": "RFI 6.3 — 계약 master 데이터 보강 항목"
         }
       ],
-      "narrative": "P2-5 정정: 결손 (PRIMARY=NONE / SECONDARY=RFI 6.3). 결손 자체가 evidence — RFI 회수 후 PRIMARY 박제 예정.",
+      "narrative": "P2-5 정정: 현재 미연동 (PRIMARY=NONE / SECONDARY=RFI 6.3). 계약 master ERP 추출/연동 시 계약 단위 lifecycle KPI 활성화.",
       "verified": false
     },
     "tbox_property_has_unit_driver": {
@@ -3330,11 +3331,11 @@
   },
   "missing_slots": {
     "cemetery_hypothesis_z4": {
-      "title": "Z4 계약자 master 부재",
+      "title": "Z4 계약자 dimension 추가 시 회원 lifecycle KPI 활성화",
       "page": "/cemetery",
-      "reason": "RFI 6.3 미수령 + Q40 미회신",
+      "reason": "현재 묘역(객체) master는 풀 셋업이나 계약자 단위 dimension 미연동 — 회원 LTV·재계약·가족 cross-sell KPI 미활성",
       "needed_data": "회원 1:1 매핑 가능한 ERP 추출본 + DB관리 프로세스 도식 ↔ ERP 매핑",
-      "placeholder_caveat": "수령 후 보강. 결손 자체가 evidence — 'master 부재로 KPI 산출 불가'",
+      "placeholder_caveat": "장지 ERP에 계약자 dimension 추가 + DB관리 프로세스 ↔ ERP 매핑 정의 시 회원 LTV·재계약율·가족 cross-sell KPI 활성화. 현재는 객체 단위 KPI(분양완료율·잠재가치·정체단지)만 표출.",
       "alias_of": null,
       "rfi_refs": [
         "RFI 6.3",
@@ -3342,11 +3343,11 @@
       ]
     },
     "rc_zone_hypothesis_z4": {
-      "title": "Z4 계약자 master 부재 (RC mirror)",
+      "title": "Z4 계약자 dimension 추가 시 회원 lifecycle KPI 활성화 (RC mirror)",
       "page": "/root-cause",
-      "reason": "RFI 6.3 미수령 + Q40 미회신",
+      "reason": "현재 묘역(객체) master는 풀 셋업이나 계약자 단위 dimension 미연동",
       "needed_data": "회원 1:1 매핑 가능한 ERP 추출본",
-      "placeholder_caveat": "수령 후 보강",
+      "placeholder_caveat": "계약자 master 보강 시 회원 LTV·재계약·가족 cross-sell BI 자동 확장.",
       "alias_of": "cemetery_hypothesis_z4",
       "rfi_refs": [
         "RFI 6.3",
@@ -3357,9 +3358,9 @@
       "title": "용인공원·YPL 계약자 master + 묘역raw 매칭",
       "page": "/data-model",
       "priority": "P0",
-      "reason": "RFI 6.3 (미수령), Q40 (미회신). B8 검토 권고 반영: 인입경로·인입일자·상담단계·상품유형·결제방식 컬럼 보강.",
+      "reason": "현재 장지 ERP에 계약자 dimension 미연동 (Q40 DB관리 프로세스 ↔ ERP 매핑 미정의). 인입경로·상담단계·상품유형·결제방식 등 컬럼 보강 시 영업 funnel·결제 KPI 활성화.",
       "needed_data": "계약번호·계약자ID·인입경로(채널)·인입일자·상담단계·가입일·묘역코드·상품유형코드·결제방식·담당설계사ID·연락처·계약상태",
-      "placeholder_caveat": "수령 후 보강. 보강성 컬럼: 가족관계 (RFI 본문 외, r5 통합고객뷰 동일가족 매칭 활용)",
+      "placeholder_caveat": "장지 ERP에 계약자 master 추출/연동 시 회원 LTV·재계약율·가족 cross-sell·funnel KPI 활성화. 보강 컬럼: 가족관계(통합고객뷰 r5 동일가족 매칭에 활용)",
       "rfi_refs": [
         "RFI 6.3",
         "Q40"
@@ -3369,9 +3370,9 @@
       "title": "장지 영업사원 master + 판매수수료 지급규정",
       "page": "/data-model",
       "priority": "P0",
-      "reason": "RFI 6.5 미수령 (6.2 일부수령) + Q24 미회신. B8 검토 권고 반영: DB유치/실계약/Conversion 분리, 소속팀·수수료등급 추가.",
+      "reason": "현재 영업사원 dimension·판매수수료 지급규정 미체계화. DB유치·실계약·Conversion·수수료등급 분리 시 영업 ROI·집중도 KPI 활성화.",
       "needed_data": "영업사원ID·소속법인·소속팀(영업팀/고객센터팀/외부업체)·담당구역·DB유치건수·실계약건수·Conversion%·수수료등급",
-      "placeholder_caveat": "수령 후 보강. 보강성 컬럼: 직급·입사일·퇴사여부 (RFI 본문 외 — HR 정보 별도 RFI)",
+      "placeholder_caveat": "영업사원 master + 판매수수료 지급규정 ERP 등록 시 영업사원별 ROI·생산성·집중도 KPI 활성화. 보강 컬럼: 직급·입사일·퇴사여부 (HR 시스템 연동 필요)",
       "rfi_refs": [
         "RFI 6.2",
         "RFI 6.5",
@@ -3382,9 +3383,9 @@
       "title": "(r3a) 구역 master — FY23~25 매출구분별·면적구분별 매출자료",
       "page": "/data-model",
       "priority": "P1",
-      "reason": "RFI 3.6/3.8/3.9 미수령. B8 검토 결과 r3 구역 master 측 분리 박제.",
+      "reason": "현재 묘역코드·장법·면적·매출구분의 3개년 시계열 매핑 미연동. 매출구분별·면적구분별 raw 연동 시 단가·평당가·재고회전율 KPI 활성화.",
       "needed_data": "묘역코드·장법·매출구분(계정)·면적(m²)·단가·FY23/24/25 매출액·재고명세서 묘원수·분양상태",
-      "placeholder_caveat": "수령 후 보강 — 본문 RFI 3.6 '3개년 매출구분별 및 면적구분별 매출자료' 핵심 결손",
+      "placeholder_caveat": "묘역코드 ↔ 매출구분(계정) ↔ 면적 ↔ 단가 매핑 ERP 추출 시 단가·평당가·재고회전율·등급별 가격 KPI 활성화",
       "rfi_refs": [
         "RFI 3.6",
         "RFI 3.8",
@@ -3395,9 +3396,9 @@
       "title": "(r3b) 이장이력 — 묘역raw 22.5% 미채움 사유",
       "page": "/data-model",
       "priority": "P1",
-      "reason": "묘역raw 27열 master 중 계약번호 22.5% 공란, 이장지 4325개 식별. B8 검토 결과 r3 이장이력 측 분리 박제.",
+      "reason": "묘역raw 27열 master 중 계약번호 22.5% 공란, 이장지 4325개 식별 — 이장이력 dimension 미체계화. 이장사유·재분양가 보강 시 재분양 pipeline KPI 활성화.",
       "needed_data": "묘역코드·이전계약번호·이장일자·신계약번호·이장사유·공실/회수일·재분양가·특수사유",
-      "placeholder_caveat": "수령 후 보강 — 본문 인터뷰 3일차오전공원(이장 용역비) + 신규야외묘역 시트 raw vs 재고명세서 차이 사유",
+      "placeholder_caveat": "이장이력 ERP 추가 등록(이장지 4325건 + 신규야외묘역 차이 사유) 시 이장지 재분양 회전율·할인분양 KPI 활성화",
       "rfi_refs": [
         "RFI 신규야외묘역 시트",
         "인터뷰 3일차오전공원"
@@ -3407,9 +3408,9 @@
       "title": "(r4a) 동인 정의 — Time Report·시설별 면적·계량기 검침 외연 가용성",
       "page": "/data-model",
       "priority": "P1",
-      "reason": "RFI 4.3/4.4 본문 '비용별 주요 발생 동인 기재' 측. B8 검토 결과 r4 동인 정의 측 분리 박제.",
+      "reason": "현재 비용 동인 외연(Time Report·시설별 면적·계량기 검침)이 수기 엑셀·도면 PDF·종이 청구서 단계 — 디지털 미체계화. 외연 디지털화 시 정밀 ABC 활성화.",
       "needed_data": "동인ID·동인명·동인유형·측정주체·측정단위·수집주기·소스시스템·수집상태",
-      "placeholder_caveat": "수령 후 보강 — 외연 결손 → A5 partiallyMissing → A5' Default rule(매출비율 fallback) 발동중",
+      "placeholder_caveat": "동인 외연 디지털 수집 체계 구축 시 매출비율 fallback(A5' Default rule) 대신 정밀 ABC(시간×시급, kWh×요금, m²×배부) KPI 활성화",
       "rfi_refs": [
         "RFI 4.3",
         "RFI 4.4"
@@ -3419,9 +3420,9 @@
       "title": "(r4b) 발생금액·배부기준 — FY23~25 매출원가 + 판관비 세부 + 비경상",
       "page": "/data-model",
       "priority": "P1",
-      "reason": "RFI 4.3 '당기제품제조원가 중 경비 세부내역 + 비경상' / RFI 4.4 '판관비 세부 + 비경상'. B8 검토 결과 r4 금액·배부 측 분리 박제.",
+      "reason": "FY25 단년 합계는 검증됐으나 3개년 시계열 + 비경상 분리 미연동. 시계열·비경상 컬럼 보강 시 비용 trend·비경상 정상화 KPI 활성화.",
       "needed_data": "계정코드·계정명·구분(원가/판관비)·FY23/24/25 발생금액·배부기준·비경상 여부·비경상 사유",
-      "placeholder_caveat": "수령 후 보강 — 동인-금액 페어가 없으면 배부 불가. 25년 합계 검증 완료, 3개년 시계열 + 비경상 분리 미수령",
+      "placeholder_caveat": "FY23~25 시계열 발생액 + 비경상 분리 ERP 추출 시 비용 trend·비경상 정상화·동인-금액 매칭 KPI 활성화",
       "rfi_refs": [
         "RFI 4.3",
         "RFI 4.4"
@@ -3431,9 +3432,9 @@
       "title": "라이프·장지 통합 고객뷰",
       "page": "/data-model",
       "priority": "P1",
-      "reason": "RFI 3.7 부분수령 (25/12~26/03만) + Q40 미회신. B8 검토 권고 반영: 라이프/장지 누적매출(억 단위)·매칭confidence 컬럼 보강.",
+      "reason": "라이프·장지 두 ERP 사이에 통합고객ID·동일가족 그룹ID·매칭confidence dimension 부재. 통합 고객뷰 구축 시 cross-sell·가족 referral KPI 활성화.",
       "needed_data": "통합고객ID·라이프회원ID·장지계약자ID·동일가족 그룹ID·최초접점채널·라이프 누적매출(억)·장지 누적매출(억)·Cross-sell·매칭confidence(%)",
-      "placeholder_caveat": "수령 후 보강. 매출은 단위만 안전 표기(억). 영업비밀 raw 박제 X",
+      "placeholder_caveat": "라이프·장지 ERP 통합 고객뷰(가족 cluster + 매칭confidence) 구축 시 cross-sell·family referral·LTV 통합 KPI 활성화. 매출은 단위만 안전 표기(억). 영업비밀 raw 노출 X",
       "rfi_refs": [
         "RFI 3.7",
         "RFI 6.3",

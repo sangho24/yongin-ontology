@@ -4,7 +4,7 @@ import { SiteShell } from "@/components/SiteShell";
 
 export const metadata: Metadata = {
   title: "용인공원 그룹 · 관리손익 BI",
-  description: "동적 컨설팅 prototype — 결손이 곧 RFI 자동 생성기",
+  description: "용인공원 그룹 관리손익 BI — 데이터 lineage 기반 KPI 대시보드",
 };
 
 export default function RootLayout({

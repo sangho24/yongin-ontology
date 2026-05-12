@@ -181,11 +181,11 @@ export function EvidenceDrawer({
             {/* Missing slot 처리 */}
             {missing && (
               <section className="rounded-md border border-rose-200 bg-rose-50/60 p-4">
-                <div className="text-[12px] font-semibold text-rose-800">자료 미수령 — 결손 자체가 evidence</div>
+                <div className="text-[12px] font-semibold text-rose-800">미활성 KPI — 데이터 모델 보강 항목</div>
                 <div className="mt-2 space-y-1.5 text-[12px] leading-relaxed text-rose-700">
-                  <div><span className="font-medium">사유:</span> {missing.reason}</div>
+                  <div><span className="font-medium">현재 상태:</span> {missing.reason}</div>
                   {missing.needed_data && (
-                    <div><span className="font-medium">필요 자료:</span> {missing.needed_data}</div>
+                    <div><span className="font-medium">보강 필요 자료:</span> {missing.needed_data}</div>
                   )}
                   <div className="mt-2 italic">{missing.placeholder_caveat}</div>
                 </div>

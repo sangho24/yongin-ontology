@@ -151,15 +151,15 @@ const ZONE_HYPOTHESES: Hypothesis[] = [
   },
   {
     id: "Z4",
-    title: "계약자 master 부재 → 회원 LTV·재계약·가족 cross-sell 분석 불가",
-    evidence: "묘역 raw에 계약번호는 77.5%이나 계약자 정보 컬럼 0열 (RFI r74 미수령)",
+    title: "계약자 dimension 추가 → 회원 LTV·재계약·가족 cross-sell KPI 활성화",
+    evidence: "묘역 raw에 계약번호는 77.5%이나 계약자 정보 컬럼 0열 (데이터 모델 보강 항목 r74)",
     signal: "high",
     llmAnalysis:
-      "묘역 raw에 계약번호는 77.5% 채워져 있으나 계약자 personal 정보 컬럼이 0열이라는 사실은, ERP 설계 시점에 계약 객체 중심 master는 갖췄으나 고객 중심 master는 별도 시스템 또는 종이 계약서에 분산된 상태임을 의미합니다. 이는 (a) BI에서 회원 LTV, family cluster, 재계약 cross-sell 같은 고객 중심 분석을 원천 차단하고, (b) 마케팅 캠페인 targeting을 단지 단위 broadcast로 제한하며, (c) 가족 referral 같은 가장 효율 높은 sales lever를 시스템적으로 활용 불가하게 만드는 root constraint입니다. RFI r74가 회신되어도 데이터 정합성·중복 정리에 추가 1~2개월의 cleansing이 필요합니다.",
+      "묘역 raw에 계약번호는 77.5% 채워져 있으나 계약자 personal 정보 컬럼이 0열이라는 사실은, ERP 설계 시점에 계약 객체 중심 master는 갖췄으나 고객 중심 master는 별도 시스템 또는 종이 계약서에 분산된 상태임을 의미합니다. 현재 (a) BI에서 회원 LTV, family cluster, 재계약 cross-sell 같은 고객 중심 KPI는 미활성, (b) 마케팅 캠페인 targeting은 단지 단위 broadcast로 제한, (c) 가족 referral 같은 가장 효율 높은 sales lever는 시스템적으로 미활용 상태입니다. 회사 ERP에 계약자 dimension을 추가하면 즉시 위 KPI들이 활성화되며, 데이터 정합성·중복 정리에 추가 1~2개월의 cleansing 기간이 동반됩니다.",
     recommendedActions: [
-      "**RFI r74 회수 우선순위 격상**: CFO·CIO 레벨에서 회신 timeline 확약, 미회신 시 escalation path 명시.",
+      "**계약자 master 보강 우선순위 격상**: CFO·CIO 레벨에서 보강 timeline 확약, 진행 미흡 시 escalation path 명시.",
       "**계약자 master 통합 cleansing 프로젝트**: 계약번호 ↔ 고객 매핑, 가족 cluster 식별 (성씨·주소 fuzzy match) 별도 sprint 편성.",
-      "**고객 중심 BI 확장 backlog**: master 수령 후 즉시 활성화할 회원 LTV·family cross-sell·재계약 dashboard 사전 설계 완료.",
+      "**고객 중심 BI 확장 backlog**: master 보강 후 즉시 활성화할 회원 LTV·family cross-sell·재계약 dashboard 사전 설계 완료.",
       "**향후 계약 ERP 입력 의무화**: 신규 계약 시 계약자 정보 mandatory field로 강제, 영업 commission 결제 조건과 연계.",
     ],
   },
@@ -625,9 +625,9 @@ export default function RootCausePage() {
             <strong>영업이익 + 회비정산차익 view</strong>로 재해석 시 그룹 의사결정 근거 강화. View 전환은
             분기 IR·내부 경영회의 default 전환부터 시작.
           </InsightBox>
-          <InsightBox type="danger" title="장지 master 결손이 BI 깊이를 제한" slotId="rc_insight_master_rfi">
-            정체단지 식별·이장지 분포는 가능하나, <strong>회원·영업사원 단위 분석은 데이터 부재</strong>.
-            데이터 모델 페이지의 RFI 5건 자동 도출 → 회신 후 회원 LTV·family cross-sell BI 자동 확장.
+          <InsightBox type="danger" title="계약자·영업사원 dimension 보강 시 회원 lifecycle BI 활성화" slotId="rc_insight_master_rfi">
+            객체(묘역) 단위 KPI는 풍부하게 활성화돼 있고, <strong>회원·영업사원 dimension 추가</strong> 시 회원 LTV·family cross-sell·영업 ROI KPI 활성화.
+            데이터 모델 페이지의 미활성 KPI 5건이 보강 후보 ↔ 회사 ERP 추출/연동 시 BI 자동 확장.
           </InsightBox>
           <InsightBox type="info" title="채널 ROI 재배분의 수익화 기회" slotId="rc_insight_channel_roi">
             온라인 채널 회원당 매출이 오프라인의 3% 수준. 광고선전비·온유프리 광고 효율 재검토 + product
@@ -664,7 +664,7 @@ export default function RootCausePage() {
               <span className="h-1.5 w-1.5 rounded-full bg-[#9a3412]" />
               <span className="text-[11px] font-semibold tracking-wider text-stone-400 w-12">A-02</span>
               <span className="flex-1 text-[12px] text-stone-700">
-                <strong className="text-stone-900">RFI 회신 대기</strong> — 장지 회원 master (r74)
+                <strong className="text-stone-900">데이터 모델 보강 진행</strong> — 장지 계약자 master ERP 추출 (r74)
               </span>
               <span className="text-[10px] font-medium text-[#9a3412]">대기</span>
             </li>

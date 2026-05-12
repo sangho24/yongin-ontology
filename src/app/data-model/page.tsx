@@ -114,7 +114,7 @@ const RFI_MOCK: Record<
       ["YP-2024-01183", "MBR-100483", "김**", "오프라인(내방)", "2024-03-21", "계약완료", "2024-04-02", "정담원-B07", "PRD-BUR-JD", "분납(12개월)", "SA-011", "배우자", "010-****-6789", "유효"],
       ["YP-2024-01184", "MBR-100484", "이**", "법인(단체)", "2024-04-30", "계약완료", "2024-05-21", "세수연-C03", "PRD-BUR-SS", "일시납", "SA-007", "모(직계존속)", "010-****-7890", "유효"],
     ],
-    mockCaveat: "※ 본문 RFI 6.3 + Q40 대응 mock. 수령 시 실 데이터로 교체. 보강성 컬럼: 가족관계 (RFI 본문 외 — 통합고객뷰 r5 동일가족 매칭 활용). 라이프 회원DB 35열 대비 비대칭 — 장지 master 자체 부재.",
+    mockCaveat: "※ 데이터 모델 보강 항목 r1 (계약자 master) 대응 mock. 회사 ERP에 계약자 dimension 추출/연동 시 실 데이터로 교체. 보강 컬럼: 가족관계 (통합고객뷰 r5 동일가족 매칭 활용). 라이프 회원DB 35열 대비 비대칭 — 장지 계약자 dimension 미연동.",
   },
   "RFI-NEW-002": {
     columns: [
@@ -133,7 +133,7 @@ const RFI_MOCK: Record<
       ["SA-007", "박**", "YPL", "고객센터팀", "정담원·세수연", "98", "32", "32.7%", "A등급(기본 7%)"],
       ["SA-011", "용인공원 외부업체", "외부업체", "외부판촉", "명가여연·천명지", "215", "58", "27.0%", "외부수수료(별도규정)"],
     ],
-    mockCaveat: "※ 본문 RFI 6.2 + 6.5 + Q24 대응 mock. 수령 시 실 데이터로 교체. RFI 6.5 판매수수료 지급기준 규정 미수령. 보강성 컬럼: 직급·입사일·퇴사여부 (RFI 본문 외 — HR 정보는 별도 RFI 필요).",
+    mockCaveat: "※ 데이터 모델 보강 항목 r2 (영업사원 master + 판매수수료 지급규정) 대응 mock. ERP 등록 후 실 데이터로 교체. 보강 컬럼: 직급·입사일·퇴사여부 (HR 시스템 연동 필요).",
   },
   "RFI-NEW-003a": {
     columns: [
@@ -154,7 +154,7 @@ const RFI_MOCK: Record<
       ["정담원-C03", "매장", "사용료수입(일반) 40400", "1.96", "5,200,000", "0", "0", "5,200,000", "1", "분양완료"],
       ["천명제1-D04", "매장", "—", "1.96", "—", "0", "0", "0", "1", "미사용(분양가능)"],
     ],
-    mockCaveat: "※ 본문 RFI 3.6/3.8/3.9 대응 mock. 수령 시 실 데이터로 교체. RFI 3.6/3.8/3.9 미수령 — 면적·매출·매핑 동시 결손. raw vs 재고명세서 묘원수 차이 사유는 신규야외묘역 시트로 별도 추적.",
+    mockCaveat: "※ 데이터 모델 보강 항목 r3a (구역 master, 면적·매출구분·시계열) 대응 mock. ERP 추출/연동 후 실 데이터로 교체. 면적·매출·매핑 dimension 동시 보강 필요. raw vs 재고명세서 묘원수 차이 사유는 신규야외묘역 시트로 별도 추적.",
   },
   "RFI-NEW-003b": {
     columns: [
@@ -172,7 +172,7 @@ const RFI_MOCK: Record<
       ["3H-D07", "YP-2017-00219", "—", "—", "—", "2023-11-08", "할인분양 대기", "할인분양 대상"],
       ["63-5공구-E22", "YP-2015-00118", "2024-08-04", "YP-2024-02014", "이장 (가족 요청)", "—", "5,500,000", "이장지 4325건 中 1건"],
     ],
-    mockCaveat: "※ 본문 인터뷰 3일차오전공원(이장 용역비) + 신규야외묘역 시트 대응 mock. 수령 시 실 데이터로 교체. 묘역raw 22.5% 미채움분(이장지 4325 포함) 사유 분류 필요.",
+    mockCaveat: "※ 데이터 모델 보강 항목 r3b (이장이력) 대응 mock. ERP 이장이력 등록 후 실 데이터로 교체. 묘역raw 22.5% 미채움분(이장지 4325 포함) 사유 분류 dimension 보강 필요.",
   },
   "RFI-NEW-004a": {
     columns: [
@@ -190,7 +190,7 @@ const RFI_MOCK: Record<
       ["FAC-A12", "사무실 부스 면적", "시설별 면적", "시설관리팀", "m²", "연1회 실측", "도면 PDF", "도면존재·디지털 미수령"],
       ["MTR-208-전기", "관리동 전기 사용량", "계량기 검침", "관리동 전기", "kWh", "분기별", "한전 청구서", "한전 청구서·디지털 미수령"],
     ],
-    mockCaveat: "※ 본문 RFI 4.3/4.4 대응 mock (동인 외연 측). 수령 시 실 데이터로 교체. 외연 결손 → A5 partiallyMissing → A5' Default rule(매출비율 fallback) 발동중.",
+    mockCaveat: "※ 데이터 모델 보강 항목 r4a (비용 동인 외연 디지털화) 대응 mock. 동인 외연 디지털 수집 체계 구축 후 실 데이터로 교체. 현재는 외연 미체계화 → A5 partiallyMissing → A5' Default rule(매출비율 fallback) 발동중.",
   },
   "RFI-NEW-004b": {
     columns: [
@@ -210,7 +210,7 @@ const RFI_MOCK: Record<
       ["83100", "감가상각비", "판관비", "210,000,000", "208,000,000", "205,000,000", "시설별 면적 m² 배분", "N", "—"],
       ["53400", "지급수수료", "제조원가", "—", "—", "62,000,000", "동인없음 (단발)", "Y", "신규 ERP 컨설팅 일회성"],
     ],
-    mockCaveat: "※ 본문 RFI 4.3/4.4 대응 mock (발생금액·배부기준 측). 수령 시 실 데이터로 교체. 25년 계정별원장 매출 10계정 합계 50,240,119,779원(영업매출 순매출, 부가세 제외) 검증 완료, 단 3개년 시계열 + 비경상 분리 미수령.",
+    mockCaveat: "※ 데이터 모델 보강 항목 r4b (발생금액·배부기준 시계열) 대응 mock. ERP 시계열 + 비경상 컬럼 추출 후 실 데이터로 교체. 25년 계정별원장 매출 10계정 합계 50,240,119,779원(영업매출 순매출, 부가세 제외) 검증 완료, 단 3개년 시계열 + 비경상 분리 추가 보강 필요.",
   },
   "RFI-NEW-005": {
     columns: [
@@ -230,7 +230,7 @@ const RFI_MOCK: Record<
       ["GRP-CUST-00101", "LIFE-09954", "MBR-100483", "YP-2024-01183", "FAM-A-0042", "라이프(상조) 2020-11", "0.3", "0.5", "Y (배우자 명의)", "92%"],
       ["GRP-CUST-00102", "—", "MBR-100484", "YP-2024-01184", "FAM-B-0117", "장지 단독", "—", "0.5", "N", "—"],
     ],
-    mockCaveat: "※ 본문 RFI 3.7 + Q40 + 6.3 합성 mock. 수령 시 실 데이터로 교체. 매출 단위는 안전 표기(억). RFI 3.7은 25/12~26/03만 부분수령, FY23~25 전체 미수령. 라이프 9,930명 + 장지 master 부재 → 통합 매핑 작업 미착수.",
+    mockCaveat: "※ 데이터 모델 보강 항목 r5 (라이프·장지 통합 고객뷰) 합성 mock. 두 ERP 통합 dimension 구축 후 실 데이터로 교체. 매출 단위는 안전 표기(억). 라이프 9,930명 + 장지 계약자 dimension 보강 필요 → 통합 매핑 dimension 신설 후 cross-sell·family referral KPI 활성화.",
   },
 };
 
@@ -333,17 +333,17 @@ export default function DataModelPage() {
   return (
     <AppLayout
       pageTitle="데이터 모델 (T-Box)"
-      pageSubtitle="결손이 곧 RFI 자동 생성기 — SQL은 침묵, 온톨로지는 비즈니스 질문으로 변환"
+      pageSubtitle="그룹 관리손익 BI를 떠받치는 데이터 모델. 충족된 영역은 활성 KPI, 미연동 영역은 데이터 보강 시 활성화될 KPI 후보."
       narration={
         <div className="space-y-2">
           <p>13 Class · 26 Property · 6 Axiom으로 구성된 의미층.</p>
           <p>
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 mr-1" /> 충족 ·
-            <span className="inline-block h-2 w-2 rounded-full bg-amber-500 mx-1" /> 부분결손 ·
-            <span className="inline-block h-2 w-2 rounded-full bg-red-500 mx-1" /> 결손
+            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 mr-1" /> 충족 (KPI 활성) ·
+            <span className="inline-block h-2 w-2 rounded-full bg-amber-500 mx-1" /> 부분 미연동 ·
+            <span className="inline-block h-2 w-2 rounded-full bg-red-500 mx-1" /> 미연동 (보강 후보)
           </p>
           <p>
-            <strong>결손 노드/엣지를 클릭</strong>하면 자동 도출되는 RFI가 우측에 표시됩니다.
+            <strong>미연동 노드/엣지를 클릭</strong>하면 데이터 보강 시 활성화될 KPI 항목이 우측에 표시됩니다.
           </p>
         </div>
       }
@@ -363,7 +363,7 @@ export default function DataModelPage() {
             <EvidenceButton slotId="tbox_stat_missing_classes" label="결손 Class" variant="subtle" />
           </div>
           <div className="headline mt-2 text-[28px] leading-none text-stone-900 tnum">{stats.classMissing}</div>
-          <div className="mt-1.5 text-[12px] text-stone-500">부분결손 또는 미수령</div>
+          <div className="mt-1.5 text-[12px] text-stone-500">부분 미연동 또는 dimension 보강 필요</div>
         </div>
         <div className="bg-white p-5">
           <div className="flex items-start justify-between gap-2">
@@ -377,11 +377,11 @@ export default function DataModelPage() {
         </div>
         <div className="bg-[#0095A9] p-5 text-white">
           <div className="flex items-start justify-between gap-2">
-            <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#b3dde0]">자동 도출 RFI</div>
-            <EvidenceButton slotId="tbox_stat_rfi_count" label="자동 도출 RFI" variant="onMint" />
+            <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#b3dde0]">미활성 KPI 식별</div>
+            <EvidenceButton slotId="tbox_stat_rfi_count" label="미활성 KPI 식별" variant="onMint" />
           </div>
           <div className="headline mt-2 text-[28px] leading-none text-white tnum">{stats.rfiCount}<span className="text-base font-normal text-[#b3dde0] ml-0.5">건</span></div>
-          <div className="mt-1.5 text-[12px] text-[#ccebee]">결손 → 비즈니스 질문</div>
+          <div className="mt-1.5 text-[12px] text-[#ccebee]">데이터 보강 시 활성화될 KPI 후보</div>
         </div>
       </section>
 
@@ -423,15 +423,15 @@ export default function DataModelPage() {
           <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[12px] leading-relaxed text-stone-500">
             <span className="inline-flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-              <strong className="text-stone-700">Member · SalesAgent · Contract</strong> 라이프 풀 master / 장지 결손
+              <strong className="text-stone-700">Member · SalesAgent · Contract</strong> 라이프 풀 master 활성 / 장지 dimension 보강 후보
             </span>
             <span className="inline-flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
-              장지 결손이 만드는 비즈니스 질문 <strong className="text-stone-700">7건</strong>이 RFI로 자동 도출
+              장지 데이터 보강 시 활성화될 KPI <strong className="text-stone-700">7건</strong>
             </span>
             <span className="inline-flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-stone-400" />
-              이 그래프 자체가 ERP팀에 전달되는 spec
+              이 그래프 자체가 사내 ERP/BI 데이터 모델 spec
             </span>
           </div>
         </Card>
@@ -488,7 +488,7 @@ export default function DataModelPage() {
           )}
 
           {detail && detail.rfis.length > 0 && (
-            <Card title="자동 도출된 RFI" subtitle="결손이 비즈니스 질문으로 변환됨" highlight>
+            <Card title="미활성 KPI 활성화 항목" subtitle="이 dimension이 ERP에 보강되면 활성화되는 KPI" highlight>
               <div className="space-y-3">
                 {detail.rfis.map((r) => (
                   <div key={r.id} className="group rounded border border-amber-200 bg-amber-50 p-3 transition-all hover:bg-amber-100 hover:shadow-sm">
@@ -522,9 +522,9 @@ export default function DataModelPage() {
 
       <section className="mt-12">
         <div className="mb-6">
-          <h3 className="text-[16px] font-semibold tracking-tight text-stone-900">필요한 RFI 미리보기</h3>
+          <h3 className="text-[16px] font-semibold tracking-tight text-stone-900">데이터 보강 항목 — KPI 활성화 후보</h3>
           <p className="mt-1.5 text-[12px] text-stone-500">
-            각 결손이 ERP팀에 어떤 모양의 자료로 와야 하는지 — 예상 컬럼·sample row·요청 대상까지 포함된 mock 표
+            각 미연동 dimension이 사내 ERP/BI에서 어떤 모양의 자료로 활성화돼야 하는지 — 예상 컬럼·sample row·담당 시스템까지 포함된 mock 표
           </p>
         </div>
         <div className="grid gap-6 md:grid-cols-2">
@@ -700,9 +700,9 @@ export default function DataModelPage() {
         <h3 className="section-label mb-3">DATA LINEAGE</h3>
         <div className="space-y-2">
           <SourceCaption>13 Class · 26 Property · 6 Axiom — tbox.json (Phase 0 정의서 기반 수동 정의)</SourceCaption>
-          <SourceCaption>결손 9건 = property.status ≠ satisfied count, 모두 장지 VC 회원·영업사원·계약자 master 부재 또는 외연 결손에 기인</SourceCaption>
-          <SourceCaption>RFI 7건 = tbox.rfiItems, 각 결손 property에 매핑된 비즈니스 질문 (P0~P1 우선순위). B8 정합성 검토 결과 r3·r4를 각 2개로 분할(r3a/r3b·r4a/r4b)하여 본문 RFI 3.6/3.8/3.9·4.3/4.4 명세에 정렬</SourceCaption>
-          <SourceCaption>Axiom A1·A2·A3·A4 충족 / A5 부분결손 / A5&apos; satisfied (fallback 정상 작동)</SourceCaption>
+          <SourceCaption>미연동 dimension 9건 = property.status ≠ satisfied count, 모두 장지 VC 회원·영업사원·계약자 dimension 또는 비용 동인 외연 보강 후보</SourceCaption>
+          <SourceCaption>데이터 보강 항목 7건 = tbox.rfiItems, 각 미연동 property에 매핑된 KPI 활성화 후보 (P0~P1 우선순위). B8 정합성 검토 결과 r3·r4를 각 2개로 분할(r3a/r3b·r4a/r4b)하여 명세에 정렬</SourceCaption>
+          <SourceCaption>Axiom A1·A2·A3·A4 충족 / A5 부분 미연동 / A5&apos; satisfied (fallback 정상 작동)</SourceCaption>
         </div>
       </section>
     </AppLayout>

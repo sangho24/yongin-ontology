@@ -20,6 +20,7 @@ import { AppLayout, SubNav } from "@/components/AppLayout";
 import { Card, EvidenceButton, StatCard, InsightBox, SourceCaption } from "@/components/Card";
 import { NumberCell } from "@/components/NumberCell";
 import { ActivityCostExplorer } from "@/components/ActivityCostExplorer";
+import { CemeterySiteMap } from "@/components/CemeterySiteMap";
 import zoneKpi from "@/data/zone_kpi.json";
 import deptKpi from "@/data/dept_kpi.json";
 import type { NumberLineage } from "@/types";
@@ -101,8 +102,8 @@ const ZONE_HYPOTHESES: Hypothesis[] = [
   },
   {
     id: "Z4",
-    title: "계약자 master 부재 → 회원 LTV·재계약·가족 cross-sell 분석 불가",
-    evidence: "묘역 raw 27열에 계약번호는 77.5%이지만 계약자 정보 컬럼 0열. RFI r74·NEW-001로 자동 도출됨.",
+    title: "계약자 dimension 추가 → 회원 LTV·재계약·가족 cross-sell KPI 활성화",
+    evidence: "묘역 raw 27열에 계약번호는 77.5%이지만 계약자 정보 컬럼 0열. 데이터 모델 보강 항목 r74·NEW-001로 식별됨 — 계약자 dimension ERP 추가 시 회원 lifecycle KPI 활성화.",
     signal: "high",
   },
 ];
@@ -147,7 +148,7 @@ export default function CemeteryPage() {
       narration={
         <div className="space-y-2">
           <p>
-            장지는 <strong>객체(묘역) master만 풀 수령</strong> — 회원 master 부재로 회원 중심 KPI는 불가.
+            장지는 <strong>객체(묘역) master 풀 셋업</strong>으로 객체 단위 KPI 활성. 계약자 dimension 추가 시 회원 중심 KPI 추가 활성화.
           </p>
           <p>가용재고 12,498기 잠재가치 약 <strong>2,594억원</strong>.</p>
           <p className="text-[11px] text-stone-400">출처: 260401_용인공원 전체 묘역_raw.xlsx</p>
@@ -157,6 +158,7 @@ export default function CemeteryPage() {
       <SubNav
         items={[
           { id: "overview", label: "묘역 현황" },
+          { id: "site-map", label: "장법별 배치도" },
           { id: "potential", label: "잠재가치" },
           { id: "activity-cost", label: "구역별 활동원가" },
           { id: "root-cause", label: "Root Cause" },
@@ -186,6 +188,11 @@ export default function CemeteryPage() {
           trendValue="22%"
         />
         <StatCard slotId="cemetery_avg_price_stat" label="평균 묘역사용료" value={autoUnit(zoneKpi.potentialValue.avgPriceOverall)} />
+      </section>
+
+      {/* ───────────────────────── 장법별 배치도 — 지도 + hotspot overlay ───────────────────────── */}
+      <section id="site-map" className="mt-12 scroll-mt-32">
+        <CemeterySiteMap />
       </section>
 
       {/* ───────────────────────── 잠재가치 (NumberCell hero · lineage 클릭 가능) ───────────────────────── */}
@@ -228,7 +235,12 @@ export default function CemeteryPage() {
                 cx="50%"
                 cy="50%"
                 outerRadius={100}
-                label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
+                // 작은 slice(2% 미만)는 라벨 생략 — 라벨끼리 겹침 방지 (예: 예약지 0%)
+                label={({ name, percent }) => {
+                  const p = percent ?? 0;
+                  return p < 0.02 ? "" : `${name} ${(p * 100).toFixed(0)}%`;
+                }}
+                labelLine={false}
                 paddingAngle={2}
                 onMouseEnter={(d) => setHoveredStatus(d.name ?? null)}
                 onMouseLeave={() => setHoveredStatus(null)}
@@ -343,8 +355,8 @@ export default function CemeteryPage() {
       </section>
 
       <section className="mt-12">
-        <InsightBox slotId="cemetery_insight_master" type="info" title="장지 KPI 한계와 보완 경로">
-          묘역 객체 단위 KPI는 풍부하나, <strong>계약자 master 부재</strong>로 회원 LTV·재계약·영업사원 생산성 산출 불가. Data Model 페이지에서 결손이 어떻게 RFI로 자동 도출되는지 확인 가능.
+        <InsightBox slotId="cemetery_insight_master" type="info" title="장지 KPI 활성화 경로 — 계약자 dimension 보강">
+          묘역 객체 단위 KPI는 풍부하게 활성화돼 있고, <strong>계약자 dimension 추가</strong> 시 회원 LTV·재계약·영업사원 생산성 KPI가 추가 활성화됨. Data Model 페이지에서 미활성 KPI와 보강 항목 매핑 확인.
         </InsightBox>
       </section>
 
@@ -519,7 +531,7 @@ export default function CemeteryPage() {
           <SourceCaption>정체 단지 = 단지별 최근 계약 연도 ≤ 2021 + 가용재고 보유</SourceCaption>
         </div>
         <p className="mt-6 max-w-3xl text-[11px] leading-relaxed text-stone-400">
-          ※ 묘역 55,711기 객체 master는 풀 수령됐으나 계약자 master는 결손 — 회원 LTV·재계약·영업사원 생산성 분석 불가. 자동 도출된 RFI는{" "}
+          ※ 묘역 55,711기 객체 master는 풀 셋업이라 객체 단위 KPI 활성. 계약자 dimension 추가 시 회원 LTV·재계약·영업사원 생산성 KPI 활성화. 데이터 모델 보강 항목은{" "}
           <Link href="/data-model" className="text-[#007a8c] underline-offset-2 hover:underline">
             Data Model
           </Link>

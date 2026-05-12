@@ -988,7 +988,7 @@
         "장지 master 결손 → BI 깊이 제한"
       ],
       "linkedDatasetIds": [
-        {"id": "pwc_rfi_v2", "relation": "인터뷰 결손 → RFI 추가요청"},
+        {"id": "pwc_rfi_v2", "relation": "인터뷰에서 도출된 데이터 모델 보강 후보"},
         {"id": "report_draft_0422", "relation": "인터뷰 발언 → 슬라이드 narrative"}
       ],
       "caveats": [
@@ -1009,26 +1009,26 @@
       "keyColumns": ["RFI No.", "주요 요청자료", "성격", "중요도", "해당법인", "수령여부"],
       "linkedKpiCount": 22,
       "linkedKpis": [
-        "자동 도출 RFI · T-Box",
-        "결손 Class·Property",
-        "회원 master 결손 (R1)",
-        "판매직 master 결손 (R2)",
-        "통합 고객 view 결손 (R5)",
-        "구역 이력 결손 (R3)",
-        "원가 동인 데이터 결손 (R4)",
-        "Class member·sales_agent·contract 결손",
-        "Property assigned_to·belongs_to·contracts 등 결손",
+        "미활성 KPI · T-Box",
+        "미연동 Class·Property dimension",
+        "회원 master 보강 항목 (R1)",
+        "영업사원 master 보강 항목 (R2)",
+        "통합 고객 view 보강 항목 (R5)",
+        "구역 이력 보강 항목 (R3)",
+        "원가 동인 데이터 보강 항목 (R4)",
+        "Class member·sales_agent·contract 보강 후보",
+        "Property assigned_to·belongs_to·contracts 등 보강 후보",
         "다음 액션 (3건)"
       ],
       "linkedDatasetIds": [
-        {"id": "interviews_april", "relation": "인터뷰 결손 → RFI 항목"},
-        {"id": "life_member_db", "relation": "회원 master 결손 (R1)"},
-        {"id": "cemetery_grave_raw", "relation": "구역 master 결손 (R3)"}
+        {"id": "interviews_april", "relation": "인터뷰에서 발견된 자료 보강 항목"},
+        {"id": "life_member_db", "relation": "회원 master 보강 항목 (R1)"},
+        {"id": "cemetery_grave_raw", "relation": "구역 master 보강 항목 (R3)"}
       ],
       "caveats": [
-        "총 110건 중 수령 22건 (20%) / 미수령·미기재 87건 (79%)",
-        "Q40 '용인공원 고객 DB 관리 프로세스' 도식·매핑 — 미수령 (rc_insight_master_rfi 핵심)",
-        "Q38 회비정산차익-2 만기해약 자동처리·회원DB 잔류 — 미수령 (mutual_hypothesis_h2 핵심)"
+        "총 110건 중 ERP 추출 완료 22건 (20%) / 추가 보강 후보 87건 (79%)",
+        "Q40 '용인공원 고객 DB 관리 프로세스' 도식·매핑 — ERP 매핑 정의 보강 항목 (rc_insight_master_rfi 핵심)",
+        "Q38 회비정산차익-2 만기해약 자동처리·회원DB 잔류 — ERP 자동처리 로직 보강 항목 (mutual_hypothesis_h2 핵심)"
       ],
       "presentationSafe": true
     },

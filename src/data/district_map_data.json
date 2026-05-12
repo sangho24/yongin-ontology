@@ -1,0 +1,1174 @@
+{
+  "$schema": "district_map_data_v0.1",
+  "generated_at": "2026-05-12",
+  "source": "용인공원_분석.xlsm / 시트[\"구역별 매출\", \"구역별매출_view_2\", \"구역별매출_ppt\"]",
+  "unit": {
+    "fy25Revenue": "원",
+    "pl_*": "원 (원시트는 천원, 1000배 환산함)"
+  },
+  "districts": [
+    {
+      "id": "sesuyeon",
+      "name": "세수연",
+      "nameKo": "세수연",
+      "enCode": null,
+      "type": "야외묘역",
+      "color": "#BDD7EE",
+      "metrics": {
+        "fy25Revenue": 452516202.0,
+        "fy25RevenueByAccount": {
+          "사용료수입(일반)": 356607500.0,
+          "사용료수입(아너)": 0.0,
+          "관리비수입": 78454843.0,
+          "이장비수입": 0.0,
+          "장례비수입": 0.0,
+          "안치료수입": 13950000.0,
+          "기타수입": 3503859.0,
+          "석축비수입": 0.0,
+          "임대료수입": 0.0,
+          "사초비수입": 0.0
+        },
+        "plRevenue": 452516000.0,
+        "plCogs": 205829000.0,
+        "plSga": 151330000.0,
+        "plOperatingProfit": 95358000.0,
+        "plCogsBreakdown": {
+          "묘지조성비": 77102000.0,
+          "용역비": 36144000.0,
+          "기타": 92583000.0
+        },
+        "plSgaBreakdown": {
+          "인건비": 42616000.0,
+          "지급수수료": 22345000.0,
+          "광고선전비": 8015000.0,
+          "판매수수료": 39043000.0,
+          "기타": 39311000.0
+        }
+      },
+      "subDistricts": [
+        {
+          "subCode": "세수연10",
+          "totalRevenue": 268494685.0
+        },
+        {
+          "subCode": "세수연11",
+          "totalRevenue": 69900000.0
+        },
+        {
+          "subCode": "세수연12",
+          "totalRevenue": 43750000.0
+        },
+        {
+          "subCode": "세수연8",
+          "totalRevenue": 11725000.0
+        },
+        {
+          "subCode": "세수연3",
+          "totalRevenue": 10241550.0
+        },
+        {
+          "subCode": "세수연",
+          "totalRevenue": 11547168.0
+        },
+        {
+          "subCode": "세수연9",
+          "totalRevenue": 3825000.0
+        },
+        {
+          "subCode": "세수연6",
+          "totalRevenue": 2873034.0
+        },
+        {
+          "subCode": "세수연7",
+          "totalRevenue": 1127590.0
+        },
+        {
+          "subCode": "세수연5",
+          "totalRevenue": 297200.0
+        }
+      ],
+      "subDistrictCount": 10,
+      "notes": "야외묘역(평장·납골) 단지"
+    },
+    {
+      "id": "jeongmyeongji",
+      "name": "정명지",
+      "nameKo": "정명지",
+      "enCode": null,
+      "type": "야외묘역",
+      "color": "#C6EFCE",
+      "metrics": {
+        "fy25Revenue": 144136566.0,
+        "fy25RevenueByAccount": {
+          "사용료수입(일반)": 0.0,
+          "사용료수입(아너)": 0.0,
+          "관리비수입": 126911300.0,
+          "이장비수입": 0.0,
+          "장례비수입": 8850000.0,
+          "안치료수입": 7000000.0,
+          "기타수입": 1375266.0,
+          "석축비수입": 0.0,
+          "임대료수입": 0.0,
+          "사초비수입": 0.0
+        },
+        "plRevenue": 144137000.0,
+        "plCogs": 58216000.0,
+        "plSga": 44183000.0,
+        "plOperatingProfit": 41738000.0,
+        "plCogsBreakdown": {
+          "묘지조성비": 21807000.0,
+          "용역비": 58216000.0,
+          "기타": 0.0
+        },
+        "plSgaBreakdown": {
+          "인건비": 10560000.0,
+          "지급수수료": 7117000.0,
+          "광고선전비": 2553000.0,
+          "판매수수료": 12183000.0,
+          "기타": 11770000.0
+        }
+      },
+      "subDistricts": [
+        {
+          "subCode": "정명",
+          "totalRevenue": 83381166.0
+        },
+        {
+          "subCode": "정명6",
+          "totalRevenue": 6575000.0
+        },
+        {
+          "subCode": "정명1납",
+          "totalRevenue": 2250000.0
+        }
+      ],
+      "subDistrictCount": 3,
+      "notes": "야외묘역 단지"
+    },
+    {
+      "id": "jeongnamji",
+      "name": "정남지",
+      "nameKo": "정남지",
+      "enCode": null,
+      "type": "야외묘역",
+      "color": "#92D050",
+      "metrics": {
+        "fy25Revenue": 2092650253.0,
+        "fy25RevenueByAccount": {
+          "사용료수입(일반)": 1608580000.0,
+          "사용료수입(아너)": 0.0,
+          "관리비수입": 277711859.0,
+          "이장비수입": 10500000.0,
+          "장례비수입": 152700000.0,
+          "안치료수입": 25450000.0,
+          "기타수입": 12608394.0,
+          "석축비수입": 0.0,
+          "임대료수입": 0.0,
+          "사초비수입": 5100000.0
+        },
+        "plRevenue": 2092650000.0,
+        "plCogs": 175453000.0,
+        "plSga": 706280000.0,
+        "plOperatingProfit": 1210917000.0,
+        "plCogsBreakdown": {
+          "묘지조성비": 65724000.0,
+          "용역비": 144796000.0,
+          "기타": 0.0
+        },
+        "plSgaBreakdown": {
+          "인건비": 200616000.0,
+          "지급수수료": 103335000.0,
+          "광고선전비": 37067000.0,
+          "판매수수료": 182982000.0,
+          "기타": 182280000.0
+        }
+      },
+      "subDistricts": [
+        {
+          "subCode": "정남",
+          "totalRevenue": 1973479539.0
+        },
+        {
+          "subCode": "정남3납",
+          "totalRevenue": 90274747.0
+        },
+        {
+          "subCode": "정남1납",
+          "totalRevenue": 11248809.0
+        },
+        {
+          "subCode": "정남2납",
+          "totalRevenue": 10251925.0
+        },
+        {
+          "subCode": "정남6납",
+          "totalRevenue": 3195233.0
+        },
+        {
+          "subCode": "정남4납",
+          "totalRevenue": 2250000.0
+        },
+        {
+          "subCode": "정남5납",
+          "totalRevenue": 1750000.0
+        },
+        {
+          "subCode": "정남7납",
+          "totalRevenue": 200000.0
+        }
+      ],
+      "subDistrictCount": 8,
+      "notes": "야외묘역(평장·납골) 단지 — zone_kpi에 잔여재고 213"
+    },
+    {
+      "id": "jeongdamwon",
+      "name": "정담원",
+      "nameKo": "정담원",
+      "enCode": null,
+      "type": "야외묘역",
+      "color": "#FFF2CC",
+      "metrics": {
+        "fy25Revenue": 7276627864.0,
+        "fy25RevenueByAccount": {
+          "사용료수입(일반)": 6595997500.0,
+          "사용료수입(아너)": 0.0,
+          "관리비수입": 473633902.0,
+          "이장비수입": 0.0,
+          "장례비수입": 0.0,
+          "안치료수입": 163200000.0,
+          "기타수입": 43796462.0,
+          "석축비수입": 0.0,
+          "임대료수입": 0.0,
+          "사초비수입": 0.0
+        },
+        "plRevenue": 7276628000.0,
+        "plCogs": 1997037000.0,
+        "plSga": 2471952000.0,
+        "plOperatingProfit": 2807639000.0,
+        "plCogsBreakdown": {
+          "묘지조성비": 748079000.0,
+          "용역비": 220526000.0,
+          "기타": 1028432000.0
+        },
+        "plSgaBreakdown": {
+          "인건비": 710870000.0,
+          "지급수수료": 359320000.0,
+          "광고선전비": 128890000.0,
+          "판매수수료": 634440000.0,
+          "기타": 638432000.0
+        }
+      },
+      "subDistricts": [
+        {
+          "subCode": "정담원7납",
+          "totalRevenue": 3297300000.0
+        },
+        {
+          "subCode": "정담원8납",
+          "totalRevenue": 2331192500.0
+        },
+        {
+          "subCode": "정담원6납",
+          "totalRevenue": 1030887501.0
+        },
+        {
+          "subCode": "정담원1납",
+          "totalRevenue": 352766195.0
+        },
+        {
+          "subCode": "정담원4납",
+          "totalRevenue": 218647000.0
+        },
+        {
+          "subCode": "정담원3납",
+          "totalRevenue": 25193892.0
+        },
+        {
+          "subCode": "정담원1평",
+          "totalRevenue": 15031535.0
+        },
+        {
+          "subCode": "정담원5납",
+          "totalRevenue": 3463497.0
+        },
+        {
+          "subCode": "정담원2납",
+          "totalRevenue": 1840444.0
+        }
+      ],
+      "subDistrictCount": 9,
+      "notes": "야외묘역(평장·납골) 단지 — 사용료(일반) 최대 단지"
+    },
+    {
+      "id": "myeonggayeon",
+      "name": "명가여연",
+      "nameKo": "명가여연",
+      "enCode": null,
+      "type": "야외묘역",
+      "color": "#E2CEEF",
+      "metrics": {
+        "fy25Revenue": 332621530.0,
+        "fy25RevenueByAccount": {
+          "사용료수입(일반)": 313347000.0,
+          "사용료수입(아너)": 0.0,
+          "관리비수입": 4333600.0,
+          "이장비수입": 0.0,
+          "장례비수입": 0.0,
+          "안치료수입": 13800000.0,
+          "기타수입": 1140930.0,
+          "석축비수입": 0.0,
+          "임대료수입": 0.0,
+          "사초비수입": 0.0
+        },
+        "plRevenue": 332622000.0,
+        "plCogs": 208086000.0,
+        "plSga": 112825000.0,
+        "plOperatingProfit": 11710000.0,
+        "plCogsBreakdown": {
+          "묘지조성비": 77948000.0,
+          "용역비": 2316000.0,
+          "기타": 127822000.0
+        },
+        "plSgaBreakdown": {
+          "인건비": 32738000.0,
+          "지급수수료": 16425000.0,
+          "광고선전비": 5892000.0,
+          "판매수수료": 28509000.0,
+          "기타": 29261000.0
+        }
+      },
+      "subDistricts": [
+        {
+          "subCode": "명가여연3",
+          "totalRevenue": 9099030.0
+        },
+        {
+          "subCode": "명가여연1",
+          "totalRevenue": 1787500.0
+        },
+        {
+          "subCode": "명가여연5다",
+          "totalRevenue": 1500000.0
+        },
+        {
+          "subCode": "명가여연5나",
+          "totalRevenue": 1200000.0
+        },
+        {
+          "subCode": "명가여연5라",
+          "totalRevenue": 1200000.0
+        },
+        {
+          "subCode": "명가여연4A",
+          "totalRevenue": 990000.0
+        },
+        {
+          "subCode": "명가여연4B",
+          "totalRevenue": 720000.0
+        },
+        {
+          "subCode": "명가여연5가",
+          "totalRevenue": 600000.0
+        },
+        {
+          "subCode": "명가여연2",
+          "totalRevenue": 450000.0
+        }
+      ],
+      "subDistrictCount": 9,
+      "notes": "야외묘역+계단식 — zone_kpi 명가여연5(계단식, 545)"
+    },
+    {
+      "id": "myeongdang",
+      "name": "명당",
+      "nameKo": "명당",
+      "enCode": null,
+      "type": "야외묘역",
+      "color": "#FFE699",
+      "metrics": {
+        "fy25Revenue": 2871556241.0,
+        "fy25RevenueByAccount": {
+          "사용료수입(일반)": 2361243750.0,
+          "사용료수입(아너)": 0.0,
+          "관리비수입": 309803224.0,
+          "이장비수입": 42880000.0,
+          "장례비수입": 61300000.0,
+          "안치료수입": 73900000.0,
+          "기타수입": 20329267.0,
+          "석축비수입": 0.0,
+          "임대료수입": 0.0,
+          "사초비수입": 2100000.0
+        },
+        "plRevenue": 2871556000.0,
+        "plCogs": 520502000.0,
+        "plSga": 963082000.0,
+        "plOperatingProfit": 1387972000.0,
+        "plCogsBreakdown": {
+          "묘지조성비": 194977000.0,
+          "용역비": 201066000.0,
+          "기타": 124459000.0
+        },
+        "plSgaBreakdown": {
+          "인건비": 274432000.0,
+          "지급수수료": 141797000.0,
+          "광고선전비": 50864000.0,
+          "판매수수료": 245205000.0,
+          "기타": 250784000.0
+        }
+      },
+      "subDistricts": [
+        {
+          "subCode": "명당1평",
+          "totalRevenue": 2478835330.0
+        },
+        {
+          "subCode": "명당",
+          "totalRevenue": 284299288.0
+        },
+        {
+          "subCode": "명당1납",
+          "totalRevenue": 93335907.0
+        },
+        {
+          "subCode": "명당2납",
+          "totalRevenue": 15085716.0
+        }
+      ],
+      "subDistrictCount": 4,
+      "notes": "야외묘역 단지"
+    },
+    {
+      "id": "cheonmyeongji",
+      "name": "천명지",
+      "nameKo": "천명지",
+      "enCode": null,
+      "type": "야외묘역",
+      "color": "#F4D9C6",
+      "metrics": {
+        "fy25Revenue": 2372076148.0,
+        "fy25RevenueByAccount": {
+          "사용료수입(일반)": 2063160000.0,
+          "사용료수입(아너)": 0.0,
+          "관리비수입": 237851200.0,
+          "이장비수입": 13200000.0,
+          "장례비수입": 2950000.0,
+          "안치료수입": 22000000.0,
+          "기타수입": 32914948.0,
+          "석축비수입": 0.0,
+          "임대료수입": 0.0,
+          "사초비수입": 0.0
+        },
+        "plRevenue": 2372076000.0,
+        "plCogs": 141509000.0,
+        "plSga": 802581000.0,
+        "plOperatingProfit": 1427986000.0,
+        "plCogsBreakdown": {
+          "묘지조성비": 53009000.0,
+          "용역비": 127025000.0,
+          "기타": 0.0
+        },
+        "plSgaBreakdown": {
+          "인건비": 229343000.0,
+          "지급수수료": 117133000.0,
+          "광고선전비": 42016000.0,
+          "판매수수료": 206761000.0,
+          "기타": 207328000.0
+        }
+      },
+      "subDistricts": [
+        {
+          "subCode": "천명4",
+          "totalRevenue": 2105915000.0
+        },
+        {
+          "subCode": "천명2",
+          "totalRevenue": 154418348.0
+        },
+        {
+          "subCode": "천명",
+          "totalRevenue": 13367200.0
+        },
+        {
+          "subCode": "천명3",
+          "totalRevenue": 2200000.0
+        }
+      ],
+      "subDistrictCount": 4,
+      "notes": "야외묘역 단지"
+    },
+    {
+      "id": "honor_noble",
+      "name": "아너스톤 노블",
+      "nameKo": "아너스톤 노블",
+      "enCode": "1NOBEL/NOBLE,2NOBLE,3NOBLE",
+      "type": "봉안당",
+      "color": "#FCE4D6",
+      "metrics": {
+        "fy25Revenue": 9797562178.0,
+        "fy25RevenueByAccount": {
+          "사용료수입(일반)": 0.0,
+          "사용료수입(아너)": 9126130000.0,
+          "관리비수입": 559887837.0,
+          "이장비수입": 1500000.0,
+          "장례비수입": 0.0,
+          "안치료수입": 0.0,
+          "기타수입": 110044341.0,
+          "석축비수입": 0.0,
+          "임대료수입": 0.0,
+          "사초비수입": 0.0
+        },
+        "plRevenue": 9797562000.0,
+        "plCogs": 68948000.0,
+        "plSga": 3840362000.0,
+        "plOperatingProfit": 5888252000.0,
+        "plCogsBreakdown": {
+          "묘지조성비": 25827000.0,
+          "용역비": 259577000.0,
+          "기타": 0.0
+        },
+        "plSgaBreakdown": {
+          "인건비": 966869000.0,
+          "지급수수료": 513150000.0,
+          "광고선전비": 669299000.0,
+          "판매수수료": 869238000.0,
+          "기타": 821806000.0
+        }
+      },
+      "subDistricts": [],
+      "subDistrictCount": 0,
+      "notes": "봉안당 노블 등급(1N/2N/3N prefix)"
+    },
+    {
+      "id": "honor_royal",
+      "name": "아너스톤 로얄",
+      "nameKo": "아너스톤 로얄",
+      "enCode": "1ROYAL,2ROYAL,3ROYAL",
+      "type": "봉안당",
+      "color": "#FCE4D6",
+      "metrics": {
+        "fy25Revenue": 18247652991.0,
+        "fy25RevenueByAccount": {
+          "사용료수입(일반)": 0.0,
+          "사용료수입(아너)": 17660950000.0,
+          "관리비수입": 446217991.0,
+          "이장비수입": 0.0,
+          "장례비수입": 0.0,
+          "안치료수입": 0.0,
+          "기타수입": 140485000.0,
+          "석축비수입": 0.0,
+          "임대료수입": 0.0,
+          "사초비수입": 0.0
+        },
+        "plRevenue": 18247653000.0,
+        "plCogs": 476390000.0,
+        "plSga": 7219819000.0,
+        "plOperatingProfit": 10551444000.0,
+        "plCogsBreakdown": {
+          "묘지조성비": 178453000.0,
+          "용역비": 206514000.0,
+          "기타": 91423000.0
+        },
+        "plSgaBreakdown": {
+          "인건비": 1820660000.0,
+          "지급수수료": 957861000.0,
+          "광고선전비": 1282608000.0,
+          "판매수수료": 1624965000.0,
+          "기타": 1533725000.0
+        }
+      },
+      "subDistricts": [],
+      "subDistrictCount": 0,
+      "notes": "봉안당 로얄 등급(1R/2R/3R prefix)"
+    },
+    {
+      "id": "honor_honor",
+      "name": "아너스톤 아너",
+      "nameKo": "아너스톤 아너",
+      "enCode": "3HONOR",
+      "type": "봉안당",
+      "color": "#FCE4D6",
+      "metrics": {
+        "fy25Revenue": 5094732808.0,
+        "fy25RevenueByAccount": {
+          "사용료수입(일반)": 0.0,
+          "사용료수입(아너)": 4588900000.0,
+          "관리비수입": 443762808.0,
+          "이장비수입": 300000.0,
+          "장례비수입": 0.0,
+          "안치료수입": 0.0,
+          "기타수입": 61770000.0,
+          "석축비수입": 0.0,
+          "임대료수입": 0.0,
+          "사초비수입": 0.0
+        },
+        "plRevenue": 5094733000.0,
+        "plCogs": 899223000.0,
+        "plSga": 1982612000.0,
+        "plOperatingProfit": 2212898000.0,
+        "plCogsBreakdown": {
+          "묘지조성비": 336844000.0,
+          "용역비": 203989000.0,
+          "기타": 358390000.0
+        },
+        "plSgaBreakdown": {
+          "인건비": 498273000.0,
+          "지급수수료": 266334000.0,
+          "광고선전비": 339524000.0,
+          "판매수수료": 451639000.0,
+          "기타": 426842000.0
+        }
+      },
+      "subDistricts": [],
+      "subDistrictCount": 0,
+      "notes": "봉안당 아너 등급(3H prefix)"
+    },
+    {
+      "id": "etc_zone",
+      "name": "기타구역",
+      "nameKo": "기타구역",
+      "enCode": null,
+      "type": "기타구역",
+      "color": "#E2EFDA",
+      "metrics": {
+        "fy25Revenue": 6099864089.0,
+        "fy25RevenueByAccount": {
+          "사용료수입(일반)": 1765850000.0,
+          "사용료수입(아너)": 0.0,
+          "관리비수입": 2930298072.0,
+          "이장비수입": 589200000.0,
+          "장례비수입": 273900000.0,
+          "안치료수입": 112750000.0,
+          "기타수입": 149671017.0,
+          "석축비수입": 175000000.0,
+          "임대료수입": 0.0,
+          "사초비수입": 103195000.0
+        },
+        "plRevenue": 6099864000.0,
+        "plCogs": 3482573000.0,
+        "plSga": 1848916000.0,
+        "plOperatingProfit": 768376000.0,
+        "plCogsBreakdown": {
+          "묘지조성비": 1304552000.0,
+          "용역비": 2127466000.0,
+          "기타": 50555000.0
+        },
+        "plSgaBreakdown": {
+          "인건비": 481095000.0,
+          "지급수수료": 301211000.0,
+          "광고선전비": 108047000.0,
+          "판매수수료": 446020000.0,
+          "기타": 512543000.0
+        }
+      },
+      "subDistricts": [
+        {
+          "subCode": "하늘라",
+          "totalRevenue": 121229119.0
+        },
+        {
+          "subCode": "하늘나",
+          "totalRevenue": 63005619.0
+        },
+        {
+          "subCode": "하늘가",
+          "totalRevenue": 37864008.0
+        },
+        {
+          "subCode": "하늘다",
+          "totalRevenue": 31118530.0
+        },
+        {
+          "subCode": "하늘사",
+          "totalRevenue": 16277440.0
+        },
+        {
+          "subCode": "하늘마",
+          "totalRevenue": 12898776.0
+        },
+        {
+          "subCode": "하늘바",
+          "totalRevenue": 4730404.0
+        },
+        {
+          "subCode": "63-1",
+          "totalRevenue": 489645807.0
+        },
+        {
+          "subCode": "63-2",
+          "totalRevenue": 380051249.0
+        },
+        {
+          "subCode": "63-7",
+          "totalRevenue": 335655508.0
+        },
+        {
+          "subCode": "63-6",
+          "totalRevenue": 236194603.0
+        },
+        {
+          "subCode": "63-3",
+          "totalRevenue": 208038476.0
+        },
+        {
+          "subCode": "63-4",
+          "totalRevenue": 184242854.0
+        },
+        {
+          "subCode": "63-9",
+          "totalRevenue": 177188137.0
+        },
+        {
+          "subCode": "63-8",
+          "totalRevenue": 167022102.0
+        },
+        {
+          "subCode": "63-5",
+          "totalRevenue": 150443785.0
+        },
+        {
+          "subCode": "63-10",
+          "totalRevenue": 50188893.0
+        },
+        {
+          "subCode": "63-9납",
+          "totalRevenue": 15300000.0
+        },
+        {
+          "subCode": "63-3납",
+          "totalRevenue": 10223907.0
+        },
+        {
+          "subCode": "63-1납",
+          "totalRevenue": 1480000.0
+        },
+        {
+          "subCode": "69-1",
+          "totalRevenue": 334630369.0
+        },
+        {
+          "subCode": "69-2",
+          "totalRevenue": 295957031.0
+        },
+        {
+          "subCode": "69-3",
+          "totalRevenue": 127302206.0
+        },
+        {
+          "subCode": "69-4",
+          "totalRevenue": 104625893.0
+        },
+        {
+          "subCode": "69-1납",
+          "totalRevenue": 6212264.0
+        },
+        {
+          "subCode": "69-2납",
+          "totalRevenue": 5262500.0
+        },
+        {
+          "subCode": "69-4납",
+          "totalRevenue": 3054113.0
+        },
+        {
+          "subCode": "가3",
+          "totalRevenue": 407001833.0
+        },
+        {
+          "subCode": "가1",
+          "totalRevenue": 225105424.0
+        },
+        {
+          "subCode": "가2납",
+          "totalRevenue": 202925530.0
+        },
+        {
+          "subCode": "가5",
+          "totalRevenue": 170529780.0
+        },
+        {
+          "subCode": "가2",
+          "totalRevenue": 140654841.0
+        },
+        {
+          "subCode": "가7",
+          "totalRevenue": 130623212.0
+        },
+        {
+          "subCode": "가6",
+          "totalRevenue": 123762935.0
+        },
+        {
+          "subCode": "가8",
+          "totalRevenue": 58612498.0
+        },
+        {
+          "subCode": "가5납",
+          "totalRevenue": 21700000.0
+        },
+        {
+          "subCode": "가7납",
+          "totalRevenue": 12266491.0
+        },
+        {
+          "subCode": "가1납",
+          "totalRevenue": 3375000.0
+        },
+        {
+          "subCode": "가6평",
+          "totalRevenue": 3039100.0
+        },
+        {
+          "subCode": "가1평",
+          "totalRevenue": 1850000.0
+        },
+        {
+          "subCode": "가2평",
+          "totalRevenue": 1312500.0
+        },
+        {
+          "subCode": "가6납",
+          "totalRevenue": 200000.0
+        },
+        {
+          "subCode": "특1평",
+          "totalRevenue": 437599186.0
+        },
+        {
+          "subCode": "특1",
+          "totalRevenue": 42197455.0
+        },
+        {
+          "subCode": "특라",
+          "totalRevenue": 21854560.0
+        },
+        {
+          "subCode": "특남",
+          "totalRevenue": 9140320.0
+        },
+        {
+          "subCode": "특다",
+          "totalRevenue": 5000000.0
+        },
+        {
+          "subCode": "특가",
+          "totalRevenue": 4076959.0
+        },
+        {
+          "subCode": "특나",
+          "totalRevenue": 2013889.0
+        },
+        {
+          "subCode": "특마",
+          "totalRevenue": 789550.0
+        },
+        {
+          "subCode": "특바",
+          "totalRevenue": -80941.0
+        },
+        {
+          "subCode": "공원",
+          "totalRevenue": 43381796.0
+        },
+        {
+          "subCode": "공원1평",
+          "totalRevenue": 36887000.0
+        },
+        {
+          "subCode": "국화1평",
+          "totalRevenue": 52772420.0
+        },
+        {
+          "subCode": "국화",
+          "totalRevenue": 24725286.0
+        },
+        {
+          "subCode": "국화1납",
+          "totalRevenue": 4290000.0
+        },
+        {
+          "subCode": "매화",
+          "totalRevenue": 30855933.0
+        },
+        {
+          "subCode": "장미",
+          "totalRevenue": 28976526.0
+        },
+        {
+          "subCode": "장미1납",
+          "totalRevenue": 25132977.0
+        },
+        {
+          "subCode": "제2G",
+          "totalRevenue": 27750507.0
+        },
+        {
+          "subCode": "제2",
+          "totalRevenue": 9241558.0
+        },
+        {
+          "subCode": "제2F",
+          "totalRevenue": 5450100.0
+        },
+        {
+          "subCode": "제2E",
+          "totalRevenue": 1927758.0
+        },
+        {
+          "subCode": "제2가",
+          "totalRevenue": 1512500.0
+        },
+        {
+          "subCode": "제2다",
+          "totalRevenue": 922792.0
+        },
+        {
+          "subCode": "제2나",
+          "totalRevenue": 790166.0
+        },
+        {
+          "subCode": "제2H",
+          "totalRevenue": 550000.0
+        },
+        {
+          "subCode": "66",
+          "totalRevenue": 43114873.0
+        },
+        {
+          "subCode": "66납",
+          "totalRevenue": 1325000.0
+        },
+        {
+          "subCode": "교회",
+          "totalRevenue": 6744024.0
+        },
+        {
+          "subCode": "문학정원",
+          "totalRevenue": 92316710.0
+        },
+        {
+          "subCode": "모란",
+          "totalRevenue": 114258.0
+        },
+        {
+          "subCode": "회원",
+          "totalRevenue": 24549718.0
+        },
+        {
+          "subCode": "회6",
+          "totalRevenue": 18057025.0
+        },
+        {
+          "subCode": "회7",
+          "totalRevenue": 6875000.0
+        },
+        {
+          "subCode": "회3",
+          "totalRevenue": 6759956.0
+        },
+        {
+          "subCode": "회원2",
+          "totalRevenue": 1750000.0
+        },
+        {
+          "subCode": "회2",
+          "totalRevenue": 869245.0
+        },
+        {
+          "subCode": "회1",
+          "totalRevenue": 751644.0
+        },
+        {
+          "subCode": "남",
+          "totalRevenue": 2810082.0
+        },
+        {
+          "subCode": "기6",
+          "totalRevenue": -468480.0
+        }
+      ],
+      "subDistrictCount": 81,
+      "notes": "63구역·69구역·봉안담·가구역·특구역 등 주요10 외 구역"
+    },
+    {
+      "id": "etc_revenue",
+      "name": "기타수입",
+      "nameKo": "기타수입",
+      "enCode": null,
+      "type": "기타수입",
+      "color": "#F2F2F2",
+      "metrics": {
+        "fy25Revenue": 1334737128.0,
+        "fy25RevenueByAccount": {
+          "사용료수입(일반)": -2000000.0,
+          "사용료수입(아너)": 376300000.0,
+          "관리비수입": 340664634.0,
+          "이장비수입": 0.0,
+          "장례비수입": 0.0,
+          "안치료수입": 1000000.0,
+          "기타수입": 135844000.0,
+          "석축비수입": 0.0,
+          "임대료수입": 76000000.0,
+          "사초비수입": 0.0,
+          "수입수수료": 405768491.0,
+          "상품매출": 1160003.0
+        },
+        "plRevenue": 1334737000.0,
+        "plCogs": 169383000.0,
+        "plSga": 450560000.0,
+        "plOperatingProfit": 714794000.0,
+        "plCogsBreakdown": {
+          "묘지조성비": 63450000.0,
+          "용역비": 169383000.0,
+          "기타": 0.0
+        },
+        "plSgaBreakdown": {
+          "인건비": 80969000.0,
+          "지급수수료": 67119000.0,
+          "광고선전비": 44084000.0,
+          "판매수수료": 64162000.0,
+          "기타": 194226000.0
+        }
+      },
+      "subDistricts": [
+        {
+          "subCode": "(기타/코드없음)",
+          "totalRevenue": 1833282403.0
+        }
+      ],
+      "subDistrictCount": 1,
+      "notes": "회계처리성 수입(구역귀속불가)"
+    }
+  ],
+  "outdoorVsColumbarium": {
+    "outdoor": {
+      "revenue": 21642049000.0,
+      "cogs": 6789205000.0,
+      "sga": 7101149000.0,
+      "cogsRate": 0.6418225002632607,
+      "opMarginRate": 0.35817754594308515
+    },
+    "columbarium": {
+      "revenue": 33139948000.0,
+      "cogs": 1444561000.0,
+      "sga": 13042793000.0,
+      "cogsRate": 0.4371568114711586,
+      "opMarginRate": 0.5628431885288414
+    }
+  },
+  "matchToZoneKpi": {
+    "세수연": {
+      "zone_kpi_match": "결손 (byDistrict에 없음)",
+      "sub_codes": [
+        "세수연10",
+        "세수연11",
+        "세수연12",
+        "세수연8",
+        "세수연3",
+        "세수연",
+        "세수연9",
+        "세수연6",
+        "세수연7",
+        "세수연5"
+      ]
+    },
+    "정명지": {
+      "zone_kpi_match": "결손 (byDistrict에 없음)",
+      "sub_codes": [
+        "정명",
+        "정명6",
+        "정명1납"
+      ]
+    },
+    "정남지": {
+      "zone_kpi_match": "정남지 (계단식, 213)",
+      "sub_codes": [
+        "정남",
+        "정남3납",
+        "정남1납",
+        "정남2납",
+        "정남6납",
+        "정남4납",
+        "정남5납",
+        "정남7납"
+      ]
+    },
+    "정담원": {
+      "zone_kpi_match": "결손 (byDistrict에 없음)",
+      "sub_codes": [
+        "정담원7납",
+        "정담원8납",
+        "정담원6납",
+        "정담원1납",
+        "정담원4납",
+        "정담원3납",
+        "정담원1평",
+        "정담원5납",
+        "정담원2납"
+      ]
+    },
+    "명가여연": {
+      "zone_kpi_match": "명가여연5만 일부 (계단식, 545)",
+      "sub_codes": [
+        "명가여연3",
+        "명가여연1",
+        "명가여연5다",
+        "명가여연5나",
+        "명가여연5라",
+        "명가여연4A",
+        "명가여연4B",
+        "명가여연5가",
+        "명가여연2"
+      ]
+    },
+    "명당": {
+      "zone_kpi_match": "결손 (byDistrict에 없음 — 가1~가7이 매핑되었을 가능성?)",
+      "sub_codes": [
+        "명당1평",
+        "명당",
+        "명당1납",
+        "명당2납"
+      ]
+    },
+    "천명지": {
+      "zone_kpi_match": "결손 (byDistrict에 없음)",
+      "sub_codes": [
+        "천명4",
+        "천명2",
+        "천명",
+        "천명3"
+      ]
+    },
+    "아너스톤 노블": {
+      "zone_kpi_match": "1NOBEL_ROOM/2NOBLE_ROOM/3NOBLE_ROOM/1NOBEL_NEST 등"
+    },
+    "아너스톤 로얄": {
+      "zone_kpi_match": "1ROYAL_ROOM/2ROYAL_ROOM/1ROYAL_CENTRAL/2ROYAL_CENTRAL"
+    },
+    "아너스톤 아너": {
+      "zone_kpi_match": "3HONOR_ROOM (96)"
+    }
+  },
+  "managerReview": {
+    "naming": "장법 7개 가설(\"영남\" 포함)은 사실과 다름. 실제 장법 7개 = 세수연·정명지·정남지·정담원·명가여연·명당·천명지 (영남 X, 명당 O)",
+    "classification": "장법 7개 + 봉안당 3등급(노블/로얄/아너) + 기타구역 + 기타수입 = 총 12분류",
+    "zone_kpi_gap": "zone_kpi.byDistrict는 잔여재고 기준 top-N 단지만 노출. 야외묘역 단지(세수연·정명지·정담원·명당·천명지)는 분양율 높아 잔여재고 적음 → top-N에 안 잡힘. 결손이 아니라 raw에는 있을 가능성 큼. 묘역 raw에서 \"장법\" 또는 \"구역\" 컬럼 별도 매핑 필요",
+    "subDistrict_count_summary": {
+      "세수연": 10,
+      "정명지": 3,
+      "정남지": 8,
+      "정담원": 9,
+      "명가여연": 9,
+      "명당": 4,
+      "천명지": 4,
+      "아너스톤 노블": 0,
+      "아너스톤 로얄": 0,
+      "아너스톤 아너": 0,
+      "기타구역": 81,
+      "기타수입": 1
+    }
+  },
+  "unmappedSheets": [
+    "장지VC_손익분석 결과_view_1 (영문코드 컬럼 등)",
+    "구역별매출_ppt R55(낮은우선순위 행기준 PL)"
+  ]
+}

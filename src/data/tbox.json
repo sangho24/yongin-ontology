@@ -11,7 +11,7 @@
       "YPL",
       "라이프"
     ],
-    "description": "용인공원재단·YPL(장지 VC) + 용인공원라이프(상조 VC)를 아우르는 관리손익 PI를 위한 mini T-Box. 결손 노드/엣지는 RFI 자동 생성기 역할."
+    "description": "용인공원재단·YPL(장지 VC) + 용인공원라이프(상조 VC)를 아우르는 관리손익 PI를 위한 mini T-Box. 결손 노드/엣지는 미활성 KPI 영역 — 데이터·시스템 보강 시 활성화 가능."
   },
   "classes": [
     {

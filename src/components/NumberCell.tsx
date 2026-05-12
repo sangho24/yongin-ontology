@@ -151,11 +151,13 @@ export function NumberCell({
               </span>
             </button>
 
-            {/* Hover tooltip — z-50으로 박스 외부에서도 보이게 */}
+            {/* Hover tooltip — z-50으로 박스 외부에서도 보이게
+                * span은 inline이라 max-w 적용 X. inline-block + 고정 width로 강제.
+                * 한글은 단어 경계가 없어 break-all로 1글자씩 줄바꿈 발생 → break-keep 명시. */}
             {interactive && hover && (lineage || slot || missingMeta) && (
               <span
                 role="tooltip"
-                className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 -translate-x-1/2 max-w-[260px] whitespace-normal rounded-md border border-stone-200 bg-white px-3 py-2 text-[11px] leading-relaxed text-stone-700 shadow-lg fade-in"
+                className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 inline-block w-[280px] -translate-x-1/2 whitespace-normal break-keep rounded-md border border-stone-200 bg-white px-3 py-2 text-[11px] leading-relaxed text-stone-700 shadow-lg fade-in"
               >
                 {useEvidenceMode && slot ? (
                   <>

@@ -13,7 +13,7 @@ import type { NumberLineage } from "@/types";
 const SECTIONS = [
   { href: "/mutual", tag: "MUTUAL", title: "상조 VC 분석", desc: "회원 9,930명 lifecycle · 채널 LTV · Root Cause" },
   { href: "/cemetery", tag: "CEMETERY", title: "장지 VC 분석", desc: "묘역 55,711기 · 잠재가치 · Root Cause" },
-  { href: "/data-model", tag: "DATA-MODEL", title: "Data Model (T-Box)", desc: "결손 → RFI 자동 도출" },
+  { href: "/data-model", tag: "DATA-MODEL", title: "Data Model (T-Box)", desc: "그룹 데이터 모델 · 미활성 KPI 식별" },
 ];
 
 export default function Home() {
@@ -196,10 +196,10 @@ export default function Home() {
               href="/data-model"
               className="flex flex-1 items-center justify-between gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[#007a8c]"
             >
-              <span>자동 도출 RFI · T-Box</span>
+              <span>미활성 KPI · T-Box</span>
               <ArrowUpRight className="h-3.5 w-3.5 text-[#0095A9] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
-            <EvidenceButton slotId="ovw_rfi_count" label="자동 도출 RFI" variant="subtle" />
+            <EvidenceButton slotId="ovw_rfi_count" label="미활성 KPI 식별" variant="subtle" />
           </div>
           <Link href="/data-model" className="block">
             <div className="mt-2.5 flex items-baseline gap-1">
@@ -207,7 +207,7 @@ export default function Home() {
               <span className="text-[12px] font-medium text-stone-500">건</span>
             </div>
             <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
-              13 Class · 26 Property · 결손 9건 → RFI 자동
+              13 Class · 26 Property · 데이터 모델 보강 시 활성화될 KPI 후보
             </div>
           </Link>
         </div>
@@ -426,7 +426,7 @@ export default function Home() {
             장지 묘역 master · {zoneKpi.meta.source} · {zoneKpi.meta.totalZones.toLocaleString()}행 × 27열
           </SourceCaption>
           <SourceCaption>
-            T-Box 의미층 · 13 Class · 26 Property · 6 Axiom · 결손 9건 → RFI 5건
+            T-Box 의미층 · 13 Class · 26 Property · 6 Axiom · 데이터 보강 시 활성화될 KPI 후보 5건
           </SourceCaption>
         </div>
       </section>
