@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { TrendingUp, TrendingDown, Package } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 import { NumberCell } from "./NumberCell";
@@ -154,6 +154,16 @@ export function ActivityCostExplorer({
 }: ActivityCostExplorerProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>(defaultZoneIds);
   const [period, setPeriod] = useState<Period>("yearly");
+
+  // 외부에서 defaultZoneIds가 새로 들어오면(예: 지도에서 단지 클릭) selectedIds 동기화 + 섹션 스크롤
+  const defaultKey = defaultZoneIds.join(",");
+  const prevKey = useRef(defaultKey);
+  useEffect(() => {
+    if (defaultKey !== prevKey.current) {
+      setSelectedIds(defaultZoneIds);
+      prevKey.current = defaultKey;
+    }
+  }, [defaultKey, defaultZoneIds]);
 
   const filteredGroups = useMemo(
     () => ZONE_GROUPS.filter((g) => side === "all" || g.side === side),
