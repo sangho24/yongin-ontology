@@ -108,9 +108,30 @@ const ZONE_HYPOTHESES: Hypothesis[] = [
   },
 ];
 
+// 지도 단지 id(=CemeterySiteMap DISTRICTS.id) → ActivityCostExplorer zone id 매핑
+const MAP_TO_ACTIVITY_ZONES: Record<string, string[]> = {
+  sesuyeon: ["sesuyeon-1"],
+  jeongmyeongji: ["jeongmyung-1", "jeongmyung-2"],
+  jeongnamji: ["jeongnam-1"],
+  jeongdamwon: ["jeongdam-A", "jeongdam-B"],
+  myeonggayeon: ["myeonggayeon-1"],
+  myeongdang: ["myeongdang-1"],
+  cheonmyeongji: ["cheonmyeongji-1"],
+  honor_royal: ["honor-royal-1R", "honor-royal-2R", "honor-royal-3R"],
+  honor_noble: ["honor-noble-1N", "honor-noble-2N", "honor-noble-3N"],
+  honor_honor: ["honor-honor-3H"],
+  etc_zone: ["etc-1"],
+};
+
 export default function CemeteryPage() {
   const [hoveredStatus, setHoveredStatus] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<string>("overview");
+  const [selectedZoneIds, setSelectedZoneIds] = useState<string[]>(["honor-royal-1R"]);
+
+  const handleMapDistrictSelect = (districtId: string) => {
+    const ids = MAP_TO_ACTIVITY_ZONES[districtId];
+    if (ids && ids.length > 0) setSelectedZoneIds(ids);
+  };
 
   const statusData = zoneKpi.statusDistribution.map((s) => ({
     name: s.status,
@@ -192,7 +213,7 @@ export default function CemeteryPage() {
 
       {/* ───────────────────────── 장법별 배치도 — 지도 + hotspot overlay ───────────────────────── */}
       <section id="site-map" className="mt-12 scroll-mt-32">
-        <CemeterySiteMap />
+        <CemeterySiteMap onDistrictSelect={handleMapDistrictSelect} />
       </section>
 
       {/* ───────────────────────── 잠재가치 (NumberCell hero · lineage 클릭 가능) ───────────────────────── */}
@@ -347,7 +368,7 @@ export default function CemeteryPage() {
       <section id="activity-cost" className="mt-12 scroll-mt-32">
         <ActivityCostExplorer
           side="cemetery"
-          defaultZoneIds={["honor-royal-1R"]}
+          defaultZoneIds={selectedZoneIds}
           title="구역별 활동원가"
           subtitle="구역을 선택하면 매출·비용 항목과 lineage가 펼쳐집니다. 다중 선택 가능."
           slotId="cemetery_zone_explorer"
