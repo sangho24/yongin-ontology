@@ -53,6 +53,41 @@
       "subZones": [
         { "id": "sesuyeon-1", "code": "1", "label": "세수연 1구역", "side": "cemetery", "category": "세수연" }
       ]
+    },
+    {
+      "category": "정남지",
+      "side": "cemetery",
+      "subZones": [
+        { "id": "jeongnam-1", "code": "1", "label": "정남지 1구역", "side": "cemetery", "category": "정남지" }
+      ]
+    },
+    {
+      "category": "명가여연",
+      "side": "cemetery",
+      "subZones": [
+        { "id": "myeonggayeon-1", "code": "1", "label": "명가여연 1구역", "side": "cemetery", "category": "명가여연" }
+      ]
+    },
+    {
+      "category": "명당",
+      "side": "cemetery",
+      "subZones": [
+        { "id": "myeongdang-1", "code": "1", "label": "명당 1구역", "side": "cemetery", "category": "명당" }
+      ]
+    },
+    {
+      "category": "천명지",
+      "side": "cemetery",
+      "subZones": [
+        { "id": "cheonmyeongji-1", "code": "1", "label": "천명지 1구역", "side": "cemetery", "category": "천명지" }
+      ]
+    },
+    {
+      "category": "기타구역",
+      "side": "cemetery",
+      "subZones": [
+        { "id": "etc-1", "code": "1", "label": "기타구역", "side": "cemetery", "category": "기타구역" }
+      ]
     }
   ],
   "activityCosts": [
