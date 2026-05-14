@@ -11,6 +11,7 @@ import {
   Database,
   FolderOpen,
   Search,
+  Share2,
   type LucideIcon,
 } from "lucide-react";
 import { SearchPalette } from "./SearchPalette";
@@ -28,6 +29,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   "/cemetery": MapPin,
   "/data-model": Database,
   "/data-catalog": FolderOpen,
+  "/knowledge-graph": Share2,
 };
 
 const NAV: { group: string; items: { path: string; label: string; sub?: string; badge?: string }[] }[] = [
@@ -44,6 +46,7 @@ const NAV: { group: string; items: { path: string; label: string; sub?: string; 
     items: [
       { path: "/data-model", label: "Data Model", sub: "T-Box · RFI", badge: "★" },
       { path: "/data-catalog", label: "Data Catalog", sub: "수령 자료 인벤토리" },
+      { path: "/knowledge-graph", label: "Knowledge Graph", sub: "Class · Instance view", badge: "β" },
     ],
   },
 ];
@@ -132,7 +135,8 @@ export function SiteShell({ children }: { children: ReactNode }) {
                     <Link
                       key={item.path}
                       href={item.path}
-                      className={`group flex items-center justify-between rounded-sm px-3 py-2 text-[13px] transition-colors ${
+                      prefetch
+                      className={`group flex items-center justify-between rounded-sm px-3 py-2 text-[13px] [transition:background-color_120ms_ease,color_120ms_ease] ${
                         active
                           ? "bg-[#0095A9] text-white"
                           : "text-stone-600 hover:bg-[#e6f4f6] hover:text-stone-900"
@@ -141,7 +145,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
                       <div className="flex min-w-0 items-start gap-2.5">
                         {Icon && (
                           <Icon
-                            className={`mt-0.5 h-4 w-4 shrink-0 ${
+                            className={`mt-0.5 h-4 w-4 shrink-0 [transition:color_120ms_ease] ${
                               active ? "text-white" : "text-stone-500 group-hover:text-stone-700"
                             }`}
                             strokeWidth={1.75}
