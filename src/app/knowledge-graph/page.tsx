@@ -1,8 +1,22 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { AppLayout } from "@/components/AppLayout";
 import { KnowledgeGraph, lookupSelection } from "@/components/KnowledgeGraph";
+
+// Network view는 d3-force·SVG 의존 → SSR 회피 위해 dynamic import
+const KnowledgeGraphNetwork = dynamic(
+  () =>
+    import("@/components/KnowledgeGraphNetwork").then(
+      (m) => m.KnowledgeGraphNetwork
+    ),
+  { ssr: false, loading: () => (
+    <div className="flex h-full w-full items-center justify-center text-[12px] text-stone-400">
+      Network 그래프 준비 중…
+    </div>
+  ) }
+);
 
 // =============================================================================
 // /knowledge-graph — 재동상무님 미팅 prop
@@ -10,6 +24,8 @@ import { KnowledgeGraph, lookupSelection } from "@/components/KnowledgeGraph";
 // =============================================================================
 
 type Layer = "class" | "instance";
+// Instance layer 내부 sub-mode: cluster(기존 column 정렬) / network(d3-force)
+type InstanceMode = "cluster" | "network";
 type Selection = { kind: "class" | "instance"; id: string } | null;
 
 // 3사 색상 — KnowledgeGraph 내부 ENTITY_COLOR와 동기화
@@ -21,6 +37,7 @@ const ENTITY_TONE: Record<string, string> = {
 
 export default function KnowledgeGraphPage() {
   const [layer, setLayer] = useState<Layer>("class");
+  const [instanceMode, setInstanceMode] = useState<InstanceMode>("cluster");
   const [selected, setSelected] = useState<Selection>(null);
 
   const detail = useMemo(() => (selected ? lookupSelection(selected) : null), [selected]);
@@ -47,35 +64,71 @@ export default function KnowledgeGraphPage() {
     >
       {/* 상단 컨트롤 — Class / Instance toggle + 범례 */}
       <section className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div className="inline-flex items-center rounded-md border border-stone-200/80 bg-white p-0.5">
-          <button
-            type="button"
-            onClick={() => {
-              setLayer("class");
-              setSelected(null);
-            }}
-            className={`rounded px-3 py-1.5 text-[12px] font-medium tracking-tight transition-colors ${
-              layer === "class"
-                ? "bg-[#0095A9] text-white"
-                : "text-stone-600 hover:bg-stone-50"
-            }`}
-          >
-            Class layer
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setLayer("instance");
-              setSelected(null);
-            }}
-            className={`rounded px-3 py-1.5 text-[12px] font-medium tracking-tight transition-colors ${
-              layer === "instance"
-                ? "bg-[#0095A9] text-white"
-                : "text-stone-600 hover:bg-stone-50"
-            }`}
-          >
-            Instance layer
-          </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="inline-flex items-center rounded-md border border-stone-200/80 bg-white p-0.5">
+            <button
+              type="button"
+              onClick={() => {
+                setLayer("class");
+                setSelected(null);
+              }}
+              className={`rounded px-3 py-1.5 text-[12px] font-medium tracking-tight transition-colors ${
+                layer === "class"
+                  ? "bg-[#0095A9] text-white"
+                  : "text-stone-600 hover:bg-stone-50"
+              }`}
+            >
+              Class layer
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setLayer("instance");
+                setSelected(null);
+              }}
+              className={`rounded px-3 py-1.5 text-[12px] font-medium tracking-tight transition-colors ${
+                layer === "instance"
+                  ? "bg-[#0095A9] text-white"
+                  : "text-stone-600 hover:bg-stone-50"
+              }`}
+            >
+              Instance layer
+            </button>
+          </div>
+
+          {/* Instance layer 활성 시 sub-toggle: Cluster / Network */}
+          {layer === "instance" && (
+            <div className="inline-flex items-center rounded-md border border-stone-200/80 bg-white p-0.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setInstanceMode("cluster");
+                  setSelected(null);
+                }}
+                className={`rounded px-2.5 py-1 text-[11px] font-medium tracking-tight transition-colors ${
+                  instanceMode === "cluster"
+                    ? "bg-stone-900 text-white"
+                    : "text-stone-600 hover:bg-stone-50"
+                }`}
+              >
+                Cluster
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setInstanceMode("network");
+                  setSelected(null);
+                }}
+                className={`rounded px-2.5 py-1 text-[11px] font-medium tracking-tight transition-colors ${
+                  instanceMode === "network"
+                    ? "bg-stone-900 text-white"
+                    : "text-stone-600 hover:bg-stone-50"
+                }`}
+              >
+                Network
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Entity 범례 */}
@@ -111,11 +164,25 @@ export default function KnowledgeGraphPage() {
       <section className={`grid gap-6 ${detail ? "lg:grid-cols-[2.4fr_1fr]" : "grid-cols-1"}`}>
         <div className="rounded-md border border-stone-200/80 bg-white p-1.5">
           <div className="h-[680px] rounded bg-[#fafaf7]">
-            <KnowledgeGraph layer={layer} onSelect={setSelected} />
+            {layer === "instance" && instanceMode === "network" ? (
+              <KnowledgeGraphNetwork
+                onSelect={setSelected}
+                selectedId={selected?.id ?? null}
+              />
+            ) : (
+              <KnowledgeGraph layer={layer} onSelect={setSelected} />
+            )}
           </div>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 px-3 py-3 text-[11px] leading-relaxed text-stone-500">
             <span>
-              현재 layer: <strong className="text-stone-700">{layer === "class" ? "Class (T-Box)" : "Instance (대표 인스턴스 cluster)"}</strong>
+              현재 layer:{" "}
+              <strong className="text-stone-700">
+                {layer === "class"
+                  ? "Class (T-Box)"
+                  : instanceMode === "network"
+                  ? "Instance · Network (force-directed)"
+                  : "Instance · Cluster (대표 인스턴스)"}
+              </strong>
             </span>
             <span className="inline-flex items-center gap-1.5">
               <span className="h-px w-5 bg-stone-400" />
@@ -237,7 +304,7 @@ export default function KnowledgeGraphPage() {
           <div>
             <div className="font-medium text-stone-800">Instance layer</div>
             <p className="mt-1">
-              클래스별 대표 인스턴스 5~10개씩 cluster. 회원 9,930명 등 풀 인스턴스 대신 대표 sample + counter 노드 표시.
+              두 가지 시점 — <strong>Cluster</strong>: 클래스별 column 정렬로 구조 일관성 파악. <strong>Network</strong>: force-directed 관계망, 드래그·줌으로 자유 탐색.
             </p>
           </div>
           <div>
