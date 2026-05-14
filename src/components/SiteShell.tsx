@@ -14,6 +14,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { SearchPalette } from "./SearchPalette";
+import { TourOverlay } from "./TourOverlay";
 
 // =============================================================================
 // SiteShell — 영구 mount되는 사이트 셸 (sidebar + 검색)
@@ -114,7 +115,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </Link>
         </div>
 
-        <nav className="px-3 py-5">
+        <nav className="px-3 py-5" data-tour-id="sidebar-nav">
           {NAV.map((group, gIdx) => (
             <div
               key={group.group}
@@ -178,8 +179,14 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
       <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      {/* Main 영역 — 페이지의 AppLayout이 header + main을 채움 */}
-      <div className="ml-56">{children}</div>
+      {/* 시연용 가이드 모드 — 영구 mount, 첫 진입 시 자동 발동 / "?" 버튼으로 재시작 */}
+      <TourOverlay />
+
+      {/* Main 영역 — 페이지의 AppLayout이 header + main을 채움
+          relative + isolate로 stacking context 격리 → page transition 시
+          fixed sidebar(z-20) 위로 페이지 콘텐츠가 겹치는 frame 차단.
+          min-w-0은 grid/flex child의 의도치 않은 width overflow 차단. */}
+      <div className="relative isolate ml-56 min-w-0">{children}</div>
     </div>
   );
 }

@@ -1,0 +1,86 @@
+{
+  "meta": {
+    "version": "v0.1",
+    "purpose": "Knowledge Graph 시각화용 대표 인스턴스 mock. 회원·구역·영업사원 등 실제 인스턴스 수가 많아(회원 9,930) 클래스별 대표 5~10개만 추출.",
+    "createdAt": "2026-05-14",
+    "notes": [
+      "PII·영업비밀 박제 X — 이름은 가명, 연락처·연봉·계좌 표기 안 함",
+      "결손(missingFor) 인스턴스는 dashed gray + 결손 라벨로 시각화 — 데이터 보강 시 활성화 후보",
+      "엣지 라벨은 T-Box property 그대로 사용 (joinedVia, recruitedBy, hasContract, forZone, performedBy, allocatedTo, supports)"
+    ]
+  },
+  "entityColors": {
+    "라이프": "#0095A9",
+    "용인공원": "#78716c",
+    "YPL": "#b45309",
+    "공통": "#a8a29e"
+  },
+  "instances": {
+    "Member": [
+      { "id": "MBR-LIFE-0001", "label": "회원#0001 (라이프 온라인 30대)", "entity": "라이프", "kpi": "납부만기(YF)" },
+      { "id": "MBR-LIFE-0247", "label": "회원#0247 (라이프 오프라인 50대)", "entity": "라이프", "kpi": "정상(YY)" },
+      { "id": "MBR-LIFE-1893", "label": "회원#1893 (라이프 법인)", "entity": "라이프", "kpi": "정상(YY)" },
+      { "id": "MBR-LIFE-3472", "label": "회원#3472 (라이프 오프라인 60대)", "entity": "라이프", "kpi": "3회연체(YB)" },
+      { "id": "MBR-LIFE-MORE", "label": "+9,926 more", "entity": "라이프", "kpi": "전체 9,930명", "isCounter": true },
+      { "id": "MBR-YP-MISSING", "label": "장지 계약자 master 결손", "entity": "용인공원", "kpi": "묘역raw 27열에 계약자 0열", "missing": true },
+      { "id": "MBR-YPL-MISSING", "label": "장지 계약자 master 결손", "entity": "YPL", "kpi": "묘역raw 27열에 계약자 0열", "missing": true }
+    ],
+    "SalesAgent": [
+      { "id": "SA-LIFE-001", "label": "김** (Top1 모집)", "entity": "라이프", "kpi": "FY25 계약 47건" },
+      { "id": "SA-LIFE-007", "label": "박** (Top2 모집)", "entity": "라이프", "kpi": "FY25 계약 32건" },
+      { "id": "SA-LIFE-011", "label": "외부판촉 SA-011", "entity": "라이프", "kpi": "FY25 계약 58건" },
+      { "id": "SA-LIFE-MORE", "label": "+다수 설계사", "entity": "라이프", "kpi": "회원DB 모집·담당 컬럼", "isCounter": true },
+      { "id": "SA-YP-MISSING", "label": "장지 영업사원 master 결손", "entity": "용인공원", "kpi": "매칭 dimension 부재", "missing": true }
+    ],
+    "Contract": [
+      { "id": "CTR-2024-01182", "label": "YP-2024-01182", "entity": "용인공원", "kpi": "봉안 로얄 1R-A12 / 8.2M" },
+      { "id": "CTR-2024-01183", "label": "YP-2024-01183", "entity": "용인공원", "kpi": "매장 정담원-B07 / 5.2M" },
+      { "id": "CTR-2024-01184", "label": "YP-2024-01184", "entity": "YPL", "kpi": "매장 세수연-C03 / 분납" },
+      { "id": "CTR-LIFE-09931", "label": "LIFE-09931 (라이프 회원계약)", "entity": "라이프", "kpi": "회원DB 1:1 대응" },
+      { "id": "CTR-MORE", "label": "+묘역raw 77.5% 계약번호 보유", "entity": "공통", "kpi": "22.5% 미채움 (이장지 4325 포함)", "isCounter": true }
+    ],
+    "Zone": [
+      { "id": "ZN-JEONGDAM-1", "label": "정담원1납", "entity": "용인공원", "kpi": "매장" },
+      { "id": "ZN-SAESUYEON-1", "label": "세수연1구역", "entity": "용인공원", "kpi": "매장" },
+      { "id": "ZN-HONOR-ROYAL", "label": "아너스톤 로얄 (1R/2R/3R)", "entity": "용인공원", "kpi": "봉안 로얄" },
+      { "id": "ZN-HONOR-NOBLE", "label": "아너스톤 노블 (1N/2N/3N)", "entity": "용인공원", "kpi": "봉안 노블" },
+      { "id": "ZN-HONOR-HONOR", "label": "아너스톤 아너 (3H)", "entity": "용인공원", "kpi": "봉안 아너" },
+      { "id": "ZN-MYUNGGA", "label": "명가여연", "entity": "용인공원", "kpi": "매장" },
+      { "id": "ZN-CHEONMYUNG", "label": "천명지", "entity": "용인공원", "kpi": "매장" },
+      { "id": "ZN-MORE", "label": "+ 묘역 27열 master", "entity": "용인공원", "kpi": "총 55,711 묘원", "isCounter": true }
+    ],
+    "Channel": [
+      { "id": "CH-OFFLINE", "label": "오프라인 (내방)", "entity": "라이프", "kpi": "9,467명 / 27.67억" },
+      { "id": "CH-ONLINE", "label": "온라인", "entity": "라이프", "kpi": "434명 / 0.38억" },
+      { "id": "CH-CORP", "label": "법인", "entity": "라이프", "kpi": "29명 / 0.54억" },
+      { "id": "CH-ETC", "label": "기타", "entity": "라이프", "kpi": "잔여" }
+    ],
+    "Department": [
+      { "id": "DEPT-MARKETING", "label": "마케팅·온라인마케팅팀", "entity": "라이프", "kpi": "유효 DB · 평균상품단가" },
+      { "id": "DEPT-EVENT", "label": "행사서비스팀", "entity": "라이프", "kpi": "상향매출 원가율" },
+      { "id": "DEPT-CORP", "label": "법인영업팀", "entity": "라이프", "kpi": "조사 DB" },
+      { "id": "DEPT-CUSTOMER", "label": "고객상담팀", "entity": "라이프", "kpi": "기존고객 해약율" }
+    ],
+    "Activity": [
+      { "id": "ACT-INTAKE", "label": "분양상담", "entity": "공통", "kpi": "Time Report" },
+      { "id": "ACT-EVENT", "label": "행사 진행", "entity": "라이프", "kpi": "행사 건수" },
+      { "id": "ACT-MARKETING", "label": "광고·캠페인", "entity": "라이프", "kpi": "온라인 신규가입 비례" },
+      { "id": "ACT-MAINTAIN", "label": "묘역 유지관리", "entity": "용인공원", "kpi": "관리비 매출 대응" }
+    ],
+    "Cost": [
+      { "id": "COST-LABOR", "label": "인건비", "entity": "공통", "kpi": "Time Report × 시급" },
+      { "id": "COST-FEE", "label": "지급수수료", "entity": "공통", "kpi": "행사·법인장례·홈페이지" },
+      { "id": "COST-AD", "label": "광고선전비", "entity": "라이프", "kpi": "온유프리·온유상조" },
+      { "id": "COST-FACILITY", "label": "감가상각비", "entity": "용인공원", "kpi": "시설별 면적 m²" }
+    ]
+  },
+  "relations": [
+    { "id": "r-member-channel", "source": "Member", "target": "Channel", "label": "joinedVia" },
+    { "id": "r-member-agent", "source": "Member", "target": "SalesAgent", "label": "recruitedBy" },
+    { "id": "r-member-contract", "source": "Member", "target": "Contract", "label": "hasContract" },
+    { "id": "r-contract-zone", "source": "Contract", "target": "Zone", "label": "forZone" },
+    { "id": "r-activity-dept", "source": "Activity", "target": "Department", "label": "performedBy" },
+    { "id": "r-cost-activity", "source": "Cost", "target": "Activity", "label": "allocatedTo" },
+    { "id": "r-dept-member", "source": "Department", "target": "Member", "label": "supports" }
+  ]
+}

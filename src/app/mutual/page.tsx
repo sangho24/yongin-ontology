@@ -23,6 +23,7 @@ import { AppLayout, SubNav } from "@/components/AppLayout";
 import { Card, EvidenceButton, WowCard, InsightBox, SourceCaption } from "@/components/Card";
 import { NumberCell } from "@/components/NumberCell";
 import { ChannelActivityCostExplorer } from "@/components/ChannelActivityCostExplorer";
+import { WhatIfSlider } from "@/components/WhatIfSlider";
 import lifeKpi from "@/data/life_kpi.json";
 import deptKpi from "@/data/dept_kpi.json";
 import { autoUnit, formatPct } from "@/lib/format";
@@ -194,6 +195,55 @@ export default function MutualPage() {
   // -------------------------------------------------------------------------
   const mutualDepts = deptKpi.deptKpiMatrix.filter((d) => MUTUAL_DEPT_IDS.has(d.id));
 
+  // -------------------------------------------------------------------------
+  // What-if 시뮬레이션 — "온라인 채널 비중" 슬라이더
+  // 가중 LTV = Σ(채널i memberCount × 채널i avgRevenue) / 전체 memberCount
+  // 슬라이더가 온라인 비중을 x%로 강제하면, 잔여 (100-x)%는 오프라인·법인의
+  // 기존 비율을 유지하며 비례 배분 → 신 가중 LTV → 총 매출 추정.
+  // -------------------------------------------------------------------------
+  const totalMembers = lifeKpi.meta.totalMembers; // 9,930
+  const channelByName = Object.fromEntries(
+    lifeKpi.channelMatrix.map((c) => [c.channel, c]),
+  ) as Record<string, (typeof lifeKpi.channelMatrix)[number]>;
+  const onlineCh = channelByName["온라인"];
+  const offlineCh = channelByName["오프라인"];
+  const corpCh = channelByName["법인"];
+
+  // 실측 온라인 비중
+  const currentOnlineShare = (onlineCh.memberCount / totalMembers) * 100; // %
+
+  // 실측 가중 LTV — channelMatrix 전체 평균 (≒ totalRevenueSum / totalMembers)
+  const currentWeightedLTV =
+    lifeKpi.channelMatrix.reduce((s, c) => s + c.memberCount * c.avgRevenue, 0) /
+    totalMembers;
+  const currentTotalRevenue = currentWeightedLTV * totalMembers;
+
+  // 슬라이더 값 x(% 단위) → 신 가중 LTV
+  const recomputeWeightedLTV = (xPct: number): number => {
+    const onlineShare = xPct / 100;
+    // 잔여 비중에 대한 오프라인/법인 기존 가중치 (memberCount 기준)
+    const offCorpTotal = offlineCh.memberCount + corpCh.memberCount;
+    const offShareWithin = offlineCh.memberCount / offCorpTotal;
+    const corpShareWithin = corpCh.memberCount / offCorpTotal;
+
+    const newOnline = totalMembers * onlineShare;
+    const newOffline = totalMembers * (1 - onlineShare) * offShareWithin;
+    const newCorp = totalMembers * (1 - onlineShare) * corpShareWithin;
+
+    const newRevenue =
+      newOnline * onlineCh.avgRevenue +
+      newOffline * offlineCh.avgRevenue +
+      newCorp * corpCh.avgRevenue;
+
+    return newRevenue / totalMembers;
+  };
+
+  const recomputeTotalRevenue = (xPct: number): number =>
+    recomputeWeightedLTV(xPct) * totalMembers;
+
+  const recomputeOnlineMembers = (xPct: number): number =>
+    Math.round(totalMembers * (xPct / 100));
+
   return (
     <AppLayout
       pageTitle="상조 VC 분석 — 라이프"
@@ -212,6 +262,7 @@ export default function MutualPage() {
         items={[
           { id: "overview", label: "회원 KPI" },
           { id: "channel", label: "채널·코호트" },
+          { id: "what-if", label: "What-if" },
           { id: "agents", label: "설계사" },
           { id: "activity-cost", label: "채널별 활동원가" },
           { id: "root-cause", label: "Root Cause" },
@@ -230,7 +281,7 @@ export default function MutualPage() {
           <h2 className="section-h">핵심 KPI</h2>
           <span className="text-[11px] tracking-wider text-stone-400">CLICK 숫자 → lineage</span>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" data-tour-id="hero-kpi">
           <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
             <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
               총 회원
@@ -385,6 +436,65 @@ export default function MutualPage() {
             </LineChart>
           </ResponsiveContainer>
         </Card>
+      </section>
+
+      {/* ===================================================================
+           What-if 슬라이더 — 채널 비중 시뮬레이션 (시범)
+           "온라인 채널 비중을 올리면 회원당 매출·총 매출이 어떻게 변하는가"
+           IDEAS.md §4 구현. 운영 BI 톤 — 절제된 강조.
+         =================================================================== */}
+      <section id="what-if" className="mt-12 scroll-mt-32">
+        <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
+          <h2 className="section-h">What-if 시뮬레이션</h2>
+          <span className="text-[11px] tracking-wider text-stone-400">
+            슬라이더 조작 → KPI 실시간 재계산
+          </span>
+        </div>
+        <p className="mb-6 max-w-3xl text-[13px] leading-relaxed text-stone-600">
+          채널 비중이 바뀌면 회원당 매출(LTV)·총 매출이 어떻게 변할지 즉시 확인.
+          온라인 LTV가 오프라인의 약 3% 수준이므로, 온라인 비중을 늘리면 가중 평균
+          LTV는 빠르게 하락. 광고선전비 배분·신규 가입 전략 의사결정 참고용.
+        </p>
+        <WhatIfSlider
+          label="온라인 채널 비중"
+          unit="%"
+          min={0}
+          max={50}
+          step={0.5}
+          defaultValue={Math.round(currentOnlineShare * 10) / 10}
+          formatter={(v) => v.toFixed(1)}
+          drivers={[
+            {
+              label: "가중 평균 회원당 매출 (LTV)",
+              compute: recomputeWeightedLTV,
+              baseline: currentWeightedLTV,
+              unit: "원",
+              formatter: (v) => Math.round(v).toLocaleString("ko-KR"),
+            },
+            {
+              label: "시뮬레이션 후 총 매출 추정",
+              compute: recomputeTotalRevenue,
+              baseline: currentTotalRevenue,
+              unit: "원",
+              formatter: autoUnit,
+            },
+            {
+              label: "온라인 회원수 (조정)",
+              compute: recomputeOnlineMembers,
+              baseline: onlineCh.memberCount,
+              unit: "명",
+            },
+          ]}
+          caption={`총 매출 추정 = 총 회원수 ${totalMembers.toLocaleString()}명 × 가중 LTV(채널 비중 조정). 잔여 비중은 오프라인·법인의 기존 비율(${(
+            (offlineCh.memberCount / (offlineCh.memberCount + corpCh.memberCount)) *
+            100
+          ).toFixed(1)}% : ${(
+            (corpCh.memberCount / (offlineCh.memberCount + corpCh.memberCount)) *
+            100
+          ).toFixed(
+            1,
+          )}%)로 비례 배분. 채널별 avgRevenue는 실측값 고정 — 비중 변화에 따른 평균 단가 변동은 본 모델에 포함되지 않음.`}
+        />
       </section>
 
       {/* ===================================================================

@@ -123,6 +123,7 @@ export default function Home() {
       {/* 1줄 헤드라인 — 4 KPI hero (분리 박스 톤, 모두 white) */}
       <section
         id="headline"
+        data-tour-id="hero-kpi"
         className="grid gap-6 scroll-mt-32 sm:grid-cols-2 lg:grid-cols-4"
       >
         {/* 카드 1: 회원 누적 납입액 (스냅샷) — P0-4 정정 (2026-05-11) */}
@@ -226,7 +227,7 @@ export default function Home() {
           현행 KPI 체계에서 포착되지 않는 수익성 관리 영역을 보완하기 위해 4가지 신규 KPI를 추가 설정.
           각 부서의 손익 그룹·기존 KPI·신규 KPI를 매핑.
         </p>
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2" data-tour-id="dept-grid">
           {deptKpi.deptKpiMatrix.map((d) => (
             <Link
               key={d.id}

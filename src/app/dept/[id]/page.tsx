@@ -2,13 +2,67 @@
 
 import { use, useMemo } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, Sparkles, Layers } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Sparkles,
+  Layers,
+  ExternalLink,
+  Plus,
+  Download,
+} from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { Card, EvidenceButton, InsightBox, SourceCaption } from "@/components/Card";
+import { NumberCell } from "@/components/NumberCell";
 import deptKpi from "@/data/dept_kpi.json";
 
 type DeptKpiRow = (typeof deptKpi.deptKpiMatrix)[number];
 type RationaleRow = (typeof deptKpi.newKpiRationale)[number];
+
+// 부서별 헤드카운트 (mock — PPT 23p 조직 기준, 실측 자료 수령 전 합리적 가정)
+const DEPT_HEADCOUNT: Record<string, number> = {
+  marketing: 12,
+  "event-service": 18,
+  "corp-sales": 6,
+  "customer-care": 14,
+};
+
+// 부서별 손익 그룹이 채널 배부 비용에서 차지하는 비중 (mock — 행사·법인·온라인 직접 채널 매핑)
+// channelCostAlloc.totals 기준으로 부서가 책임지는 채널 비중을 합리적으로 산정
+const DEPT_CHANNEL_KEYS: Record<string, ("법인" | "온라인" | "오프라인" | "기타")[]> = {
+  marketing: ["오프라인", "온라인"],
+  "event-service": ["법인", "온라인", "오프라인"],
+  "corp-sales": ["법인"],
+  "customer-care": ["법인", "온라인", "오프라인", "기타"],
+};
+
+// KPI별 측정 주기·담당자 (mock — 부서별 운영 흐름 기준 합리적 매핑)
+// 마케팅·온라인·법인영업 KPI는 월간 운영, 상담팀 해약율은 월간, 상향매출 원가율은 분기 결산 기준
+const KPI_META: Record<string, { freq: "월간" | "분기" | "연간"; owner: string }> = {
+  // 마케팅
+  "유효 DB": { freq: "월간", owner: "마케팅팀장" },
+  "다이렉트 계약": { freq: "월간", owner: "마케팅팀장" },
+  "평균상품단가": { freq: "월간", owner: "마케팅팀장 · 온라인마케팅팀장" },
+  // 행사서비스
+  "상품매출": { freq: "월간", owner: "행사서비스팀장" },
+  "상향매출": { freq: "월간", owner: "행사서비스팀장" },
+  "법인행사건수": { freq: "월간", owner: "행사관리팀장" },
+  "법인장례전환율": { freq: "분기", owner: "행사관리팀장" },
+  "장지수수료": { freq: "월간", owner: "행사서비스팀장" },
+  "상향매출 원가율": { freq: "분기", owner: "행사서비스팀장 · 재무팀" },
+  "장례용품매출": { freq: "월간", owner: "행사서비스팀장" },
+  // 법인영업
+  "조사 DB": { freq: "월간", owner: "법인영업팀장" },
+  // 고객상담
+  "기존고객 해약율": { freq: "월간", owner: "고객상담팀장" },
+};
+
+// 측정 주기별 배지 색 톤 (월간=teal, 분기=stone, 연간=amber)
+const FREQ_TONE: Record<"월간" | "분기" | "연간", string> = {
+  "월간": "bg-[#e6f4f6] text-[#007a8c]",
+  "분기": "bg-stone-100 text-stone-600",
+  "연간": "bg-amber-50 text-amber-700",
+};
 
 // 부서 id별 VC 사이드 (상조/장지) 매핑 — 사이드 안내·관련 evidence slot lookup용
 const DEPT_VC_SIDE: Record<string, "mutual" | "cemetery" | "shared"> = {
@@ -55,6 +109,31 @@ export default function DeptDetailPage({ params }: PageProps) {
 
   const vcSide = dept ? DEPT_VC_SIDE[dept.id] ?? "shared" : "shared";
   const relatedSlots = dept ? DEPT_RELATED_SLOTS[dept.id] ?? [] : [];
+
+  // 부서 헤드라인 stat — 헤드카운트·KPI수·신규비중·채널비용비중
+  const stats = useMemo(() => {
+    if (!dept) return null;
+    const totalKpi = dept.existingKpi.length + dept.newKpi.length;
+    const newRatio = totalKpi > 0 ? (dept.newKpi.length / totalKpi) * 100 : 0;
+
+    // 채널 배부 비용 비중 = 부서가 책임지는 채널의 totals 합 / 전체 totals 합
+    const headers = deptKpi.channelCostAlloc.headers as readonly string[];
+    const totals = deptKpi.channelCostAlloc.totals as readonly number[];
+    const allSum = totals.reduce((a, b) => a + b, 0);
+    const myChannels = DEPT_CHANNEL_KEYS[dept.id] ?? [];
+    const mySum = myChannels.reduce((acc, ch) => {
+      const idx = headers.indexOf(ch);
+      return idx >= 0 ? acc + totals[idx] : acc;
+    }, 0);
+    const channelCostRatio = allSum > 0 ? (mySum / allSum) * 100 : 0;
+
+    return {
+      headcount: DEPT_HEADCOUNT[dept.id] ?? 0,
+      totalKpi,
+      newRatio,
+      channelCostRatio,
+    };
+  }, [dept]);
   const vcLabel =
     vcSide === "mutual" ? "상조 VC" : vcSide === "cemetery" ? "장지 VC" : "상조·장지 공통";
   const vcHref =
@@ -146,6 +225,92 @@ export default function DeptDetailPage({ params }: PageProps) {
         </div>
       </section>
 
+      {/* 부서 헤드라인 stat — 4-card grid */}
+      {stats && (
+        <section className="mb-10 grid gap-px overflow-hidden rounded-md bg-stone-200/60 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="bg-white p-6">
+            <div className="text-[10px] font-medium uppercase tracking-[0.1em] text-stone-400">
+              헤드카운트
+            </div>
+            <div className="mt-3">
+              <NumberCell
+                value={stats.headcount}
+                unit="명"
+                size="lg"
+                lineage={{
+                  source: "PPT 23p · 조직도",
+                  formula: "부서 인원 (FY25 기준)",
+                }}
+              />
+            </div>
+            <p className="mt-2 text-[11px] leading-relaxed text-stone-500">
+              {dept.dept} 운영 인력
+            </p>
+          </div>
+
+          <div className="bg-white p-6">
+            <div className="text-[10px] font-medium uppercase tracking-[0.1em] text-stone-400">
+              추적 KPI 수
+            </div>
+            <div className="mt-3">
+              <NumberCell
+                value={stats.totalKpi}
+                unit="개"
+                size="lg"
+                lineage={{
+                  source: "PPT 23p · 부서별 KPI 매핑",
+                  formula: `기존 ${dept.existingKpi.length} + 신규 ${dept.newKpi.length}`,
+                }}
+              />
+            </div>
+            <p className="mt-2 text-[11px] leading-relaxed text-stone-500">
+              기존 {dept.existingKpi.length} · 신규 {dept.newKpi.length}
+            </p>
+          </div>
+
+          <div className="bg-white p-6">
+            <div className="text-[10px] font-medium uppercase tracking-[0.1em] text-stone-400">
+              신규 KPI 비중
+            </div>
+            <div className="mt-3">
+              <NumberCell
+                value={Math.round(stats.newRatio * 10) / 10}
+                unit="%"
+                size="lg"
+                emphasis={stats.newRatio > 0}
+                lineage={{
+                  source: "PPT 23p · 신규 KPI rationale",
+                  formula: "신규 KPI / 전체 KPI × 100",
+                }}
+              />
+            </div>
+            <p className="mt-2 text-[11px] leading-relaxed text-stone-500">
+              체계 보강 영역 비율
+            </p>
+          </div>
+
+          <div className="bg-white p-6">
+            <div className="text-[10px] font-medium uppercase tracking-[0.1em] text-stone-400">
+              채널 배부 비용 비중
+            </div>
+            <div className="mt-3">
+              <NumberCell
+                value={Math.round(stats.channelCostRatio * 10) / 10}
+                unit="%"
+                size="lg"
+                lineage={{
+                  source: "PPT 41p · 채널 배부 비용",
+                  formula: "부서 책임 채널 합계 / 전체 채널 합계",
+                }}
+              />
+            </div>
+            <p className="mt-2 text-[11px] leading-relaxed text-stone-500">
+              {(DEPT_CHANNEL_KEYS[dept.id] ?? []).join(" · ") || "—"}
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* KPI 그리드 — 기존 / 신규 2 컬럼 */}
       <section className="mb-10 grid gap-6 md:grid-cols-2">
         {/* 기존 KPI */}
@@ -157,15 +322,32 @@ export default function DeptDetailPage({ params }: PageProps) {
           </div>
           <ul className="mt-4 space-y-2.5">
             {dept.existingKpi.length > 0 ? (
-              dept.existingKpi.map((k, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-2 rounded-sm border border-stone-100 bg-[#fafaf7] px-3 py-2 text-[13px] text-stone-800"
-                >
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-stone-400" />
-                  {k}
-                </li>
-              ))
+              dept.existingKpi.map((k, i) => {
+                const meta = KPI_META[k];
+                return (
+                  <li
+                    key={i}
+                    className="flex items-start justify-between gap-3 rounded-sm border border-stone-100 bg-[#fafaf7] px-3 py-2 text-[13px] text-stone-800"
+                  >
+                    <span className="flex min-w-0 items-start gap-2">
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-stone-400" />
+                      <span className="truncate">{k}</span>
+                    </span>
+                    {meta && (
+                      <span className="flex shrink-0 items-center gap-2">
+                        <span
+                          className={`rounded-sm px-1.5 py-0.5 text-[10px] font-medium tracking-wider ${FREQ_TONE[meta.freq]}`}
+                        >
+                          {meta.freq}
+                        </span>
+                        <span className="hidden text-[10px] tracking-wider text-stone-500 md:inline">
+                          {meta.owner}
+                        </span>
+                      </span>
+                    )}
+                  </li>
+                );
+              })
             ) : (
               <li className="text-[12px] text-stone-400">현재 정의된 기존 KPI 없음</li>
             )}
@@ -182,15 +364,32 @@ export default function DeptDetailPage({ params }: PageProps) {
           </div>
           <ul className="mt-4 space-y-2.5">
             {dept.newKpi.length > 0 ? (
-              dept.newKpi.map((k, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-2 rounded-sm border border-[#0095A9]/15 bg-[#e6f4f6]/40 px-3 py-2 text-[13px] font-medium text-[#007a8c]"
-                >
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#0095A9]" />
-                  {k}
-                </li>
-              ))
+              dept.newKpi.map((k, i) => {
+                const meta = KPI_META[k];
+                return (
+                  <li
+                    key={i}
+                    className="flex items-start justify-between gap-3 rounded-sm border border-[#0095A9]/15 bg-[#e6f4f6]/40 px-3 py-2 text-[13px] font-medium text-[#007a8c]"
+                  >
+                    <span className="flex min-w-0 items-start gap-2">
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#0095A9]" />
+                      <span className="truncate">{k}</span>
+                    </span>
+                    {meta && (
+                      <span className="flex shrink-0 items-center gap-2">
+                        <span
+                          className={`rounded-sm px-1.5 py-0.5 text-[10px] font-medium tracking-wider ${FREQ_TONE[meta.freq]}`}
+                        >
+                          {meta.freq}
+                        </span>
+                        <span className="hidden text-[10px] tracking-wider text-[#007a8c]/70 md:inline">
+                          {meta.owner}
+                        </span>
+                      </span>
+                    )}
+                  </li>
+                );
+              })
             ) : (
               <li className="text-[12px] text-stone-400">신규 KPI 없음 (현행 체계로 충분)</li>
             )}
@@ -314,6 +513,93 @@ export default function DeptDetailPage({ params }: PageProps) {
           </Card>
         </section>
       )}
+
+      {/* 운영 액션 패널 — 재무팀 사용자 ERP 이동·KPI 등록·export */}
+      <section className="mt-12">
+        <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
+          <h2 className="section-h">이 부서의 운영 액션</h2>
+          <span className="text-[11px] tracking-wider text-stone-400">
+            ERP · Data Model 연동
+          </span>
+        </div>
+        <div className="grid gap-px overflow-hidden rounded-md bg-stone-200/60 md:grid-cols-3">
+          {/* ERP 부서 화면 열기 */}
+          <div className="flex flex-col bg-white p-6">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-[#e6f4f6] text-[#0095A9]">
+                <ExternalLink className="h-4 w-4" />
+              </span>
+              <h4 className="text-[14px] font-semibold text-stone-900">ERP 부서 화면 열기</h4>
+            </div>
+            <p className="mt-3 flex-1 text-[12px] leading-relaxed text-stone-600">
+              {dept.dept}의 ERP 분개·전표 화면으로 이동. 현재 화면 컨텍스트(부서·기간) 유지.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                // ERP 부서 화면 이동 — 실제 ERP URL 매핑 전 mock
+                console.log(`[OperationsAction] open ERP for dept=${dept.id}`);
+                alert(`ERP /dept/${dept.id} 이동`);
+              }}
+              className="mt-4 inline-flex items-center justify-center gap-1.5 rounded-md border border-stone-200 bg-white px-3 py-2 text-[12px] font-medium text-stone-700 transition-colors hover:border-[#0095A9]/40 hover:text-[#007a8c]"
+            >
+              ERP로 이동
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+
+          {/* 신규 KPI 트래커 등록 */}
+          <div className="flex flex-col bg-white p-6">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-[#e6f4f6] text-[#0095A9]">
+                <Plus className="h-4 w-4" />
+              </span>
+              <h4 className="text-[14px] font-semibold text-stone-900">신규 KPI 트래커 등록</h4>
+            </div>
+            <p className="mt-3 flex-1 text-[12px] leading-relaxed text-stone-600">
+              부서 단위 신규 KPI({dept.newKpi.length}개)를 Data Model에 자동 트래커로 등록.
+              미수령 자료는 RFI 후보로 추가.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                // KPI 트래커 등록 — Data Model 페이지에 자동 RFI 추가
+                console.log(`[OperationsAction] register KPI tracker for dept=${dept.id}`);
+                alert("KPI 트래커 등록 — Data Model에 자동 RFI 추가");
+              }}
+              className="mt-4 inline-flex items-center justify-center gap-1.5 rounded-md border border-stone-200 bg-white px-3 py-2 text-[12px] font-medium text-stone-700 transition-colors hover:border-[#0095A9]/40 hover:text-[#007a8c]"
+            >
+              트래커 등록
+              <Plus className="h-3.5 w-3.5" />
+            </button>
+          </div>
+
+          {/* 부서 단위 활동원가 export */}
+          <div className="flex flex-col bg-white p-6">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-[#e6f4f6] text-[#0095A9]">
+                <Download className="h-4 w-4" />
+              </span>
+              <h4 className="text-[14px] font-semibold text-stone-900">활동원가 export</h4>
+            </div>
+            <p className="mt-3 flex-1 text-[12px] leading-relaxed text-stone-600">
+              부서 단위 채널 배부 비용·KPI 매핑을 CSV로 다운로드. 월간 결산·임원 보고용.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                // 활동원가 CSV 다운로드 — mock
+                console.log(`[OperationsAction] export activity cost for dept=${dept.id}`);
+                alert("CSV 다운로드");
+              }}
+              className="mt-4 inline-flex items-center justify-center gap-1.5 rounded-md border border-stone-200 bg-white px-3 py-2 text-[12px] font-medium text-stone-700 transition-colors hover:border-[#0095A9]/40 hover:text-[#007a8c]"
+            >
+              CSV 다운로드
+              <Download className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* 다른 부서로 이동 */}
       <section className="mt-10">

@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useState, ReactNode } from "react";
-import { Search } from "lucide-react";
+import { Search, HelpCircle } from "lucide-react";
 import { useSearchPalette } from "./SiteShell";
+import { startTour } from "./TourOverlay";
 
 // =============================================================================
 // AppLayout — 페이지 헤더 + main + narration
@@ -26,6 +27,7 @@ export function AppLayout({
 
   return (
     <>
+      {/* z-10: sidebar(z-20)보다 낮게 유지 → page transition 시에도 sidebar 가림 방지 */}
       <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-6 border-b border-stone-200/80 bg-[#fafaf7]/85 px-12 backdrop-blur-md">
         <div className="flex min-w-0 items-baseline gap-3">
           <h2 className="truncate text-[18px] font-semibold tracking-tight text-stone-900">
@@ -33,8 +35,8 @@ export function AppLayout({
           </h2>
         </div>
 
-        {/* 중앙: 검색 — 클릭 또는 ⌘K로 SearchPalette 열림 */}
-        <div className="hidden flex-1 justify-center md:flex">
+        {/* 중앙: 검색 — 클릭 또는 ⌘K로 SearchPalette 열림 · 옆에 가이드 모드 "?" 버튼 */}
+        <div className="hidden flex-1 items-center justify-center gap-2 md:flex" data-tour-id="search">
           <button
             type="button"
             onClick={() => search.open()}
@@ -49,6 +51,16 @@ export function AppLayout({
             <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-stone-200 bg-stone-50 px-1.5 py-0.5 text-[10px] font-medium tracking-wide text-stone-500">
               ⌘K
             </kbd>
+          </button>
+          {/* 가이드 모드 재시작 */}
+          <button
+            type="button"
+            onClick={() => startTour()}
+            aria-label="가이드 모드 시작"
+            title="가이드 모드"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-stone-200 bg-white/60 text-stone-500 transition-colors hover:border-[#0095A9]/40 hover:bg-white hover:text-[#0095A9]"
+          >
+            <HelpCircle className="h-4 w-4" strokeWidth={1.75} />
           </button>
         </div>
 
