@@ -42,24 +42,28 @@ export default function KnowledgeGraphPage() {
 
   const detail = useMemo(() => (selected ? lookupSelection(selected) : null), [selected]);
 
+  // detail 패널 열렸을 때는 NOTES 자동 숨김 — AppLayout 우측 aside와 detail column이
+  // 좁은 공간에서 겹치는 issue 방지
   return (
     <AppLayout
       pageTitle="Knowledge Graph — 인스턴스 관계망"
       pageSubtitle="T-Box 클래스와 그 인스턴스의 실제 관계를 시각화. 노드 = 인스턴스, 엣지 = T-Box relation."
       narration={
-        <div className="space-y-2.5">
-          <p>
-            라이프(<span className="font-medium" style={{ color: ENTITY_TONE.라이프 }}>mint</span>) ·
-            용인공원(<span className="font-medium" style={{ color: ENTITY_TONE.용인공원 }}>stone</span>) ·
-            YPL(<span className="font-medium" style={{ color: ENTITY_TONE.YPL }}>amber</span>) 3사 인스턴스가 한 그래프에서 어떻게 연결되어 있는지 한눈에.
-          </p>
-          <p>
-            결손 영역(예: 장지 Member master 부재)은 회색 dashed 노드로 표시 — 데이터·시스템 보강 시 활성화 가능한 KPI 후보.
-          </p>
-          <p>
-            <strong>Class layer</strong>는 의미층 spec, <strong>Instance layer</strong>는 그 spec에 실제로 매달려 있는 대표 row.
-          </p>
-        </div>
+        detail ? undefined : (
+          <div className="space-y-2.5">
+            <p>
+              라이프(<span className="font-medium" style={{ color: ENTITY_TONE.라이프 }}>mint</span>) ·
+              용인공원(<span className="font-medium" style={{ color: ENTITY_TONE.용인공원 }}>stone</span>) ·
+              YPL(<span className="font-medium" style={{ color: ENTITY_TONE.YPL }}>amber</span>) 3사 인스턴스가 한 그래프에서 어떻게 연결되어 있는지 한눈에.
+            </p>
+            <p>
+              결손 영역(예: 장지 Member master 부재)은 회색 dashed 노드로 표시 — 데이터·시스템 보강 시 활성화 가능한 KPI 후보.
+            </p>
+            <p>
+              <strong>Class layer</strong>는 의미층 spec, <strong>Instance layer</strong>는 그 spec에 실제로 매달려 있는 대표 row.
+            </p>
+          </div>
+        )
       }
     >
       {/* 상단 컨트롤 — Class / Instance toggle + 범례 */}
