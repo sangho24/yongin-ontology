@@ -13,15 +13,14 @@ const KnowledgeGraphNetwork = dynamic(
       (m) => m.KnowledgeGraphNetwork
     ),
   { ssr: false, loading: () => (
-    <div className="flex h-full w-full items-center justify-center text-[12px] text-stone-400">
-      Network 그래프 준비 중…
+    <div className="flex h-full w-full items-center justify-center">
+      <span className="h-4 w-4 animate-spin rounded-full border-2 border-stone-200 border-t-[#0095A9]" />
     </div>
   ) }
 );
 
 // =============================================================================
-// /knowledge-graph — 재동상무님 미팅 prop
-// T-Box 클래스와 그 인스턴스의 실제 관계를 시각화. 사이드바 NAV 미등록(미팅용 직접 URL 진입).
+// /knowledge-graph — T-Box 클래스와 인스턴스 관계 시각화
 // =============================================================================
 
 type Layer = "class" | "instance";

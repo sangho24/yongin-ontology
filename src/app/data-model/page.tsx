@@ -242,6 +242,7 @@ const PRIORITY_BADGE: Record<string, string> = {
 
 type RfiItem = (typeof tbox.rfiItems)[number];
 type ClassDef = (typeof tbox.classes)[number];
+type PropertyDef = (typeof tbox.properties)[number];
 
 export default function DataModelPage() {
   const [selected, setSelected] = useState<{ kind: "node" | "edge"; id: string } | null>(null);
@@ -323,7 +324,9 @@ export default function DataModelPage() {
     const edge = tbox.reactFlow.edges.find((e) => e.id === selected.id);
     if (!edge) return null;
     const propId = edge.id.replace(/^e-/, "");
-    const prop = tbox.properties.find((p) => p.id === propId || (p.id.includes(edge.source) && p.id.includes(edge.target)));
+    const prop = (tbox.properties as PropertyDef[] | undefined)?.find(
+      (p) => p.id === propId || (edge.source && edge.target && p.id.includes(edge.source) && p.id.includes(edge.target))
+    );
     const linkedRfis = (tbox.rfiItems as RfiItem[]).filter((r) =>
       prop ? r.linkedProperties.includes(prop.id) : false
     );

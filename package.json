@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@comunica/query-sparql": "^5.2.2",
     "@types/d3-force": "^3.0.10",
     "@xyflow/react": "^12.10.2",
     "d3-force": "^3.0.0",

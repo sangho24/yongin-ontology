@@ -27,17 +27,12 @@ export default function FinanceActions({
   const handleOpenERP = () => {
     if (onOpenERP) {
       onOpenERP(context);
-    } else {
-      // 핸들러 미연결 시 placeholder
-      console.log("[FinanceActions] ERP에서 열기", context);
     }
   };
 
   const handleRegister = () => {
     if (onRegisterActivity) {
       onRegisterActivity(context);
-    } else {
-      console.log("[FinanceActions] 활동 자동 등록", context);
     }
   };
 

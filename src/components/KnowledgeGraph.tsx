@@ -456,11 +456,12 @@ export function lookupSelection(sel: { kind: "class" | "instance"; id: string })
     }>).map((i) => ({ ...i, parentClass: k }))
   ).find((i) => i.id === sel.id);
   if (!inst) return null;
+  const parentCls = tbox.classes.find((c) => c.id === inst.parentClass);
   return {
     title: inst.label,
     entity: inst.entity,
     kpi: inst.kpi,
     missing: inst.missing,
-    parentClass: inst.parentClass,
+    parentClass: parentCls?.label ?? inst.parentClass,
   };
 }

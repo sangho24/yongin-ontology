@@ -512,18 +512,22 @@ export default function MutualPage() {
                 </tr>
               </thead>
               <tbody>
-                {lifeKpi.salesAgentDistribution.top10.map((a, i) => (
-                  <tr key={a.agentId} className="border-t transition-colors hover:bg-stone-50">
-                    <td className="p-2 font-medium">
-                      <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-sm bg-[#0095A9] text-[10px] font-medium text-white tnum">
-                        {i + 1}
-                      </span>
-                      {a.agentName}
-                    </td>
-                    <td className="p-2 text-right tabular-nums">{a.memberCount}</td>
-                    <td className="p-2 text-right font-semibold tabular-nums">{autoUnit(a.revenueSum)}</td>
-                  </tr>
-                ))}
+                {lifeKpi.salesAgentDistribution.top10.length === 0 ? (
+                  <tr><td colSpan={3} className="p-4 text-center text-xs text-slate-400">데이터 없음</td></tr>
+                ) : (
+                  lifeKpi.salesAgentDistribution.top10.map((a, i) => (
+                    <tr key={a.agentId} className="border-t transition-colors hover:bg-stone-50">
+                      <td className="p-2 font-medium">
+                        <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-sm bg-[#0095A9] text-[10px] font-medium text-white tnum">
+                          {i + 1}
+                        </span>
+                        {a.agentName}
+                      </td>
+                      <td className="p-2 text-right tabular-nums">{a.memberCount}</td>
+                      <td className="p-2 text-right font-semibold tabular-nums">{autoUnit(a.revenueSum)}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

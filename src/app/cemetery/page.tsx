@@ -326,13 +326,17 @@ export default function CemeteryPage() {
                 </tr>
               </thead>
               <tbody>
-                {zoneKpi.salesVelocity.stagnantDistricts?.slice(0, 15).map((d, i) => (
-                  <tr key={i} className="border-t transition-colors hover:bg-stone-50">
-                    <td className="p-2 font-medium">{d.district}</td>
-                    <td className="p-2 text-right tabular-nums text-rose-600">{d.lastContractYear ?? "—"}</td>
-                    <td className="p-2 text-right tabular-nums">{d.availableCount}</td>
-                  </tr>
-                ))}
+                {(zoneKpi.salesVelocity.stagnantDistricts?.length ?? 0) === 0 ? (
+                  <tr><td colSpan={3} className="p-4 text-center text-xs text-slate-400">해당 단지 없음</td></tr>
+                ) : (
+                  zoneKpi.salesVelocity.stagnantDistricts?.slice(0, 15).map((d, i) => (
+                    <tr key={i} className="border-t transition-colors hover:bg-stone-50">
+                      <td className="p-2 font-medium">{d.district}</td>
+                      <td className="p-2 text-right tabular-nums text-rose-600">{d.lastContractYear ?? "—"}</td>
+                      <td className="p-2 text-right tabular-nums">{d.availableCount}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -350,14 +354,18 @@ export default function CemeteryPage() {
                 </tr>
               </thead>
               <tbody>
-                {zoneKpi.transferZones.byDistrict.slice(0, 15).map((d, i) => (
-                  <tr key={i} className="border-t transition-colors hover:bg-stone-50">
-                    <td className="p-2 font-medium">{d.district}</td>
-                    <td className="p-2 text-right tabular-nums">{d.transferCount}</td>
-                    <td className="p-2 text-right tabular-nums text-slate-500">{d.totalCount}</td>
-                    <td className="p-2 text-right tabular-nums font-semibold">{formatPct(d.transferRate)}</td>
-                  </tr>
-                ))}
+                {zoneKpi.transferZones.byDistrict.length === 0 ? (
+                  <tr><td colSpan={4} className="p-4 text-center text-xs text-slate-400">해당 단지 없음</td></tr>
+                ) : (
+                  zoneKpi.transferZones.byDistrict.slice(0, 15).map((d, i) => (
+                    <tr key={i} className="border-t transition-colors hover:bg-stone-50">
+                      <td className="p-2 font-medium">{d.district}</td>
+                      <td className="p-2 text-right tabular-nums">{d.transferCount}</td>
+                      <td className="p-2 text-right tabular-nums text-slate-500">{d.totalCount}</td>
+                      <td className="p-2 text-right tabular-nums font-semibold">{formatPct(d.transferRate)}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

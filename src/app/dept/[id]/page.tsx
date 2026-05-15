@@ -537,9 +537,7 @@ export default function DeptDetailPage({ params }: PageProps) {
             <button
               type="button"
               onClick={() => {
-                // ERP 부서 화면 이동 — 실제 ERP URL 매핑 전 mock
-                console.log(`[OperationsAction] open ERP for dept=${dept.id}`);
-                alert(`ERP /dept/${dept.id} 이동`);
+                // ERP URL 연동 전 — 버튼 노출만
               }}
               className="mt-4 inline-flex items-center justify-center gap-1.5 rounded-md border border-stone-200 bg-white px-3 py-2 text-[12px] font-medium text-stone-700 transition-colors hover:border-[#0095A9]/40 hover:text-[#007a8c]"
             >
@@ -563,9 +561,7 @@ export default function DeptDetailPage({ params }: PageProps) {
             <button
               type="button"
               onClick={() => {
-                // KPI 트래커 등록 — Data Model 페이지에 자동 RFI 추가
-                console.log(`[OperationsAction] register KPI tracker for dept=${dept.id}`);
-                alert("KPI 트래커 등록 — Data Model에 자동 RFI 추가");
+                // Data Model 자동 등록 연동 전 — 버튼 노출만
               }}
               className="mt-4 inline-flex items-center justify-center gap-1.5 rounded-md border border-stone-200 bg-white px-3 py-2 text-[12px] font-medium text-stone-700 transition-colors hover:border-[#0095A9]/40 hover:text-[#007a8c]"
             >
@@ -588,9 +584,7 @@ export default function DeptDetailPage({ params }: PageProps) {
             <button
               type="button"
               onClick={() => {
-                // 활동원가 CSV 다운로드 — mock
-                console.log(`[OperationsAction] export activity cost for dept=${dept.id}`);
-                alert("CSV 다운로드");
+                // CSV export 연동 전 — 버튼 노출만
               }}
               className="mt-4 inline-flex items-center justify-center gap-1.5 rounded-md border border-stone-200 bg-white px-3 py-2 text-[12px] font-medium text-stone-700 transition-colors hover:border-[#0095A9]/40 hover:text-[#007a8c]"
             >
