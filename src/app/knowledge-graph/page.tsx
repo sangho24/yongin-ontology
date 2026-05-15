@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { AppLayout } from "@/components/AppLayout";
 import { KnowledgeGraph, lookupSelection } from "@/components/KnowledgeGraph";
+import { KGQueryBar } from "@/components/KGQueryBar";
 
 // Network view는 d3-force·SVG 의존 → SSR 회피 위해 dynamic import
 const KnowledgeGraphNetwork = dynamic(
@@ -164,8 +165,11 @@ export default function KnowledgeGraphPage() {
         </div>
       </section>
 
+      {/* 그래프 탐색 쿼리 바 */}
+      <KGQueryBar />
+
       {/* 그래프 + 우측 detail */}
-      <section className={`grid gap-6 ${detail ? "lg:grid-cols-[2.4fr_1fr]" : "grid-cols-1"}`}>
+      <section className={`grid gap-6 ${detail ? "lg:grid-cols-[1.8fr_1fr]" : "grid-cols-1"}`}>
         <div className="rounded-md border border-stone-200/80 bg-white p-1.5">
           <div className="h-[680px] rounded bg-[#fafaf7]">
             {layer === "instance" && instanceMode === "network" ? (
@@ -293,32 +297,6 @@ export default function KnowledgeGraphPage() {
         )}
       </section>
 
-      {/* 하단 narration — 그래프 읽는 법 */}
-      <section className="mt-10 border-t border-stone-200 pt-6">
-        <h3 className="mb-3 text-[11px] font-semibold tracking-[0.14em] text-stone-400">
-          READING THE GRAPH
-        </h3>
-        <div className="grid gap-3 text-[12px] leading-relaxed text-stone-600 md:grid-cols-3">
-          <div>
-            <div className="font-medium text-stone-800">Class layer</div>
-            <p className="mt-1">
-              13개 클래스 · 16개 property 관계로 구성된 의미층 spec. 노드 좌측 dot 색이 해당 클래스를 보유한 entity.
-            </p>
-          </div>
-          <div>
-            <div className="font-medium text-stone-800">Instance layer</div>
-            <p className="mt-1">
-              두 가지 시점 — <strong>Cluster</strong>: 클래스별 column 정렬로 구조 일관성 파악. <strong>Network</strong>: force-directed 관계망, 드래그·줌으로 자유 탐색.
-            </p>
-          </div>
-          <div>
-            <div className="font-medium text-stone-800">결손 시각화</div>
-            <p className="mt-1">
-              회색 dashed 노드 = 데이터 master 부재. 장지 VC의 Member·SalesAgent dimension이 대표 결손 — 보강 시 영업 생산성·CAC KPI 활성화.
-            </p>
-          </div>
-        </div>
-      </section>
     </AppLayout>
   );
 }
