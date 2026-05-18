@@ -5,8 +5,8 @@ import { LineChart, Line, ResponsiveContainer } from "recharts";
 import type { NumberLineage, NumberDriver } from "@/types";
 import { autoUnit } from "@/lib/format";
 import { LineagePanel } from "./LineagePanel";
-import { EvidenceDrawer } from "./EvidenceDrawer";
 import { getSlot, getMissingSlot, isMissing } from "@/lib/evidence";
+import { useEvidenceStore } from "@/store/evidence";
 
 // =============================================================================
 // NumberCell — 박스로 감싼 인터랙티브 숫자 셀
@@ -73,7 +73,9 @@ export function NumberCell({
   className = "",
 }: NumberCellProps) {
   const [hover, setHover] = useState(false);
+  // lineage 모드(레거시)만 local state 유지. evidence(slotId) 모드는 store 사용.
   const [open, setOpen] = useState(false);
+  const openEvidence = useEvidenceStore((s) => s.openSlot);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   // slotId가 있으면 evidence_index 우선, 없으면 기존 lineage 모드
@@ -138,7 +140,14 @@ export function NumberCell({
               onMouseLeave={() => setHover(false)}
               onFocus={() => setHover(true)}
               onBlur={() => setHover(false)}
-              onClick={() => interactive && setOpen(true)}
+              onClick={() => {
+                if (!interactive) return;
+                if (useEvidenceMode && slotId) {
+                  openEvidence(slotId, { value, unit, label });
+                } else {
+                  setOpen(true);
+                }
+              }}
               disabled={!interactive}
               className={`inline-flex items-baseline gap-1 rounded-md border bg-white transition-colors duration-150 ${styles.box} ${borderCls} ${hoverCls} ${
                 !interactive ? "cursor-default" : ""
@@ -217,24 +226,8 @@ export function NumberCell({
         )}
       </span>
 
-      {/* slotId 모드 우선, 없으면 기존 lineage 모드 */}
-      {useEvidenceMode && slotId && (
-        <EvidenceDrawer
-          open={open}
-          onClose={() => setOpen(false)}
-          slotId={slotId}
-          title={slot?.title ?? missingMeta?.title ?? label ?? slotId}
-          page={slot?.page}
-          kind={slot?.kind}
-          evidence={slot?.evidence}
-          caveats={slot?.caveats}
-          narrative={slot?.narrative}
-          verified={slot?.verified}
-          missing={missingMeta}
-          value={value}
-          unit={unit}
-        />
-      )}
+      {/* evidence(slotId) 모드는 SiteShell의 EvidenceDrawerHost에서 1개만 mount.
+          여기서는 lineage(레거시) 모드만 자체 패널 사용. */}
       {!useEvidenceMode && lineage && (
         <LineagePanel
           open={open}

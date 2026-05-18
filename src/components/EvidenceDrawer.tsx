@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { X, Check, AlertCircle, FileSpreadsheet, Presentation, MessageSquare, FileText, Inbox } from "lucide-react";
+import { X, Check, AlertCircle, FileSpreadsheet, Presentation, MessageSquare, FileText, Inbox, ExternalLink, Sparkles } from "lucide-react";
 import type { EvidenceEntry, MissingSlotMeta } from "@/types";
 import { resolveCaveats } from "@/lib/evidence";
 import { autoUnit } from "@/lib/format";
@@ -96,6 +96,27 @@ export function EvidenceDrawer({
   };
 
   const headerValue = value !== undefined ? autoUnit(value).replace(/원$/, "") : null;
+
+  // 운영 액션 표시 조건: evidence가 1건 이상 있고 missing slot이 아닐 때만 노출
+  const primaryEvidence = evidence?.[0];
+  const showActions = !missing && !!primaryEvidence;
+
+  // ERP 점프 placeholder — 실제 ERP URL은 추후 연동. 데모는 source_file 노출.
+  const handleOpenERP = () => {
+    const src = primaryEvidence?.source_file ?? "(unknown)";
+    console.log("[EvidenceDrawer] ERP에서 열기", { slotId, source_file: src });
+    if (typeof window !== "undefined") {
+      window.alert(`ERP 점프 (데모)\n\nslot: ${slotId}\nsource: ${src}`);
+    }
+  };
+
+  // 활동 자동 등록 placeholder — Data Model·RFI 자동 추가는 추후 연동.
+  const handleRegisterActivity = () => {
+    console.log("[EvidenceDrawer] 활동 자동 등록", { slotId });
+    if (typeof window !== "undefined") {
+      window.alert(`활동 자동 등록 (데모)\n\nslot: ${slotId}\n→ Data Model · RFI 큐에 추가`);
+    }
+  };
 
   return (
     <>
@@ -274,6 +295,30 @@ export function EvidenceDrawer({
             )}
           </div>
         </div>
+
+        {/* Footer — 재무팀 운영 액션 (ERP 점프 · 활동 자동 등록) */}
+        {showActions && (
+          <div className="border-t border-stone-200 bg-stone-50/80 px-6 py-3.5 backdrop-blur">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleOpenERP}
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-md border border-[#0095A9]/40 bg-[#e6f4f6] px-3 py-2 text-[12px] font-semibold text-[#007a8c] transition-colors duration-150 hover:border-[#0095A9]/60 hover:bg-[#d4ecef]"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+                ERP에서 열기
+              </button>
+              <button
+                type="button"
+                onClick={handleRegisterActivity}
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-md border border-stone-300 bg-white px-3 py-2 text-[12px] font-medium text-stone-700 transition-colors duration-150 hover:border-stone-400 hover:bg-stone-100"
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                활동 자동 등록
+              </button>
+            </div>
+          </div>
+        )}
       </aside>
     </>
   );

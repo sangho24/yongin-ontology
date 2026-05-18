@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { SearchPalette } from "./SearchPalette";
 import { TourOverlay } from "./TourOverlay";
+import { EvidenceDrawerHost } from "./EvidenceDrawerHost";
 
 // =============================================================================
 // SiteShell — 영구 mount되는 사이트 셸 (sidebar + 검색)
@@ -185,6 +186,9 @@ export function SiteShell({ children }: { children: ReactNode }) {
 
       {/* 시연용 가이드 모드 — 영구 mount, 첫 진입 시 자동 발동 / "?" 버튼으로 재시작 */}
       <TourOverlay />
+
+      {/* Evidence Drawer — 영구 mount, 카드·NumberCell이 store로 push */}
+      <EvidenceDrawerHost />
 
       {/* Main 영역 — 페이지의 AppLayout이 header + main을 채움
           relative + isolate로 stacking context 격리 → page transition 시

@@ -1,13 +1,15 @@
 "use client";
 
-import { ReactNode, useState, useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 import { ArrowUp, ArrowDown, Minus, Info } from "lucide-react";
-import { EvidenceDrawer } from "./EvidenceDrawer";
 import { getSlot, getMissingSlot, isMissing } from "@/lib/evidence";
+import { useEvidenceStore } from "@/store/evidence";
 
 // =============================================================================
-// EvidenceButton — slotId 있으면 우상단 'i' 버튼 + EvidenceDrawer 호출
-// Card·StatCard·WowCard·InsightBox 공용
+// EvidenceButton — slotId 있으면 우상단 'i' 버튼.
+// Drawer는 SiteShell의 EvidenceDrawerHost 1개만 mount되어 있어, 여기서는
+// store action만 호출. 페이지 navigation 중 mount/unmount 깜빡임 제거.
+// Card·StatCard·WowCard·InsightBox 공용.
 // =============================================================================
 function EvidenceButton({
   slotId,
@@ -18,7 +20,7 @@ function EvidenceButton({
   label?: string;
   variant?: "default" | "onMint" | "subtle";
 }) {
-  const [open, setOpen] = useState(false);
+  const openSlot = useEvidenceStore((s) => s.openSlot);
   const slot = useMemo(() => getSlot(slotId), [slotId]);
   const missingMeta = useMemo(
     () => (isMissing(slotId) ? getMissingSlot(slotId) : null),
@@ -34,30 +36,15 @@ function EvidenceButton({
       : "text-stone-400 hover:bg-stone-100 hover:text-stone-900";
 
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label={`${label ?? slot?.title ?? "근거"} 근거 보기`}
-        title="근거·출처 보기"
-        className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-colors duration-150 ${btnCls}`}
-      >
-        <Info className="h-3.5 w-3.5" />
-      </button>
-      <EvidenceDrawer
-        open={open}
-        onClose={() => setOpen(false)}
-        slotId={slotId}
-        title={slot?.title ?? missingMeta?.title ?? label ?? slotId}
-        page={slot?.page}
-        kind={slot?.kind}
-        evidence={slot?.evidence}
-        caveats={slot?.caveats}
-        narrative={slot?.narrative}
-        verified={slot?.verified}
-        missing={missingMeta}
-      />
-    </>
+    <button
+      type="button"
+      onClick={() => openSlot(slotId, { label })}
+      aria-label={`${label ?? slot?.title ?? "근거"} 근거 보기`}
+      title="근거·출처 보기"
+      className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-colors duration-150 ${btnCls}`}
+    >
+      <Info className="h-3.5 w-3.5" />
+    </button>
   );
 }
 

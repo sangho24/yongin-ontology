@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useEffect, useRef } from "react";
 import {
   Background,
   BackgroundVariant,
@@ -14,6 +14,7 @@ import {
   Position,
   ReactFlow,
   ReactFlowProvider,
+  type ReactFlowInstance,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import tbox from "@/data/tbox.json";
@@ -378,6 +379,21 @@ export function KnowledgeGraph({ layer, onSelect }: KnowledgeGraphProps) {
     [onSelect]
   );
 
+  // ReactFlow 인스턴스 ref — onInit에서 1회 보관 후 layer 변경 시에만 fitView 재호출
+  // (fitView prop을 상시 활성화하면 노드 click·selection마다 viewport가 reset되는 문제 회피)
+  const rfRef = useRef<ReactFlowInstance | null>(null);
+
+  // layer 변경 시(class ↔ instance) viewport 재맞춤 — 노드 click에는 트리거되지 않음
+  useEffect(() => {
+    const inst = rfRef.current;
+    if (!inst) return;
+    // 노드 좌표 반영 후 fit 되도록 다음 tick에 호출
+    const id = requestAnimationFrame(() => {
+      inst.fitView({ padding: 0.18 });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [layer]);
+
   return (
     <ReactFlowProvider>
       <ReactFlow
@@ -386,8 +402,11 @@ export function KnowledgeGraph({ layer, onSelect }: KnowledgeGraphProps) {
         nodeTypes={nodeTypes}
         onNodeClick={onNodeClick}
         onPaneClick={() => onSelect(null)}
-        fitView
-        fitViewOptions={{ padding: 0.18 }}
+        onInit={(instance) => {
+          // 초기 mount 1회 fitView, 이후 인스턴스는 ref에 보관해 layer 변경 시 재사용
+          rfRef.current = instance;
+          instance.fitView({ padding: 0.18 });
+        }}
         proOptions={{ hideAttribution: true }}
       >
         <Background variant={BackgroundVariant.Dots} gap={16} size={1} color="#e7e5e4" />

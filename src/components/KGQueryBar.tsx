@@ -27,6 +27,21 @@ const RESULT_DESC: Record<string, (rows: SPARQLRow[]) => string> = {
   cq5:         (r) => `결손 인스턴스 ${r.length}개`,
 };
 
+// 칩에 노출할 짧은 라벨 — 시연·보고용 큐레이션
+// (sparqlEngine의 긴 라벨은 결과 description으로 사용, 칩은 짧고 self-evident하게)
+const CHIP_LABEL: Record<string, string> = {
+  cq1:           "정담원 구역 계약자",
+  cq2:           "온라인 회원 담당 부서",
+  cq4:           "세수연 계약 채널",
+  "cq5-crossvc": "VC 간 동일 회원",
+  "cq6-channel": "채널별 계약 수",
+  cq3:           "인건비 귀속 활동",
+  cq5:           "결손 KPI 후보",
+};
+
+// 칩 노출 순서 — 임팩트 큰 cross-VC·구역 질의를 앞에
+const CHIP_ORDER = ["cq1", "cq4", "cq2", "cq6-channel", "cq5-crossvc", "cq3", "cq5"];
+
 interface QueryResult {
   description: string;
   rows: SPARQLRow[];
@@ -164,25 +179,29 @@ export function KGQueryBar() {
         )}
       </div>
 
-      {/* CQ 템플릿 chip */}
+      {/* 예시 질의 chip — 큐레이션된 CQ 템플릿을 짧은 라벨로 노출 */}
       <div className="flex flex-wrap items-center gap-1.5 px-3 py-2">
         <span className="mr-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-stone-400">
-          CQ
+          예시 질의
         </span>
-        {templates.map((tpl) => (
-          <button
-            key={tpl.id}
-            onClick={() => runCQ(tpl)}
-            disabled={loading}
-            className={`rounded-full border px-2.5 py-0.5 text-[11px] font-medium transition-colors disabled:opacity-50 ${
-              activeId === tpl.id
-                ? "border-[#0095A9] bg-[#e6f4f6] text-[#0095A9]"
-                : "border-stone-200 bg-stone-50 text-stone-600 hover:border-stone-300 hover:bg-stone-100"
-            }`}
-          >
-            {tpl.label}
-          </button>
-        ))}
+        {CHIP_ORDER
+          .map((id) => templates.find((t) => t.id === id))
+          .filter((t): t is CQTemplate => Boolean(t))
+          .map((tpl) => (
+            <button
+              key={tpl.id}
+              onClick={() => runCQ(tpl)}
+              disabled={loading}
+              title={tpl.label}
+              className={`rounded-full border px-2.5 py-0.5 text-[11px] font-medium transition-colors disabled:opacity-50 ${
+                activeId === tpl.id
+                  ? "border-[#0095A9] bg-[#e6f4f6] text-[#0095A9]"
+                  : "border-stone-200 bg-white text-stone-600 hover:border-[#0095A9]/40 hover:bg-[#e6f4f6]/40 hover:text-[#0095A9]"
+              }`}
+            >
+              {CHIP_LABEL[tpl.id] ?? tpl.label}
+            </button>
+          ))}
       </div>
 
       {/* 결과 */}

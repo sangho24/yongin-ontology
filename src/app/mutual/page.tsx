@@ -20,7 +20,7 @@ import {
 } from "recharts";
 import { ArrowUpRight, ChevronDown, ChevronUp, GitBranch } from "lucide-react";
 import { AppLayout, SubNav } from "@/components/AppLayout";
-import { Card, EvidenceButton, WowCard, InsightBox, SourceCaption } from "@/components/Card";
+import { Card, EvidenceButton, InsightBox, SourceCaption } from "@/components/Card";
 import { NumberCell } from "@/components/NumberCell";
 import { ChannelActivityCostExplorer } from "@/components/ChannelActivityCostExplorer";
 import { WhatIfSlider } from "@/components/WhatIfSlider";
@@ -637,20 +637,9 @@ export default function MutualPage() {
       </section>
 
       {/* ===================================================================
-           WowCard · InsightBox
+           InsightBox — 만기해약 패턴 (회계 재해석 WowCard는 Root Cause 페이지로 이동)
          =================================================================== */}
       <section className="mt-12">
-        <WowCard
-          slotId="mutual_wow_mature_benefit"
-          variant="mint"
-          label="회계 ≠ 경제"
-          value={autoUnit(lifeKpi.wowMetrics.potentialFromMature)}
-          sub={`만기해약 ${lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명의 회비정산차익은 영업외수익이지만 경제적으로는 매출의 일부. 영업이익+회비정산차익 view 시 손익 재해석.`}
-          footnote="회원DB 회원상태=YF의 매출합계 sum"
-        />
-      </section>
-
-      <section className="mt-6">
         <InsightBox type="warn" title="만기해약 비중과 영업손실의 관계" slotId="mutual_insight_mature">
           매출은 23~25년 21→36→46억으로 성장 중이나, 최근 가입 회원의 만기율(2022년 72%, 2023년 96%)이 높아 회비정산차익(영업외)으로 흘러감. 영업이익 view에선 손실 trend가 보이나, 조정후이익(영업이익+회비정산차익) view에서 재평가 필요.
         </InsightBox>

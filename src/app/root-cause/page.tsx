@@ -27,7 +27,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
-import { Card, EvidenceButton, InsightBox, SourceCaption } from "@/components/Card";
+import { Card, EvidenceButton, InsightBox, SourceCaption, WowCard } from "@/components/Card";
 import { NumberCell } from "@/components/NumberCell";
 import lifeKpi from "@/data/life_kpi.json";
 import zoneKpi from "@/data/zone_kpi.json";
@@ -494,6 +494,25 @@ export default function RootCausePage() {
           lineage={channelGapLineage}
           slotId="rc_stat_channel_ltv_gap"
           emphasis
+        />
+      </section>
+
+      {/* 회계 ≠ 경제 재해석 — H1 가설의 frame이 되는 WowCard (mutual 페이지에서 이동) */}
+      <section className="mt-12">
+        <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
+          <h2 className="section-h">회계 ≠ 경제 재해석</h2>
+          <span className="text-[12px] tracking-wider text-stone-400">H1 frame</span>
+        </div>
+        <p className="mb-4 max-w-3xl text-[12.5px] leading-relaxed text-stone-600">
+          이 가설은 회계상으로는 손실로 보이지만 경제적 재해석 시 회비정산차익이 매출 성격으로 흡수되어 손익 view가 바뀝니다.
+        </p>
+        <WowCard
+          slotId="mutual_wow_mature_benefit"
+          variant="mint"
+          label="회계 ≠ 경제"
+          value={autoUnit(lifeKpi.wowMetrics.potentialFromMature)}
+          sub={`만기해약 ${lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명의 회비정산차익은 영업외수익이지만 경제적으로는 매출의 일부. 영업이익+회비정산차익 view 시 손익 재해석.`}
+          footnote="회원DB 회원상태=YF의 매출합계 sum"
         />
       </section>
 
