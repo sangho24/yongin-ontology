@@ -208,7 +208,8 @@ export type DataCatalogCategoryKey =
   | "analysis"
   | "report"
   | "transcript"
-  | "governance";
+  | "governance"
+  | "dozone-final";
 
 export type DataCatalogCategory = {
   key: DataCatalogCategoryKey;

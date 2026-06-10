@@ -359,7 +359,7 @@ export function CemeterySiteMap({
                       )}
                       {isHonor && (
                         <div className="mt-0.5 text-[10px] text-stone-500">
-                          아너스톤 R/N/H 통합 76개 · 분양도면 수령 시 분할 layer 추가 예정
+                          아너스톤 R/N/H 통합 76개 · 분양도면 보강 시 분할 layer 추가 예정
                         </div>
                       )}
                     </div>
@@ -568,7 +568,7 @@ function PlotDetailCard({
 
       {isHonor && (
         <p className="mt-3 rounded border border-stone-200 bg-stone-50 px-2.5 py-1.5 text-[10.5px] leading-relaxed text-stone-700">
-          아너스톤은 분양도면 미수령 상태로 봉안당 76개 plot이 단일 polygon으로 통합됐습니다. 도면 보강 시 R/N/H 등급별
+          아너스톤은 분양도면 미확보 상태로 봉안당 76개 plot이 단일 polygon으로 통합됐습니다. 도면 보강 시 R/N/H 등급별
           분할 layer 추가 예정.
         </p>
       )}

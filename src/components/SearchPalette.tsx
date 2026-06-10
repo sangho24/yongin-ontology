@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Hash, FileSpreadsheet, Database, FolderOpen, ArrowRight } from "lucide-react";
+import { Search, Hash, Database, FolderOpen, ArrowRight } from "lucide-react";
 import evidenceData from "@/data/evidence_index.json";
 import tboxData from "@/data/tbox.json";
 import catalogData from "@/data/data_catalog.json";
@@ -37,8 +37,8 @@ const ROUTES: SearchItem[] = [
   { id: "p-/mutual", kind: "page", title: "상조 VC", sub: "라이프 · 회원 master", href: "/mutual" },
   { id: "p-/cemetery", kind: "page", title: "장지 VC", sub: "용인공원·YPL · 객체 master", href: "/cemetery" },
   { id: "p-/root-cause", kind: "page", title: "Root Cause", sub: "근원 분석 · 가설", href: "/root-cause" },
-  { id: "p-/data-model", kind: "page", title: "Data Model", sub: "T-Box · RFI", href: "/data-model" },
-  { id: "p-/data-catalog", kind: "page", title: "Data Catalog", sub: "수령 자료 인벤토리", href: "/data-catalog" },
+  { id: "p-/data-model", kind: "page", title: "Data Model", sub: "T-Box · As-is 로직", href: "/data-model" },
+  { id: "p-/data-catalog", kind: "page", title: "Data Catalog", sub: "보유 자료 인벤토리", href: "/data-catalog" },
 ];
 
 function buildIndex(): SearchItem[] {
@@ -112,7 +112,7 @@ const KIND_LABEL: Record<ResultKind, string> = {
   slot: "KPI · 슬롯",
   "tbox-class": "Class",
   "tbox-property": "Property",
-  dataset: "수령 자료",
+  dataset: "보유 자료",
 };
 
 // 한글·영문 정규화 (대소문자·공백 무시)
@@ -156,11 +156,19 @@ export function SearchPalette({
       .slice(0, 50);
   }, [query, index]);
 
-  // open 시 input focus + state reset
-  useEffect(() => {
+  // open 전이 시 state reset — effect 대신 렌더 중 상태 조정 패턴
+  const [prevOpen, setPrevOpen] = useState(open);
+  if (prevOpen !== open) {
+    setPrevOpen(open);
     if (open) {
       setQuery("");
       setActiveIdx(0);
+    }
+  }
+
+  // open 시 input focus (DOM 부수효과)
+  useEffect(() => {
+    if (open) {
       requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [open]);
@@ -175,10 +183,12 @@ export function SearchPalette({
     };
   }, [open]);
 
-  // 결과 변하면 active reset
-  useEffect(() => {
+  // query 변경 시 active reset — 렌더 중 상태 조정 패턴
+  const [prevQuery, setPrevQuery] = useState(query);
+  if (prevQuery !== query) {
+    setPrevQuery(query);
     setActiveIdx(0);
-  }, [query]);
+  }
 
   const handleSelect = (item: SearchItem) => {
     onClose();

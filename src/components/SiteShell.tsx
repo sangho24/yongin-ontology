@@ -10,7 +10,6 @@ import {
   MapPin,
   Database,
   FolderOpen,
-  Search,
   Share2,
   type LucideIcon,
 } from "lucide-react";
@@ -45,8 +44,8 @@ const NAV: { group: string; items: { path: string; label: string; sub?: string; 
   {
     group: "META",
     items: [
-      { path: "/data-model", label: "Data Model", sub: "T-Box · RFI", badge: "★" },
-      { path: "/data-catalog", label: "Data Catalog", sub: "수령 자료 인벤토리" },
+      { path: "/data-model", label: "Data Model", sub: "T-Box · As-is 로직", badge: "★" },
+      { path: "/data-catalog", label: "Data Catalog", sub: "보유 자료 인벤토리" },
       { path: "/knowledge-graph", label: "Knowledge Graph", sub: "Class · Instance view", badge: "β" },
     ],
   },

@@ -26,6 +26,7 @@ import { ChannelActivityCostExplorer } from "@/components/ChannelActivityCostExp
 import { WhatIfSlider } from "@/components/WhatIfSlider";
 import lifeKpi from "@/data/life_kpi.json";
 import deptKpi from "@/data/dept_kpi.json";
+import asisLogic from "@/data/asis_logic.json";
 import { autoUnit, formatPct } from "@/lib/format";
 import type { NumberLineage } from "@/types";
 
@@ -112,6 +113,31 @@ const MUTUAL_DEPT_IDS = new Set([
   "corp-sales",
   "customer-care",
 ]);
+
+// -----------------------------------------------------------------------------
+// 채널별 확정 손익 (As-is) — asis_logic.mutualPL 기반
+// 행사매출 인식 기준 (0528 확정 · 더존송부용 260603). 회원DB 누적 계약액 기준과
+// 집계 범위가 다름 — 본 페이지에 두 기준 수치가 공존하므로 섹션마다 기준 명기.
+// -----------------------------------------------------------------------------
+type MutualPlChannel = (typeof asisLogic.mutualPL.channels)[number];
+type MutualPlMetric = Exclude<keyof MutualPlChannel, "name">;
+type RatioValues = Record<string, number>;
+
+const PL_ROWS: { key: MutualPlMetric; label: string; isResult?: boolean }[] = [
+  { key: "revenue", label: "행사매출" },
+  { key: "labor", label: "인건비" },
+  { key: "fees", label: "지급수수료" },
+  { key: "ads", label: "광고선전비" },
+  { key: "otherSga", label: "기타 판관비" },
+  { key: "operatingIncome", label: "영업이익", isResult: true },
+  { key: "settlementGain", label: "회비정산차익" },
+  { key: "adjustedIncome", label: "반영 후 이익", isResult: true },
+];
+
+// KPI 산식 — vc가 상조·공통인 것만 (0528 확정)
+const MUTUAL_KPI_FORMULAS = asisLogic.kpiFormulas.filter(
+  (f) => f.vc === "상조" || f.vc === "공통",
+);
 
 export default function MutualPage() {
   const [hoveredChannel, setHoveredChannel] = useState<string | null>(null);
@@ -251,7 +277,7 @@ export default function MutualPage() {
       narration={
         <div className="space-y-2">
           <p>
-            라이프는 <strong>회원 master 풀 수령</strong>으로 LTV·코호트·만기·설계사 분포 모두 산출 가능.
+            라이프는 <strong>회원 master 풀 확보</strong>로 LTV·코호트·만기·설계사 분포 모두 산출 가능.
           </p>
           <p>온라인 회원당 매출이 오프라인의 <strong>약 3% 수준</strong> — 광고 ROI 재배분 근거.</p>
           <p className="text-[11px] text-stone-400">출처: 라이프_회원DB_backdata.xlsx / 25년말 DB</p>
@@ -261,11 +287,13 @@ export default function MutualPage() {
       <SubNav
         items={[
           { id: "overview", label: "회원 KPI" },
+          { id: "pl-asis", label: "확정 손익 (As-is)" },
           { id: "channel", label: "채널·코호트" },
           { id: "what-if", label: "What-if" },
           { id: "agents", label: "설계사" },
           { id: "activity-cost", label: "채널별 활동원가" },
           { id: "root-cause", label: "Root Cause" },
+          { id: "kpi-asis", label: "KPI 체계" },
           { id: "department", label: "부서별 KPI" },
         ]}
       />
@@ -279,7 +307,9 @@ export default function MutualPage() {
       <section id="overview" className="mt-10 scroll-mt-32">
         <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
           <h2 className="section-h">핵심 KPI</h2>
-          <span className="text-[11px] tracking-wider text-stone-400">CLICK 숫자 → lineage</span>
+          <span className="text-[11px] tracking-wider text-stone-400">
+            회원DB 누적 계약액 기준 (25년말 스냅샷) · CLICK 숫자 → lineage
+          </span>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" data-tour-id="hero-kpi">
           <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
@@ -355,10 +385,151 @@ export default function MutualPage() {
       </section>
 
       {/* ===================================================================
+           NEW — 채널별 확정 손익 (As-is) · asis_logic.mutualPL
+           0528 회의 확정 — 더존 ERP 구축사 전달 완료(260603).
+           행사매출 인식 기준: 본 페이지의 회원DB 누적 계약액 수치와 집계 범위 다름.
+         =================================================================== */}
+      <section id="pl-asis" className="mt-12 scroll-mt-32">
+        <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
+          <h2 className="section-h">채널별 확정 손익 (As-is)</h2>
+          <span className="text-[11px] tracking-wider text-stone-400">
+            FY25 · 천원 · 0528 확정 — 더존 전달 완료
+          </span>
+        </div>
+        <p className="mb-6 max-w-3xl text-[13px] leading-relaxed text-stone-600">
+          0528 회의에서 as-is 확정된 채널별 손익. <strong className="text-[#9a3412]">4개 채널 전부
+          영업손실</strong> — 회비정산차익 반영 후에도 합계 −
+          <span className="tnum">{Math.abs(asisLogic.mutualPL.total.adjustedIncome / 100000).toFixed(1)}</span>억원.
+          <strong className="text-stone-800"> 행사매출 인식 기준</strong>(장례행사 발생 시점 매출)으로,
+          아래 회원DB 누적 계약액 기준 수치와 집계 범위가 다름.
+        </p>
+
+        <Card
+          title="채널별 손익 — 행사매출 인식 기준"
+          subtitle={asisLogic.mutualPL.basis}
+        >
+          <div className="overflow-hidden rounded-sm border border-stone-100">
+            <table className="w-full text-[12px]">
+              <thead className="bg-stone-50/60 text-[10px] uppercase tracking-[0.08em] text-stone-500">
+                <tr>
+                  <th className="p-3 text-left font-medium">항목 (천원)</th>
+                  {asisLogic.mutualPL.channels.map((ch) => (
+                    <th key={ch.name} className="p-3 text-right font-medium tnum">
+                      {ch.name}
+                    </th>
+                  ))}
+                  <th className="p-3 text-right font-medium tnum">합계</th>
+                </tr>
+              </thead>
+              <tbody>
+                {PL_ROWS.map((row) => {
+                  const sum = asisLogic.mutualPL.channels.reduce(
+                    (s, ch) => s + ch[row.key],
+                    0,
+                  );
+                  return (
+                    <tr
+                      key={row.key}
+                      className={`border-t border-stone-100 transition-colors hover:bg-[#fafaf7] ${
+                        row.isResult ? "bg-stone-50/60" : ""
+                      }`}
+                    >
+                      <td
+                        className={`p-3 ${
+                          row.isResult ? "font-semibold text-stone-900" : "text-stone-700"
+                        }`}
+                      >
+                        {row.label}
+                      </td>
+                      {asisLogic.mutualPL.channels.map((ch) => {
+                        const v = ch[row.key];
+                        return (
+                          <td
+                            key={ch.name}
+                            className={`p-3 text-right tnum ${
+                              row.isResult
+                                ? v < 0
+                                  ? "font-semibold text-[#9a3412]"
+                                  : "font-semibold text-stone-900"
+                                : "text-stone-700"
+                            }`}
+                          >
+                            {v === 0 ? "—" : v.toLocaleString("ko-KR")}
+                          </td>
+                        );
+                      })}
+                      <td
+                        className={`p-3 text-right tnum ${
+                          row.isResult
+                            ? sum < 0
+                              ? "font-semibold text-[#9a3412]"
+                              : "font-semibold text-stone-900"
+                            : "font-medium text-stone-800"
+                        }`}
+                      >
+                        {sum === 0 ? "—" : sum.toLocaleString("ko-KR")}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+
+        {/* 채널 손익 비율 지표 — 회비정산차익율·행사매출이익율·상향매출비율 */}
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {asisLogic.mutualPL.ratios.map((r) => (
+            <div
+              key={r.name}
+              className="rounded-md border border-stone-200/80 bg-white p-5 transition-colors hover:border-stone-300"
+            >
+              <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
+                {r.name}
+              </div>
+              <div className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1.5">
+                {Object.entries(r.values as RatioValues).map(([ch, v]) => (
+                  <div key={ch} className="flex items-baseline gap-1.5">
+                    <span className="text-[11px] text-stone-500">{ch}</span>
+                    <span className="tnum text-[16px] font-semibold text-stone-900">
+                      {v.toFixed(2)}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2.5 border-t border-stone-100 pt-2 text-[11px] leading-relaxed text-stone-500">
+                {r.formula}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6">
+          <InsightBox type="warn" title="확정 손익 핵심 시사점">
+            <ul className="space-y-1.5">
+              {asisLogic.mutualPL.insights.map((ins, i) => (
+                <li key={i} className="flex items-start gap-1.5">
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-amber-700" />
+                  <span>{ins}</span>
+                </li>
+              ))}
+            </ul>
+          </InsightBox>
+        </div>
+
+        <div className="mt-4">
+          <SourceCaption>
+            보고서 21~25p · 채널별 손익 시트 (더존송부용_상조VC-용인공원라이프_분석_260603) — 행사매출
+            인식 기준. 회원DB 누적 계약액 기준(아래 채널·코호트 섹션)과 집계 범위가 다름.
+          </SourceCaption>
+        </div>
+      </section>
+
+      {/* ===================================================================
            채널 LTV · 회원상태 (mt-6 → mt-12, gap-4 → gap-8)
          =================================================================== */}
       <section id="channel" className="mt-12 grid gap-8 scroll-mt-32 lg:grid-cols-2">
-        <Card title="채널별 회원당 LTV" subtitle="평균 매출(원) 기준" slotId="mutual_channel_ltv_chart">
+        <Card title="채널별 회원당 LTV" subtitle="회원DB 누적 계약액 기준 — 확정 손익(행사매출 기준)과 집계 범위 다름" slotId="mutual_channel_ltv_chart">
           <ResponsiveContainer width="100%" height={260}>
             <BarChart
               data={channelChartData}
@@ -421,7 +592,7 @@ export default function MutualPage() {
            가입연도별 코호트
          =================================================================== */}
       <section className="mt-12">
-        <Card title="가입연도별 코호트" subtitle="회원수·만기율·평균 LTV — 2022년 이후 만기율 급등" slotId="mutual_cohort_linechart">
+        <Card title="가입연도별 코호트" subtitle="회원수·만기율·평균 LTV — 2022년 이후 만기율 급등 (회원DB 기준 잠정)" slotId="mutual_cohort_linechart">
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={cohort}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -533,7 +704,7 @@ export default function MutualPage() {
           </div>
         </Card>
 
-        <Card title="채널별 납부만기 도달율" subtitle="회원상태=납부만기(YF) / 채널 전체. 해약율 아님 — 정상 납부완료 비율" slotId="mutual_mature_by_channel">
+        <Card title="채널별 납부만기 도달율" subtitle="회원상태=납부만기(YF) / 채널 전체 · 회원DB 기준. 해약율 아님 — 정상 납부완료 비율" slotId="mutual_mature_by_channel">
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={lifeKpi.matureAnalysis.byChannel}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -556,7 +727,7 @@ export default function MutualPage() {
           side="mutual"
           defaultChannelIds={["ch-offline"]}
           title="채널별 활동원가"
-          subtitle="채널을 선택하면 매출·비용 항목과 lineage가 펼쳐집니다 · 다중 선택 가능"
+          subtitle="채널을 선택하면 매출·비용 항목과 lineage가 펼쳐집니다 · 다중 선택 가능 · 매출은 회원DB 누적 계약액 기준"
           slotId="mutual_channel_explorer"
         />
       </section>
@@ -589,7 +760,7 @@ export default function MutualPage() {
                 id: "H2",
                 title: "최근 가입 코호트의 만기율 급등 — 단기 수익실현·해약 패턴",
                 evidence:
-                  "2022~2025년 만기율 72%·96%·88%·88% (2018~2020년 1.5~4% 대비 약 30배). 신규 가입자가 짧은 주기로 만기 처리되는 구조 — 영업비용 회수 전 매출이 영업외로 이전.",
+                  "2022~2025년 만기율 72%·96%·88%·88% (회원DB 기준 잠정 — 2018~2020년 1.5~4% 대비 약 30배). 신규 가입자가 짧은 주기로 만기 처리되는 구조 — 영업비용 회수 전 매출이 영업외로 이전.",
                 signal: "high" as const,
               },
               {
@@ -641,8 +812,113 @@ export default function MutualPage() {
          =================================================================== */}
       <section className="mt-12">
         <InsightBox type="warn" title="만기해약 비중과 영업손실의 관계" slotId="mutual_insight_mature">
-          매출은 23~25년 21→36→46억으로 성장 중이나, 최근 가입 회원의 만기율(2022년 72%, 2023년 96%)이 높아 회비정산차익(영업외)으로 흘러감. 영업이익 view에선 손실 trend가 보이나, 조정후이익(영업이익+회비정산차익) view에서 재평가 필요.
+          매출은 23~25년 21→36→46억으로 성장 중이나, 최근 가입 회원의 만기율(회원DB 기준 잠정 — 2022년 72%, 2023년 96%)이 높아 회비정산차익(영업외)으로 흘러감. 영업이익 view에선 손실 trend가 보이나, 조정후이익(영업이익+회비정산차익) view에서 재평가 필요.
         </InsightBox>
+      </section>
+
+      {/* ===================================================================
+           NEW — 조직별 KPI 체계 (As-is 확정) · asis_logic.kpiByOrg + kpiFormulas
+         =================================================================== */}
+      <section id="kpi-asis" className="mt-12 scroll-mt-32">
+        <div className="mb-4 flex items-baseline justify-between border-b border-stone-200 pb-2">
+          <h2 className="section-h">조직별 KPI 체계 — As-is 확정</h2>
+          <span className="text-[11px] tracking-wider text-stone-400">보고서 18·27p</span>
+        </div>
+        <p className="mb-6 max-w-3xl text-[13px] leading-relaxed text-stone-600">
+          0528 확정 손익 구조에 맞춰 조직별 KPI를 손익 그룹에 정렬. 신규 KPI는 현행 체계에서
+          포착되지 않는 수익성 관리 영역(상향매출 원가율·해약율 등)을 보완.
+        </p>
+
+        <Card
+          title="조직별 KPI — 상조 VC"
+          subtitle="손익 그룹별 기존·신규 KPI 매핑 (0528 확정)"
+        >
+          <div className="overflow-hidden rounded-sm border border-stone-100">
+            <table className="w-full text-[12px]">
+              <thead className="bg-stone-50/60 text-[10px] uppercase tracking-[0.08em] text-stone-500">
+                <tr>
+                  <th className="p-3 text-left font-medium">조직</th>
+                  <th className="p-3 text-left font-medium">손익 그룹</th>
+                  <th className="p-3 text-left font-medium">기존 KPI</th>
+                  <th className="p-3 text-left font-medium">신규 KPI</th>
+                </tr>
+              </thead>
+              <tbody>
+                {asisLogic.kpiByOrg.mutual.map((row) => (
+                  <tr key={row.org} className="border-t border-stone-100 transition-colors hover:bg-[#fafaf7]">
+                    <td className="p-3 align-top font-semibold text-stone-900">{row.org}</td>
+                    <td className="p-3 align-top text-stone-700">{row.plGroup}</td>
+                    <td className="p-3 align-top">
+                      {row.baseKpi.length > 0 ? (
+                        <div className="flex flex-wrap gap-1.5">
+                          {row.baseKpi.map((k) => (
+                            <span
+                              key={k}
+                              className="inline-flex items-center rounded-sm border border-stone-200 bg-stone-50 px-1.5 py-0.5 text-[11px] text-stone-700"
+                            >
+                              {k}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-stone-400">—</span>
+                      )}
+                    </td>
+                    <td className="p-3 align-top">
+                      {row.newKpi.length > 0 ? (
+                        <div className="flex flex-wrap gap-1.5">
+                          {row.newKpi.map((k) => (
+                            <span
+                              key={k}
+                              className="inline-flex items-center rounded-sm border border-[#0095A9]/30 bg-[#e6f4f6] px-1.5 py-0.5 text-[11px] font-medium text-[#007a8c]"
+                            >
+                              {k}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-stone-400">—</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+
+        <div className="mt-6">
+          <InsightBox type="info" title="온라인 채널 KPI 운영 시사점">
+            온라인 채널은 매출비중 5.16% vs DB 신규가입자 비중 33% — 채널 KPI는 매출이 아닌
+            CPA(월 광고비 ÷ 유효DB 건수) 추이로 관리. 광고선전비 전액이 온라인 채널 귀속이므로
+            CPA가 채널 효율의 1차 지표.
+          </InsightBox>
+        </div>
+
+        {/* KPI 산식 — 상조·공통 (0528 확정) */}
+        <div className="mt-6 grid gap-px overflow-hidden rounded-md bg-stone-200/60 md:grid-cols-2">
+          {MUTUAL_KPI_FORMULAS.map((f) => (
+            <div key={f.name} className="bg-white p-4">
+              <div className="flex items-baseline justify-between gap-2">
+                <h4 className="text-[14px] font-semibold text-stone-900">{f.name}</h4>
+                <span
+                  className={`shrink-0 rounded-sm px-1.5 py-0.5 text-[10px] font-medium ${
+                    f.vc === "공통" ? "bg-stone-100 text-stone-600" : "bg-[#e6f4f6] text-[#007a8c]"
+                  }`}
+                >
+                  {f.vc}
+                </span>
+              </div>
+              <p className="mt-1.5 text-[12.5px] leading-relaxed text-stone-700 tnum">{f.formula}</p>
+              <p className="mt-1.5 text-[10.5px] text-stone-400">{f.source}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-4 space-y-2">
+          <SourceCaption>{asisLogic.kpiByOrg.kpiNote}</SourceCaption>
+          <SourceCaption>{asisLogic.kpiByOrg.source} · KPI 산식 {MUTUAL_KPI_FORMULAS.length}종 (상조·공통)</SourceCaption>
+        </div>
       </section>
 
       {/* ===================================================================
@@ -733,6 +1009,8 @@ export default function MutualPage() {
       <section className="mt-12 border-t border-stone-200 pt-5">
         <h3 className="section-label mb-3">DATA LINEAGE</h3>
         <div className="space-y-2">
+          <SourceCaption>채널별 확정 손익 = asis_logic.mutualPL — 보고서 21~25p · 채널별 손익 시트 (더존송부용 260603) · 행사매출 인식 기준</SourceCaption>
+          <SourceCaption>조직별 KPI 체계·산식 = asis_logic.kpiByOrg.mutual + kpiFormulas(상조·공통) — 보고서 18·27p · 상조VC_중간정리 시트</SourceCaption>
           <SourceCaption>총 회원 9,930명 = 회원DB 25년말 시트 row count</SourceCaption>
           <SourceCaption>회원 누적 납입액 (스냅샷) = 매출합계 컬럼 sum (가입~25년말 누적). FY25 회사 손익 인식 매출 4,624M과 정의 다름.</SourceCaption>
           <SourceCaption>납부만기 도달율 = 회원상태=YF count(4,433) / total(9,930)</SourceCaption>

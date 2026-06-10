@@ -35,7 +35,7 @@ const METHOD_LABEL: Record<string, string> = {
   INTERVIEW: "인터뷰",
   RFI: "RFI 항목",
   META: "메타·인덱스",
-  MISSING: "자료 미수령",
+  MISSING: "자료 미연동",
 };
 
 const METHOD_ICON: Record<string, typeof FileSpreadsheet> = {
@@ -110,11 +110,11 @@ export function EvidenceDrawer({
     }
   };
 
-  // 활동 자동 등록 placeholder — Data Model·RFI 자동 추가는 추후 연동.
+  // 활동 자동 등록 placeholder — 데이터 모델 보강 큐 자동 추가는 추후 연동.
   const handleRegisterActivity = () => {
     console.log("[EvidenceDrawer] 활동 자동 등록", { slotId });
     if (typeof window !== "undefined") {
-      window.alert(`활동 자동 등록 (데모)\n\nslot: ${slotId}\n→ Data Model · RFI 큐에 추가`);
+      window.alert(`활동 자동 등록 (데모)\n\nslot: ${slotId}\n→ 데이터 모델 보강 큐에 추가`);
     }
   };
 
@@ -169,7 +169,7 @@ export function EvidenceDrawer({
               {missing && (
                 <span className="inline-flex items-center gap-1 rounded-full border border-rose-300/40 bg-rose-50 px-2 py-0.5 text-[10px] font-medium text-rose-700">
                   <AlertCircle className="h-3 w-3" />
-                  자료 미수령
+                  자료 미연동
                 </span>
               )}
               <span className="text-[10px] text-stone-400 tnum">{slotId}</span>

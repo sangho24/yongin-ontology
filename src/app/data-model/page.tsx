@@ -13,16 +13,16 @@ import {
   ReactFlowProvider,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ExternalLink } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
-import { Card, EvidenceButton, SourceCaption } from "@/components/Card";
+import { Card, EvidenceButton, InsightBox, SourceCaption } from "@/components/Card";
 import { TBoxNode } from "@/components/TBoxNode";
 import tbox from "@/data/tbox.json";
+import asisLogic from "@/data/asis_logic.json";
 
 const nodeTypes = { classNode: TBoxNode };
 
 // =============================================================================
-// T-Box 노드/엣지/RFI ID → evidence_index slotId 매핑
+// T-Box 노드/엣지/Axiom ID → evidence_index slotId 매핑
 // 매핑되지 않는 항목은 undefined 반환 → EvidenceButton 자체가 렌더 SKIP
 // =============================================================================
 const NODE_SLOT_MAP: Record<string, string> = {
@@ -74,173 +74,11 @@ const AXIOM_SLOT_MAP: Record<string, string> = {
   A5p: "tbox_axiom_a5p",
 };
 
-// RFI 카드 → evidence slotId (B8 검토 결과 r3·r4 분할로 7개)
-const RFI_SLOT_MAP: Record<string, string> = {
-  "RFI-NEW-001": "tbox_rfi_r1_member_master",
-  "RFI-NEW-002": "tbox_rfi_r2_salesagent_master",
-  "RFI-NEW-003a": "tbox_rfi_r3a_zone_master",
-  "RFI-NEW-003b": "tbox_rfi_r3b_transfer_history",
-  "RFI-NEW-004a": "tbox_rfi_r4a_driver_definition",
-  "RFI-NEW-004b": "tbox_rfi_r4b_cost_amount_allocation",
-  "RFI-NEW-005": "tbox_rfi_r5_unified_customer_view",
-};
+// As-is 확정 출처 매핑 — confidence 문구에 "확정"이 포함되면 확정 badge, 아니면 비고 노출
+function isConfirmedSource(confidence: string): boolean {
+  return confidence.startsWith("확정");
+}
 
-// 각 RFI가 실제로 도착했을 때 어떤 모양의 표가 될지 보여주는 강화 mock.
-// 실 데이터 수령 전이므로 모든 값은 plausible mock — PII·영업비밀 박제 X.
-// (이름은 가명·연락처는 마스킹·금액·연봉·계좌·주민번호 표시 안 함)
-const RFI_MOCK: Record<
-  string,
-  { columns: string[]; rows: string[][]; mockCaveat: string }
-> = {
-  "RFI-NEW-001": {
-    columns: [
-      "계약번호",
-      "계약자ID",
-      "계약자명(가명)",
-      "인입경로",
-      "인입일자",
-      "상담단계",
-      "가입일",
-      "묘역코드",
-      "상품유형코드",
-      "결제방식",
-      "담당설계사ID",
-      "가족관계",
-      "연락처(마스킹)",
-      "계약상태",
-    ],
-    rows: [
-      ["YP-2024-01182", "MBR-100482", "홍**", "온라인", "2024-02-08", "계약완료", "2024-03-15", "1R-A12", "PRD-ROY-1R", "일시납", "SA-007", "본인", "010-****-5678", "유효"],
-      ["YP-2024-01183", "MBR-100483", "김**", "오프라인(내방)", "2024-03-21", "계약완료", "2024-04-02", "정담원-B07", "PRD-BUR-JD", "분납(12개월)", "SA-011", "배우자", "010-****-6789", "유효"],
-      ["YP-2024-01184", "MBR-100484", "이**", "법인(단체)", "2024-04-30", "계약완료", "2024-05-21", "세수연-C03", "PRD-BUR-SS", "일시납", "SA-007", "모(직계존속)", "010-****-7890", "유효"],
-    ],
-    mockCaveat: "※ 데이터 모델 보강 항목 r1 (계약자 master) 대응 mock. 회사 ERP에 계약자 dimension 추출/연동 시 실 데이터로 교체. 보강 컬럼: 가족관계 (통합고객뷰 r5 동일가족 매칭 활용). 라이프 회원DB 35열 대비 비대칭 — 장지 계약자 dimension 미연동.",
-  },
-  "RFI-NEW-002": {
-    columns: [
-      "영업사원ID",
-      "이름(가명)",
-      "소속법인",
-      "소속팀",
-      "담당구역",
-      "DB유치건수(FY25)",
-      "실계약건수(FY25)",
-      "Conversion%",
-      "수수료등급",
-    ],
-    rows: [
-      ["SA-001", "김**", "용인공원", "영업팀", "1R·2R 봉안 로얄", "182", "47", "25.8%", "B등급(기본 5%)"],
-      ["SA-007", "박**", "YPL", "고객센터팀", "정담원·세수연", "98", "32", "32.7%", "A등급(기본 7%)"],
-      ["SA-011", "용인공원 외부업체", "외부업체", "외부판촉", "명가여연·천명지", "215", "58", "27.0%", "외부수수료(별도규정)"],
-    ],
-    mockCaveat: "※ 데이터 모델 보강 항목 r2 (영업사원 master + 판매수수료 지급규정) 대응 mock. ERP 등록 후 실 데이터로 교체. 보강 컬럼: 직급·입사일·퇴사여부 (HR 시스템 연동 필요).",
-  },
-  "RFI-NEW-003a": {
-    columns: [
-      "묘역코드",
-      "장법",
-      "매출구분(계정)",
-      "면적(m²)",
-      "단가",
-      "FY23 매출액(원)",
-      "FY24 매출액(원)",
-      "FY25 매출액(원)",
-      "재고명세서 묘원수",
-      "분양상태",
-    ],
-    rows: [
-      ["1R-A12", "봉안 로얄", "사용료수입(아너) 41100", "—", "—", "12,500,000", "—", "8,200,000", "1", "분양완료"],
-      ["63-1공구-B07", "매장", "사용료수입(일반) 40400", "1.96", "4,800,000", "0", "4,800,000", "0", "1", "분양완료"],
-      ["정담원-C03", "매장", "사용료수입(일반) 40400", "1.96", "5,200,000", "0", "0", "5,200,000", "1", "분양완료"],
-      ["천명제1-D04", "매장", "—", "1.96", "—", "0", "0", "0", "1", "미사용(분양가능)"],
-    ],
-    mockCaveat: "※ 데이터 모델 보강 항목 r3a (구역 master, 면적·매출구분·시계열) 대응 mock. ERP 추출/연동 후 실 데이터로 교체. 면적·매출·매핑 dimension 동시 보강 필요. raw vs 재고명세서 묘원수 차이 사유는 신규야외묘역 시트로 별도 추적.",
-  },
-  "RFI-NEW-003b": {
-    columns: [
-      "묘역코드",
-      "이전계약번호",
-      "이장일자",
-      "신계약번호",
-      "이장사유",
-      "공실/회수일",
-      "재분양가",
-      "특수사유",
-    ],
-    rows: [
-      ["1R-A12", "YP-2018-00742", "2024-02-10", "YP-2024-01182", "가족 합장", "—", "8,200,000", "—"],
-      ["3H-D07", "YP-2017-00219", "—", "—", "—", "2023-11-08", "할인분양 대기", "할인분양 대상"],
-      ["63-5공구-E22", "YP-2015-00118", "2024-08-04", "YP-2024-02014", "이장 (가족 요청)", "—", "5,500,000", "이장지 4325건 中 1건"],
-    ],
-    mockCaveat: "※ 데이터 모델 보강 항목 r3b (이장이력) 대응 mock. ERP 이장이력 등록 후 실 데이터로 교체. 묘역raw 22.5% 미채움분(이장지 4325 포함) 사유 분류 dimension 보강 필요.",
-  },
-  "RFI-NEW-004a": {
-    columns: [
-      "동인ID",
-      "동인명",
-      "동인유형",
-      "측정주체",
-      "측정단위",
-      "수집주기",
-      "소스시스템",
-      "수집상태",
-    ],
-    rows: [
-      ["TR-EMP-007", "분양상담 시간", "Time Report", "분양상담팀", "시간(h)", "월별", "수기 엑셀", "수기·미체계화"],
-      ["FAC-A12", "사무실 부스 면적", "시설별 면적", "시설관리팀", "m²", "연1회 실측", "도면 PDF", "도면존재·디지털 미수령"],
-      ["MTR-208-전기", "관리동 전기 사용량", "계량기 검침", "관리동 전기", "kWh", "분기별", "한전 청구서", "한전 청구서·디지털 미수령"],
-    ],
-    mockCaveat: "※ 데이터 모델 보강 항목 r4a (비용 동인 외연 디지털화) 대응 mock. 동인 외연 디지털 수집 체계 구축 후 실 데이터로 교체. 현재는 외연 미체계화 → A5 partiallyMissing → A5' Default rule(매출비율 fallback) 발동중.",
-  },
-  "RFI-NEW-004b": {
-    columns: [
-      "계정코드",
-      "계정명",
-      "구분",
-      "FY23 발생금액(원)",
-      "FY24 발생금액(원)",
-      "FY25 발생금액(원)",
-      "배부기준",
-      "비경상 여부",
-      "비경상 사유",
-    ],
-    rows: [
-      ["80200", "직원급여", "판관비", "1,420,000,000", "1,510,000,000", "1,628,000,000", "Time Report 시간(h) × 시급", "N", "—"],
-      ["51820", "전력비", "제조원가", "82,000,000", "88,400,000", "94,500,000", "계량기 검침 kWh 배분", "N", "—"],
-      ["83100", "감가상각비", "판관비", "210,000,000", "208,000,000", "205,000,000", "시설별 면적 m² 배분", "N", "—"],
-      ["53400", "지급수수료", "제조원가", "—", "—", "62,000,000", "동인없음 (단발)", "Y", "신규 ERP 컨설팅 일회성"],
-    ],
-    mockCaveat: "※ 데이터 모델 보강 항목 r4b (발생금액·배부기준 시계열) 대응 mock. ERP 시계열 + 비경상 컬럼 추출 후 실 데이터로 교체. 25년 계정별원장 매출 10계정 합계 50,240,119,779원(영업매출 순매출, 부가세 제외) 검증 완료, 단 3개년 시계열 + 비경상 분리 추가 보강 필요.",
-  },
-  "RFI-NEW-005": {
-    columns: [
-      "통합고객ID",
-      "라이프회원ID",
-      "장지계약자ID",
-      "장지계약번호",
-      "동일가족 그룹ID",
-      "최초접점채널",
-      "라이프 누적매출(억)",
-      "장지 누적매출(억)",
-      "Cross-sell",
-      "매칭confidence(%)",
-    ],
-    rows: [
-      ["GRP-CUST-00100", "LIFE-09931", "MBR-100482", "YP-2024-01182", "FAM-A-0042", "라이프(상조) 2019-04", "0.4", "0.8", "Y (장지 후속)", "98%"],
-      ["GRP-CUST-00101", "LIFE-09954", "MBR-100483", "YP-2024-01183", "FAM-A-0042", "라이프(상조) 2020-11", "0.3", "0.5", "Y (배우자 명의)", "92%"],
-      ["GRP-CUST-00102", "—", "MBR-100484", "YP-2024-01184", "FAM-B-0117", "장지 단독", "—", "0.5", "N", "—"],
-    ],
-    mockCaveat: "※ 데이터 모델 보강 항목 r5 (라이프·장지 통합 고객뷰) 합성 mock. 두 ERP 통합 dimension 구축 후 실 데이터로 교체. 매출 단위는 안전 표기(억). 라이프 9,930명 + 장지 계약자 dimension 보강 필요 → 통합 매핑 dimension 신설 후 cross-sell·family referral KPI 활성화.",
-  },
-};
-
-const PRIORITY_BADGE: Record<string, string> = {
-  P0: "bg-[#9a3412] text-white",
-  P1: "bg-[#b45309] text-white",
-  P2: "bg-stone-500 text-white",
-};
-
-type RfiItem = (typeof tbox.rfiItems)[number];
 type ClassDef = (typeof tbox.classes)[number];
 type PropertyDef = (typeof tbox.properties)[number];
 
@@ -307,7 +145,7 @@ export default function DataModelPage() {
       classMissing,
       totalEdges: allEdges.length,
       edgeMissing,
-      rfiCount: tbox.rfiItems.length,
+      sourceCount: asisLogic.dataSources.length,
     };
   }, []);
 
@@ -316,10 +154,7 @@ export default function DataModelPage() {
     if (selected.kind === "node") {
       const cls = (tbox.classes as ClassDef[]).find((c) => c.id === selected.id);
       if (!cls) return null;
-      const linkedRfis = (tbox.rfiItems as RfiItem[]).filter((r) =>
-        r.linkedProperties.some((p) => p.startsWith(cls.id + "-") || p.endsWith("-" + cls.id))
-      );
-      return { kind: "class" as const, data: cls, rfis: linkedRfis };
+      return { kind: "class" as const, data: cls };
     }
     const edge = tbox.reactFlow.edges.find((e) => e.id === selected.id);
     if (!edge) return null;
@@ -327,16 +162,13 @@ export default function DataModelPage() {
     const prop = (tbox.properties as PropertyDef[] | undefined)?.find(
       (p) => p.id === propId || (edge.source && edge.target && p.id.includes(edge.source) && p.id.includes(edge.target))
     );
-    const linkedRfis = (tbox.rfiItems as RfiItem[]).filter((r) =>
-      prop ? r.linkedProperties.includes(prop.id) : false
-    );
-    return { kind: "edge" as const, data: { ...edge, prop }, rfis: linkedRfis };
+    return { kind: "edge" as const, data: { ...edge, prop } };
   }, [selected]);
 
   return (
     <AppLayout
       pageTitle="데이터 모델 (T-Box)"
-      pageSubtitle="그룹 관리손익 BI를 떠받치는 데이터 모델. 충족된 영역은 활성 KPI, 미연동 영역은 데이터 보강 시 활성화될 KPI 후보."
+      pageSubtitle="그룹 관리손익 BI를 떠받치는 데이터 모델 — 0528 확정 as-is 로직 및 출처 체계 (더존 ERP 구축사 전달 완료, 260603)."
       narration={
         <div className="space-y-2">
           <p>13 Class · 26 Property · 6 Axiom으로 구성된 의미층.</p>
@@ -346,7 +178,8 @@ export default function DataModelPage() {
             <span className="inline-block h-2 w-2 rounded-full bg-red-500 mx-1" /> 미연동 (보강 후보)
           </p>
           <p>
-            <strong>미연동 노드/엣지를 클릭</strong>하면 데이터 보강 시 활성화될 KPI 항목이 우측에 표시됩니다.
+            <strong>노드/엣지를 클릭</strong>하면 정의·충족 현황이 우측에 표시됩니다. 배부 로직과
+            출처 매핑은 하단 As-is 확정 로직 섹션 참조.
           </p>
         </div>
       }
@@ -376,15 +209,12 @@ export default function DataModelPage() {
           <div className="headline mt-2 text-[28px] leading-none text-stone-900 tnum">
             {stats.edgeMissing}<span className="text-stone-400 font-normal"> / {stats.totalEdges}</span>
           </div>
-          <div className="mt-1.5 text-[12px] text-stone-500">관계 status ≠ satisfied</div>
+          <div className="mt-1.5 text-[12px] text-stone-500">그래프 edge 기준 (attribute property 제외)</div>
         </div>
         <div className="bg-[#0095A9] p-5 text-white">
-          <div className="flex items-start justify-between gap-2">
-            <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#b3dde0]">미활성 KPI 식별</div>
-            <EvidenceButton slotId="tbox_stat_rfi_count" label="미활성 KPI 식별" variant="onMint" />
-          </div>
-          <div className="headline mt-2 text-[28px] leading-none text-white tnum">{stats.rfiCount}<span className="text-base font-normal text-[#b3dde0] ml-0.5">건</span></div>
-          <div className="mt-1.5 text-[12px] text-[#ccebee]">데이터 보강 시 활성화될 KPI 후보</div>
+          <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#b3dde0]">확정 출처 매핑</div>
+          <div className="headline mt-2 text-[28px] leading-none text-white tnum">{stats.sourceCount}<span className="text-base font-normal text-[#b3dde0] ml-0.5">건</span></div>
+          <div className="mt-1.5 text-[12px] text-[#ccebee]">0528 확정 — 더존 전달 완료 (260603)</div>
         </div>
       </section>
 
@@ -430,7 +260,7 @@ export default function DataModelPage() {
             </span>
             <span className="inline-flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
-              장지 데이터 보강 시 활성화될 KPI <strong className="text-stone-700">7건</strong>
+              미연동 관계 <strong className="text-stone-700">{stats.edgeMissing}건</strong> (edge 기준) — 보강 시 활성화 가능한 KPI 후보
             </span>
             <span className="inline-flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-stone-400" />
@@ -490,140 +320,110 @@ export default function DataModelPage() {
             </Card>
           )}
 
-          {detail && detail.rfis.length > 0 && (
-            <Card title="미활성 KPI 활성화 항목" subtitle="이 dimension이 ERP에 보강되면 활성화되는 KPI" highlight>
-              <div className="space-y-3">
-                {detail.rfis.map((r) => (
-                  <div key={r.id} className="group rounded border border-amber-200 bg-amber-50 p-3 transition-all hover:bg-amber-100 hover:shadow-sm">
-                    <div className="flex items-center gap-2">
-                      <span className="rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">
-                        {r.priority}
-                      </span>
-                      <span className="text-sm font-semibold text-slate-900">{r.id}</span>
-                    </div>
-                    <div className="mt-1 text-sm font-medium text-slate-800">{r.title}</div>
-                    <p className="mt-1 text-xs text-slate-600">{r.rationale}</p>
-                    <div className="mt-2 text-xs">
-                      <span className="font-semibold text-slate-700">예상 컬럼: </span>
-                      <span className="text-slate-600">
-                        {r.expectedColumns.slice(0, 4).join(", ")}
-                        {r.expectedColumns.length > 4 ? "..." : ""}
-                      </span>
-                    </div>
-                    <div className="mt-1 text-xs">
-                      <span className="font-semibold text-slate-700">요청 대상: </span>
-                      <span className="text-slate-600">{r.askTo}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
         </div>
         )}
       </section>
 
+      {/* ===================================================================
+           As-is 확정 로직 — 0528 확정 · 더존 전달 완료 (asis_logic.json)
+           배부 우선순위(장지·상조 3단계) + 출처 매핑 — "정보의 출처 명확화" 핵심 화면
+         =================================================================== */}
       <section className="mt-12">
         <div className="mb-6">
-          <h3 className="text-[16px] font-semibold tracking-tight text-stone-900">데이터 보강 항목 — KPI 활성화 후보</h3>
+          <h3 className="text-[16px] font-semibold tracking-tight text-stone-900">
+            As-is 확정 로직 — 0528 확정 · 더존 전달 완료
+          </h3>
           <p className="mt-1.5 text-[12px] text-stone-500">
-            각 미연동 dimension이 사내 ERP/BI에서 어떤 모양의 자료로 활성화돼야 하는지 — 예상 컬럼·sample row·담당 시스템까지 포함된 mock 표
+            장지·상조 VC 배부 우선순위와 데이터 출처 매핑 — 확정 로직은 더존(아마란스) 구축사에
+            전달 완료 ({asisLogic.meta.confirmedAt} 송부)
           </p>
         </div>
-        <div className="grid gap-6 md:grid-cols-2">
-          {(tbox.rfiItems as RfiItem[]).map((r) => {
-            const mock = RFI_MOCK[r.id];
-            const columns = mock?.columns ?? r.expectedColumns;
-            const rows = mock?.rows ?? [];
-            const badgeCls = PRIORITY_BADGE[r.priority] ?? "bg-stone-500 text-white";
-            return (
-              <div
-                key={r.id}
-                className="group rounded-md border border-stone-200/80 bg-white p-6 transition-colors duration-150 hover:border-stone-300"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-[11px] font-semibold tracking-[0.04em] text-stone-700">{r.id}</span>
-                    <span className={`rounded px-1.5 py-0.5 text-[10px] font-bold uppercase ${badgeCls}`}>
-                      {r.priority}
-                    </span>
-                    <span className="rounded border border-stone-200 bg-stone-50 px-1.5 py-0.5 text-[10px] font-medium text-stone-500">
-                      MOCK
-                    </span>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-1">
-                    {RFI_SLOT_MAP[r.id] && (
-                      <EvidenceButton slotId={RFI_SLOT_MAP[r.id]} label={r.title} variant="subtle" />
-                    )}
-                    <button
-                      type="button"
-                      className="flex shrink-0 items-center gap-1 text-[10px] font-medium text-stone-400 transition-colors hover:text-[#0095A9]"
-                    >
-                      <ExternalLink className="h-3 w-3" />
-                      샘플 요청서
-                    </button>
-                  </div>
-                </div>
-                <div className="mt-2 text-[14px] font-semibold tracking-tight text-stone-900">{r.title}</div>
-                <p className="mt-2 text-[12px] leading-relaxed text-stone-600">{r.rationale}</p>
 
-                <div className="mt-4 overflow-x-auto rounded border border-stone-200/80">
-                  <table className="w-full text-[11px] text-stone-700">
-                    <thead className="bg-stone-50 text-[10px] font-medium uppercase tracking-[0.04em] text-stone-500">
-                      <tr>
-                        {columns.map((col) => (
-                          <th
-                            key={col}
-                            className="border-b border-stone-200/80 px-2 py-1.5 text-left whitespace-nowrap"
-                          >
-                            {col}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {rows.length > 0 ? (
-                        rows.map((row, ri) => (
-                          <tr key={ri} className="border-b border-stone-100 last:border-b-0">
-                            {columns.map((_, ci) => (
-                              <td key={ci} className="px-2 py-1.5 align-top text-stone-600 whitespace-nowrap">
-                                {row[ci] ?? "—"}
-                              </td>
-                            ))}
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          {columns.map((_, ci) => (
-                            <td key={ci} className="px-2 py-1.5 text-stone-300">
-                              —
-                            </td>
-                          ))}
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+        <InsightBox type="info" title="확정 배경">
+          {asisLogic.meta.decisionContext}
+        </InsightBox>
 
-                {mock?.mockCaveat && (
-                  <div className="mt-2 rounded border border-amber-200/60 bg-amber-50/40 px-2 py-1.5 text-[10.5px] leading-relaxed text-amber-900/80">
-                    {mock.mockCaveat}
-                  </div>
-                )}
-
-                <div className="mt-4 space-y-1.5 border-t border-stone-100 pt-3 text-[11px] leading-relaxed">
-                  <div className="text-stone-500">
-                    <span className="font-semibold text-stone-600">현황: </span>
-                    {r.currentSourceCheck}
-                  </div>
-                  <div className="text-stone-500">
-                    <span className="font-semibold text-stone-600">요청 대상: </span>
-                    <span className="text-[#0095A9]">{r.askTo}</span>
-                  </div>
-                </div>
+        {/* 배부 우선순위 — 장지·상조 3단계 */}
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
+          {(
+            [
+              { vc: "장지 VC", steps: asisLogic.allocationPrinciples.cemetery },
+              { vc: "상조 VC", steps: asisLogic.allocationPrinciples.mutual },
+            ] as const
+          ).map((group) => (
+            <div
+              key={group.vc}
+              className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300"
+            >
+              <div className="flex items-baseline justify-between gap-2">
+                <h4 className="text-[14px] font-semibold tracking-tight text-stone-900">
+                  {group.vc} 배부 우선순위
+                </h4>
+                <span className="text-[10px] tracking-wider text-stone-400">직접 → 활동기준 → 간접</span>
               </div>
-            );
-          })}
+              <ol className="mt-4 space-y-3">
+                {group.steps.map((s) => (
+                  <li key={s.order} className="flex items-start gap-3">
+                    <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm bg-[#0095A9] text-[11px] font-semibold text-white tnum">
+                      {s.order}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="text-[13px] font-semibold text-stone-900">{s.name}</div>
+                      <p className="mt-0.5 text-[12px] leading-relaxed text-stone-600">{s.rule}</p>
+                      <p className="mt-1 text-[10.5px] text-stone-400">{s.source}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </div>
+
+        {/* 출처 매핑 표 — dataSources 11건 */}
+        <div className="mt-6">
+          <Card
+            title="데이터 출처 매핑"
+            subtitle={`분석에 사용된 원천 데이터 ${asisLogic.dataSources.length}건 — 시스템·출처·활용처·확인 근거`}
+          >
+            <div className="overflow-x-auto rounded-sm border border-stone-100">
+              <table className="w-full text-[12px]">
+                <thead className="bg-stone-50/60 text-[10px] uppercase tracking-[0.08em] text-stone-500">
+                  <tr>
+                    <th className="p-3 text-left font-medium">데이터</th>
+                    <th className="p-3 text-left font-medium">출처</th>
+                    <th className="p-3 text-left font-medium">활용</th>
+                    <th className="p-3 text-left font-medium">확인 근거 · 비고</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {asisLogic.dataSources.map((src) => (
+                    <tr key={src.id} className="border-t border-stone-100 transition-colors hover:bg-[#fafaf7]">
+                      <td className="p-3 align-top font-medium text-stone-900">{src.data}</td>
+                      <td className="p-3 align-top text-stone-700">{src.sourceLabel}</td>
+                      <td className="p-3 align-top text-stone-600">{src.usage}</td>
+                      <td className="p-3 align-top">
+                        {isConfirmedSource(src.confidence) ? (
+                          <span className="inline-flex items-center rounded-sm border border-[#0095A9]/30 bg-[#e6f4f6] px-1.5 py-0.5 text-[10.5px] font-medium text-[#007a8c]">
+                            {src.confidence}
+                          </span>
+                        ) : (
+                          <span className="text-[11.5px] leading-relaxed text-stone-500">{src.confidence}</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </div>
+
+        <div className="mt-4 space-y-2">
+          <SourceCaption>확정 산출물: {asisLogic.meta.sources.join(" · ")}</SourceCaption>
+          <SourceCaption>
+            확정 범위: 장지 보고서 {asisLogic.meta.scopeSlides.cemetery.join("·")}p / 상조 보고서{" "}
+            {asisLogic.meta.scopeSlides.mutual.join("·")}p
+          </SourceCaption>
         </div>
       </section>
 
@@ -703,8 +503,8 @@ export default function DataModelPage() {
         <h3 className="section-label mb-3">DATA LINEAGE</h3>
         <div className="space-y-2">
           <SourceCaption>13 Class · 26 Property · 6 Axiom — tbox.json (Phase 0 정의서 기반 수동 정의)</SourceCaption>
-          <SourceCaption>미연동 dimension 9건 = property.status ≠ satisfied count, 모두 장지 VC 회원·영업사원·계약자 dimension 또는 비용 동인 외연 보강 후보</SourceCaption>
-          <SourceCaption>데이터 보강 항목 7건 = tbox.rfiItems, 각 미연동 property에 매핑된 KPI 활성화 후보 (P0~P1 우선순위). B8 정합성 검토 결과 r3·r4를 각 2개로 분할(r3a/r3b·r4a/r4b)하여 명세에 정렬</SourceCaption>
+          <SourceCaption>결손 Property = 그래프 edge status ≠ satisfied 기준 (attribute property 제외) — 상단 stat·그래프 캡션과 동일 기준으로 통일. 모두 장지 VC 회원·영업사원·계약자 dimension 또는 비용 동인 외연 보강 후보</SourceCaption>
+          <SourceCaption>As-is 확정 로직·출처 매핑 = asis_logic.json — 0528 회의 확정, 더존(아마란스) 구축사 전달 완료 (260603 송부)</SourceCaption>
           <SourceCaption>Axiom A1·A2·A3·A4 충족 / A5 부분 미연동 / A5&apos; satisfied (fallback 정상 작동)</SourceCaption>
         </div>
       </section>

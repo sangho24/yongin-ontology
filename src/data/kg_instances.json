@@ -50,7 +50,7 @@
       { "id": "ZN-MORE", "label": "+ 묘역 27열 master", "entity": "용인공원", "kpi": "총 55,711 묘원", "isCounter": true }
     ],
     "Channel": [
-      { "id": "CH-OFFLINE", "label": "오프라인 (내방)", "entity": "라이프", "kpi": "9,467명 / 27.67억" },
+      { "id": "CH-OFFLINE", "label": "오프라인 (내방)", "entity": "라이프", "kpi": "9,467명 / 276.7억 (회원DB 누적 계약액)" },
       { "id": "CH-ONLINE", "label": "온라인", "entity": "라이프", "kpi": "434명 / 0.38억" },
       { "id": "CH-CORP", "label": "법인", "entity": "라이프", "kpi": "29명 / 0.54억" },
       { "id": "CH-ETC", "label": "기타", "entity": "라이프", "kpi": "잔여" }

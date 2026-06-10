@@ -1,8 +1,8 @@
 {
   "$schema": "data_catalog_v0.1",
-  "generated_at": "2026-05-11",
-  "version": "0.1",
-  "note": "발표용 데이터 인벤토리. SPO에서 수령한 약 110개 자료를 35개 dataset으로 abstraction. 파일경로/PII/영업비밀(수수료율 raw)은 일체 노출하지 않음. 자료명·범위·KPI 연결 정보만 표출.",
+  "generated_at": "2026-06-10",
+  "version": "0.2",
+  "note": "발표용 데이터 인벤토리. SPO 기준으로 정리한 보유 자료 약 110개를 39개 dataset으로 abstraction. 파일경로/PII/영업비밀(수수료율 raw)은 일체 노출하지 않음. 자료명·범위·KPI 연결 정보만 표출.",
   "categories": [
     {
       "key": "raw-master",
@@ -45,6 +45,12 @@
       "label": "RFI·계약",
       "description": "PwC RFI·주요 계약서",
       "color": "#65a30d"
+    },
+    {
+      "key": "dozone-final",
+      "label": "더존 전달 확정본",
+      "description": "0528 회의 as-is 확정 후 더존(아마란스) ERP 구축사에 전달한 분석 확정본 (2026-06-03 송부)",
+      "color": "#0f766e"
     }
   ],
   "datasets": [
@@ -109,7 +115,7 @@
       ],
       "caveats": [
         "매출합계 컬럼은 가입~25년말 누적 (회사 손익 인식 매출과 정의 다름)",
-        "채널구분 '오프라인 ' (trailing space) 152건 정규화 필요 (P2-2 정정: 'oo오프라인' 표기 오타)",
+        "채널구분 '오프라인 ' (trailing space) 152건 정규화 필요 ('oo오프라인' 표기는 오타로 확인)",
         "가입경로 컬럼 채움률 0.7%로 사실상 미사용",
         "모집영업소속 70%가 (구)용인공원라이프 — 조직개편 caveat"
       ],
@@ -1112,6 +1118,62 @@
         "시설인력(에코비엠) 6명 → 7명 (직무 변동: 소장·시설관리1 빠지고 봉안당 청소 추가)"
       ],
       "piiNote": "직급별 연봉 raw 일체 노출 X. 인원·총액·평균만 표출.",
+      "presentationSafe": true
+    },
+    {
+      "id": "dozone_cemetery_final",
+      "name": "(더존송부용) 장지VC 분석 확정본 (260603)",
+      "category": "dozone-final",
+      "natureCode": "ANALYSIS-WORKBOOK",
+      "scope": "FY25 (장지 VC as-is 확정 — 용인공원+YPL, 내부거래 제거 후)",
+      "shape": "246시트 xlsm — 구역별 매출 보정 피벗 + ERP 구축 시트 + 장지ERP설계 + KPI + ABC(활동원가) 시트 포함",
+      "owner": "PwC→더존 전달 완료",
+      "primaryKeys": ["구역코드", "계정코드"],
+      "keyColumns": ["구역별 매출 보정 블록", "구역별 손익 (12분류 × 12계정)", "As-is Driver", "KPI 정의"],
+      "linkedKpiCount": 3,
+      "linkedKpis": [
+        "구역별 활동원가 (as-is 확정 기준)",
+        "구역별 손익 12분류 (보고서 12~14p)",
+        "as-is 배부 로직 (직접 → 활동 → 간접)"
+      ],
+      "linkedDatasetIds": [
+        {"id": "cemetery_analysis_workbook", "relation": "작업본 → 확정본 (260603 더존 송부)"},
+        {"id": "fs_fy25", "relation": "용인공원·YPL 원장 source"},
+        {"id": "revenue_zone_mapping", "relation": "구역 분류 single source"}
+      ],
+      "caveats": [
+        "구역별 매출 시트는 상단(원장 기준)·하단(보정 최종) 두 피벗 블록 공존 — 확정값은 하단 보정 블록 (용인공원 소계 55,709,805,504원)",
+        "장지 매출 56,116,734천원은 12계정·YPL 포함·내부거래 제거 후 기준 — 영업매출 10계정 50,240,119,779원과 집계 범위 상이"
+      ],
+      "presentationSafe": true
+    },
+    {
+      "id": "dozone_mutual_final",
+      "name": "(더존송부용) 상조VC 라이프 분석 확정본 (260603)",
+      "category": "dozone-final",
+      "natureCode": "ANALYSIS-WORKBOOK",
+      "scope": "FY25 (상조 VC as-is 확정 — 행사매출 인식 기준 채널손익)",
+      "shape": "75시트 xlsm — 채널별 손익 + Backdata INDEX + 상품별 분류값(142개 매핑) + 해약-RAW(13,251건) 포함",
+      "owner": "PwC→더존 전달 완료",
+      "primaryKeys": ["회원번호", "행사번호"],
+      "keyColumns": ["채널별 손익", "상품별 분류값 (142개 ERP 상품명 → 채널·표준상품명)", "해약-RAW", "Backdata INDEX"],
+      "linkedKpiCount": 4,
+      "linkedKpis": [
+        "채널별 손익 (as-is 확정)",
+        "회비정산차익율",
+        "행사매출이익율",
+        "상향매출비율"
+      ],
+      "linkedDatasetIds": [
+        {"id": "life_analysis_workbook", "relation": "작업본 → 확정본 (260603 더존 송부)"},
+        {"id": "life_settlement_backdata", "relation": "해약-RAW 동일 (13,251건)"},
+        {"id": "life_event_revenue_backdata", "relation": "행사매출 recon source"}
+      ],
+      "caveats": [
+        "상조 1~3월 행사 ERP 세부데이터 결손 — 해당 기간 행사수수료는 금액 기준 recon으로 정확도 제한",
+        "회비정산차익 원장−ERP 차이 −5,780,500원은 기타 채널 차감으로 반영"
+      ],
+      "piiNote": "해약-RAW 회원 raw 포함 — 화면 노출 시 집계만.",
       "presentationSafe": true
     }
   ]

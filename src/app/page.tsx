@@ -8,6 +8,8 @@ import { NumberCell } from "@/components/NumberCell";
 import lifeKpi from "@/data/life_kpi.json";
 import zoneKpi from "@/data/zone_kpi.json";
 import deptKpi from "@/data/dept_kpi.json";
+import asisLogic from "@/data/asis_logic.json";
+import { autoUnit } from "@/lib/format";
 import type { NumberLineage } from "@/types";
 
 const SECTIONS = [
@@ -18,10 +20,14 @@ const SECTIONS = [
 
 export default function Home() {
   const totalLifecycle = lifeKpi.wowMetrics.totalLifecycleRevenue;
-  const totalPotential = zoneKpi.wowMetrics.potentialFromAvailable;
+  // 잠재가치 = 미판매분 + 이장지분 합계 (totalSaleableValue) — 산식과 정합
+  const totalPotential = zoneKpi.potentialValue.totalSaleableValue;
   const totalCost = deptKpi.channelCostAlloc.totals.reduce((a, b) => a + b, 0);
   // 채널 배부 합계는 천원 단위(JSON spec)이므로 "원"으로 환산 시 ×1000
   const totalCostKRW = totalCost * 1000;
+  // 0528 회의 as-is 확정 슬라이드 수 (장지 8 + 상조 6)
+  const confirmedSlideCount =
+    asisLogic.meta.scopeSlides.cemetery.length + asisLogic.meta.scopeSlides.mutual.length;
 
   // -------------------------------------------------------------------
   // Hero 3카드 lineage 정의
@@ -65,8 +71,18 @@ export default function Home() {
         rowCount: 12498,
       },
       {
-        label: "등급 평균가 적용",
-        detail: "각 구역·등급별 평균 단가로 환산 (proxy)",
+        label: "미판매분 잠재가치",
+        detail: "미판매 8,173기 × 등급 평균가 (proxy)",
+        amount: zoneKpi.wowMetrics.potentialFromAvailable,
+      },
+      {
+        label: "이장지분 잠재가치",
+        detail: "이장지 4,325기 × 등급 평균가 (proxy)",
+        amount: zoneKpi.wowMetrics.potentialFromTransfer,
+      },
+      {
+        label: "합산 (totalSaleableValue)",
+        detail: `미판매 ${autoUnit(zoneKpi.wowMetrics.potentialFromAvailable)} + 이장지 ${autoUnit(zoneKpi.wowMetrics.potentialFromTransfer)}`,
         amount: totalPotential,
       },
     ],
@@ -165,7 +181,8 @@ export default function Home() {
             />
           </div>
           <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
-            미판매 8,173 + 이장지 4,325기 (proxy)
+            미판매 {autoUnit(zoneKpi.wowMetrics.potentialFromAvailable)} + 이장지{" "}
+            {autoUnit(zoneKpi.wowMetrics.potentialFromTransfer)} (proxy)
           </div>
         </div>
 
@@ -190,25 +207,27 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 카드 4: 자동 도출 RFI (Data Model 진입) */}
+        {/* 카드 4: As-is 확정 로직 (0528 확정 · 더존 전달) */}
         <div className="group relative rounded-md border border-[#0095A9]/30 bg-[#e6f4f6]/40 p-6 transition-colors hover:border-[#0095A9]/50 hover:bg-[#e6f4f6]">
           <div className="flex items-start justify-between gap-2">
             <Link
-              href="/data-model"
+              href="/cemetery#asis-pl"
               className="flex flex-1 items-center justify-between gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[#007a8c]"
             >
-              <span>미활성 KPI · T-Box</span>
+              <span>As-is 확정 로직</span>
               <ArrowUpRight className="h-3.5 w-3.5 text-[#0095A9] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
-            <EvidenceButton slotId="ovw_rfi_count" label="미활성 KPI 식별" variant="subtle" />
           </div>
-          <Link href="/data-model" className="block">
+          <Link href="/cemetery#asis-pl" className="block">
             <div className="mt-2.5 flex items-baseline gap-1">
-              <span className="headline text-[24px] leading-none text-[#007a8c] tnum">5</span>
-              <span className="text-[12px] font-medium text-stone-500">건</span>
+              <span className="headline text-[24px] leading-none text-[#007a8c] tnum">
+                {confirmedSlideCount}
+              </span>
+              <span className="text-[12px] font-medium text-stone-500">장 확정</span>
             </div>
             <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
-              13 Class · 26 Property · 데이터 모델 보강 시 활성화될 KPI 후보
+              0528 확정 · 더존 전달(6/3) — 장지 {asisLogic.meta.scopeSlides.cemetery.length} ·
+              상조 {asisLogic.meta.scopeSlides.mutual.length} 슬라이드
             </div>
           </Link>
         </div>
@@ -427,7 +446,10 @@ export default function Home() {
             장지 묘역 master · {zoneKpi.meta.source} · {zoneKpi.meta.totalZones.toLocaleString()}행 × 27열
           </SourceCaption>
           <SourceCaption>
-            T-Box 의미층 · 13 Class · 26 Property · 6 Axiom · 데이터 보강 시 활성화될 KPI 후보 5건
+            As-is 확정 로직 · {asisLogic.meta.sources[0]} · {asisLogic.meta.sources[1]} — 0528 확정 · 더존 전달(260603)
+          </SourceCaption>
+          <SourceCaption>
+            T-Box 의미층 · 13 Class · 26 Property · 6 Axiom
           </SourceCaption>
         </div>
       </section>

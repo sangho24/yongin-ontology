@@ -19,7 +19,7 @@ import deptKpi from "@/data/dept_kpi.json";
 type DeptKpiRow = (typeof deptKpi.deptKpiMatrix)[number];
 type RationaleRow = (typeof deptKpi.newKpiRationale)[number];
 
-// 부서별 헤드카운트 (mock — PPT 23p 조직 기준, 실측 자료 수령 전 합리적 가정)
+// 부서별 헤드카운트 (추정 — PPT 23p 조직도 기준, 인사자료 미연동 상태의 합리적 가정)
 const DEPT_HEADCOUNT: Record<string, number> = {
   marketing: 12,
   "event-service": 18,
@@ -230,7 +230,7 @@ export default function DeptDetailPage({ params }: PageProps) {
         <section className="mb-10 grid gap-px overflow-hidden rounded-md bg-stone-200/60 sm:grid-cols-2 lg:grid-cols-4">
           <div className="bg-white p-6">
             <div className="text-[10px] font-medium uppercase tracking-[0.1em] text-stone-400">
-              헤드카운트
+              헤드카운트 (추정)
             </div>
             <div className="mt-3">
               <NumberCell
@@ -238,13 +238,13 @@ export default function DeptDetailPage({ params }: PageProps) {
                 unit="명"
                 size="lg"
                 lineage={{
-                  source: "PPT 23p · 조직도",
-                  formula: "부서 인원 (FY25 기준)",
+                  source: "조직도 기반 추정 (PPT 23p)",
+                  formula: "부서 인원 추정 (FY25 조직도 기준 · 인사자료 미연동)",
                 }}
               />
             </div>
             <p className="mt-2 text-[11px] leading-relaxed text-stone-500">
-              {dept.dept} 운영 인력
+              {dept.dept} 운영 인력 — 조직도 기반 추정치
             </p>
           </div>
 
@@ -395,6 +395,11 @@ export default function DeptDetailPage({ params }: PageProps) {
             )}
           </ul>
         </div>
+
+        {/* 주기·담당자 배지는 추정값 — 화면에 명기 */}
+        <p className="text-[11px] leading-relaxed text-stone-400 md:col-span-2">
+          측정 주기·담당자 배지는 조직도·운영 흐름 기반 추정 — 인사·운영 자료 연동 시 확정.
+        </p>
       </section>
 
       {/* 도입 사유 — rationale */}
@@ -556,7 +561,7 @@ export default function DeptDetailPage({ params }: PageProps) {
             </div>
             <p className="mt-3 flex-1 text-[12px] leading-relaxed text-stone-600">
               부서 단위 신규 KPI({dept.newKpi.length}개)를 Data Model에 자동 트래커로 등록.
-              미수령 자료는 RFI 후보로 추가.
+              미연동 자료는 데이터 모델 보강 항목으로 관리.
             </p>
             <button
               type="button"

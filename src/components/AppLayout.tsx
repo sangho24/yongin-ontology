@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, ReactNode } from "react";
+import { ReactNode } from "react";
 import { Search, HelpCircle } from "lucide-react";
 import { useSearchPalette } from "./SiteShell";
 import { startTour } from "./TourOverlay";

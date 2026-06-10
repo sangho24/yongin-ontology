@@ -11,7 +11,8 @@
       "YPL",
       "라이프"
     ],
-    "description": "용인공원재단·YPL(장지 VC) + 용인공원라이프(상조 VC)를 아우르는 관리손익 PI를 위한 mini T-Box. 결손 노드/엣지는 미활성 KPI 영역 — 데이터·시스템 보강 시 활성화 가능."
+    "description": "용인공원재단·YPL(장지 VC) + 용인공원라이프(상조 VC)를 아우르는 관리손익 PI를 위한 mini T-Box. 결손 노드/엣지는 미활성 KPI 영역 — 데이터·시스템 보강 시 활성화 가능.",
+    "rfiClosedNote": "0528 회의 as-is 확정에 따라 데이터 보강 요청 항목 전부 종결 (2026-06-03 더존 송부)"
   },
   "classes": [
     {
@@ -31,7 +32,7 @@
         "용인공원": null,
         "YPL": null
       },
-      "note": "라이프는 35열 회원DB master 수령. 장지는 계약자 master 부재 — 묘역raw 27열에 계약자 정보 0열."
+      "note": "라이프는 35열 회원DB master 보유. 장지는 계약자 master 부재 — 묘역raw 27열에 계약자 정보 0열."
     },
     {
       "id": "SalesAgent",
@@ -86,7 +87,7 @@
         "YPL": 27,
         "라이프": "N/A"
       },
-      "note": "묘역raw 27열 master 풀 수령. 장법별 분류 체계 확정(아너스톤 1R/2R/3R, 1N/2N/3N, 3H prefix)."
+      "note": "묘역raw 27열 master 풀 보유. 장법별 분류 체계 확정(아너스톤 1R/2R/3R, 1N/2N/3N, 3H prefix)."
     },
     {
       "id": "BurialMethod",
@@ -189,11 +190,11 @@
       ],
       "missingFor": [],
       "instanceCountByEntity": {
-        "용인공원": "활동정의 진행중",
-        "YPL": "활동정의 진행중",
+        "용인공원": "활동정의 확정 (0528 as-is)",
+        "YPL": "활동정의 확정 (0528 as-is)",
         "라이프": "23개 분석 시트"
       },
-      "note": "라이프_분석.xlsx 23개 xx_분석 비용 시트로 활동 도출. 7p PPT 작업 진행중."
+      "note": "라이프_분석.xlsx 23개 xx_분석 비용 시트로 활동 도출. 활동정의는 0528 회의 as-is로 확정."
     },
     {
       "id": "CostDriver",
@@ -216,7 +217,7 @@
     {
       "id": "Entity",
       "label": "Entity (3사)",
-      "definition": "용인공원재단(공익재단)/YPL(장지 영리)/용인공원라이프(상조).",
+      "definition": "용인공원재단(공익재단)/YPL(장지 마케팅)/용인공원라이프(상조).",
       "status": "satisfied",
       "satisfiedFor": [
         "용인공원",
@@ -265,7 +266,6 @@
         "용인공원",
         "YPL"
       ],
-      "rfiMapping": "RFI-NEW-001",
       "definition": "Member가 체결한 Contract들. 라이프 1:1 대응, 장지는 매핑테이블 부재."
     },
     {
@@ -282,7 +282,6 @@
         "용인공원",
         "YPL"
       ],
-      "rfiMapping": "RFI-NEW-002",
       "definition": "Member의 담당/모집 영업사원. 라이프는 회원DB 컬럼 보유, 장지는 부재."
     },
     {
@@ -301,8 +300,7 @@
         "용인공원-22.5%",
         "YPL-22.5%"
       ],
-      "rfiMapping": "RFI-NEW-003a",
-      "definition": "Contract가 사용하는 묘역. 묘역raw 22.5% 미채움분 사유 미확인(이장지 4325의 history 포함). r3a 구역 master + r3b 이장이력 두 갈래로 분할 박제."
+      "definition": "Contract가 사용하는 묘역. 묘역raw 22.5% 미채움분 사유 미확인(이장지 4325의 history 포함)."
     },
     {
       "id": "Contract-hasRevenueStream-RevenueStream",
@@ -363,8 +361,7 @@
         "시설별 면적",
         "계량기 검침"
       ],
-      "rfiMapping": "RFI-NEW-004a",
-      "definition": "비용 Account의 배부 동인. 일부 동인은 ERP 외연 결손 → A5' Default rule 발동. r4a 동인 정의 + r4b 발생금액·배부기준 두 갈래로 분할 박제."
+      "definition": "비용 Account의 배부 동인. 일부 동인은 ERP 외연 결손 → A5' Default rule 발동."
     },
     {
       "id": "Account-tracesTo-Zone",
@@ -636,7 +633,6 @@
         "Time Report 시간단위",
         "시설별 면적 m²"
       ],
-      "rfiMapping": "RFI-NEW-004a",
       "definition": "동인 측정 단위. 외연 결손 동인은 단위 정의 자체가 미확정."
     },
     {
@@ -728,172 +724,6 @@
       ]
     }
   ],
-  "rfiItems": [
-    {
-      "id": "RFI-NEW-001",
-      "priority": "P0",
-      "title": "용인공원·YPL 계약자 master + 묘역raw 매칭테이블",
-      "rationale": "Member-contracts-Contract property가 장지 VC에서 결손. 회원 LTV·CAC·재계약률·영업사원 생산성 산출 불가.",
-      "linkedProperties": [
-        "Member-contracts-Contract",
-        "Member-hasFamily-string",
-        "Member-hasJoinDate-date"
-      ],
-      "expectedColumns": [
-        "계약번호 (FK)",
-        "계약자ID",
-        "이름",
-        "인입경로(채널)",
-        "인입일자",
-        "상담단계",
-        "가입일",
-        "묘역코드",
-        "상품유형코드",
-        "결제방식",
-        "담당설계사ID",
-        "가족관계",
-        "연락처"
-      ],
-      "currentSourceCheck": "RFI 6.3 미수령 + Q40 미회신. 묘역 raw 27열에 계약자 정보 0열. 라이프 회원DB(35열) 대비 비대칭.",
-      "askTo": "용인공원·YPL 영업팀 / 라이프 고객센터팀"
-    },
-    {
-      "id": "RFI-NEW-002",
-      "priority": "P0",
-      "title": "장지 VC 영업사원 master + 묘역-영업사원 매칭",
-      "rationale": "Member-assignedTo-SalesAgent 결손. 장지 영업사원 생산성·CAC·인센티브 PI 불가능.",
-      "linkedProperties": [
-        "Member-assignedTo-SalesAgent",
-        "SalesAgent-belongsTo-Entity"
-      ],
-      "expectedColumns": [
-        "영업사원ID",
-        "이름",
-        "소속법인",
-        "소속팀",
-        "담당구역",
-        "DB유치건수(FY25)",
-        "실계약건수(FY25)",
-        "Conversion%",
-        "수수료등급"
-      ],
-      "currentSourceCheck": "RFI 6.5 미수령 (6.2 일부수령). 라이프 회원DB에 모집·담당설계사 컬럼 존재. 장지측은 영업사원 master 존재 여부 자체 미확인.",
-      "askTo": "용인공원·YPL 영업팀 / 라이프 경영지원팀"
-    },
-    {
-      "id": "RFI-NEW-003a",
-      "priority": "P1",
-      "title": "(r3a) 구역 master — FY23~25 매출구분별·면적구분별 매출자료",
-      "rationale": "RFI 3.6 본문: '3개년간의 매출구분별(사용료수입·관리비수입 등) 및 면적구분별(63-1공구·천명제1 등) 매출자료'. mock은 이장 history에 치우쳐 있어 구역×매출×면적 3차원 자료 분리 박제 필요.",
-      "linkedProperties": [
-        "Contract-uses-Zone",
-        "Zone-locatedIn-BurialMethod"
-      ],
-      "expectedColumns": [
-        "묘역코드",
-        "장법",
-        "매출구분(계정)",
-        "면적(m²)",
-        "단가",
-        "FY23 매출액",
-        "FY24 매출액",
-        "FY25 매출액",
-        "재고명세서 묘원수",
-        "분양상태"
-      ],
-      "currentSourceCheck": "RFI 3.6/3.8/3.9 미수령. 묘역raw 27열 + 신규야외묘역 시트 raw vs 재고명세서 차이 사유 미확보.",
-      "askTo": "용인공원 재무회계팀 / 영업팀"
-    },
-    {
-      "id": "RFI-NEW-003b",
-      "priority": "P1",
-      "title": "(r3b) 이장이력 — 묘역raw 22.5% 계약번호 미채움 사유 (이장지 4325 history)",
-      "rationale": "Contract-uses-Zone 22.5% 미채움. 인터뷰 3일차오전공원 이장 용역비 + 신규야외묘역 시트의 묘역raw vs 재고명세서 차이 사유 미확보.",
-      "linkedProperties": [
-        "Contract-uses-Zone",
-        "Contract-hasContractDate-date"
-      ],
-      "expectedColumns": [
-        "묘역코드",
-        "이전계약번호",
-        "이장일자",
-        "신계약번호",
-        "이장사유",
-        "공실/회수일",
-        "재분양가",
-        "특수사유"
-      ],
-      "currentSourceCheck": "묘역 raw 27열 master 중 계약번호 컬럼 22.5% 공란. 이장지 4325개 별도 식별됨.",
-      "askTo": "용인공원·YPL 영업팀"
-    },
-    {
-      "id": "RFI-NEW-004a",
-      "priority": "P1",
-      "title": "(r4a) 동인 정의 — Time Report·시설별 면적·계량기 검침 (외연 가용성)",
-      "rationale": "RFI 4.3/4.4 본문 '비용별 주요 발생 동인 기재' 측. 동인 식별·측정주체·단위·주기·소스시스템 정의 부재 → A5 partiallyMissing → A5' Default rule(매출비율 fallback) 발동중.",
-      "linkedProperties": [
-        "Account-hasDriver-CostDriver",
-        "CostDriver-hasUnit-string"
-      ],
-      "expectedColumns": [
-        "동인ID",
-        "동인명",
-        "동인유형",
-        "측정주체",
-        "측정단위",
-        "수집주기",
-        "소스시스템",
-        "수집상태"
-      ],
-      "currentSourceCheck": "용인공원 배부기준 시트에 일부 동인 정의되어 있으나 외연 raw 미수령. 라이프 상조ERP설계 17~20열은 채널배부 한정.",
-      "askTo": "3사 경영지원팀"
-    },
-    {
-      "id": "RFI-NEW-004b",
-      "priority": "P1",
-      "title": "(r4b) 발생금액·배부기준 — FY23~25 매출원가 + 판관비 세부 + 비경상",
-      "rationale": "RFI 4.3 '당기제품제조원가 중 경비 세부내역 + 비경상 비용' / RFI 4.4 '판관비 세부 항목 구분 필수 + 비경상'. 동인-금액 페어가 없으면 배부 불가. mock은 동인 외연만 박제, 금액·배부기준·비경상 축 결손.",
-      "linkedProperties": [
-        "Account-hasDriver-CostDriver",
-        "Activity-hasDriver-CostDriver"
-      ],
-      "expectedColumns": [
-        "계정코드",
-        "계정명",
-        "구분(원가/판관비)",
-        "FY23 발생금액",
-        "FY24 발생금액",
-        "FY25 발생금액",
-        "배부기준",
-        "비경상 여부",
-        "비경상 사유"
-      ],
-      "currentSourceCheck": "RFI 4.3/4.4 미수령. 25년 계정별원장 매출 10계정 합계 50,240,119,779원(영업매출 순매출, 부가세 제외) 검증 완료, 단 3개년 시계열 + 비경상 분리 미수령.",
-      "askTo": "3사 재무회계팀"
-    },
-    {
-      "id": "RFI-NEW-005",
-      "priority": "P1",
-      "title": "라이프 회원DB와 장지 계약자 ID 통합 매핑(그룹 단일 고객뷰)",
-      "rationale": "그룹 관점에서 상조→장지 cross-sell·동일 가족 식별 불가. Entity 간 Member 통합 ID 부재.",
-      "linkedProperties": [
-        "Member-contracts-Contract",
-        "Member-assignedTo-SalesAgent"
-      ],
-      "expectedColumns": [
-        "통합고객ID",
-        "라이프회원ID",
-        "장지계약자ID",
-        "동일가족 그룹ID",
-        "최초접점채널",
-        "라이프 누적매출(억)",
-        "장지 누적매출(억)",
-        "매칭confidence(%)"
-      ],
-      "currentSourceCheck": "RFI 3.7 25/12~26/03만 부분수령. FY23~25 전체 미수령. 라이프 9,930명 회원DB와 장지 계약자 master 자체가 부재 → 통합 매핑 작업 미착수.",
-      "askTo": "라이프 서비스기획팀 / 3사 경영지원팀"
-    }
-  ],
   "reactFlow": {
     "nodes": [
       {
@@ -914,7 +744,7 @@
             "용인공원",
             "YPL"
           ],
-          "note": "라이프는 35열 회원DB master 수령. 장지는 계약자 master 부재 — 묘역raw 27열에 계약자 정보 0열."
+          "note": "라이프는 35열 회원DB master 보유. 장지는 계약자 master 부재 — 묘역raw 27열에 계약자 정보 0열."
         }
       },
       {
@@ -975,7 +805,7 @@
             "YPL"
           ],
           "missingFor": [],
-          "note": "묘역raw 27열 master 풀 수령. 장법별 분류 체계 확정(아너스톤 1R/2R/3R, 1N/2N/3N, 3H prefix)."
+          "note": "묘역raw 27열 master 풀 보유. 장법별 분류 체계 확정(아너스톤 1R/2R/3R, 1N/2N/3N, 3H prefix)."
         }
       },
       {
@@ -1094,7 +924,7 @@
             "라이프"
           ],
           "missingFor": [],
-          "note": "라이프_분석.xlsx 23개 xx_분석 비용 시트로 활동 도출. 7p PPT 작업 진행중."
+          "note": "라이프_분석.xlsx 23개 xx_분석 비용 시트로 활동 도출. 활동정의는 0528 회의 as-is로 확정."
         }
       },
       {
@@ -1127,7 +957,7 @@
         "data": {
           "label": "Entity (3사)",
           "status": "satisfied",
-          "definition": "용인공원재단(공익재단)/YPL(장지 영리)/용인공원라이프(상조).",
+          "definition": "용인공원재단(공익재단)/YPL(장지 마케팅)/용인공원라이프(상조).",
           "satisfiedFor": [
             "용인공원",
             "YPL",
@@ -1167,7 +997,7 @@
         "label": "contracts",
         "data": {
           "status": "partiallyMissing",
-          "rfiId": "RFI-NEW-001",
+          "rfiId": null,
           "definition": "Member가 체결한 Contract들. 라이프 1:1 대응, 장지는 매핑테이블 부재.",
           "satisfiedFor": [
             "라이프"
@@ -1200,7 +1030,7 @@
         "label": "assignedTo",
         "data": {
           "status": "partiallyMissing",
-          "rfiId": "RFI-NEW-002",
+          "rfiId": null,
           "definition": "Member의 담당/모집 영업사원. 라이프는 회원DB 컬럼 보유, 장지는 부재.",
           "satisfiedFor": [
             "라이프"
@@ -1233,8 +1063,8 @@
         "label": "uses",
         "data": {
           "status": "partiallyMissing",
-          "rfiId": "RFI-NEW-003a",
-          "definition": "Contract가 사용하는 묘역. 묘역raw 22.5% 미채움분 사유 미확인(이장지 4325의 history 포함). r3a 구역 master + r3b 이장이력 두 갈래로 분할 박제.",
+          "rfiId": null,
+          "definition": "Contract가 사용하는 묘역. 묘역raw 22.5% 미채움분 사유 미확인(이장지 4325의 history 포함).",
           "satisfiedFor": [
             "라이프-N/A",
             "용인공원-77.5%",
@@ -1360,8 +1190,8 @@
         "label": "hasDriver",
         "data": {
           "status": "partiallyMissing",
-          "rfiId": "RFI-NEW-004a",
-          "definition": "비용 Account의 배부 동인. 일부 동인은 ERP 외연 결손 → A5' Default rule 발동. r4a 동인 정의 + r4b 발생금액·배부기준 두 갈래로 분할 박제.",
+          "rfiId": null,
+          "definition": "비용 Account의 배부 동인. 일부 동인은 ERP 외연 결손 → A5' Default rule 발동.",
           "satisfiedFor": [
             "매출비율·면적·인원수 동인"
           ],

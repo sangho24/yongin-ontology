@@ -22,7 +22,7 @@ import { NumberCell } from "@/components/NumberCell";
 import { ActivityCostExplorer } from "@/components/ActivityCostExplorer";
 import { CemeterySiteMap } from "@/components/CemeterySiteMap";
 import zoneKpi from "@/data/zone_kpi.json";
-import deptKpi from "@/data/dept_kpi.json";
+import asisLogic from "@/data/asis_logic.json";
 import type { NumberLineage } from "@/types";
 import { autoUnit, formatPct } from "@/lib/format";
 
@@ -35,10 +35,16 @@ const STATUS_COLORS: Record<string, string> = {
   미판매: "#9a3412",   // brick (강조 주목)
 };
 
+// As-is 확정 데이터 (0528 확정 · 더존 전달 260603)
+const CEMETERY_PL = asisLogic.cemeteryPL;
+const COST_ALLOCATION = asisLogic.cemeteryCostAllocation;
+const ALLOCATION_PRINCIPLES = asisLogic.allocationPrinciples.cemetery;
+const ORG_KPIS = asisLogic.kpiByOrg.cemetery;
+
 // 핵심 KPI lineage — 잠재가치 / 평균 묘역사용료
 const POTENTIAL_LINEAGE: NumberLineage = {
   source: "260401_용인공원 전체 묘역_raw.xlsx / 가용재고",
-  formula: "(미판매 + 이장지) × 등급별 평균 묘역사용료",
+  formula: "(미판매 8,173 + 이장지 4,325) × 등급별 평균 묘역사용료",
   verified: false,
   unit: "원",
   asOf: "2026-04-01",
@@ -46,7 +52,9 @@ const POTENTIAL_LINEAGE: NumberLineage = {
     { label: "묘역 raw row count", rowCount: 55711 },
     { label: "분양상태=미판매·이장지 필터", rowCount: 12498 },
     { label: "등급별 평균가 매핑 (proxy)" },
-    { label: "잠재가치 sum", amount: zoneKpi.wowMetrics.potentialFromAvailable },
+    { label: "미판매분 잠재가치", amount: zoneKpi.wowMetrics.potentialFromAvailable },
+    { label: "이장지분 잠재가치", amount: zoneKpi.wowMetrics.potentialFromTransfer },
+    { label: "합산 (totalSaleableValue)", amount: zoneKpi.potentialValue.totalSaleableValue },
   ],
   notes: "proxy 추정 — 실제 분양가는 옵션·할인·시장 변수로 ±변동",
 };
@@ -63,14 +71,6 @@ const AVG_PRICE_LINEAGE: NumberLineage = {
     { label: "전체 평균 묘역사용료", amount: zoneKpi.potentialValue.avgPriceOverall },
   ],
   notes: "등급·단지별 편차 큼 — 잠재가치 계산은 등급별 평균을 별도 매핑",
-};
-
-// 부서별 KPI 분류 — 장지 VC와 무관한 부서는 "전사 공통"으로 표기
-const CEMETERY_DEPT_TAGS: Record<string, "관련" | "전사 공통"> = {
-  marketing: "전사 공통",
-  "event-service": "관련",
-  "corp-sales": "전사 공통",
-  "customer-care": "전사 공통",
 };
 
 // Root Cause — 장지 가설 (root-cause page와 동일한 정의이지만 inline 표시용 간단 버전)
@@ -91,7 +91,7 @@ const ZONE_HYPOTHESES: Hypothesis[] = [
   {
     id: "Z2",
     title: "이장지 4,325기의 재분양 자원이 활용 안 됨",
-    evidence: "이장지 잠재가치 약 660억원, 전체 가용재고 잠재의 29% 비중. 이장 history 추적 부재로 재분양 candidates 식별 불가.",
+    evidence: `이장지 잠재가치 약 ${autoUnit(zoneKpi.wowMetrics.potentialFromTransfer)}, 전체 가용재고 잠재의 ${formatPct(zoneKpi.wowMetrics.potentialFromTransfer / zoneKpi.potentialValue.totalSaleableValue, 0)} 비중. 이장 history 추적 부재로 재분양 candidates 식별 불가.`,
     signal: "high",
   },
   {
@@ -169,10 +169,13 @@ export default function CemeteryPage() {
       narration={
         <div className="space-y-2">
           <p>
+            관리손익 로직은 <strong>0528 회의 as-is 확정</strong> · 더존(아마란스) 전달 6/3. 구역별 확정 손익·배부 로직 반영.
+          </p>
+          <p>
             장지는 <strong>객체(묘역) master 풀 셋업</strong>으로 객체 단위 KPI 활성. 계약자 dimension 추가 시 회원 중심 KPI 추가 활성화.
           </p>
           <p>가용재고 12,498기 잠재가치 약 <strong>2,594억원</strong>.</p>
-          <p className="text-[11px] text-stone-400">출처: 260401_용인공원 전체 묘역_raw.xlsx</p>
+          <p className="text-[11px] text-stone-400">출처: 260401_용인공원 전체 묘역_raw.xlsx · 더존송부용 260603</p>
         </div>
       }
     >
@@ -180,10 +183,12 @@ export default function CemeteryPage() {
         items={[
           { id: "overview", label: "묘역 현황" },
           { id: "site-map", label: "장법별 배치도" },
+          { id: "asis-pl", label: "구역별 확정 손익" },
+          { id: "allocation", label: "배부 로직" },
           { id: "potential", label: "잠재가치" },
           { id: "activity-cost", label: "구역별 활동원가" },
           { id: "root-cause", label: "Root Cause" },
-          { id: "department", label: "부서별 KPI" },
+          { id: "department", label: "조직별 KPI" },
         ]}
         activeId={activeSection}
         onSelect={handleSubNavSelect}
@@ -216,6 +221,168 @@ export default function CemeteryPage() {
         <CemeterySiteMap onDistrictSelect={handleMapDistrictSelect} />
       </section>
 
+      {/* ───────────────────────── 구역별 확정 손익 (As-is) ───────────────────────── */}
+      <section id="asis-pl" className="mt-12 scroll-mt-32">
+        <div className="mb-4 flex items-baseline justify-between gap-2 border-b border-stone-200 pb-2">
+          <h2 className="section-h">구역별 확정 손익 (As-is)</h2>
+          <span className="text-[11px] tracking-wider text-stone-400">
+            FY25 · 단위: 천원 · 영업이익 순
+          </span>
+        </div>
+        <p className="mb-5 max-w-3xl text-[13px] leading-relaxed text-stone-600">
+          0528 회의에서 as-is 확정된 12구역 손익. 아너스톤 로얄·노블 두 구역이 그룹 영업이익의 60%를
+          차지하고, 기타구역·명가여연은 원가율이 높아 이익률이 낮음.
+        </p>
+        <div className="overflow-hidden rounded-md border border-stone-200/80 bg-white">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50/60 text-[11px] uppercase tracking-[0.08em] text-stone-500">
+              <tr>
+                <th className="p-3 text-left font-medium">#</th>
+                <th className="p-3 text-left font-medium">구역</th>
+                <th className="p-3 text-right font-medium tnum">매출</th>
+                <th className="p-3 text-right font-medium tnum">매출원가</th>
+                <th className="p-3 text-right font-medium tnum">원가율</th>
+                <th className="p-3 text-right font-medium tnum">판관비</th>
+                <th className="p-3 text-right font-medium tnum">영업이익</th>
+                <th className="p-3 text-right font-medium tnum">이익률</th>
+              </tr>
+            </thead>
+            <tbody>
+              {CEMETERY_PL.zones.map((z) => {
+                // 이익률에 비례한 mint 배경 강도 (최고 60.2% 기준 정규화)
+                const marginIntensity = Math.max(0.05, (z.opMargin / 65) * 0.4);
+                return (
+                  <tr
+                    key={z.name}
+                    className="border-t border-stone-100 transition-colors hover:bg-[#fafaf7]"
+                  >
+                    <td className="p-3 text-[11px] tnum text-stone-400">{z.rank}</td>
+                    <td className="p-3 font-semibold text-stone-900">{z.name}</td>
+                    <td className="p-3 text-right tnum text-stone-800">
+                      {z.revenue.toLocaleString()}
+                    </td>
+                    <td className="p-3 text-right tnum text-stone-600">
+                      {z.cogs.toLocaleString()}
+                    </td>
+                    <td className="p-3 text-right tnum text-[11px] text-stone-500">
+                      {z.cogsRatio.toFixed(1)}%
+                    </td>
+                    <td className="p-3 text-right tnum text-stone-600">
+                      {z.sga.toLocaleString()}
+                    </td>
+                    <td className="p-3 text-right font-semibold tnum text-stone-900">
+                      {z.operatingIncome.toLocaleString()}
+                    </td>
+                    <td
+                      className="p-3 text-right font-semibold tnum text-stone-900"
+                      style={{ backgroundColor: `rgba(0, 149, 169, ${marginIntensity})` }}
+                    >
+                      {z.opMargin.toFixed(1)}%
+                    </td>
+                  </tr>
+                );
+              })}
+              <tr className="border-t-2 border-stone-300 bg-stone-50">
+                <td className="p-3" />
+                <td className="p-3 text-[12px] font-semibold uppercase tracking-[0.06em] text-stone-700">
+                  합계
+                </td>
+                <td className="p-3 text-right font-bold tnum text-stone-900">
+                  {CEMETERY_PL.total.revenue.toLocaleString()}
+                </td>
+                <td className="p-3 text-right font-bold tnum text-stone-900">
+                  {CEMETERY_PL.total.cogs.toLocaleString()}
+                </td>
+                <td className="p-3 text-right tnum text-[11px] font-semibold text-stone-600">
+                  {CEMETERY_PL.total.cogsRatio.toFixed(1)}%
+                </td>
+                <td className="p-3 text-right font-bold tnum text-stone-900">
+                  {CEMETERY_PL.total.sga.toLocaleString()}
+                </td>
+                <td className="p-3 text-right font-bold tnum text-[#0095A9]">
+                  {CEMETERY_PL.total.operatingIncome.toLocaleString()}
+                </td>
+                <td className="p-3 text-right font-bold tnum text-[#0095A9]">
+                  {CEMETERY_PL.total.opMargin.toFixed(1)}%
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-3 space-y-2">
+          <SourceCaption>보고서 12~14p · 더존송부용 260603 — 0528 as-is 확정</SourceCaption>
+          <p className="text-[11px] leading-relaxed text-stone-400">※ {CEMETERY_PL.labelNote}</p>
+          <p className="text-[11px] leading-relaxed text-stone-400">
+            ※ 매출 {CEMETERY_PL.total.revenue.toLocaleString()}천원은 12계정(수입수수료·상품매출
+            포함)·YPL 포함·내부거래 제거 후 기준 — 영업매출 10계정 기준 50,240,119,779원과 집계 범위
+            상이.
+          </p>
+        </div>
+      </section>
+
+      {/* ───────────────────────── 배부 로직 (As-is 확정) ───────────────────────── */}
+      <section id="allocation" className="mt-12 scroll-mt-32">
+        <div className="mb-4 flex items-baseline justify-between gap-2 border-b border-stone-200 pb-2">
+          <h2 className="section-h">배부 로직 (As-is 확정)</h2>
+          <span className="text-[11px] tracking-wider text-stone-400">{COST_ALLOCATION.source}</span>
+        </div>
+        <p className="mb-5 max-w-3xl text-[13px] leading-relaxed text-stone-600">
+          비용은 ① 직접 배부 → ② 활동 기준 배부 → ③ 간접 배부 순으로 우선 적용. 6대 비용의 계정별
+          배부 방식과 로직은 0528 확정 기준.
+        </p>
+        {/* 배부 우선순위 3단계 */}
+        <div className="grid gap-px overflow-hidden rounded-md bg-stone-200/60 md:grid-cols-3">
+          {ALLOCATION_PRINCIPLES.map((p) => (
+            <div key={p.order} className="bg-white p-5">
+              <div className="flex items-baseline gap-2">
+                <span className="headline text-[20px] leading-none text-[#0095A9] tnum">
+                  {p.order}
+                </span>
+                <h3 className="text-[14px] font-semibold text-stone-900">{p.name}</h3>
+              </div>
+              <p className="mt-2 text-[12px] leading-relaxed text-stone-600">{p.rule}</p>
+              <div className="mt-2 text-[10px] tracking-wider text-stone-400">{p.source}</div>
+            </div>
+          ))}
+        </div>
+        {/* 6대 비용 배부 표 */}
+        <div className="mt-6 overflow-hidden rounded-md border border-stone-200/80 bg-white">
+          <table className="w-full text-sm">
+            <thead className="bg-stone-50/60 text-[11px] uppercase tracking-[0.08em] text-stone-500">
+              <tr>
+                <th className="p-3 text-left font-medium">계정</th>
+                <th className="p-3 text-left font-medium">구분</th>
+                <th className="p-3 text-right font-medium tnum">금액 (천원)</th>
+                <th className="p-3 text-left font-medium">배부 방식</th>
+                <th className="p-3 text-left font-medium">배부 로직</th>
+              </tr>
+            </thead>
+            <tbody>
+              {COST_ALLOCATION.items.map((c) => (
+                <tr
+                  key={c.account}
+                  className="border-t border-stone-100 transition-colors hover:bg-[#fafaf7]"
+                >
+                  <td className="p-3 font-semibold text-stone-900">{c.account}</td>
+                  <td className="p-3 text-[12px] text-stone-500">{c.category}</td>
+                  <td className="p-3 text-right tnum text-stone-800">
+                    {c.amount.toLocaleString()}
+                  </td>
+                  <td className="p-3 whitespace-nowrap text-[12px] text-stone-600">{c.method}</td>
+                  <td className="p-3 text-[12px] leading-relaxed text-stone-600">{c.logic}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-3 space-y-2">
+          <SourceCaption>
+            백데이터: 급여대장(용인공원·YPL) · 법인카드 사용자구분 · 고정자산명세 · 계정별원장 적요
+          </SourceCaption>
+          <p className="text-[11px] leading-relaxed text-stone-400">※ {COST_ALLOCATION.etc}</p>
+        </div>
+      </section>
+
       {/* ───────────────────────── 잠재가치 (NumberCell hero · lineage 클릭 가능) ───────────────────────── */}
       <section id="potential" className="mt-12 scroll-mt-32">
         <div className="grid gap-6 rounded-md border border-stone-200/80 bg-white px-8 py-6 lg:grid-cols-[auto_1fr_auto_1fr] lg:items-center">
@@ -224,12 +391,12 @@ export default function CemeteryPage() {
           </div>
           <div>
             <NumberCell
-              value={zoneKpi.wowMetrics.potentialFromAvailable}
+              value={zoneKpi.potentialValue.totalSaleableValue}
               unit="원"
               lineage={POTENTIAL_LINEAGE}
               size="lg"
               emphasis
-              sub={`Top 단지 = ${zoneKpi.wowMetrics.topPotentialDistrict?.district} (${autoUnit(zoneKpi.wowMetrics.topPotentialDistrict?.potentialValue ?? 0)}) · proxy 추정 · 클릭하여 산식 확인`}
+              sub={`미판매 ${autoUnit(zoneKpi.wowMetrics.potentialFromAvailable)} + 이장지 ${autoUnit(zoneKpi.wowMetrics.potentialFromTransfer)} · Top 단지 = ${zoneKpi.wowMetrics.topPotentialDistrict?.district} (${autoUnit(zoneKpi.wowMetrics.topPotentialDistrict?.potentialValue ?? 0)}) · proxy 추정 · 클릭하여 산식 확인`}
             />
           </div>
           <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-stone-500 lg:border-l lg:border-stone-200 lg:pl-8">
@@ -460,94 +627,82 @@ export default function CemeteryPage() {
         </Link>
       </section>
 
-      {/* ───────────────────────── 부서별 KPI 매핑 ───────────────────────── */}
+      {/* ───────────────────────── 조직별 KPI (As-is 확정) ───────────────────────── */}
       <section id="department" className="mt-12 scroll-mt-32">
         <div className="mb-5 flex items-baseline justify-between gap-2 border-b border-stone-200 pb-2">
           <div className="flex items-center gap-2">
-            <h2 className="section-h">부서별 KPI 매핑</h2>
-            <EvidenceButton slotId="cemetery_dept_kpi_cards" label="부서별 KPI 매핑 — 장지 VC" variant="subtle" />
+            <h2 className="section-h">조직별 KPI — 장지 VC</h2>
+            <EvidenceButton slotId="cemetery_dept_kpi_cards" label="조직별 KPI — 장지 VC" variant="subtle" />
           </div>
-          <span className="text-[11px] tracking-wider text-stone-400">PPT 23p · 장지 VC 매핑</span>
+          <span className="text-[11px] tracking-wider text-stone-400">보고서 18p · 0528 확정</span>
         </div>
         <p className="mb-6 max-w-3xl text-[13px] leading-relaxed text-stone-600">
-          현재 dept_kpi.json은 상조 VC 채널 중심으로 정의되어 있음. 장지 VC와 직접 연관되는 부서는 행사·법인장례 통합 영역 (행사서비스팀)이며, 그 외는 전사 공통으로 표기.
+          0528 확정 기준 장지 VC 4개 조직의 손익 Group · 기존 KPI · 신규 KPI 매핑. 신규 KPI는
+          구역별 확정 손익과 연결되어 조직 단위 수익성 관리를 가능하게 함.
         </p>
         <div className="grid gap-6 md:grid-cols-2">
-          {deptKpi.deptKpiMatrix.map((d) => {
-            const tag = CEMETERY_DEPT_TAGS[d.id] ?? "전사 공통";
-            const isRelated = tag === "관련";
-            return (
-              <div
-                key={d.id}
-                className={`group rounded-md border bg-white p-6 transition-colors ${
-                  isRelated
-                    ? "border-[#0095A9]/30 ring-1 ring-[#0095A9]/10 hover:border-[#0095A9]/50"
-                    : "border-stone-200/80 hover:border-stone-300"
-                }`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-400">
-                      {d.revenueGroup}
-                    </div>
-                    <h3 className="mt-1 text-[15px] font-semibold text-stone-900">{d.dept}</h3>
+          {ORG_KPIS.map((d) => (
+            <div
+              key={d.org}
+              className="group rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-[#0095A9]/30"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-400">
+                    {d.plGroup}
                   </div>
-                  <span
-                    className={`shrink-0 rounded-sm px-1.5 py-0.5 text-[10px] font-semibold ${
-                      isRelated
-                        ? "bg-[#e6f4f6] text-[#0095A9]"
-                        : "bg-stone-100 text-stone-500"
-                    }`}
-                  >
-                    {tag}
+                  <h3 className="mt-1 text-[15px] font-semibold text-stone-900">{d.org}</h3>
+                </div>
+                {d.newKpi.length > 0 && (
+                  <span className="flex shrink-0 items-center gap-1 rounded-sm bg-[#e6f4f6] px-1.5 py-0.5 text-[10px] font-semibold text-[#0095A9]">
+                    <Sparkles className="h-3 w-3" />
+                    NEW
                   </span>
-                </div>
+                )}
+              </div>
 
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-stone-400">
-                      기존 KPI
-                    </div>
-                    <ul className="mt-1.5 space-y-1">
-                      {d.existingKpi.length > 0 ? (
-                        d.existingKpi.map((k, i) => (
-                          <li key={i} className="flex items-start gap-1.5 text-[12px] text-stone-700">
-                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-stone-400" />
-                            {k}
-                          </li>
-                        ))
-                      ) : (
-                        <li className="text-[12px] text-stone-400">—</li>
-                      )}
-                    </ul>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div>
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-stone-400">
+                    기존 KPI
                   </div>
-                  <div>
-                    <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#0095A9]">
-                      신규 KPI
-                      {d.newKpi.length > 0 && <Sparkles className="h-3 w-3" />}
-                    </div>
-                    <ul className="mt-1.5 space-y-1">
-                      {d.newKpi.length > 0 ? (
-                        d.newKpi.map((k, i) => (
-                          <li key={i} className="flex items-start gap-1.5 text-[12px] font-medium text-[#007a8c]">
-                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#0095A9]" />
-                            {k}
-                          </li>
-                        ))
-                      ) : (
-                        <li className="text-[12px] text-stone-400">—</li>
-                      )}
-                    </ul>
-                  </div>
+                  <ul className="mt-1.5 space-y-1">
+                    {d.baseKpi.length > 0 ? (
+                      d.baseKpi.map((k, i) => (
+                        <li key={i} className="flex items-start gap-1.5 text-[12px] text-stone-700">
+                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-stone-400" />
+                          {k}
+                        </li>
+                      ))
+                    ) : (
+                      <li className="text-[12px] text-stone-400">—</li>
+                    )}
+                  </ul>
                 </div>
-
-                <div className="mt-4 border-t border-stone-100 pt-3 text-[11px] leading-relaxed text-stone-500">
-                  {d.rationale}
+                <div>
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#0095A9]">
+                    신규 KPI
+                  </div>
+                  <ul className="mt-1.5 space-y-1">
+                    {d.newKpi.length > 0 ? (
+                      d.newKpi.map((k, i) => (
+                        <li key={i} className="flex items-start gap-1.5 text-[12px] font-medium text-[#007a8c]">
+                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#0095A9]" />
+                          {k}
+                        </li>
+                      ))
+                    ) : (
+                      <li className="text-[12px] text-stone-400">—</li>
+                    )}
+                  </ul>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
+        <p className="mt-4 max-w-3xl text-[11px] leading-relaxed text-stone-400">
+          ※ {asisLogic.kpiByOrg.kpiNote}
+        </p>
       </section>
 
       <section className="mt-12 border-t border-stone-200 pt-6">
@@ -556,8 +711,9 @@ export default function CemeteryPage() {
           <SourceCaption>총 묘역 55,711기 = 묘역 raw row count (26년 4월 기준)</SourceCaption>
           <SourceCaption>분양완료율 77.6% = (설묘 37,301 + 계약 5,753 + 예약 159) / 55,711</SourceCaption>
           <SourceCaption>가용재고 12,498기 = 미판매 8,173 + 이장지 4,325 (raw)</SourceCaption>
-          <SourceCaption>잠재가치 = 가용재고 행에 등급별 평균 묘역사용료 매핑 후 sum (proxy 추정)</SourceCaption>
+          <SourceCaption>잠재가치 {autoUnit(zoneKpi.potentialValue.totalSaleableValue)} = 미판매분 {autoUnit(zoneKpi.wowMetrics.potentialFromAvailable)} + 이장지분 {autoUnit(zoneKpi.wowMetrics.potentialFromTransfer)} (등급별 평균 묘역사용료 매핑 · proxy 추정)</SourceCaption>
           <SourceCaption>정체 단지 = 단지별 최근 계약 연도 ≤ 2021 + 가용재고 보유</SourceCaption>
+          <SourceCaption>구역별 확정 손익·배부 로직·조직별 KPI = {asisLogic.meta.sources[0]} (보고서 12~14·18p · 0528 as-is 확정)</SourceCaption>
         </div>
         <p className="mt-6 max-w-3xl text-[11px] leading-relaxed text-stone-400">
           ※ 묘역 55,711기 객체 master는 풀 셋업이라 객체 단위 KPI 활성. 계약자 dimension 추가 시 회원 LTV·재계약·영업사원 생산성 KPI 활성화. 데이터 모델 보강 항목은{" "}

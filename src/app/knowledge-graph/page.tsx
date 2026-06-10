@@ -147,7 +147,7 @@ export default function KnowledgeGraphPage() {
           </span>
           <span className="inline-flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full" style={{ backgroundColor: ENTITY_TONE.YPL }} />
-            YPL (장지 영리)
+            YPL (장지 마케팅)
           </span>
           <span className="inline-flex items-center gap-1.5">
             <span className="flex items-center gap-0.5">

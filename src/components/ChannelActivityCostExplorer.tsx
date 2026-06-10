@@ -121,7 +121,7 @@ function buildLineage(item: AggregatedItem): NumberLineage {
       { label: "최종 집계", amount: item.amount },
     ],
     notes: item.sources.has("estimated")
-      ? "일부 항목 proxy 추정 — RFI를 통한 정밀 검증 권장"
+      ? "일부 항목 proxy 추정 — 원천 자료(동인·원장) 보강 시 정밀 검증 가능"
       : undefined,
   };
 }

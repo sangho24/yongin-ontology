@@ -32,7 +32,6 @@ import { NumberCell } from "@/components/NumberCell";
 import lifeKpi from "@/data/life_kpi.json";
 import zoneKpi from "@/data/zone_kpi.json";
 import { autoUnit, formatPct } from "@/lib/format";
-import type { NumberLineage } from "@/types";
 
 // =============================================================================
 // 가설 타입 + mock LLM 분석 / 추천 액션
@@ -166,91 +165,6 @@ const ZONE_HYPOTHESES: Hypothesis[] = [
 ];
 
 // =============================================================================
-// 상단 StatCard용 lineage
-// =============================================================================
-
-const matureLineage: NumberLineage = {
-  source: "라이프_회원DB / 회원상태=YF",
-  formula: "Σ 매출합계(회원상태=YF) / Σ 매출합계(전체)",
-  verified: true,
-  unit: "%",
-  asOf: "2025-12-31",
-  steps: [
-    {
-      label: "회원DB 로드",
-      detail: "라이프_분석.xlsx / 회원DB 시트 — 9,930행 (만료 포함 전체)",
-      rowCount: 9930,
-    },
-    {
-      label: "회원상태 = YF (납부만기) 필터",
-      detail: "납부 의무 종료된 회원, 정산차익 대상",
-      amount: lifeKpi.memberStatus[0].revenueSum,
-      rowCount: lifeKpi.memberStatus[0].count,
-    },
-    {
-      label: "전체 매출합계 산출",
-      detail: "회원상태 무관 전체 회원 누적 납입액 (스냅샷)",
-      amount: lifeKpi.wowMetrics.totalLifecycleRevenue,
-    },
-    {
-      label: "비중 산출",
-      detail: "16,835,918,500 / 27,764,964,000 = 60.6%",
-    },
-  ],
-  notes:
-    "YF는 납부의무 종료 회원으로 회비정산차익이 영업외수익으로 인식됨. 영업이익 view 보정 시 핵심 driver.",
-};
-
-const stagnantLineage: NumberLineage = {
-  source: "묘역_raw(26.04 기준) / 단지·등급별 평균가 proxy",
-  formula: "Σ (정체단지 가용재고 × 등급 평균가)",
-  verified: false,
-  unit: "원",
-  asOf: "2026-04-01",
-  steps: [
-    {
-      label: "정체단지 식별",
-      detail: "2022년 1월 이후 계약 0건인 단지 추출",
-      rowCount: 2499,
-    },
-    {
-      label: "등급 평균가 매핑",
-      detail: "단지별 등급 → avgPriceByGrade lookup (proxy)",
-    },
-    {
-      label: "잠재가치 산출",
-      detail: "가용재고 × 등급 평균가 합산",
-      amount: zoneKpi.wowMetrics.potentialFromTransfer ?? 0,
-    },
-  ],
-  notes:
-    "proxy 추정치 — 등급 평균가는 historical 단가이므로 시장가 ceiling 도달 시 과대 가능성. 정확한 값은 단지별 실제 listing 가격 master 보강 후 재산출 필요.",
-};
-
-const channelGapLineage: NumberLineage = {
-  source: "라이프_회원DB / 채널 × 매출합계",
-  formula: "오프라인 회원당 매출 / 온라인 회원당 매출",
-  verified: true,
-  asOf: "2025-12-31",
-  steps: [
-    {
-      label: "채널별 회원수·매출합계 집계",
-      detail: "channelMatrix groupby(채널)",
-    },
-    {
-      label: "회원당 매출 산출",
-      detail: `오프라인 ${autoUnit(lifeKpi.wowMetrics.ltvByChannel.오프라인)} / 온라인 ${autoUnit(lifeKpi.wowMetrics.ltvByChannel.온라인)}`,
-    },
-    {
-      label: "비율 계산",
-      detail: "2,923,140 / 86,484 ≈ 33.8배 → 34배 표기",
-    },
-  ],
-  notes:
-    "비율(배수)이라 verified는 산식 일치 기준. 단, 절대 LTV는 product mix·funnel 보정 전 raw 값이라 추가 분해 필요.",
-};
-
-// =============================================================================
 // 가설 카드 — LLM 분석·추천 액션 토글 포함
 // =============================================================================
 
@@ -371,7 +285,6 @@ function StatCellWithActions({
   value,
   unit,
   sub,
-  lineage,
   emphasis = false,
   slotId,
 }: {
@@ -379,7 +292,6 @@ function StatCellWithActions({
   value: number;
   unit?: string;
   sub: string;
-  lineage: NumberLineage;
   emphasis?: boolean;
   slotId?: string;
 }) {
@@ -392,7 +304,6 @@ function StatCellWithActions({
         <NumberCell
           value={value}
           unit={unit}
-          lineage={slotId ? undefined : lineage}
           slotId={slotId}
           size="lg"
           emphasis={emphasis}
@@ -474,16 +385,14 @@ export default function RootCausePage() {
           value={Math.round(lifeKpi.memberStatus[0].shareOfRevenue * 1000) / 10}
           unit="%"
           sub={`${lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명 회비정산차익 → 영업외 인식`}
-          lineage={matureLineage}
           slotId="rc_stat_mature_member"
           emphasis
         />
         <StatCellWithActions
-          label="장지 가용재고 정체 잠재"
+          label="이장지 잠재가치"
           value={zoneKpi.wowMetrics.potentialFromTransfer ?? 0}
           unit="원"
-          sub={`이장지 4,325기 — 가용재고 잠재의 29%`}
-          lineage={stagnantLineage}
+          sub={`이장지 4,325기 재분양 자원 — 가용재고 잠재의 ${formatPct(zoneKpi.wowMetrics.potentialFromTransfer / zoneKpi.potentialValue.totalSaleableValue, 0)} (정체단지 2,499건과 별개)`}
           slotId="rc_stat_transfer_potential"
         />
         <StatCellWithActions
@@ -491,7 +400,6 @@ export default function RootCausePage() {
           value={34}
           unit="배"
           sub="광고 ROI 재배분 후보 — product mix 보정 후 재평가"
-          lineage={channelGapLineage}
           slotId="rc_stat_channel_ltv_gap"
           emphasis
         />
@@ -640,22 +548,22 @@ export default function RootCausePage() {
         </div>
         <div className="grid gap-6 md:grid-cols-2">
           <InsightBox type="warn" title="회계 손익 ≠ 경제 손익" slotId="rc_insight_gaap_vs_economic">
-            상조 VC의 "손실"은 회비정산차익 영업외 분류로 인한 시각적 효과가 큼.{" "}
+            상조 VC의 &ldquo;손실&rdquo;은 회비정산차익 영업외 분류로 인한 시각적 효과가 큼.{" "}
             <strong>영업이익 + 회비정산차익 view</strong>로 재해석 시 그룹 의사결정 근거 강화. View 전환은
             분기 IR·내부 경영회의 default 전환부터 시작.
           </InsightBox>
           <InsightBox type="danger" title="계약자·영업사원 dimension 보강 시 회원 lifecycle BI 활성화" slotId="rc_insight_master_rfi">
             객체(묘역) 단위 KPI는 풍부하게 활성화돼 있고, <strong>회원·영업사원 dimension 추가</strong> 시 회원 LTV·family cross-sell·영업 ROI KPI 활성화.
-            데이터 모델 페이지의 미활성 KPI 5건이 보강 후보 ↔ 회사 ERP 추출/연동 시 BI 자동 확장.
+            0528 as-is 확정 로직 기준 — 회사 ERP 추출·연동 보강 시 BI 자동 확장.
           </InsightBox>
           <InsightBox type="info" title="채널 ROI 재배분의 수익화 기회" slotId="rc_insight_channel_roi">
             온라인 채널 회원당 매출이 오프라인의 3% 수준. 광고선전비·온유프리 광고 효율 재검토 + product
             mix 차등화 우선.
           </InsightBox>
           <InsightBox type="success" title="단기 액션 — 가용재고 활성화" slotId="rc_insight_inventory_activation">
-            이장지 4,325기 + 정체단지 우선 처리 →{" "}
-            <strong>{autoUnit(zoneKpi.wowMetrics.potentialFromAvailable)}</strong> 잠재가치 일부 실현
-            가능. 가설 검증(H1·H2·Z1·Z4) 인터뷰와 병행.
+            이장지 4,325기 재분양 pipeline 진입 시{" "}
+            <strong>{autoUnit(zoneKpi.wowMetrics.potentialFromTransfer ?? 0)}</strong> 잠재가치 일부 실현
+            가능. 정체단지 우선 처리·가설 검증(H1·H2·Z1·Z4) 인터뷰와 병행.
           </InsightBox>
         </div>
 

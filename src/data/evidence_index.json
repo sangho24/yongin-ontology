@@ -1,15 +1,15 @@
 {
   "$schema": "evidence_index_v0.1",
-  "generated_at": "2026-05-11",
-  "version": "0.1",
+  "generated_at": "2026-06-10",
+  "version": "0.2",
   "policies": {
     "fee_rates": "수수료율(묘지 27.5%, 봉안당 50%, 상조 10%, 광고 마크업 15%, 정액 6억) — 영업비밀. 화면 박제 시 '구간 표기' 또는 '비공개' 검토. 본 evidence_index의 source_file 경로는 박제하되 raw 수치는 노출 X.",
     "pii": "직급별 연봉·계좌번호·고객 성명·휴대폰·주민번호·주소 raw 박제 X. 화면은 인원·총액·평균만 노출. 외주인력(누보이엔지·에코비엠) 직급별 raw는 비공개.",
-    "ypl_business_model": "YPL = 장지 VC 종속 마케팅 대행사. FY25 매출 19.76억 대부분이 용인공원 마케팅 대행비. 외부 vendor X, 그룹 내부거래 위주. 김현호 대표 라이프·YPL 겸직 + 동일 사무실. cemetery_*·ovw_dept_kpi_cards narrative에 'YPL=용인공원 광고예산 흡수' 명시.",
-    "lifecycle_revenue_caveat": "회원DB '매출합계' 컬럼 sum(27,765M)은 가입~25년말 누적 (2010~25). FY25 행사매출 4,624M(라이프 손익계산서)와 정의 다름 — F-2 caveat. 화면 카드 라벨 '스냅샷 기준 누적 매출' 명시 필수.",
+    "ypl_business_model": "YPL = 장지 VC 종속 마케팅 대행사. FY25 매출 197.6억 대부분이 용인공원 마케팅 대행비. 외부 vendor X, 그룹 내부거래 위주. 김현호 대표 라이프·YPL 겸직 + 동일 사무실. cemetery_*·ovw_dept_kpi_cards narrative에 'YPL=용인공원 광고예산 흡수' 명시.",
+    "lifecycle_revenue_caveat": "회원DB '매출합계' 컬럼 sum(27,765M)은 가입~25년말 누적 (2010~25). FY25 행사매출 4,624M(라이프 손익계산서)와 정의 다름 — 매출 정의 caveat. 화면 카드 라벨 '스냅샷 기준 누적 매출' 명시 필수.",
     "channel_normalization": "회원DB 채널구분 '오프라인 ' (trailing space) 152건은 '오프라인'으로 정규화 후 표시.",
     "data_period_asymmetry": "회원DB(25년말 누적 9,930) ≠ ERP(23-25 신규 4,437) ≠ 일일보고(25.12-26.04 신규 1,246, 온유 위주). 단순 합산 금지. 시점·범위 비대칭 caveat 필수. 누적 KPI(스냅샷)와 단년 KPI(FY25)·3년 누적 KPI는 라벨에 기간 prefix 명시 필수.",
-    "intercompany_elimination": "그룹 3사(용인공원·YPL·라이프) 매출 단순 합산 금지. B3 §4-1 기준 2025 P&L 내부거래 9건 = 20,773,260,866원(약 20.8억) 제거 후 통합 매출 산출. 주요 항목: 용인공원→YPL 지급수수료 18,744,994,618원(P-1), YPL→용인공원 판매수수료 534,655,910원(P-2) 등. B/S 내부거래 4건 1,379,133,071원 별도. tbox_axiom_a4 양방향매칭 공리 cross-link.",
+    "intercompany_elimination": "그룹 3사(용인공원·YPL·라이프) 매출 단순 합산 금지. 2025 P&L 내부거래 9건 = 20,773,260,866원(약 207.7억) 제거 후 통합 매출 산출. 주요 항목: 용인공원→YPL 지급수수료 18,744,994,618원(P-1), YPL→용인공원 판매수수료 534,655,910원(P-2) 등. B/S 내부거래 4건 1,379,133,071원 별도. tbox_axiom_a4 양방향매칭 공리 cross-link.",
     "lifecycle_revenue_split": "회원DB 누적 매출합계(스냅샷, 27,765M)와 회사 손익계산서상 인식 매출(FY25 행사매출, 4,624M)은 정의가 다름. 누적은 회원입장 납입액, 인식매출은 회사 손익 PL anchor. 화면 PRIMARY는 회사 손익 인식 매출, SECONDARY는 회원DB 스냅샷.",
     "kpi_activation_path": "본 BI는 회사 내부 운영·의사결정 도구. 결손 영역은 PwC 자료 요청 list가 아니라 '회사가 어느 시스템·자료 보강 시 어느 KPI가 활성화되는가'의 활성화 로드맵으로 frame. 미활성 KPI 식별 → 데이터 모델 보강 항목(7건) → 해당 자료 ERP 추출/연동 시 활성화될 KPI 명시. ⚠ 본 화면 narrative·subtitle·tooltip·caveat 작성 시 컨설턴트 톤(예: '결손 → RFI 자동', 'PwC가 자료 받으면 가능', '수령 후 보강', '결손 자체가 evidence') 사용 금지. 회사 내부 톤(예: '데이터 모델 보강 시 KPI 활성화', '회원·영업사원 dimension 추가 시 lifecycle KPI 활성화') 사용."
   },
@@ -27,7 +27,7 @@
           "computed_value": 4623872231,
           "computed_unit": "원 (FY25 행사매출 / 회사 손익 인식 매출)",
           "verified": true,
-          "notes": "P0-4 정정 (2026-05-11): 회사 손익 인식 매출(GAAP)을 PRIMARY로 승격. 라이프 PL 행사매출 라인."
+          "notes": "회사 손익 인식 매출(GAAP)을 PRIMARY로 승격. 라이프 PL 행사매출 라인."
         },
         {
           "rank": "SECONDARY",
@@ -38,17 +38,17 @@
           "computed_unit": "원 (회원DB 누적 / 회원입장 납입액)",
           "as_of": "2026-04-20",
           "verified": true,
-          "notes": "P0-4 정정: 회원DB 매출합계 컬럼 sum (가입~25년말 누적, 2010~25). 9,930 회원. 회사 손익 인식 매출과 정의 다름 — 회원입장 누적 납입액 스냅샷."
+          "notes": "회원DB 매출합계 컬럼 sum (가입~25년말 누적, 2010~25). 9,930 회원. 회사 손익 인식 매출과 정의 다름 — 회원입장 누적 납입액 스냅샷."
         },
         {
           "rank": "NARRATIVE",
           "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
           "slide": 4,
           "method": "DEFINITION",
-          "notes": "Executive Summary p.4. 매출 정의 불일치 — F-2 caveat."
+          "notes": "Executive Summary p.4. 매출 정의 불일치 caveat."
         }
       ],
-      "narrative": "P0-4 정정: 라벨 'lifecycle 매출' → '회원 누적 납입액 (스냅샷)'. PRIMARY는 회사 손익 인식 매출(FY25 4,624M), SECONDARY는 회원DB 누적 납입액(27,765M, 2010~25 가입자 누적). 두 anchor 정의 다름 — 합산·비교 금지. 그룹 통합 매출 산출 시 3사 단순합산 금지 (내부거래 20.8억 제거).",
+      "narrative": "라벨 'lifecycle 매출' → '회원 누적 납입액 (스냅샷)'. PRIMARY는 회사 손익 인식 매출(FY25 4,624M), SECONDARY는 회원DB 누적 납입액(27,765M, 2010~25 가입자 누적). 두 anchor 정의 다름 — 합산·비교 금지. 그룹 통합 매출 산출 시 3사 단순합산 금지 (내부거래 207.7억 제거).",
       "caveats": [
         "lifecycle_revenue_caveat",
         "lifecycle_revenue_split",
@@ -85,7 +85,7 @@
           "computed_value": 28045558858,
           "computed_unit": "원 (BS 비유동부채 / deferred revenue)",
           "verified": true,
-          "notes": "P0-6 정정 (2026-05-11): 라이프 행사예수금 — 회계 성격이 다른 별개 anchor (BS 부채 ≠ 미래 수익 추정). 행사 발생 시 매출 인식 / 해약 시 회비정산차익(영업외) 인식 / 100% 매출 전환 가정 X."
+          "notes": "라이프 행사예수금 — 회계 성격이 다른 별개 anchor (BS 부채 ≠ 미래 수익 추정). 행사 발생 시 매출 인식 / 해약 시 회비정산차익(영업외) 인식 / 100% 매출 전환 가정 X."
         },
         {
           "rank": "NARRATIVE",
@@ -95,7 +95,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P0-6 정정: 두 anchor 회계 성격 다름 — (1) 묘역 가용재고 잠재가치(미래 수익 추정, PROXY, 최대치, 분양가능률·할인율 미반영) (2) 라이프 행사예수금 28,045M(현재 BS 부채). 합산 X, 분리 해석 필수.",
+      "narrative": "두 anchor 회계 성격 다름 — (1) 묘역 가용재고 잠재가치(미래 수익 추정, PROXY, 최대치, 분양가능률·할인율 미반영) (2) 라이프 행사예수금 28,045M(현재 BS 부채). 합산 X, 분리 해석 필수.",
       "caveats": [
         "fee_rates",
         "lifecycle_revenue_caveat",
@@ -114,7 +114,7 @@
           "sheet": "손익계산서",
           "method": "RAW",
           "verified": true,
-          "notes": "P1-1 정정 (2026-05-11): 라이프 PL raw — 매출원가 0 / 판관비 7,471M 전액 (B3 §1-3). 채널귀속 가능 비용은 판관비 한정."
+          "notes": "라이프 PL raw — 매출원가 0 / 판관비 7,471M 전액. 채널귀속 가능 비용은 판관비 한정."
         },
         {
           "rank": "SECONDARY",
@@ -122,7 +122,7 @@
           "sheet": "비용23개_분석 합산",
           "method": "ANALYSIS",
           "verified": true,
-          "notes": "P1-1 정정: PRIMARY → SECONDARY 강등. F2 비용23개 _분석 시트군 합산 (가공본). 채널귀속 가능 비용 = 인건비+수수료+광고선전비"
+          "notes": "PRIMARY → SECONDARY 강등. F2 비용23개 _분석 시트군 합산 (가공본). 채널귀속 가능 비용 = 인건비+수수료+광고선전비"
         },
         {
           "rank": "SECONDARY",
@@ -157,7 +157,7 @@
           "notes": "0403 17:55 (참석자4 PwC) — 활동기준 배부 정의"
         }
       ],
-      "narrative": "P1-2 정정: 채널귀속 가능 비용 (인건비+수수료+광고선전비). 라이프 = 판관비 한정 (매출원가 0) / 용인공원 = 제조원가+판관비 합산 후 채널 귀속 (CLAUDE.md L77~78). YPL=용인공원 광고예산 흡수 구조.",
+      "narrative": "채널귀속 가능 비용 (인건비+수수료+광고선전비). 라이프 = 판관비 한정 (매출원가 0) / 용인공원 = 제조원가+판관비 합산 후 채널 귀속 (CLAUDE.md L77~78). YPL=용인공원 광고예산 흡수 구조.",
       "caveats": [
         "ypl_business_model",
         "channel_normalization"
@@ -175,12 +175,12 @@
           "sheet": "RFI List",
           "method": "RAW",
           "computed_value": 5,
-          "computed_unit": "건 (P0 표출)",
+          "computed_unit": "건 (P0 미활성 KPI 후보)",
           "verified": true,
-          "notes": "데이터 보강 항목 110건 중 87건이 회사 ERP 보강 후보. P0 우선순위 5건 표출."
+          "notes": "미활성 KPI 후보 110건 중 P0 우선순위 5건 화면 표시. 0528 회의 as-is 확정으로 보강 요청 전부 종결 (2026-06-03 더존 송부) — 이후 회사 시스템·자료 보강 시 활성화 가능한 KPI 후보로 관리."
         }
       ],
-      "narrative": "P2-1 sync 룰 명시: 데이터 보강 항목 중 P0 5건 화면 노출. tbox_stat_rfi_count(/data-model)와 동일 단일 source-of-truth (RFI_260507.xlsx:RFI List) — 두 화면 수치 일치 보장. computed_value 동기화 의무.",
+      "narrative": "미활성 KPI 식별 P0 5건. tbox_stat_rfi_count(/data-model)와 동일 단일 source-of-truth (RFI_260507.xlsx:RFI List) — 두 화면 수치 일치. 0528 as-is 확정으로 보강 요청 전부 종결 — 결손 영역은 데이터·시스템 보강 시 활성화 가능한 KPI 후보.",
       "verified": true
     },
     "ovw_dept_kpi_cards": {
@@ -215,7 +215,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P1-6 정정: deptKpiMatrix 반복. dept master 미정의 — Phase F에서 보강. ⚠ 부서별 KPI 합계 vs PL 합계 reconcile 미실시 — RFI r1·r4 보강 후 검증 필요.",
+      "narrative": "부서 master 미연동 — 보강 시 부서 드릴다운 정밀화. 부서별 KPI 합계와 PL 합계의 대사는 원천 자료 보강 시 정밀 검증 가능.",
       "caveats": [
         "ypl_business_model",
         "intercompany_elimination"
@@ -261,7 +261,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P2-2 정정: 계정×채널 매트릭스. 채널구분 '오프라인 ' (trailing space, 152건) 정규화 caveat. 'oo오프라인' 표기는 오타였음.",
+      "narrative": "계정×채널 매트릭스. 채널구분 '오프라인 ' (trailing space, 152건) 정규화 caveat. 'oo오프라인' 표기는 오타였음.",
       "caveats": [
         "channel_normalization"
       ],
@@ -293,7 +293,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "deptKpi.newKpiRationale — Skeleton 슬라이드 추가 narrative 필요",
+      "narrative": "신규 KPI 도입 사유 — 보고서 18·24·27p KPI matrix 기반 (조직별 base/new KPI 정의).",
       "verified": false
     },
     "mutual_total_members": {
@@ -310,7 +310,7 @@
           "computed_unit": "명 (활성 8,007 + 비활성 1,923)",
           "as_of": "2026-04-20",
           "verified": true,
-          "notes": "P1-4 정정 (2026-05-11): 회원상태 4분포 = 납부만기(YF) 4,433 + 정상(YY) 3,574 → 활성 8,007 / 3회연체(YB) 1,882 + 오류(YE) 41 → 비활성 1,923. row count 9,930."
+          "notes": "회원상태 4분포 = 납부만기(YF) 4,433 + 정상(YY) 3,574 → 활성 8,007 / 3회연체(YB) 1,882 + 오류(YE) 41 → 비활성 1,923. row count 9,930."
         },
         {
           "rank": "SECONDARY",
@@ -322,7 +322,7 @@
           "notes": "분리 마스터 — 단순 합산 금지"
         }
       ],
-      "narrative": "P1-4 정정: 9,930명 (25년말 누적, 활성 8,007 + 비활성 1,923). 활성 = 납부만기(YF) 4,433 + 정상(YY) 3,574, 비활성 = 3회연체(YB) 1,882 + 오류(YE) 41. 일일보고 1,246건은 25.12-26.04 신규 (온유 위주, 분리 마스터).",
+      "narrative": "9,930명 (25년말 누적, 활성 8,007 + 비활성 1,923). 활성 = 납부만기(YF) 4,433 + 정상(YY) 3,574, 비활성 = 3회연체(YB) 1,882 + 오류(YE) 41. 일일보고 1,246건은 25.12-26.04 신규 (온유 위주, 분리 마스터).",
       "caveats": [
         "data_period_asymmetry"
       ],
@@ -341,7 +341,7 @@
           "computed_value": 4623872231,
           "computed_unit": "원 (FY25 행사매출 / 회사 손익 인식 매출)",
           "verified": true,
-          "notes": "P0-4 정정 (2026-05-11): 회사 손익 인식 매출(GAAP)을 PRIMARY로 승격. 회원DB 누적 27,765M은 SECONDARY로 강등."
+          "notes": "회사 손익 인식 매출(GAAP)을 PRIMARY로 승격. 회원DB 누적 27,765M은 SECONDARY로 강등."
         },
         {
           "rank": "SECONDARY",
@@ -352,7 +352,7 @@
           "computed_unit": "원 (회원DB 누적, 2010~25 가입자)",
           "as_of": "2026-04-20",
           "verified": true,
-          "notes": "P0-4 정정: 회원입장 누적 납입액 스냅샷. 회사 손익 매출과 정의 다름."
+          "notes": "회원입장 누적 납입액 스냅샷. 회사 손익 매출과 정의 다름."
         },
         {
           "rank": "SECONDARY",
@@ -362,7 +362,7 @@
           "computed_value": 19758763395,
           "computed_unit": "원 (YPL FY25 매출, 내부거래 18.74억 포함)",
           "verified": true,
-          "notes": "YPL FY25 매출 19.76억 중 18.74억(P-1 내부거래)이 용인공원→YPL 지급수수료. 외부매출은 약 1,000M. 그룹 합산 시 제거 필수."
+          "notes": "YPL FY25 매출 197.6억 중 18.74억(P-1 내부거래)이 용인공원→YPL 지급수수료. 외부매출은 약 1,000M. 그룹 합산 시 제거 필수."
         },
         {
           "rank": "NARRATIVE",
@@ -372,7 +372,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P0-3·P0-4 정정: 라벨 'lifecycle 매출' → '회원 누적 납입액 (스냅샷)'. PRIMARY는 FY25 회사 손익 인식 매출(라이프 4,624M), SECONDARY는 회원DB 누적(27,765M)·YPL FY25(19,759M, 내부거래 포함). **3사 합산 시 내부거래 20.8억(B3 §4-1 P&L 9건) 제거 필수, 단순합산 금지** — tbox_axiom_a4 양방향매칭 참조.",
+      "narrative": "라벨 'lifecycle 매출' → '회원 누적 납입액 (스냅샷)'. PRIMARY는 FY25 회사 손익 인식 매출(라이프 4,624M), SECONDARY는 회원DB 누적(27,765M)·YPL FY25(19,759M, 내부거래 포함). **3사 합산 시 내부거래 207.7억(P&L 9건) 제거 필수, 단순합산 금지** — tbox_axiom_a4 양방향매칭 참조.",
       "caveats": [
         "lifecycle_revenue_caveat",
         "lifecycle_revenue_split",
@@ -560,7 +560,7 @@
           "sheet": "25년말 DB",
           "method": "RAW",
           "verified": true,
-          "notes": "B7 부수발견 정정 (2026-05-11): 채널×회원상태 crosstab. 회원상태=납부만기(YF) / 채널 전체 비율. 해약율 아님 — 회원상태 YF는 납부완료 정상 만기."
+          "notes": "채널×회원상태 crosstab. 회원상태=납부만기(YF) / 채널 전체 비율. 해약율 아님 — 회원상태 YF는 납부완료 정상 만기."
         },
         {
           "rank": "SECONDARY",
@@ -683,7 +683,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "signal=HIGH. F-2 caveat 핵심 evidence.",
+      "narrative": "signal=HIGH. 회계≠경제(매출 정의) caveat의 핵심 evidence.",
       "verified": true
     },
     "mutual_hypothesis_h2": {
@@ -711,10 +711,10 @@
           "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
           "sheet": "Q&A",
           "method": "RFI",
-          "notes": "Q38 (4-17 이호석) 만기해약 자동처리 + 회원DB 잔류 — 미회신"
+          "notes": "만기해약 자동처리 + 회원DB 잔류 로직 미연동 (이호석 팀장 인터뷰 0417)"
         }
       ],
-      "narrative": "P1-7 정정: title '72→96→88→88%'의 4개 값(코호트 정의)이 evidence_index에 미박제. RFI Q38 (만기해약 자동처리 + 회원DB 잔류 로직) 미회신으로 만기율 정의 자체 미확정 → computed_value 산출 불가. Q38 답변 후 코호트별(가입연도) 만기율 정확 추출 예정.",
+      "narrative": "코호트 만기율 '72→96→88→88%'는 만기해약 자동처리·회원DB 잔류 로직이 ERP에 미연동되어 만기율 정의가 미확정 — 정밀 수치 산출 제한. 해당 로직 연동 시 가입연도별 만기율 KPI 활성화.",
       "caveats": [
         "data_period_asymmetry"
       ],
@@ -738,7 +738,7 @@
           "source_file": "spo_evidence/DataPack/배부기준/온유상조_Performance_Report_new_260417.xlsx",
           "sheet": "RD_플랫폼",
           "method": "RAW",
-          "notes": "온유=그룹 자회사 (D-5 답)"
+          "notes": "온유=그룹 자회사 브랜드"
         },
         {
           "rank": "SECONDARY",
@@ -748,7 +748,7 @@
           "notes": "DB구분 아너스톤 19,320 / 용인공원 3,774"
         }
       ],
-      "narrative": "P2-4 정정: signal=MEDIUM. 온유=그룹 자회사 caveat. 채널구분 trailing space 정규화 적용.",
+      "narrative": "signal=MEDIUM. 온유=그룹 자회사 caveat. 채널구분 trailing space 정규화 적용.",
       "caveats": [
         "channel_normalization",
         "ypl_business_model"
@@ -776,7 +776,7 @@
           "notes": "모집설계사명 김지숙 362/이영옥2 324"
         }
       ],
-      "narrative": "P2-7 정정: signal=MEDIUM. RFI 6.2/6.5 일부수령 — 설계사 master 부분결손. Gini 0.69 산출 base = 회원DB 모집설계사명 distinct N (라이프_회원DB_backdata.xlsx:25년말 DB), 분포변수 = 설계사별 매출합계 sum. Lorenz 곡선 기반.",
+      "narrative": "signal=MEDIUM. 설계사 master 부분 미연동 — 판매수수료 지급기준 보강 시 정밀화. Gini 0.69 산출 base = 회원DB 모집설계사명 distinct N (라이프_회원DB_backdata.xlsx:25년말 DB), 분포변수 = 설계사별 매출합계 sum. Lorenz 곡선 기반.",
       "caveats": [
         "pii",
         "lifecycle_revenue_caveat"
@@ -797,7 +797,7 @@
           "computed_unit": "원 (3년 누적 해약수입금)",
           "as_of": "2023-09-27 ~ 2025-12-31 (3년 누적)",
           "verified": true,
-          "notes": "P0-5 정정 (2026-05-11): as_of 기간 명시. 3년 누적 해약수입금. FY25 단년 회비정산차익은 별도 SECONDARY 참조."
+          "notes": "as_of 기간 명시. 3년 누적 해약수입금. FY25 단년 회비정산차익은 별도 SECONDARY 참조."
         },
         {
           "rank": "SECONDARY",
@@ -808,7 +808,7 @@
           "computed_unit": "원 (FY25 단년 회비정산차익 / 영업외수익)",
           "as_of": "2025-12-31 (FY25 단년)",
           "verified": true,
-          "notes": "P0-5 추가: FY25 단년 회비정산차익(영업외수익 92900). B3 §1-3. 3년 누적과 분리 표기."
+          "notes": "FY25 단년 회비정산차익(영업외수익 92900). 3년 누적과 분리 표기."
         },
         {
           "rank": "SECONDARY",
@@ -824,7 +824,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P0-5 정정: 해약수입금 2,812,594,408원은 2023-09-27~2025-12-31 3년 누적. FY25 단년 회비정산차익(영업외수익)은 550,265,950원. 만기 시 회사 가져가는 차익 — GAAP상 영업외수익으로 영업이익과 분리.",
+      "narrative": "해약수입금 2,812,594,408원은 2023-09-27~2025-12-31 3년 누적. FY25 단년 회비정산차익(영업외수익)은 550,265,950원. 만기 시 회사 가져가는 차익 — GAAP상 영업외수익으로 영업이익과 분리.",
       "caveats": [
         "data_period_asymmetry",
         "lifecycle_revenue_caveat"
@@ -844,7 +844,7 @@
           "computed_value": -2847056108,
           "computed_unit": "원 (FY25 영업손실 / 손익계산서 raw 셀값)",
           "verified": true,
-          "notes": "P0-1 정정 (2026-05-11): 손익계산서 Sheet1 행43 raw 셀값 직접 추출. 기존 -2,847,056,000원은 천원단위 절사 표기였음. 정확값 -2,847,056,108원."
+          "notes": "손익계산서 Sheet1 행43 raw 셀값 직접 추출. 기존 -2,847,056,000원은 천원단위 절사 표기였음. 정확값 -2,847,056,108원."
         },
         {
           "rank": "SECONDARY",
@@ -904,7 +904,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P1-6 정정: mutualDepts 필터. YPL 상조 10% 수수료가 변동비 핵심. ⚠ 부서별 KPI 합계 vs 라이프 PL 합계 reconcile 미실시 — RFI r1·r4 보강 후 검증 필요.",
+      "narrative": "YPL 상조 10% 수수료가 변동비 핵심. 부서별 KPI 합계와 라이프 PL 합계의 대사는 원천 자료 보강 시 정밀 검증 가능.",
       "caveats": [
         "ypl_business_model",
         "fee_rates",
@@ -933,7 +933,7 @@
           "method": "ANALYSIS"
         }
       ],
-      "narrative": "P1 정책확장: 55,711기. 장지 KPI 해석 시 YPL 마케팅 대행 매출 흐름 맥락 반영.",
+      "narrative": "55,711기. 장지 KPI 해석 시 YPL 마케팅 대행 매출 흐름 맥락 반영.",
       "caveats": [
         "ypl_business_model"
       ],
@@ -952,7 +952,7 @@
           "computed_value": 0.78,
           "computed_unit": "비율 (기수 기준 — 분양완료 기수 / 총 기수, 면적·단가가중 X)",
           "verified": true,
-          "notes": "P2-6 정정 (2026-05-11): 산출 기준 명시. 78% = 분양완료 기수 / 총 묘지재고 기수 (단순 기수 기준). 면적가중·단가가중과 다름."
+          "notes": "산출 기준 명시. 78% = 분양완료 기수 / 총 묘지재고 기수 (단순 기수 기준). 면적가중·단가가중과 다름."
         },
         {
           "rank": "SECONDARY",
@@ -967,7 +967,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P2-6 정정: 78% (기수 기준 — 분양완료 기수 / 총 기수). 면적·단가가중 산출 아님.",
+      "narrative": "78% (기수 기준 — 분양완료 기수 / 총 기수). 면적·단가가중 산출 아님.",
       "caveats": [
         "ypl_business_model"
       ],
@@ -1000,7 +1000,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P1 정책확장: 12,498기. 장지 KPI 해석 시 YPL 마케팅 대행 매출 흐름 맥락 반영.",
+      "narrative": "12,498기. 장지 KPI 해석 시 YPL 마케팅 대행 매출 흐름 맥락 반영.",
       "caveats": [
         "ypl_business_model"
       ],
@@ -1017,7 +1017,7 @@
           "sheet": "KPI",
           "method": "ANALYSIS",
           "verified": true,
-          "notes": "P1-11 정정 (2026-05-11): cemetery_avg_price_kpi와 동일 source (KPI 시트) 단일 source-of-truth. autoUnit으로 표기단위만 다름 (StatCard=단위포맷, NumberCell=raw)."
+          "notes": "cemetery_avg_price_kpi와 동일 source (KPI 시트) 단일 source-of-truth. autoUnit으로 표기단위만 다름 (StatCard=단위포맷, NumberCell=raw)."
         },
         {
           "rank": "SECONDARY",
@@ -1026,7 +1026,7 @@
           "method": "RAW"
         }
       ],
-      "narrative": "P1-11 정정: cemetery_avg_price_kpi와 sync — 동일 PRIMARY (용인공원_분석.xlsm:KPI 시트) 사용으로 수치 일치 보장. StatCard·NumberCell 표기 차이만 존재.",
+      "narrative": "cemetery_avg_price_kpi와 sync — 동일 PRIMARY (용인공원_분석.xlsm:KPI 시트) 사용으로 수치 일치 보장. StatCard·NumberCell 표기 차이만 존재.",
       "caveats": [
         "fee_rates",
         "ypl_business_model"
@@ -1066,7 +1066,7 @@
           "computed_value": 28045558858,
           "computed_unit": "원 (BS 비유동부채 / deferred revenue, 별개 anchor)",
           "verified": true,
-          "notes": "P0-6 정정 (2026-05-11): 라이프 행사예수금 — 회계 성격 다른 별개 anchor (BS 부채 ≠ 미래 수익 추정). 묘역 잠재가치와 합산·비교 금지."
+          "notes": "라이프 행사예수금 — 회계 성격 다른 별개 anchor (BS 부채 ≠ 미래 수익 추정). 묘역 잠재가치와 합산·비교 금지."
         },
         {
           "rank": "NARRATIVE",
@@ -1076,7 +1076,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P0-6 정정: 두 anchor 회계 성격 다름 — (1) 묘역 가용재고 잠재가치(미래 수익 추정, PROXY, 최대치, 분양 가능률·할인율 미반영) (2) 라이프 행사예수금 28,045M(현재 BS 부채). 합산 X, 분리 해석 필수. 단가는 영업비밀. 잠재가치 산정 매출 anchor는 용인공원 단일사 — 그룹 합산 시 YPL 내부거래 제거.",
+      "narrative": "두 anchor 회계 성격 다름 — (1) 묘역 가용재고 잠재가치(미래 수익 추정, PROXY, 최대치, 분양 가능률·할인율 미반영) (2) 라이프 행사예수금 28,045M(현재 BS 부채). 합산 X, 분리 해석 필수. 단가는 영업비밀. 잠재가치 산정 매출 anchor는 용인공원 단일사 — 그룹 합산 시 YPL 내부거래 제거.",
       "caveats": [
         "fee_rates",
         "lifecycle_revenue_caveat",
@@ -1116,7 +1116,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P1-11 정정: cemetery_avg_price_stat와 sync — 동일 PRIMARY (용인공원_분석.xlsm:KPI 시트) 사용. 원장 대조용 SECONDARY로 25년 묘지재고 명세 raw 활용.",
+      "narrative": "cemetery_avg_price_stat와 sync — 동일 PRIMARY (용인공원_분석.xlsm:KPI 시트) 사용. 원장 대조용 SECONDARY로 25년 묘지재고 명세 raw 활용.",
       "caveats": [
         "fee_rates",
         "ypl_business_model"
@@ -1154,7 +1154,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P1 정책확장: 5종 (제품/재공품/봉안/원재료/저장품). 장지 KPI 해석 시 YPL 마케팅 대행 매출이 그룹 내부거래로 흐른다는 맥락 반영.",
+      "narrative": "5종 (제품/재공품/봉안/원재료/저장품). 장지 KPI 해석 시 YPL 마케팅 대행 매출이 그룹 내부거래로 흐른다는 맥락 반영.",
       "caveats": [
         "ypl_business_model"
       ],
@@ -1170,7 +1170,7 @@
           "source_file": "spo_evidence/재무제표 수령본/FY25/1. 용인공원/용인공원_계정별원장 (2).xls",
           "method": "RAW",
           "verified": true,
-          "notes": "PRIMARY 검토 (2026-05-11): 분석본 → 25년 계정별원장 RAW로 PRIMARY 변경. 계약속도는 raw 데이터 직접 표현 (RAW가 PRIMARY 회계학적 정합). FY24 49.23억→FY25 50.24억 +2.05% YoY."
+          "notes": "분석본 → 25년 계정별원장 RAW로 PRIMARY 변경. 계약속도는 raw 데이터 직접 표현 (RAW가 PRIMARY 회계학적 정합). FY24 492.3억→FY25 502.4억 +2.05% YoY."
         },
         {
           "rank": "SECONDARY",
@@ -1186,7 +1186,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P1 정책확장 (2026-05-11): 날짜축 집계로 계약속도 산출. FY24 49.23억→FY25 50.24억 +2.05% YoY. 매출은 용인공원 단일사 기준 (그룹 합산 시 YPL 내부거래 제거 필수).",
+      "narrative": "날짜축 집계로 계약속도 산출. FY24 492.3억→FY25 502.4억 +2.05% YoY. 매출은 용인공원 단일사 기준 (그룹 합산 시 YPL 내부거래 제거 필수).",
       "caveats": [
         "intercompany_elimination",
         "ypl_business_model",
@@ -1233,7 +1233,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P1 정책확장: F8 master + F1·F7 reconcile. 잠재가치는 PROXY (재고기수 × 단가, 단가 영업비밀). 매출 anchor는 용인공원 단일사 — 그룹 합산 시 YPL 내부거래 제거.",
+      "narrative": "F8 master + F1·F7 reconcile. 잠재가치는 PROXY (재고기수 × 단가, 단가 영업비밀). 매출 anchor는 용인공원 단일사 — 그룹 합산 시 YPL 내부거래 제거.",
       "caveats": [
         "fee_rates",
         "ypl_business_model",
@@ -1273,7 +1273,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P1 정책확장: 232 세부구역 중 정체 식별. 매출은 용인공원 단일사 — YPL 광고예산 흡수 맥락 caveat.",
+      "narrative": "232 세부구역 중 정체 식별. 매출은 용인공원 단일사 — YPL 광고예산 흡수 맥락 caveat.",
       "caveats": [
         "ypl_business_model"
       ],
@@ -1310,7 +1310,7 @@
           "notes": "3일차오전 05:46 — 이장 발생 정의"
         }
       ],
-      "narrative": "P1 정책확장: 이장 발생 구역 추적. 매출은 용인공원 단일사 — YPL 마케팅 대행 흐름 caveat.",
+      "narrative": "이장 발생 구역 추적. 매출은 용인공원 단일사 — YPL 마케팅 대행 흐름 caveat.",
       "caveats": [
         "ypl_business_model"
       ],
@@ -1394,7 +1394,7 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": true,
-          "notes": "RFI 110건 중 r1/r2/r3 P0 미수령"
+          "notes": "r1/r2/r3 영역(P0) 미연동 — 보강 시 활성화"
         },
         {
           "rank": "SECONDARY",
@@ -1521,7 +1521,7 @@
           "rank": "NARRATIVE",
           "source_file": "spo_evidence/PPT보고서/01. 용인공원그룹_관리손익분석_보고서_Draft_0422.pptx",
           "slide": 16,
-          "notes": "p.16~17, p.103~104 아너스톤 노블 105억/로얄 59억/아너 22억 = 영업이익 69%",
+          "notes": "p.16~17, p.103~104 아너스톤 로얄 105억/노블 59억/아너 22억 = 영업이익 69% (보고서 원문 라벨 스왑 — 등급 코드 기준 정정)",
           "method": "NARRATIVE_PPT"
         }
       ],
@@ -1592,7 +1592,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P1-6 정정: CEMETERY_DEPT_TAGS. 시설관리부서 외주비 = 에코비엠 1.5~1.9억/년 + 누보이엔지 사무 6~8억/년. YPL=용인공원 광고예산 흡수. ⚠ 부서별 KPI 합계 vs 용인공원 PL 합계 reconcile 미실시 — RFI r1·r4 보강 후 검증 필요.",
+      "narrative": "시설관리부서 외주비 = 에코비엠 1.5~1.9억/년 + 누보이엔지 사무 6~8억/년. YPL=용인공원 광고예산 흡수. 부서별 KPI 합계와 용인공원 PL 합계의 대사는 원천 자료 보강 시 정밀 검증 가능.",
       "caveats": [
         "ypl_business_model",
         "fee_rates",
@@ -1614,7 +1614,7 @@
           "computed_value": 0.606,
           "computed_unit": "비율 (스냅샷 누적 매출 기준)",
           "verified": true,
-          "notes": "P1-9 정정 (2026-05-11): 납부만기(YF) 회원 매출합계 16,835M / 전체 27,765M = 60.6%. 회원DB 누적 스냅샷 기준 — FY25 행사매출 기준과 정의 다름."
+          "notes": "납부만기(YF) 회원 매출합계 16,835M / 전체 27,765M = 60.6%. 회원DB 누적 스냅샷 기준 — FY25 행사매출 기준과 정의 다름."
         },
         {
           "rank": "SECONDARY",
@@ -1624,7 +1624,7 @@
           "notes": "라이프 FY25 행사매출 4,624M / 회비정산차익 550M — 별도 산출 권장"
         }
       ],
-      "narrative": "P1-9 정정: 스냅샷 기준 만기회원 누적매출 비중 60.6% (16,835M/27,765M). FY25 손익 행사매출 기준 비중과 정의 다름 — 별도 산출 필요.",
+      "narrative": "스냅샷 기준 만기회원 누적매출 비중 60.6% (16,835M/27,765M). FY25 손익 행사매출 기준 비중과 정의 다름 — 별도 산출 필요.",
       "caveats": [
         "lifecycle_revenue_caveat",
         "data_period_asymmetry"
@@ -1673,10 +1673,10 @@
           "computed_value": 34,
           "computed_unit": "배 (오프 2,929k원 / 온 86.5k원, 누적매출 기준)",
           "verified": true,
-          "notes": "P1-8 정정 (2026-05-11): 오프라인 27,284M/9,315명=2,929k원 vs 온라인 37,534M/434명=86.5k원, gap=33.9배. 누적 매출 기준이며 가입 시점 다른 두 그룹(온라인은 신규 위주) 단순 비교."
+          "notes": "오프라인 27,284M/9,315명=2,929k원 vs 온라인 37,534M/434명=86.5k원, gap=33.9배. 누적 매출 기준이며 가입 시점 다른 두 그룹(온라인은 신규 위주) 단순 비교."
         }
       ],
-      "narrative": "P1-8 정정: 34배 (누적 LTV gap). ⚠ 온라인은 신규 가입 위주, 오프라인은 2010년부터 누적 — 가입연도 비대칭으로 단순 LTV 비교 caveat 필수.",
+      "narrative": "34배 (누적 LTV gap). ⚠ 온라인은 신규 가입 위주, 오프라인은 2010년부터 누적 — 가입연도 비대칭으로 단순 LTV 비교 caveat 필수.",
       "caveats": [
         "channel_normalization",
         "data_period_asymmetry",
@@ -1737,10 +1737,10 @@
           "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
           "sheet": "Q&A",
           "method": "RFI",
-          "notes": "Q38 미회신"
+          "notes": "만기해약 자동처리·회원DB 잔류 로직 미연동"
         }
       ],
-      "narrative": "Q38 미수령",
+      "narrative": "만기해약 처리 로직 미연동 — 보강 시 코호트 만기율 KPI 활성화",
       "caveats": [
         "data_period_asymmetry"
       ],
@@ -1773,7 +1773,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "P2-4 정정: 온유=그룹 자회사. 채널구분 trailing space 정규화 적용.",
+      "narrative": "온유=그룹 자회사. 채널구분 trailing space 정규화 적용.",
       "caveats": [
         "channel_normalization",
         "ypl_business_model"
@@ -1798,10 +1798,10 @@
           "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
           "sheet": "RFI List",
           "method": "RFI",
-          "notes": "6.5 (판매수수료 지급기준 미수령)"
+          "notes": "판매수수료 지급기준 미연동"
         }
       ],
-      "narrative": "RFI 6.5 미수령",
+      "narrative": "판매수수료 지급기준 미연동 — 보강 시 활성화",
       "caveats": [
         "pii",
         "fee_rates"
@@ -1852,7 +1852,7 @@
           "notes": "광고비 normalize 시"
         }
       ],
-      "narrative": "P2-4 정정: 채널 LTV. 채널구분 trailing space 정규화 적용.",
+      "narrative": "채널 LTV. 채널구분 trailing space 정규화 적용.",
       "caveats": [
         "channel_normalization",
         "lifecycle_revenue_caveat"
@@ -2030,7 +2030,7 @@
           "computed_value": -2847056108,
           "computed_unit": "원 (FY25 영업손실 / 손익계산서 raw 셀값)",
           "verified": true,
-          "notes": "P0-1 정정 (2026-05-11): 손익계산서 Sheet1 행43 raw 추출. 기존 -2,847,056,000원은 절사값."
+          "notes": "손익계산서 Sheet1 행43 raw 추출. 기존 -2,847,056,000원은 절사값."
         },
         {
           "rank": "PRIMARY",
@@ -2040,7 +2040,7 @@
           "computed_value": 28045558858,
           "computed_unit": "원 (행사예수금 BS 비유동부채 / deferred revenue)",
           "verified": true,
-          "notes": "F-2 정량증거. 행사예수금 = 상조 선납 회비. 행사 발생 시 매출 인식 / 해약 시 일부 회비정산차익(영업외수익) 인식. 100% 매출 전환 가정 X — 만기/해약 시점·해약환급률에 따라 PL 인식 패턴 상이."
+          "notes": "회계≠경제 정량 근거. 행사예수금 = 상조 선납 회비. 행사 발생 시 매출 인식 / 해약 시 일부 회비정산차익(영업외수익) 인식. 100% 매출 전환 가정 X — 만기/해약 시점·해약환급률에 따라 PL 인식 패턴 상이."
         },
         {
           "rank": "SECONDARY",
@@ -2054,7 +2054,7 @@
           "rank": "NARRATIVE",
           "source_file": "spo_evidence/인터뷰 녹음본/용인공원그룹_0403.xlsx",
           "method": "INTERVIEW",
-          "notes": "B5 §3.5"
+          "notes": "0403 인터뷰 인용 (행사예수금 성격 발언)"
         },
         {
           "rank": "NARRATIVE",
@@ -2063,7 +2063,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "F-2 정량증거. FY25 영업손실 -2,847,056,108원(약 -28.5억) vs 행사예수금 28,045,558,858원(약 280.5억). 행사예수금 = 행사발생 시 매출 인식 / 해약 시 일부 회비정산차익(영업외) 인식 / 100% 매출 전환 가정 X. 회계 손익(GAAP) ≠ 경제 가치. SECONDARY 해약수입금 2,812M은 2023-09-27~2025-12-31 3년 누적이며 FY25 단년 회비정산차익은 550,265,950원.",
+      "narrative": "회계≠경제 정량 근거. FY25 영업손실 -2,847,056,108원(약 -28.5억) vs 행사예수금 28,045,558,858원(약 280.5억). 행사예수금 = 행사발생 시 매출 인식 / 해약 시 일부 회비정산차익(영업외) 인식 / 100% 매출 전환 가정 X. 회계 손익(GAAP) ≠ 경제 가치. SECONDARY 해약수입금 2,812M은 2023-09-27~2025-12-31 3년 누적이며 FY25 단년 회비정산차익은 550,265,950원.",
       "caveats": [
         "lifecycle_revenue_caveat",
         "data_period_asymmetry"
@@ -2081,7 +2081,7 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": true,
-          "notes": "r1/r2/r3/r4/r5 미수령"
+          "notes": "r1~r5 영역 미연동 — 보강 시 활성화"
         },
         {
           "rank": "NARRATIVE",
@@ -2191,7 +2191,7 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 110 미수령 87건 → 액션 후보. A-01~A-03 작가 결정"
+          "notes": "보강 후보 87건 중 단기 액션 3건(A-01~A-03) 선별"
         },
         {
           "rank": "NARRATIVE",
@@ -2201,7 +2201,7 @@
           "method": "NARRATIVE_PPT"
         }
       ],
-      "narrative": "액션 자체 박제 필요",
+      "narrative": "Executive Summary 기반 단기 액션 3건",
       "verified": false
     },
     "rc_lineage_section": {
@@ -2256,7 +2256,7 @@
           "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
           "sheet": "RFI List",
           "method": "RFI",
-          "notes": "r1/r2 미수령"
+          "notes": "r1/r2 영역 미연동"
         }
       ],
       "narrative": "partiallyMissing 3개",
@@ -2280,7 +2280,7 @@
           "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
           "sheet": "RFI List",
           "method": "RFI",
-          "notes": "r1/r3 미수령"
+          "notes": "r1/r3 영역 미연동"
         }
       ],
       "narrative": "partiallyMissing 6개",
@@ -2297,11 +2297,11 @@
           "sheet": "RFI List",
           "method": "RAW",
           "computed_value": 5,
-          "computed_unit": "건 (P0 표출, 데이터 보강 후보 87건/110건)",
+          "computed_unit": "건 (P0 미활성 KPI 후보 — 전체 보강 후보 87건/110건)",
           "verified": true
         }
       ],
-      "narrative": "P2-1 sync 룰 명시: 5건 P0 표출. ovw_rfi_count(/)와 동일 단일 source-of-truth (RFI_260507.xlsx:RFI List) — 두 화면 수치 일치 보장.",
+      "narrative": "P0 미활성 KPI 후보 5건. ovw_rfi_count(/)와 동일 단일 source-of-truth (RFI_260507.xlsx:RFI List) — 두 화면 수치 일치. 0528 as-is 확정으로 보강 요청 전부 종결 — 잔여 결손은 회사 시스템·자료 보강 시 활성화 로드맵으로 관리.",
       "verified": false
     },
     "tbox_graph_main": {
@@ -2337,7 +2337,7 @@
           "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
           "sheet": "Q&A",
           "method": "RFI",
-          "notes": "RFI r1 (P0) + Q40 미회신"
+          "notes": "계약자 master 미연동 (P0) — DB관리 프로세스 ↔ ERP 매핑 보강 시 활성화"
         }
       ],
       "narrative": "partiallyMissing",
@@ -2365,7 +2365,7 @@
           "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
           "sheet": "RFI List",
           "method": "RFI",
-          "notes": "RFI r2 (P0) + 6.5 미수령"
+          "notes": "영업사원 master·판매수수료 지급기준 미연동 (P0) — 보강 시 활성화"
         },
         {
           "rank": "NARRATIVE",
@@ -2399,7 +2399,7 @@
           "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
           "sheet": "RFI List",
           "method": "RFI",
-          "notes": "RFI 6.3 미수령"
+          "notes": "회원-계약 매핑 미연동 — 보강 시 활성화"
         }
       ],
       "narrative": "partiallyMissing",
@@ -2474,10 +2474,10 @@
           "computed_value": 50240119779,
           "computed_unit": "원 (영업매출 10계정 순매출)",
           "verified": true,
-          "notes": "매출 10계정 / B3 영업매출 합계 50.24억 (CLAUDE.md 정정 적용)"
+          "notes": "매출 10계정 — FY25 영업매출 합계 502.4억 (50,240,119,779원, 부가세 제외)"
         }
       ],
-      "narrative": "satisfied. 부가세 제외·환입 차감 후 순매출. 본 50,240M은 용인공원 단일 회사 매출 — 그룹 통합 매출 산출 시 YPL·라이프 단순 합산 금지(내부거래 20.8억 제거 필수). tbox_axiom_a4 양방향매칭 공리 참조.",
+      "narrative": "satisfied. 50,240,119,779원 = 영업매출 10계정(부가세 제외·환입 차감 후 순매출) 기준. 더존송부용 확정 구역별 손익은 12계정(수입수수료·상품매출 포함)·YPL 포함·내부거래 제거 후 56,116,734천원 기준 — 두 기준이 병존하므로 화면 표기 시 기준 명기. 본 수치는 용인공원 단일 회사 매출 — 그룹 통합 매출 산출 시 YPL·라이프 단순 합산 금지(내부거래 207.7억 제거 필수). tbox_axiom_a4 양방향매칭 공리 참조.",
       "caveats": [
         "intercompany_elimination"
       ],
@@ -2493,7 +2493,7 @@
           "source_file": "spo_evidence/분석파일/용인공원_분석.xlsm",
           "method": "RAW",
           "verified": true,
-          "notes": "0~118번 계정 시트 / B3 ERP 119시트"
+          "notes": "0~118번 계정 시트 (ERP 119개 계정 시트)"
         }
       ],
       "narrative": "satisfied",
@@ -2644,7 +2644,7 @@
           "sheet": "Summary",
           "method": "ANALYSIS",
           "verified": true,
-          "notes": "3사 + B3 PL/BS 3사"
+          "notes": "3사 PL/BS"
         }
       ],
       "narrative": "satisfied",
@@ -2679,7 +2679,7 @@
           "source_file": "NONE",
           "method": "MISSING",
           "verified": false,
-          "notes": "P2-5 정정: PRIMARY=NONE (현재 미연동). 회원-계약 1:1 매핑 marker가 raw 출처에 부재 — 데이터 모델 보강 항목."
+          "notes": "PRIMARY=NONE (현재 미연동). 회원-계약 1:1 매핑 marker가 raw 출처에 부재 — 데이터 모델 보강 항목."
         },
         {
           "rank": "SECONDARY",
@@ -2687,10 +2687,10 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 6.3 — 회원-계약 1:1 매핑 데이터 보강 항목"
+          "notes": "보강 후보 6.3 — 회원-계약 1:1 매핑 데이터 보강 항목"
         }
       ],
-      "narrative": "P2-5 정정: 현재 미연동 (PRIMARY=NONE / SECONDARY=RFI 6.3). 회원-계약 1:1 매핑 ERP 추출/연동 시 회원 단위 계약 lifecycle KPI 활성화.",
+      "narrative": "현재 미연동 (PRIMARY=NONE / SECONDARY=보강 후보 6.3). 회원-계약 1:1 매핑 ERP 추출/연동 시 회원 단위 계약 lifecycle KPI 활성화.",
       "verified": false
     },
     "tbox_property_assigned_to": {
@@ -2703,7 +2703,7 @@
           "source_file": "NONE",
           "method": "MISSING",
           "verified": false,
-          "notes": "P2-5 정정: PRIMARY=NONE (현재 미연동). sales_agent 배정 master 미체계화 — 데이터 모델 보강 항목."
+          "notes": "PRIMARY=NONE (현재 미연동). sales_agent 배정 master 미체계화 — 데이터 모델 보강 항목."
         },
         {
           "rank": "SECONDARY",
@@ -2711,10 +2711,10 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 6.5, 6.2 — 판매수수료 지급기준 + 영업사원 master 데이터 보강 항목"
+          "notes": "보강 후보 6.5·6.2 — 판매수수료 지급기준 + 영업사원 master 데이터 보강 항목"
         }
       ],
-      "narrative": "P2-5 정정: 현재 미연동 (PRIMARY=NONE / SECONDARY=RFI 6.5·6.2). 영업사원 master + 판매수수료 지급규정 ERP 등록 시 영업사원별 ROI·생산성 KPI 활성화.",
+      "narrative": "현재 미연동 (PRIMARY=NONE / SECONDARY=보강 후보 6.5·6.2). 영업사원 master + 판매수수료 지급규정 ERP 등록 시 영업사원별 ROI·생산성 KPI 활성화.",
       "verified": false
     },
     "tbox_property_uses_zone": {
@@ -2727,7 +2727,7 @@
           "source_file": "NONE",
           "method": "MISSING",
           "verified": false,
-          "notes": "P2-5 정정: PRIMARY=NONE (현재 미연동). 회원-구역 매핑 미체계화 — 데이터 모델 보강 항목."
+          "notes": "PRIMARY=NONE (현재 미연동). 회원-구역 매핑 미체계화 — 데이터 모델 보강 항목."
         },
         {
           "rank": "SECONDARY",
@@ -2735,10 +2735,10 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 3.7, 3.6 — 매출구분별·면적구분별 매출자료 데이터 보강 항목"
+          "notes": "보강 후보 3.7·3.6 — 매출구분별·면적구분별 매출자료 데이터 보강 항목"
         }
       ],
-      "narrative": "P2-5 정정: 현재 미연동 (PRIMARY=NONE / SECONDARY=RFI 3.7·3.6). 회원-구역 매핑 ERP 추출/연동 시 구역 단위 매출 KPI 활성화.",
+      "narrative": "현재 미연동 (PRIMARY=NONE / SECONDARY=보강 후보 3.7·3.6). 회원-구역 매핑 ERP 추출/연동 시 구역 단위 매출 KPI 활성화.",
       "verified": false
     },
     "tbox_property_has_driver_account": {
@@ -2751,7 +2751,7 @@
           "source_file": "NONE",
           "method": "MISSING",
           "verified": false,
-          "notes": "P2-5 정정: PRIMARY=NONE (현재 미연동). 비용 동인 외연 디지털 미체계화 — 데이터 모델 보강 항목."
+          "notes": "PRIMARY=NONE (현재 미연동). 비용 동인 외연 디지털 미체계화 — 데이터 모델 보강 항목."
         },
         {
           "rank": "SECONDARY",
@@ -2759,10 +2759,10 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 4.3, 4.4 — 매출원가/판관비 동인 자료 데이터 보강 항목"
+          "notes": "보강 후보 4.3·4.4 — 매출원가/판관비 동인 자료 데이터 보강 항목"
         }
       ],
-      "narrative": "P2-5 정정: 현재 미연동 (PRIMARY=NONE / SECONDARY=RFI 4.3·4.4). 비용 동인 외연 디지털화(Time Report·계량기·면적) 시 정밀 ABC KPI 활성화.",
+      "narrative": "현재 미연동 (PRIMARY=NONE / SECONDARY=보강 후보 4.3·4.4). 비용 동인 외연 디지털화(Time Report·계량기·면적) 시 정밀 ABC KPI 활성화.",
       "verified": false
     },
     "tbox_property_belongs_to": {
@@ -2775,7 +2775,7 @@
           "source_file": "NONE",
           "method": "MISSING",
           "verified": false,
-          "notes": "P2-5 정정: PRIMARY=NONE (현재 미연동). 부서-회원/매출 매핑 미체계화 — 데이터 모델 보강 항목."
+          "notes": "PRIMARY=NONE (현재 미연동). 부서-회원/매출 매핑 미체계화 — 데이터 모델 보강 항목."
         },
         {
           "rank": "SECONDARY",
@@ -2783,10 +2783,10 @@
           "sheet": "부서 확인 필요",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 부서 확인 — dept master 데이터 보강 항목"
+          "notes": "부서 master 확인 — dept master 데이터 보강 항목"
         }
       ],
-      "narrative": "P2-5 정정: 현재 미연동 (PRIMARY=NONE / SECONDARY=RFI 부서). 부서 master + KPI matrix ERP 연동 시 부서별 KPI 드릴다운 활성화.",
+      "narrative": "현재 미연동 (PRIMARY=NONE / SECONDARY=보강 후보 부서). 부서 master + KPI matrix ERP 연동 시 부서별 KPI 드릴다운 활성화.",
       "verified": false
     },
     "tbox_property_has_family": {
@@ -2816,7 +2816,7 @@
           "sheet": "25년말 DB",
           "method": "RAW",
           "verified": true,
-          "notes": "회원DB 100% 충족이나 ERP 외 미반영. Q40"
+          "notes": "회원DB 100% 충족이나 ERP 외 미반영 — DB관리 프로세스 ↔ ERP 매핑 정의 보강 시 활성화"
         }
       ],
       "narrative": "회원DB 충족 / ERP 미반영",
@@ -2832,7 +2832,7 @@
           "source_file": "NONE",
           "method": "MISSING",
           "verified": false,
-          "notes": "P2-5 정정: PRIMARY=NONE (현재 미연동). 계약 master 미체계화 — 데이터 모델 보강 항목."
+          "notes": "PRIMARY=NONE (현재 미연동). 계약 master 미체계화 — 데이터 모델 보강 항목."
         },
         {
           "rank": "SECONDARY",
@@ -2840,10 +2840,10 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": false,
-          "notes": "RFI 6.3 — 계약 master 데이터 보강 항목"
+          "notes": "보강 후보 6.3 — 계약 master 데이터 보강 항목"
         }
       ],
-      "narrative": "P2-5 정정: 현재 미연동 (PRIMARY=NONE / SECONDARY=RFI 6.3). 계약 master ERP 추출/연동 시 계약 단위 lifecycle KPI 활성화.",
+      "narrative": "현재 미연동 (PRIMARY=NONE / SECONDARY=보강 후보 6.3). 계약 master ERP 추출/연동 시 계약 단위 lifecycle KPI 활성화.",
       "verified": false
     },
     "tbox_property_has_unit_driver": {
@@ -2857,7 +2857,7 @@
           "sheet": "RFI List",
           "method": "RFI",
           "verified": false,
-          "notes": "구역 단위 동인 미정의 — RFI 4.3"
+          "notes": "구역 단위 동인 미정의 — 보강 후보 4.3 (보강 시 활성화)"
         }
       ],
       "narrative": "결손",
@@ -2873,7 +2873,7 @@
           "source_file": "spo_evidence/재무제표 수령본/FY25/1. 용인공원/용인공원_계정별원장 (2).xls",
           "method": "RAW",
           "verified": true,
-          "notes": "10개 매출계정(48~57) 적요·계정 직접추적. 합계 50,240,119,779원"
+          "notes": "10개 매출계정(48~57) 적요·계정 직접추적. 합계 50,240,119,779원 (영업매출 10계정·부가세 제외 기준 — 더존송부용 확정 구역별 손익 56,116,734천원과 기준 병존)"
         },
         {
           "rank": "SECONDARY",
@@ -3133,12 +3133,12 @@
           "source_file": "spo_evidence/재무제표 수령본/FY25/1. 용인공원/용인공원_계정별원장 (2).xls",
           "method": "RAW",
           "computed_value": 50240119779,
-          "computed_unit": "원 (FY25 영업매출)",
+          "computed_unit": "원 (FY25 영업매출 10계정, 부가세 제외)",
           "verified": true,
-          "notes": "= xlsm수정9 = Legacy 0원 차이 (D-3 답)"
+          "notes": "— 원장·분석본(xlsm)·피벗 세 소스 매출 합계 0원 차이"
         }
       ],
-      "narrative": "satisfied. 세 파일 매출 합계 0원 차이.",
+      "narrative": "satisfied. 원장·분석본·피벗 세 소스 매출 합계 0원 차이. 50,240,119,779원 = 영업매출 10계정(부가세 제외) 기준 — 더존송부용 확정 구역별 손익(12계정·YPL 포함·내부거래 제거 후 56,116,734천원)과 집계 범위가 다름.",
       "verified": true
     },
     "tbox_axiom_a2": {
@@ -3203,7 +3203,7 @@
           "sheet": "2025_내부거래매칭",
           "method": "RAW",
           "verified": true,
-          "notes": "P1-10 정정 (2026-05-11): 2025 P&L 9건 (합계 20,773M, 지급측 절대값) + B/S 4건 (1,379M). P&L 9건 중 7건 VAT 10% 부과(부가세 일치 확인) / 2건 비과세 거래(P-8/P-9, VAT 0원). B/S 4건은 VAT 무관. 양방향 매칭 최대 오차 1원. 2023 미매칭 19건 별도 caveat."
+          "notes": "2025 P&L 9건 (합계 20,773M, 지급측 절대값) + B/S 4건 (1,379M). P&L 9건 중 7건 VAT 10% 부과(부가세 일치 확인) / 2건 비과세 거래(P-8/P-9, VAT 0원). B/S 4건은 VAT 무관. 양방향 매칭 최대 오차 1원. 2023 미매칭 19건 별도 caveat."
         },
         {
           "rank": "SECONDARY",
@@ -3212,7 +3212,7 @@
           "method": "ANALYSIS"
         }
       ],
-      "narrative": "P1-10 정정: satisfied. ⭐ 단독 PRIMARY (다른 파일에 내부거래 백데이터 없음). P&L 9건 중 7건 VAT 10% / 2건 비과세, B/S 4건 VAT 무관. 2023 미매칭 19건은 별도 보강 필요. tbox_class_revenue_stream / mutual_lifecycle_revenue / *_dept_kpi_cards 매출슬롯 cross-link.",
+      "narrative": "satisfied. ⭐ 단독 PRIMARY (다른 파일에 내부거래 백데이터 없음). P&L 9건 중 7건 VAT 10% / 2건 비과세, B/S 4건 VAT 무관. 2023 미매칭 19건은 별도 보강 필요. tbox_class_revenue_stream / mutual_lifecycle_revenue / *_dept_kpi_cards 매출슬롯 cross-link.",
       "caveats": [
         "ypl_business_model",
         "intercompany_elimination"
@@ -3236,10 +3236,10 @@
           "source_file": "spo_evidence/RFI/RFI_260507.xlsx",
           "sheet": "RFI List",
           "method": "RFI",
-          "notes": "r4 미수령"
+          "notes": "r4 영역 미연동"
         }
       ],
-      "narrative": "P2-8 정정: 외연가용성 axiom 검증 자체는 충족(verified=true) — 인터뷰 4건 인용으로 ERP 외연 결손 사실 확인. 데이터 외연은 partiallyMissing(엑셀·수기 의존, RFI r4 미수령) — verified는 axiom 검증 결과, partiallyMissing은 데이터 상태 (두 의미 분리).",
+      "narrative": "외연가용성 axiom 검증 자체는 충족(verified=true) — 인터뷰 4건 인용으로 ERP 외연 결손 사실 확인. 데이터 외연은 partiallyMissing(엑셀·수기 의존, 동인 외연 r4 영역 미연동) — verified는 axiom 검증 결과, partiallyMissing은 데이터 상태 (두 의미 분리).",
       "verified": true
     },
     "tbox_axiom_a5p": {
@@ -3318,7 +3318,7 @@
         "zoneId in {sesuyeon,jeongmyeongji,jeongnamji,jeongdamwon,myeongga_yeoyeon,myeongdang,cheonmyeongji}": "F1 2025 장지 구역별 손익계산서 행 + F1 구역별 매출 + F8 대구역_피벗 컬럼",
         "zoneId=honor_royal/noble/honor": "F1 매출 10계정 (50_사용료수입(아너)) + F7 아너스톤 구분요청 (1R/2R/3R / 1N/2N/3N / 3H prefix)",
         "zoneId=other": "F6 기타(미분류) 상세 + F1 매출10계정 미분류건",
-        "account=묘지조성비": "F1 묘지조성비(52500)_분석 + RFI 신규야외묘역 질의",
+        "account=묘지조성비": "F1 묘지조성비(52500)_분석 + 신규야외묘역 보강 자료",
         "account=용역비": "F5 용역비_배부분석 PRIMARY",
         "account=인건비": "F1 직원급여 + 제조원가 인건비",
         "account=감가상각비": "F1 감가상각비_분석 (3단계 배부 — PPT p.51~52)"

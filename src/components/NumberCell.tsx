@@ -179,7 +179,7 @@ export function NumberCell({
                   </>
                 ) : useEvidenceMode && missingMeta ? (
                   <>
-                    <span className="block font-semibold text-rose-700">자료 미수령</span>
+                    <span className="block font-semibold text-rose-700">자료 미연동</span>
                     <span className="mt-0.5 block text-stone-500">{missingMeta.reason}</span>
                   </>
                 ) : lineage ? (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronRight, Database, AlertCircle, Link as LinkIcon, Tag } from "lucide-react";
+import { ChevronRight, AlertCircle, Link as LinkIcon, Tag } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import catalogData from "@/data/data_catalog.json";
 import type { DataCatalog, Dataset, DataCatalogCategoryKey } from "@/types";
@@ -46,7 +46,7 @@ export default function DataCatalogPage() {
   return (
     <AppLayout
       pageTitle="Data Catalog"
-      pageSubtitle="용인공원 그룹 PI에서 수령한 SharePoint 자료의 인벤토리. 각 자료의 성격·핵심 컬럼·연결 KPI·관련 자료를 한 화면에서 추적합니다."
+      pageSubtitle="프로젝트에서 확보·분석한 자료 인벤토리. 각 자료의 성격·핵심 컬럼·연결 KPI·관련 자료를 한 화면에서 추적합니다."
       narration={
         <>
           <p>
@@ -61,7 +61,7 @@ export default function DataCatalogPage() {
     >
       {/* 상단 통계 */}
       <section className="mb-8 grid grid-cols-3 gap-4">
-        <StatBox label="수령 자료" value={catalog.datasets.length.toString()} sub="그룹화 단위" />
+        <StatBox label="보유 자료" value={catalog.datasets.length.toString()} sub="그룹화 단위" />
         <StatBox label="자료 카테고리" value={catalog.categories.length.toString()} />
         <StatBox label="연결 KPI 합계" value={totalKpiLinks.toString()} sub="중복 포함 — 자료 × KPI" />
       </section>

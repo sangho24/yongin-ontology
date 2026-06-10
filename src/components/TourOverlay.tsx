@@ -60,7 +60,7 @@ const TOUR_STEPS: TourStep[] = [
     targetSelector: '[data-tour-id="hero-kpi"]',
     title: "상조 VC · 활동원가 탐색",
     narration:
-      "상조 VC · 장지 VC 페이지에서는 각 vertical의 활동원가 · Root Cause 분석을 탐색합니다. 회의·시연용 흐름은 여기서 자연스럽게 이어집니다.",
+      "상조 VC · 장지 VC 페이지에서는 각 vertical의 활동원가 · Root Cause 분석을 탐색합니다. 주요 화면 흐름을 순서대로 안내합니다.",
     page: "/mutual",
   },
 ];

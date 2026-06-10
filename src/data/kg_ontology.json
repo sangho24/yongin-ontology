@@ -80,7 +80,7 @@
     { "@id": "inst:BM-BURIAL",      "@type": "yp:BurialMethod", "label": "매장 (연고매장·자연장·수목장)", "entity": "용인공원", "kpi": "구역 중심" },
     { "@id": "inst:BM-CREMATION",   "@type": "yp:BurialMethod", "label": "봉안 (봉안담·봉안묘)",         "entity": "용인공원", "kpi": "아너스톤 라인" },
 
-    { "@id": "inst:CH-OFFLINE",     "@type": "yp:Channel", "label": "오프라인 (내방)", "entity": "라이프", "kpi": "9,467명 / 27.67억" },
+    { "@id": "inst:CH-OFFLINE",     "@type": "yp:Channel", "label": "오프라인 (내방)", "entity": "라이프", "kpi": "9,467명 / 276.7억 (회원DB 누적 계약액)" },
     { "@id": "inst:CH-ONLINE",      "@type": "yp:Channel", "label": "온라인",          "entity": "라이프", "kpi": "434명 / 0.38억" },
     { "@id": "inst:CH-CORP",        "@type": "yp:Channel", "label": "법인",            "entity": "라이프", "kpi": "29명 / 0.54억" },
     { "@id": "inst:CH-ETC",         "@type": "yp:Channel", "label": "기타",            "entity": "라이프", "kpi": "잔여" },
@@ -185,8 +185,8 @@
     { "@id": "inst:CD-AREA",       "@type": "yp:CostDriver", "label": "면적 (m²)",           "entity": "용인공원", "kpi": "구역별 m² 비례" },
     { "@id": "inst:CD-COUNT",      "@type": "yp:CostDriver", "label": "건수 (행사·계약)",     "entity": "공통",     "kpi": "행사 건수 비례" },
 
-    { "@id": "inst:ENT-LIFE", "@type": "yp:Entity", "label": "라이프 (상조 VC)", "entity": "라이프", "kpi": "FY25 매출 19.76억" },
-    { "@id": "inst:ENT-YP",   "@type": "yp:Entity", "label": "용인공원 (장지 VC)", "entity": "용인공원", "kpi": "FY25 매출 50.24억" },
+    { "@id": "inst:ENT-LIFE", "@type": "yp:Entity", "label": "라이프 (상조 VC)", "entity": "라이프", "kpi": "FY25 행사매출 46.2억 (인식 기준)" },
+    { "@id": "inst:ENT-YP",   "@type": "yp:Entity", "label": "용인공원 (장지 VC)", "entity": "용인공원", "kpi": "FY25 매출 502.4억 (영업매출 10계정)" },
     { "@id": "inst:ENT-YPL",  "@type": "yp:Entity", "label": "YPL (장지 마케팅)", "entity": "YPL", "kpi": "내부거래 중심" },
 
     { "@id": "inst:FP-2025",    "@type": "yp:FiscalPeriod", "label": "FY2025 (연간)", "entity": "공통", "kpi": "2025-01 ~ 2025-12" },
