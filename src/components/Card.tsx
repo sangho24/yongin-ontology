@@ -41,6 +41,7 @@ function EvidenceButton({
       onClick={() => openSlot(slotId, { label })}
       aria-label={`${label ?? slot?.title ?? "근거"} 근거 보기`}
       title="근거·출처 보기"
+      data-slot-id={slotId}
       className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-colors duration-150 ${btnCls}`}
     >
       <Info className="h-3.5 w-3.5" />
@@ -68,7 +69,7 @@ export function Card({
 }) {
   return (
     <div
-      className={`rounded-md border bg-white p-5 transition-colors duration-150 ${
+      className={`print-card rounded-md border bg-white p-5 transition-colors duration-150 ${
         highlight
           ? "border-[#0095A9]/30 ring-1 ring-[#0095A9]/10"
           : "border-stone-200/80"
@@ -102,6 +103,7 @@ export function Card({
 export function StatCard({
   label,
   value,
+  unit,
   sub,
   trend,
   trendValue,
@@ -110,6 +112,7 @@ export function StatCard({
 }: {
   label: string;
   value: string;
+  unit?: string;
   sub?: string;
   trend?: "up" | "down" | "flat";
   trendValue?: string;
@@ -121,13 +124,14 @@ export function StatCard({
     trend === "up" ? "text-[#0095A9]" : trend === "down" ? "text-[#9a3412]" : "text-stone-500";
 
   return (
-    <div className="group rounded-md border border-stone-200/80 bg-white p-5 transition-colors duration-150 hover:border-stone-300">
+    <div className="print-card group rounded-md border border-stone-200/80 bg-white p-5 transition-colors duration-150 hover:border-stone-300">
       <div className="flex items-start justify-between gap-2">
         <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-stone-500">{label}</div>
         {slotId && <EvidenceButton slotId={slotId} label={label} variant="subtle" />}
       </div>
-      <div className="mt-2 flex items-baseline gap-2">
+      <div className="mt-2 flex items-baseline gap-1.5">
         <span className="headline text-[28px] leading-none text-stone-900 tnum">{value}</span>
+        {unit && <span className="text-[12px] font-medium text-stone-400">{unit}</span>}
         {trend && trendValue && (
           <span className={`flex items-center gap-0.5 text-[11px] font-medium ${trendClr}`}>
             <TrendIcon className="h-3 w-3" />
@@ -147,6 +151,7 @@ export function StatCard({
 export function WowCard({
   label,
   value,
+  unit,
   sub,
   variant = "mint",
   footnote,
@@ -154,6 +159,7 @@ export function WowCard({
 }: {
   label: string;
   value: string;
+  unit?: string;
   sub?: string;
   variant?: "mint" | "outline" | "muted";
   footnote?: string;
@@ -187,12 +193,15 @@ export function WowCard({
   }[variant];
 
   return (
-    <div className={`group rounded-md p-6 transition-colors duration-150 ${styles.wrap}`}>
+    <div className={`print-card group rounded-md p-6 transition-colors duration-150 ${styles.wrap}`}>
       <div className="flex items-start justify-between gap-2">
         <div className={`text-[12px] font-medium uppercase tracking-[0.08em] ${styles.label}`}>{label}</div>
         {slotId && <EvidenceButton slotId={slotId} label={label} variant={styles.btn} />}
       </div>
-      <div className={`headline mt-3 text-[36px] leading-none tnum ${styles.value}`}>{value}</div>
+      <div className="mt-3 flex items-baseline gap-1.5">
+        <span className={`headline text-[36px] leading-none tnum ${styles.value}`}>{value}</span>
+        {unit && <span className={`text-[13px] font-medium ${styles.sub}`}>{unit}</span>}
+      </div>
       {sub && <div className={`mt-2.5 text-[13px] leading-relaxed ${styles.sub}`}>{sub}</div>}
       {footnote && (
         <div className={`mt-4 border-t pt-3 text-[10px] leading-relaxed ${styles.foot}`}>{footnote}</div>

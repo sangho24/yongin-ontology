@@ -4,18 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, ReactNode } from "react";
-import {
-  LayoutDashboard,
-  Users,
-  MapPin,
-  Database,
-  FolderOpen,
-  Share2,
-  type LucideIcon,
-} from "lucide-react";
+import { LayoutDashboard, BarChart3, Target, type LucideIcon } from "lucide-react";
 import { SearchPalette } from "./SearchPalette";
-import { TourOverlay } from "./TourOverlay";
 import { EvidenceDrawerHost } from "./EvidenceDrawerHost";
+import { useEvidenceStore } from "@/store/evidence";
 
 // =============================================================================
 // SiteShell — 영구 mount되는 사이트 셸 (sidebar + 검색)
@@ -25,28 +17,17 @@ import { EvidenceDrawerHost } from "./EvidenceDrawerHost";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   "/": LayoutDashboard,
-  "/mutual": Users,
-  "/cemetery": MapPin,
-  "/data-model": Database,
-  "/data-catalog": FolderOpen,
-  "/knowledge-graph": Share2,
+  "/pl": BarChart3,
+  "/kpi": Target,
 };
 
 const NAV: { group: string; items: { path: string; label: string; sub?: string; badge?: string }[] }[] = [
   {
-    group: "ANALYSIS",
+    group: "경영손익",
     items: [
-      { path: "/", label: "Overview" },
-      { path: "/mutual", label: "상조 VC", sub: "라이프 · 회원 master" },
-      { path: "/cemetery", label: "장지 VC", sub: "용인공원·YPL · 객체 master" },
-    ],
-  },
-  {
-    group: "META",
-    items: [
-      { path: "/data-model", label: "Data Model", sub: "T-Box · As-is 로직", badge: "★" },
-      { path: "/data-catalog", label: "Data Catalog", sub: "보유 자료 인벤토리" },
-      { path: "/knowledge-graph", label: "Knowledge Graph", sub: "Class · Instance view", badge: "β" },
+      { path: "/", label: "Overview", sub: "그룹 수지현황" },
+      { path: "/pl", label: "손익", sub: "조직별 원가 및 손익" },
+      { path: "/kpi", label: "KPI", sub: "조직별 지표 추이" },
     ],
   },
 ];
@@ -81,8 +62,14 @@ export function SiteShell({ children }: { children: ReactNode }) {
         setSearchOpen(true);
         return;
       }
-      const tag = (e.target as HTMLElement)?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      // 입력 요소(input/textarea/select/contenteditable) 포커스 중에는 페이지 이동 무시
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target?.isContentEditable) return;
+      // 오버레이(검색 팔레트·Evidence Drawer·가이드 모드) 열림 중에는 페이지 이동 무시
+      // — TourOverlay의 ArrowLeft/Right 스텝 이동과 충돌 방지
+      if (searchOpen) return;
+      if (useEvidenceStore.getState().open) return;
       if ((e.key === "ArrowRight" || e.key === "j") && activeIdx >= 0 && activeIdx < FLAT.length - 1) {
         router.push(FLAT[activeIdx + 1].path);
       }
@@ -92,12 +79,12 @@ export function SiteShell({ children }: { children: ReactNode }) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [activeIdx, router]);
+  }, [activeIdx, router, searchOpen]);
 
   return (
     <div className="min-h-screen bg-[#fafaf7] text-stone-900">
-      {/* Sidebar — 영구 mount */}
-      <aside className="fixed inset-y-0 left-0 z-20 w-56 border-r border-stone-200/80 bg-white">
+      {/* Sidebar — 영구 mount (인쇄 시 숨김) */}
+      <aside className="no-print fixed inset-y-0 left-0 z-20 w-56 border-r border-stone-200/80 bg-white">
         <div className="flex h-16 items-center border-b border-stone-100 px-4">
           <Link
             href="/"
@@ -175,16 +162,9 @@ export function SiteShell({ children }: { children: ReactNode }) {
           ))}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 border-t border-stone-100 px-5 py-3">
-          <div className="text-[10px] tracking-[0.1em] text-stone-400 uppercase">Navigation</div>
-          <div className="mt-1 text-[11px] text-stone-500">← → 또는 j / k · ⌘K 검색</div>
-        </div>
       </aside>
 
       <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />
-
-      {/* 시연용 가이드 모드 — 영구 mount, 첫 진입 시 자동 발동 / "?" 버튼으로 재시작 */}
-      <TourOverlay />
 
       {/* Evidence Drawer — 영구 mount, 카드·NumberCell이 store로 push */}
       <EvidenceDrawerHost />
@@ -193,7 +173,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           relative + isolate로 stacking context 격리 → page transition 시
           fixed sidebar(z-20) 위로 페이지 콘텐츠가 겹치는 frame 차단.
           min-w-0은 grid/flex child의 의도치 않은 width overflow 차단. */}
-      <div className="relative isolate ml-56 min-w-0">{children}</div>
+      <div className="print-root relative isolate ml-56 min-w-0">{children}</div>
     </div>
   );
 }

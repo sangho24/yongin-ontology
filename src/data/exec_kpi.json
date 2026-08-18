@@ -1,0 +1,420 @@
+{
+  "meta": {
+    "title": "조직별 KPI (기존 · 신규제안)",
+    "source_doc": "용인공원_0814_회의자료_Draft.pdf — 6p(용인공원재단·YPL) / 7p(용인공원라이프)",
+    "period_label": "26년 4월",
+    "months": ["25.12", "26.01", "26.02", "26.03", "26.04"],
+    "note": "신규제안 KPI는 현행 KPI 체계에서 포착되지 않는 수익성 관리 영역을 보완하기 위한 제안. 경영지원팀·재무회계팀은 실질이 경영지원 조직이므로 KPI 설정에서 제외. 실질 구현 가능성은 아마란스10 추가개발 과정에서 DK BMC와 확인 예정.",
+    "availability_legend": {
+      "available": "현 보유 자료(원장·재무제표)로 산출 가능",
+      "partial": "일부 원천만 보유 — 분모 또는 구분 기준 추가 필요",
+      "missing": "원천 미확보 — 화면 수치는 대표값(mock)"
+    }
+  },
+
+  "companies": [
+    {
+      "id": "yongin",
+      "label": "용인공원재단 · YPL",
+      "teams": [
+        {
+          "id": "online_mkt",
+          "label": "온라인마케팅팀",
+          "pl_group": ["사용료수입", "서비스상품수입"],
+          "rationale": "손익분석 결과 아너스톤 구역이 전사 영업이익의 핵심 축으로 확인된 만큼, 온라인 성과도 단순 DB 확보가 아니라 고수익 구역으로의 유입과 실제 계약 전환 기여도를 중심으로 관리할 필요가 있음.",
+          "kpis": [
+            {
+              "id": "inbound_db",
+              "label": "인입 DB",
+              "type": "base",
+              "unit": "건",
+              "value": 1842,
+              "prev": 1710,
+              "series": [1523, 1608, 1744, 1710, 1842],
+              "formula": "월간 신규 인입 DB 건수 합",
+              "availability": "missing",
+              "lineage": "kpi.yongin.inbound_db"
+            },
+            {
+              "id": "honorstone_inflow_share",
+              "label": "아너스톤 유입비중",
+              "type": "new",
+              "unit": "%",
+              "value": 41.3,
+              "prev": 38.9,
+              "series": [35.1, 36.8, 37.4, 38.9, 41.3],
+              "formula": "아너스톤 관심 인입 DB ÷ 전체 인입 DB",
+              "availability": "missing",
+              "lineage": "kpi.yongin.honorstone_inflow_share"
+            },
+            {
+              "id": "db_to_visit",
+              "label": "DB→방문 전환율",
+              "type": "new",
+              "unit": "%",
+              "value": 23.6,
+              "prev": 24.8,
+              "series": [26.2, 25.4, 25.1, 24.8, 23.6],
+              "formula": "방문 DB 건수 ÷ 인입 DB 건수",
+              "availability": "missing",
+              "lineage": "kpi.yongin.db_to_visit"
+            },
+            {
+              "id": "db_to_contract",
+              "label": "DB→계약 전환율",
+              "type": "new",
+              "unit": "%",
+              "value": 5.8,
+              "prev": 6.1,
+              "series": [6.4, 6.3, 6.0, 6.1, 5.8],
+              "formula": "계약 건수 ÷ 인입 DB 건수",
+              "availability": "partial",
+              "lineage": "kpi.yongin.db_to_contract"
+            }
+          ]
+        },
+        {
+          "id": "sales_hq",
+          "label": "영업본부",
+          "pl_group": ["사용료수입"],
+          "rationale": "분석 결과 아너스톤이 야외묘역 대비 매출·영업이익·구역당 생산성에서 모두 우수하였고, 세부 구역 간 효율 격차도 확인됨. 이에 따라 영업본부는 구역군 및 세부 구역 단위의 수익성과 고수익 구역 판매 확대를 함께 관리할 필요가 있음.",
+          "kpis": [
+            {
+              "id": "op_achieve_honorstone",
+              "label": "아너스톤 영업이익 달성률",
+              "type": "new",
+              "unit": "%",
+              "value": 86.5,
+              "prev": 79.2,
+              "series": [72.4, 81.0, 76.3, 79.2, 86.5],
+              "formula": "아너스톤 영업이익 실적 ÷ 아너스톤 영업이익 목표",
+              "availability": "partial",
+              "lineage": "kpi.yongin.op_achieve_honorstone"
+            },
+            {
+              "id": "op_achieve_outdoor",
+              "label": "야외묘역 영업이익 달성률",
+              "type": "new",
+              "unit": "%",
+              "value": 78.3,
+              "prev": 91.5,
+              "series": [88.1, 94.2, 90.7, 91.5, 78.3],
+              "formula": "야외묘역 영업이익 실적 ÷ 야외묘역 영업이익 목표",
+              "availability": "partial",
+              "lineage": "kpi.yongin.op_achieve_outdoor"
+            },
+            {
+              "id": "rev_per_zone",
+              "label": "구역당 평균 매출",
+              "type": "new",
+              "unit": "백만원",
+              "value": 421,
+              "prev": 396,
+              "series": [358, 372, 401, 396, 421],
+              "formula": "세부 구역별 매출 합 ÷ 판매 활동 구역 수",
+              "availability": "partial",
+              "lineage": "kpi.yongin.rev_per_zone"
+            },
+            {
+              "id": "op_per_zone",
+              "label": "구역당 평균 영업이익",
+              "type": "new",
+              "unit": "백만원",
+              "value": 137,
+              "prev": 129,
+              "series": [112, 118, 133, 129, 137],
+              "formula": "세부 구역별 영업이익 합 ÷ 판매 활동 구역 수",
+              "availability": "partial",
+              "lineage": "kpi.yongin.op_per_zone"
+            },
+            {
+              "id": "honorstone_contract_share",
+              "label": "아너스톤 계약비중",
+              "type": "new",
+              "unit": "%",
+              "value": 52.4,
+              "prev": 48.7,
+              "series": [44.2, 46.1, 47.8, 48.7, 52.4],
+              "formula": "아너스톤 계약 건수 ÷ 전체 계약 건수",
+              "availability": "partial",
+              "lineage": "kpi.yongin.honorstone_contract_share"
+            }
+          ]
+        },
+        {
+          "id": "cs_center",
+          "label": "고객센터",
+          "pl_group": ["관리비수입", "서비스상품수입"],
+          "rationale": "서비스상품수입 확대와 관리비수입 유지에 영향을 미치는 핵심 접점임. 따라서 고객 유지와 부가수익 창출 기여도를 함께 반영하는 KPI가 손익 구조와 보다 부합함.",
+          "kpis": [
+            {
+              "id": "service_conversion",
+              "label": "서비스상품 전환율",
+              "type": "new",
+              "unit": "%",
+              "value": 12.7,
+              "prev": 13.9,
+              "series": [15.1, 14.6, 14.0, 13.9, 12.7],
+              "formula": "서비스상품 계약 건수 ÷ 고객센터 접촉 고객 수",
+              "availability": "missing",
+              "lineage": "kpi.yongin.service_conversion"
+            },
+            {
+              "id": "mgmt_fee_retention",
+              "label": "관리비수입 유지율",
+              "type": "new",
+              "unit": "%",
+              "value": 94.2,
+              "prev": 93.6,
+              "series": [92.8, 93.1, 93.4, 93.6, 94.2],
+              "formula": "당기 관리비 수납 계좌 수 ÷ 전기 관리비 부과 대상 계좌 수",
+              "availability": "partial",
+              "lineage": "kpi.yongin.mgmt_fee_retention"
+            }
+          ]
+        },
+        {
+          "id": "tsm",
+          "label": "T&SM 팀",
+          "pl_group": ["사용료수입", "서비스상품수입"],
+          "rationale": "손익분석상 아너스톤이 고수익 구역으로 확인되었고, 구역별 영업효율 차이도 크게 나타남. 이에 따라 단순 방문 유치에서 나아가 방문 고객을 고수익 구역 계약과 실제 영업이익으로 얼마나 전환했는지를 중심으로 평가할 필요가 있음.",
+          "kpis": [
+            {
+              "id": "visit_db",
+              "label": "방문 DB",
+              "type": "base",
+              "unit": "건",
+              "value": 435,
+              "prev": 424,
+              "series": [399, 408, 438, 424, 435],
+              "formula": "월간 방문 상담 건수 합",
+              "availability": "missing",
+              "lineage": "kpi.yongin.visit_db"
+            },
+            {
+              "id": "honorstone_contract_share_tsm",
+              "label": "아너스톤 계약비중",
+              "type": "new",
+              "unit": "%",
+              "value": 52.4,
+              "prev": 48.7,
+              "series": [44.2, 46.1, 47.8, 48.7, 52.4],
+              "formula": "아너스톤 계약 건수 ÷ 전체 계약 건수",
+              "availability": "partial",
+              "lineage": "kpi.yongin.honorstone_contract_share"
+            },
+            {
+              "id": "visit_to_contract",
+              "label": "방문→계약 전환율",
+              "type": "new",
+              "unit": "%",
+              "value": 24.6,
+              "prev": 24.1,
+              "series": [24.5, 24.8, 23.9, 24.1, 24.6],
+              "formula": "계약 건수 ÷ 방문 건수",
+              "availability": "missing",
+              "lineage": "kpi.yongin.visit_to_contract"
+            },
+            {
+              "id": "op_per_visit",
+              "label": "방문당 영업이익",
+              "type": "new",
+              "unit": "백만원",
+              "value": 6.52,
+              "prev": 6.18,
+              "series": [5.74, 5.96, 6.41, 6.18, 6.52],
+              "formula": "영업 조직 영업이익 ÷ 방문 건수",
+              "availability": "partial",
+              "lineage": "kpi.yongin.op_per_visit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "life",
+      "label": "용인공원라이프",
+      "teams": [
+        {
+          "id": "tsm_mkt",
+          "label": "T&SM 팀 · 마케팅팀",
+          "pl_group": ["오프라인 채널 매출", "온라인 채널 매출"],
+          "rationale": "상품매출은 상향 대비 수수료율이 낮게 산정되어, 동일 매출시 상품매출이 높은 매출 구성이 더 수익성이 좋음. 따라서 평균상품단가를 보조지표로 추가 설정하여, 가입단계에서부터 고단가 상품 유입을 유도하는 전략 병행이 필요함.",
+          "kpis": [
+            {
+              "id": "valid_db",
+              "label": "유효 DB",
+              "type": "base",
+              "unit": "건",
+              "value": 1265,
+              "prev": 1338,
+              "series": [1402, 1361, 1290, 1338, 1265],
+              "formula": "월간 유효 DB 건수 합",
+              "availability": "missing",
+              "lineage": "kpi.life.valid_db"
+            },
+            {
+              "id": "direct_contract",
+              "label": "다이렉트 계약",
+              "type": "base",
+              "unit": "건",
+              "value": 187,
+              "prev": 201,
+              "series": [214, 208, 195, 201, 187],
+              "formula": "다이렉트 채널 신규 계약 건수",
+              "availability": "missing",
+              "lineage": "kpi.life.direct_contract"
+            },
+            {
+              "id": "avg_product_price",
+              "label": "평균상품단가",
+              "type": "new",
+              "unit": "백만원",
+              "value": 3.84,
+              "prev": 3.71,
+              "series": [3.58, 3.62, 3.77, 3.71, 3.84],
+              "formula": "신규계약 상품금액 합 ÷ 신규계약 건수",
+              "availability": "missing",
+              "lineage": "kpi.life.avg_product_price"
+            }
+          ]
+        },
+        {
+          "id": "event_corp",
+          "label": "행사서비스팀 · 법인영업팀",
+          "pl_group": ["행사매출", "상향매출", "장지수수료", "장례용품매출"],
+          "rationale": "상향매출의 수수료 구조는 원가 + (매출 − 원가) × 수수료율 방식으로 산정되며, 이로 인해 명목 수수료율 대비 실질 수수료율이 높음. 따라서 원가율 관리를 통해서 상향매출의 수익성을 개선할 필요가 있음. 법인채널의 경우 제휴행사 구조상 고액상품 가입 유도가 불가함. 이에 장례용품 매출을 추가 KPI로 설정하여 행사 건당 장례용품 매출 극대화를 전략적 목표로 관리할 필요가 있음.",
+          "kpis": [
+            {
+              "id": "product_sales",
+              "label": "상품매출",
+              "type": "base",
+              "unit": "백만원",
+              "value": 214,
+              "prev": 236,
+              "series": [251, 243, 228, 236, 214],
+              "formula": "행사 상품매출 인식액 합",
+              "availability": "available",
+              "lineage": "kpi.life.product_sales"
+            },
+            {
+              "id": "upsell_revenue",
+              "label": "상향매출",
+              "type": "base",
+              "unit": "백만원",
+              "value": 131,
+              "prev": 148,
+              "series": [162, 155, 141, 148, 131],
+              "formula": "행사 시 상향 판매분 매출 인식액 합",
+              "availability": "available",
+              "lineage": "kpi.life.upsell_revenue"
+            },
+            {
+              "id": "corp_event_count",
+              "label": "법인행사 건수",
+              "type": "base",
+              "unit": "건",
+              "value": 68,
+              "prev": 74,
+              "series": [81, 77, 71, 74, 68],
+              "formula": "법인 채널 행사 시행 건수",
+              "availability": "partial",
+              "lineage": "kpi.life.corp_event_count"
+            },
+            {
+              "id": "corp_funeral_conv",
+              "label": "법인장례 전환율",
+              "type": "base",
+              "unit": "%",
+              "value": 18.4,
+              "prev": 19.2,
+              "series": [20.5, 20.1, 19.4, 19.2, 18.4],
+              "formula": "법인 채널 행사 건수 ÷ 법인 채널 유효 회원 수",
+              "availability": "missing",
+              "lineage": "kpi.life.corp_funeral_conv"
+            },
+            {
+              "id": "cemetery_fee",
+              "label": "장지수수료",
+              "type": "base",
+              "unit": "백만원",
+              "value": 34,
+              "prev": 29,
+              "series": [22, 26, 31, 29, 34],
+              "formula": "장지 판매 알선 수수료 수입액",
+              "availability": "available",
+              "lineage": "kpi.life.cemetery_fee"
+            },
+            {
+              "id": "upsell_cost_ratio",
+              "label": "상향매출 원가율",
+              "type": "new",
+              "unit": "%",
+              "value": 68.4,
+              "prev": 66.9,
+              "series": [64.2, 65.1, 66.3, 66.9, 68.4],
+              "formula": "상향매출 원가 ÷ 상향매출",
+              "availability": "partial",
+              "lineage": "kpi.life.upsell_cost_ratio",
+              "highlight": true
+            },
+            {
+              "id": "funeral_goods_revenue",
+              "label": "장례용품 매출",
+              "type": "new",
+              "unit": "백만원",
+              "value": 61,
+              "prev": 57,
+              "series": [49, 53, 60, 57, 61],
+              "formula": "행사 부수 장례용품 판매 매출 인식액 합",
+              "availability": "partial",
+              "lineage": "kpi.life.funeral_goods_revenue"
+            }
+          ]
+        },
+        {
+          "id": "corp_sales",
+          "label": "법인영업팀",
+          "pl_group": ["법인 채널 매출"],
+          "rationale": "법인채널은 제휴 계약을 통해 상품을 운영하기 때문에, 가입 단가의 조정이 제한적임. 따라서 현행 KPI인 조사 DB 확대 전략을 지속 유지하는 것이 적합함.",
+          "kpis": [
+            {
+              "id": "survey_db",
+              "label": "조사 DB",
+              "type": "base",
+              "unit": "건",
+              "value": 3210,
+              "prev": 3044,
+              "series": [2781, 2905, 3122, 3044, 3210],
+              "formula": "법인 제휴처 대상 조사 DB 확보 건수",
+              "availability": "missing",
+              "lineage": "kpi.life.survey_db"
+            }
+          ]
+        },
+        {
+          "id": "tsm_life",
+          "label": "T&SM 팀",
+          "pl_group": ["회비정산차익"],
+          "rationale": "Value Chain상 고객의 이탈 경로는 행사 매출과 해약에 따른 중도 이탈로 구분됨. 해약은 위약금 수익만을 인식한 채 고객이 이탈하는 비정상적 경로에 해당하므로, 고객을 행사매출로 연결하는 것이 수익성 관리의 핵심 과제임. 따라서 기존고객 해약율을 KPI로 선정함.",
+          "kpis": [
+            {
+              "id": "churn_rate",
+              "label": "기존고객 해약율",
+              "type": "new",
+              "unit": "%",
+              "value": 1.42,
+              "prev": 1.31,
+              "series": [1.18, 1.24, 1.29, 1.31, 1.42],
+              "formula": "당월 해약 건수 ÷ 기초 유효 회원 수",
+              "availability": "partial",
+              "lineage": "kpi.life.churn_rate",
+              "invert": true,
+              "highlight": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

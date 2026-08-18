@@ -1,0 +1,1389 @@
+{
+  "meta": {
+    "title": "경영손익 장표 데이터",
+    "source_doc": "[용인공원] 26년 5월 경영회의 보고.pdf — slide 4 / 9 / 10",
+    "period_label": "26년 4월 (누계 25.12~26.04)",
+    "unit": "백만원",
+    "ratio_unit": "%",
+    "transcribed_at": "2026-06-11",
+    "note": "표는 엑셀→이미지 삽입 형태로 수식 추적 불가. 3200px 렌더링 + 독립 vision 판독 3회 교차로 전사 확정(불확실 셀 0건). 산식은 전 행 산술 검산으로 역산 완료.",
+    "months": [
+      "25.12",
+      "26.01",
+      "26.02",
+      "26.03",
+      "26.04"
+    ],
+    "monthly_basis": "26년 4월은 장표 실측값. 3월은 장표 MOM 증감액으로 역산했고, 25.12~26.02는 누계(25.12~26.04) 잔여를 균등 배분한 추정치. 자금 수지의 월별 값은 손익 총수입 구성비로 배분한 추정치.",
+    "org_basis": "조직 구분은 경영회의 보고 장표를 그대로 따른다. slide 9는 '용인공원/와이피엘' 병기(두 법인 합산)로 영업과 고객센터+경영 두 블록, slide 10은 용인공원라이프 단독. 자금 수지(slide 4)는 3사를 각각 표시하므로 손익 장표와 법인 묶음이 다르다."
+  },
+  "cash": {
+    "slide": 4,
+    "title": "매출 및 집행예산 Cash flow",
+    "basis": "현금주의 수지 (발생주의 손익과 상이)",
+    "basis_evidence": "4p 용인공원 수입 5,231 ≠ 9p 총수입 합 5,033(4,211+822) / 4p 라이프 944 ≠ 10p 총수입 1,014",
+    "formula": {
+      "손익": "수입 − 지출",
+      "손익율": "손익 ÷ 수입",
+      "그룹계": "3사 합"
+    },
+    "scenarios": [
+      {
+        "id": "forecast",
+        "label": "예상수지",
+        "asof": "26.4.30 기준",
+        "rows": [
+          {
+            "entity": "용인공원",
+            "income": 5827,
+            "expense": 4855,
+            "profit": 972,
+            "margin": 17,
+            "monthly": {
+              "income": [
+                4763.0,
+                4763.0,
+                4763.0,
+                5632.4,
+                5827
+              ],
+              "expense": [
+                3968.5,
+                3968.5,
+                3968.5,
+                4692.8,
+                4855
+              ],
+              "profit": [
+                794.5,
+                794.5,
+                794.5,
+                939.5,
+                972
+              ]
+            }
+          },
+          {
+            "entity": "용인공원라이프",
+            "income": 1380,
+            "expense": 1136,
+            "profit": 244,
+            "margin": 18,
+            "monthly": {
+              "income": [
+                1466.2,
+                1466.2,
+                1466.0,
+                1585.5,
+                1380
+              ],
+              "expense": [
+                1207.0,
+                1207.0,
+                1206.8,
+                1305.2,
+                1136
+              ],
+              "profit": [
+                259.2,
+                259.2,
+                259.2,
+                280.3,
+                244
+              ]
+            }
+          },
+          {
+            "entity": "와이피엘",
+            "income": 2142,
+            "expense": 1373,
+            "profit": 769,
+            "margin": 36,
+            "monthly": {
+              "income": [
+                1750.9,
+                1750.9,
+                1750.9,
+                2070.5,
+                2142
+              ],
+              "expense": [
+                1122.3,
+                1122.3,
+                1122.3,
+                1327.1,
+                1373
+              ],
+              "profit": [
+                628.6,
+                628.6,
+                628.6,
+                743.3,
+                769
+              ]
+            }
+          },
+          {
+            "entity": "그룹계",
+            "income": 9349,
+            "expense": 7364,
+            "profit": 1985,
+            "margin": 21,
+            "total": true,
+            "monthly": {
+              "income": [
+                7980.1,
+                7980.1,
+                7979.9,
+                9288.4,
+                9349
+              ],
+              "expense": [
+                6297.8,
+                6297.8,
+                6297.6,
+                7325.1,
+                7364
+              ],
+              "profit": [
+                1682.3,
+                1682.3,
+                1682.3,
+                1963.1,
+                1985
+              ],
+              "margin": [
+                21,
+                21,
+                21,
+                21,
+                21
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "actual",
+        "label": "수지현황(실적)",
+        "asof": "04월 30일",
+        "rows": [
+          {
+            "entity": "용인공원",
+            "income": 5231,
+            "expense": 3590,
+            "profit": 1641,
+            "margin": 31,
+            "monthly": {
+              "income": [
+                4275.8,
+                4275.8,
+                4275.8,
+                5056.3,
+                5231
+              ],
+              "expense": [
+                2934.5,
+                2934.5,
+                2934.5,
+                3470.1,
+                3590
+              ],
+              "profit": [
+                1341.4,
+                1341.4,
+                1341.4,
+                1586.2,
+                1641
+              ]
+            }
+          },
+          {
+            "entity": "용인공원라이프",
+            "income": 944,
+            "expense": 820,
+            "profit": 124,
+            "margin": 13,
+            "monthly": {
+              "income": [
+                1003.0,
+                1003.0,
+                1002.8,
+                1084.6,
+                944
+              ],
+              "expense": [
+                871.2,
+                871.2,
+                871.1,
+                942.1,
+                820
+              ],
+              "profit": [
+                131.8,
+                131.8,
+                131.7,
+                142.5,
+                124
+              ]
+            }
+          },
+          {
+            "entity": "와이피엘",
+            "income": 1519,
+            "expense": 1413,
+            "profit": 106,
+            "margin": 7,
+            "monthly": {
+              "income": [
+                1241.6,
+                1241.6,
+                1241.6,
+                1468.3,
+                1519
+              ],
+              "expense": [
+                1155.0,
+                1155.0,
+                1155.0,
+                1365.8,
+                1413
+              ],
+              "profit": [
+                86.6,
+                86.6,
+                86.6,
+                102.5,
+                106
+              ]
+            }
+          },
+          {
+            "entity": "그룹계",
+            "income": 7694,
+            "expense": 5823,
+            "profit": 1871,
+            "margin": 24,
+            "total": true,
+            "monthly": {
+              "income": [
+                6520.4,
+                6520.4,
+                6520.2,
+                7609.2,
+                7694
+              ],
+              "expense": [
+                4960.7,
+                4960.7,
+                4960.6,
+                5778.0,
+                5823
+              ],
+              "profit": [
+                1559.8,
+                1559.8,
+                1559.7,
+                1831.2,
+                1871
+              ],
+              "margin": [
+                24,
+                24,
+                24,
+                24,
+                24
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "pl": {
+    "formula": {
+      "총수입": "수입 하위항목 합",
+      "총지출": "지출 하위항목 합",
+      "손익": "총수입 − 총지출",
+      "손익율": "손익 ÷ 총수입",
+      "원가율": "총지출 ÷ 총수입 (손익율 + 원가율 = 100)",
+      "영업손익": "(총수입 − 부금 − 영업외수입) − (총지출 − 영업외비용Ⅰ)",
+      "영업손익율": "영업손익 ÷ (총수입 − 부금 − 영업외수입)"
+    },
+    "blocks": [
+      {
+        "id": "yongin_ops",
+        "slide": 9,
+        "entity": "용인공원 · 와이피엘",
+        "org": "영업",
+        "headline_kpi": "cost_ratio",
+        "target_note": "26년 원가율 목표 27%",
+        "target_value": 27,
+        "rows": [
+          {
+            "id": "rev_total",
+            "label": "총수입",
+            "level": 0,
+            "kind": "revenue",
+            "m_target": 5013,
+            "m_actual": 4211,
+            "mom": 190,
+            "yoy": 118,
+            "c_target": 21116,
+            "c_actual": 18661,
+            "c_yoy": -943,
+            "monthly": {
+              "actual": [
+                3476.3,
+                3476.3,
+                3476.4,
+                4021.0,
+                4211.0
+              ],
+              "target": [
+                4025.8,
+                4025.8,
+                4025.8,
+                4025.6,
+                5013.0
+              ]
+            }
+          },
+          {
+            "id": "rev_outdoor",
+            "label": "야외묘소",
+            "level": 1,
+            "kind": "revenue",
+            "m_target": 1440,
+            "m_actual": 1128,
+            "mom": -572,
+            "yoy": -191,
+            "c_target": 5634,
+            "c_actual": 5804,
+            "c_yoy": -21,
+            "monthly": {
+              "actual": [
+                992.0,
+                992.0,
+                992.0,
+                1700,
+                1128
+              ],
+              "target": [
+                1048.5,
+                1048.5,
+                1048.5,
+                1048.5,
+                1440
+              ]
+            }
+          },
+          {
+            "id": "rev_honorstone",
+            "label": "아너스톤",
+            "level": 1,
+            "kind": "revenue",
+            "m_target": 3507,
+            "m_actual": 3032,
+            "mom": 761,
+            "yoy": 316,
+            "c_target": 15185,
+            "c_actual": 12567,
+            "c_yoy": -1067,
+            "monthly": {
+              "actual": [
+                2421.3,
+                2421.3,
+                2421.4,
+                2271,
+                3032
+              ],
+              "target": [
+                2919.5,
+                2919.5,
+                2919.5,
+                2919.5,
+                3507
+              ]
+            }
+          },
+          {
+            "id": "rev_mutual_stone",
+            "label": "상조/석재",
+            "level": 1,
+            "kind": "revenue",
+            "m_target": 66,
+            "m_actual": 51,
+            "mom": 1,
+            "yoy": -7,
+            "c_target": 297,
+            "c_actual": 290,
+            "c_yoy": 145,
+            "monthly": {
+              "actual": [
+                63.0,
+                63.0,
+                63.0,
+                50,
+                51
+              ],
+              "target": [
+                57.8,
+                57.8,
+                57.8,
+                57.6,
+                66
+              ]
+            }
+          },
+          {
+            "id": "exp_total",
+            "label": "총지출",
+            "level": 0,
+            "kind": "expense",
+            "m_target": 1289,
+            "m_actual": 1374,
+            "mom": 481,
+            "yoy": 157,
+            "c_target": 5863,
+            "c_actual": 5786,
+            "c_yoy": -357,
+            "monthly": {
+              "actual": [
+                1173.0,
+                1173.0,
+                1173.0,
+                893.0,
+                1374.0
+              ],
+              "target": [
+                1143.4,
+                1143.4,
+                1143.4,
+                1143.8,
+                1289.0
+              ]
+            }
+          },
+          {
+            "id": "exp_fixed",
+            "label": "고정비",
+            "level": 1,
+            "kind": "expense",
+            "m_target": 170,
+            "m_actual": 159,
+            "mom": 1,
+            "yoy": -12,
+            "c_target": 855,
+            "c_actual": 847,
+            "c_yoy": -82,
+            "monthly": {
+              "actual": [
+                176.7,
+                176.7,
+                176.6,
+                158,
+                159
+              ],
+              "target": [
+                171.2,
+                171.2,
+                171.2,
+                171.4,
+                170
+              ]
+            }
+          },
+          {
+            "id": "exp_var",
+            "label": "변동비",
+            "level": 1,
+            "kind": "expense",
+            "m_target": 1119,
+            "m_actual": 1215,
+            "mom": 480,
+            "yoy": 169,
+            "c_target": 5008,
+            "c_actual": 4939,
+            "c_yoy": -275,
+            "monthly": {
+              "actual": [
+                996.3,
+                996.3,
+                996.4,
+                735,
+                1215
+              ],
+              "target": [
+                972.2,
+                972.2,
+                972.2,
+                972.4,
+                1119
+              ]
+            }
+          },
+          {
+            "id": "profit",
+            "label": "손익",
+            "level": 0,
+            "kind": "profit",
+            "m_target": 3724,
+            "m_actual": 2837,
+            "mom": -291,
+            "yoy": -39,
+            "c_target": 15253,
+            "c_actual": 12875,
+            "c_yoy": -586,
+            "monthly": {
+              "actual": [
+                2303.3,
+                2303.3,
+                2303.4,
+                3128.0,
+                2837.0
+              ],
+              "target": [
+                2882.4,
+                2882.4,
+                2882.4,
+                2881.8,
+                3724.0
+              ]
+            }
+          },
+          {
+            "id": "margin",
+            "label": "손익율",
+            "level": 0,
+            "kind": "ratio",
+            "m_target": 74,
+            "m_actual": 67,
+            "c_target": 72,
+            "c_actual": 69,
+            "monthly": {
+              "actual": [
+                66,
+                66,
+                66,
+                78,
+                67
+              ],
+              "target": [
+                72,
+                72,
+                72,
+                72,
+                74
+              ]
+            }
+          },
+          {
+            "id": "cost_ratio",
+            "label": "원가율",
+            "level": 0,
+            "kind": "ratio",
+            "m_target": 26,
+            "m_actual": 33,
+            "c_target": 28,
+            "c_actual": 31,
+            "c_yoy": 0,
+            "emphasis": true,
+            "monthly": {
+              "actual": [
+                34,
+                34,
+                34,
+                22,
+                33
+              ],
+              "target": [
+                28,
+                28,
+                28,
+                28,
+                26
+              ]
+            }
+          }
+        ],
+        "scope_note": "용인공원재단과 와이피엘의 영업 조직 합산 실적",
+        "tab_label": "용인공원 · 와이피엘 · 영업"
+      },
+      {
+        "id": "yongin_cs",
+        "slide": 9,
+        "entity": "용인공원 · 와이피엘",
+        "org": "고객센터+경영",
+        "headline_kpi": "cost_ratio",
+        "target_note": "26년 원가율 목표 85%",
+        "target_value": 85,
+        "rows": [
+          {
+            "id": "rev_total",
+            "label": "총수입",
+            "level": 0,
+            "kind": "revenue",
+            "m_target": 880,
+            "m_actual": 822,
+            "mom": -22,
+            "yoy": 62,
+            "c_target": 3792,
+            "c_actual": 3579,
+            "c_yoy": 333,
+            "monthly": {
+              "actual": [
+                637.7,
+                637.7,
+                637.6,
+                844.0,
+                822.0
+              ],
+              "target": [
+                727.9,
+                727.9,
+                727.9,
+                728.3,
+                880.0
+              ]
+            }
+          },
+          {
+            "id": "rev_mgmt_fee",
+            "label": "관리비",
+            "level": 1,
+            "kind": "revenue",
+            "m_target": 612,
+            "m_actual": 573,
+            "mom": -54,
+            "yoy": 145,
+            "c_target": 2645,
+            "c_actual": 2673,
+            "c_yoy": 596,
+            "monthly": {
+              "actual": [
+                491.0,
+                491.0,
+                491.0,
+                627,
+                573
+              ],
+              "target": [
+                508.2,
+                508.2,
+                508.2,
+                508.4,
+                612
+              ]
+            }
+          },
+          {
+            "id": "rev_service",
+            "label": "서비스매출",
+            "level": 1,
+            "kind": "revenue",
+            "m_target": 262,
+            "m_actual": 243,
+            "mom": 33,
+            "yoy": -58,
+            "c_target": 1116,
+            "c_actual": 875,
+            "c_yoy": -105,
+            "monthly": {
+              "actual": [
+                140.7,
+                140.7,
+                140.6,
+                210,
+                243
+              ],
+              "target": [
+                213.5,
+                213.5,
+                213.5,
+                213.5,
+                262
+              ]
+            }
+          },
+          {
+            "id": "rev_rent",
+            "label": "임대료",
+            "level": 1,
+            "kind": "revenue",
+            "m_target": 6,
+            "m_actual": 6,
+            "mom": -1,
+            "yoy": -25,
+            "c_target": 31,
+            "c_actual": 31,
+            "c_yoy": -158,
+            "monthly": {
+              "actual": [
+                6.0,
+                6.0,
+                6.0,
+                7,
+                6
+              ],
+              "target": [
+                6.2,
+                6.2,
+                6.2,
+                6.4,
+                6
+              ]
+            }
+          },
+          {
+            "id": "exp_total",
+            "label": "총지출",
+            "level": 0,
+            "kind": "expense",
+            "m_target": 583,
+            "m_actual": 621,
+            "mom": 201,
+            "yoy": -74,
+            "c_target": 3236,
+            "c_actual": 2940,
+            "c_yoy": -231,
+            "memo": "원본 엑셀에 작성자 메모 존재(셀 메모 표식)",
+            "monthly": {
+              "actual": [
+                633.0,
+                633.0,
+                633.0,
+                420.0,
+                621.0
+              ],
+              "target": [
+                663.2,
+                663.2,
+                663.2,
+                663.4,
+                583.0
+              ]
+            }
+          },
+          {
+            "id": "exp_fixed",
+            "label": "고정비",
+            "level": 1,
+            "kind": "expense",
+            "m_target": 461,
+            "m_actual": 414,
+            "mom": 96,
+            "yoy": -93,
+            "c_target": 2490,
+            "c_actual": 2148,
+            "c_yoy": -307,
+            "monthly": {
+              "actual": [
+                472.0,
+                472.0,
+                472.0,
+                318,
+                414
+              ],
+              "target": [
+                507.2,
+                507.2,
+                507.2,
+                507.4,
+                461
+              ]
+            }
+          },
+          {
+            "id": "exp_var",
+            "label": "변동비",
+            "level": 1,
+            "kind": "expense",
+            "m_target": 122,
+            "m_actual": 207,
+            "mom": 105,
+            "yoy": 19,
+            "c_target": 746,
+            "c_actual": 792,
+            "c_yoy": 76,
+            "monthly": {
+              "actual": [
+                161.0,
+                161.0,
+                161.0,
+                102,
+                207
+              ],
+              "target": [
+                156.0,
+                156.0,
+                156.0,
+                156.0,
+                122
+              ]
+            }
+          },
+          {
+            "id": "profit",
+            "label": "손익",
+            "level": 0,
+            "kind": "profit",
+            "m_target": 297,
+            "m_actual": 201,
+            "mom": -223,
+            "yoy": 136,
+            "c_target": 556,
+            "c_actual": 639,
+            "c_yoy": 564,
+            "monthly": {
+              "actual": [
+                4.7,
+                4.7,
+                4.6,
+                424.0,
+                201.0
+              ],
+              "target": [
+                64.7,
+                64.7,
+                64.7,
+                64.9,
+                297.0
+              ]
+            }
+          },
+          {
+            "id": "margin",
+            "label": "손익율",
+            "level": 0,
+            "kind": "ratio",
+            "m_target": 34,
+            "m_actual": 24,
+            "c_target": 15,
+            "c_actual": 18,
+            "monthly": {
+              "actual": [
+                1,
+                1,
+                1,
+                50,
+                24
+              ],
+              "target": [
+                9,
+                9,
+                9,
+                9,
+                34
+              ]
+            }
+          },
+          {
+            "id": "cost_ratio",
+            "label": "원가율",
+            "level": 0,
+            "kind": "ratio",
+            "m_target": 66,
+            "m_actual": 76,
+            "c_target": 85,
+            "c_actual": 82,
+            "c_yoy": -16,
+            "emphasis": true,
+            "monthly": {
+              "actual": [
+                99,
+                99,
+                99,
+                50,
+                76
+              ],
+              "target": [
+                91,
+                91,
+                91,
+                91,
+                66
+              ]
+            }
+          }
+        ],
+        "scope_note": "용인공원재단과 와이피엘의 고객센터·경영 조직 합산 실적",
+        "tab_label": "용인공원 · 와이피엘 · 고객센터+경영"
+      },
+      {
+        "id": "life",
+        "slide": 10,
+        "entity": "용인공원라이프",
+        "org": "전사",
+        "headline_kpi": "op_margin",
+        "target_note": "26년 목표 80%",
+        "target_value": 80,
+        "rows": [
+          {
+            "id": "rev_total",
+            "label": "총수입",
+            "level": 0,
+            "kind": "revenue",
+            "m_target": 1618,
+            "m_actual": 1014,
+            "mom": -151,
+            "yoy": 72,
+            "c_target": 7061,
+            "c_actual": 5411,
+            "c_yoy": 1652,
+            "monthly": {
+              "actual": [
+                1077.4,
+                1077.4,
+                1077.2,
+                1165.0,
+                1014.0
+              ],
+              "target": [
+                1360.8,
+                1360.8,
+                1360.8,
+                1360.6,
+                1618.0
+              ]
+            }
+          },
+          {
+            "id": "rev_installment",
+            "label": "부금",
+            "level": 1,
+            "kind": "revenue",
+            "m_target": 864,
+            "m_actual": 632,
+            "mom": -19,
+            "yoy": 111,
+            "c_target": 3874,
+            "c_actual": 3115,
+            "c_yoy": 1171,
+            "monthly": {
+              "actual": [
+                610.7,
+                610.7,
+                610.6,
+                651,
+                632
+              ],
+              "target": [
+                752.5,
+                752.5,
+                752.5,
+                752.5,
+                864
+              ]
+            }
+          },
+          {
+            "id": "rev_event",
+            "label": "행사",
+            "level": 1,
+            "kind": "revenue",
+            "m_target": 607,
+            "m_actual": 345,
+            "mom": -153,
+            "yoy": -60,
+            "c_target": 2649,
+            "c_actual": 2190,
+            "c_yoy": 561,
+            "monthly": {
+              "actual": [
+                449.0,
+                449.0,
+                449.0,
+                498,
+                345
+              ],
+              "target": [
+                510.5,
+                510.5,
+                510.5,
+                510.5,
+                607
+              ]
+            }
+          },
+          {
+            "id": "rev_cemetery",
+            "label": "장지판매",
+            "level": 1,
+            "kind": "revenue",
+            "m_target": 137,
+            "m_actual": 34,
+            "mom": 21,
+            "yoy": 29,
+            "c_target": 488,
+            "c_actual": 89,
+            "c_yoy": -37,
+            "monthly": {
+              "actual": [
+                14.0,
+                14.0,
+                14.0,
+                13,
+                34
+              ],
+              "target": [
+                87.8,
+                87.8,
+                87.8,
+                87.6,
+                137
+              ]
+            }
+          },
+          {
+            "id": "rev_relocation",
+            "label": "이장용품",
+            "level": 1,
+            "kind": "revenue",
+            "m_target": 10,
+            "m_actual": 3,
+            "mom": 2,
+            "yoy": -3,
+            "c_target": 50,
+            "c_actual": 12,
+            "c_yoy": -33,
+            "monthly": {
+              "actual": [
+                2.7,
+                2.7,
+                2.6,
+                1,
+                3
+              ],
+              "target": [
+                10.0,
+                10.0,
+                10.0,
+                10.0,
+                10
+              ]
+            }
+          },
+          {
+            "id": "rev_nonop",
+            "label": "영업외수입",
+            "level": 1,
+            "kind": "revenue",
+            "m_target": null,
+            "m_actual": null,
+            "mom": -2,
+            "yoy": -5,
+            "c_target": null,
+            "c_actual": 5,
+            "c_yoy": -10,
+            "monthly": {
+              "actual": [
+                1.0,
+                1.0,
+                1.0,
+                2,
+                0
+              ],
+              "target": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0
+              ]
+            }
+          },
+          {
+            "id": "exp_total",
+            "label": "총지출",
+            "level": 0,
+            "kind": "expense",
+            "m_target": 1127,
+            "m_actual": 809,
+            "mom": -178,
+            "yoy": -12,
+            "c_target": 5472,
+            "c_actual": 5027,
+            "c_yoy": 1176,
+            "monthly": {
+              "actual": [
+                1077.0,
+                1077.0,
+                1077.0,
+                987.0,
+                809.0
+              ],
+              "target": [
+                1086.3,
+                1086.3,
+                1086.3,
+                1086.1,
+                1127.0
+              ]
+            }
+          },
+          {
+            "id": "exp_fixed",
+            "label": "고정비",
+            "level": 1,
+            "kind": "expense",
+            "m_target": 160,
+            "m_actual": 117,
+            "mom": -7,
+            "yoy": -3,
+            "c_target": 719,
+            "c_actual": 658,
+            "c_yoy": 48,
+            "monthly": {
+              "actual": [
+                139.0,
+                139.0,
+                139.0,
+                124,
+                117
+              ],
+              "target": [
+                139.8,
+                139.8,
+                139.8,
+                139.6,
+                160
+              ]
+            }
+          },
+          {
+            "id": "exp_var",
+            "label": "변동비",
+            "level": 1,
+            "kind": "expense",
+            "m_target": 452,
+            "m_actual": 366,
+            "mom": 64,
+            "yoy": -25,
+            "c_target": 2071,
+            "c_actual": 1788,
+            "c_yoy": 451,
+            "monthly": {
+              "actual": [
+                373.3,
+                373.3,
+                373.4,
+                302,
+                366
+              ],
+              "target": [
+                404.8,
+                404.8,
+                404.8,
+                404.6,
+                452
+              ]
+            }
+          },
+          {
+            "id": "exp_invest",
+            "label": "투자비",
+            "level": 1,
+            "kind": "expense",
+            "m_target": 112,
+            "m_actual": 18,
+            "mom": -148,
+            "yoy": 13,
+            "c_target": 772,
+            "c_actual": 571,
+            "c_yoy": 363,
+            "monthly": {
+              "actual": [
+                129.0,
+                129.0,
+                129.0,
+                166,
+                18
+              ],
+              "target": [
+                165.0,
+                165.0,
+                165.0,
+                165.0,
+                112
+              ]
+            }
+          },
+          {
+            "id": "exp_nonop1",
+            "label": "영업외비용Ⅰ",
+            "level": 1,
+            "kind": "expense",
+            "m_target": 331,
+            "m_actual": 244,
+            "mom": -95,
+            "yoy": 3,
+            "c_target": 1565,
+            "c_actual": 1621,
+            "c_yoy": 252,
+            "memo": "해약 + 공제담보",
+            "monthly": {
+              "actual": [
+                346.0,
+                346.0,
+                346.0,
+                339,
+                244
+              ],
+              "target": [
+                308.5,
+                308.5,
+                308.5,
+                308.5,
+                331
+              ]
+            }
+          },
+          {
+            "id": "exp_nonop2",
+            "label": "영업외비용Ⅱ",
+            "level": 1,
+            "kind": "expense",
+            "m_target": 72,
+            "m_actual": 64,
+            "mom": 8,
+            "yoy": 0,
+            "c_target": 345,
+            "c_actual": 389,
+            "c_yoy": 62,
+            "monthly": {
+              "actual": [
+                89.7,
+                89.7,
+                89.6,
+                56,
+                64
+              ],
+              "target": [
+                68.2,
+                68.2,
+                68.2,
+                68.4,
+                72
+              ]
+            }
+          },
+          {
+            "id": "profit",
+            "label": "손익",
+            "level": 0,
+            "kind": "profit",
+            "m_target": 491,
+            "m_actual": 205,
+            "mom": 27,
+            "yoy": 84,
+            "c_target": 1589,
+            "c_actual": 384,
+            "c_yoy": 476,
+            "monthly": {
+              "actual": [
+                0.4,
+                0.4,
+                0.2,
+                178.0,
+                205.0
+              ],
+              "target": [
+                274.5,
+                274.5,
+                274.5,
+                274.5,
+                491.0
+              ]
+            }
+          },
+          {
+            "id": "margin",
+            "label": "손익율",
+            "level": 0,
+            "kind": "ratio",
+            "m_target": 30,
+            "m_actual": 20,
+            "c_target": 23,
+            "c_actual": 7,
+            "monthly": {
+              "actual": [
+                0,
+                0,
+                0,
+                15,
+                20
+              ],
+              "target": [
+                20,
+                20,
+                20,
+                20,
+                30
+              ]
+            }
+          },
+          {
+            "id": "op_profit",
+            "label": "영업손익",
+            "level": 0,
+            "kind": "profit",
+            "m_target": -52,
+            "m_actual": -183,
+            "mom": -47,
+            "yoy": -24,
+            "c_target": -720,
+            "c_actual": -1115,
+            "c_yoy": -433,
+            "memo": "4월 목표 −52는 역산값 −42와 불일치 — 산출근거 확인 대상",
+            "monthly": {
+              "actual": [
+                -265.3,
+                -265.3,
+                -265.4,
+                -136.0,
+                -183.0
+              ],
+              "target": [
+                -169.5,
+                -169.5,
+                -169.5,
+                -169.5,
+                -52
+              ]
+            }
+          },
+          {
+            "id": "op_margin",
+            "label": "영업손익율",
+            "level": 0,
+            "kind": "ratio",
+            "m_target": -7,
+            "m_actual": -48,
+            "c_target": -23,
+            "c_actual": -49,
+            "emphasis": true,
+            "monthly": {
+              "actual": [
+                -57,
+                -57,
+                -57,
+                -27,
+                -48
+              ],
+              "target": [
+                -28,
+                -28,
+                -28,
+                -28,
+                -7
+              ]
+            }
+          }
+        ],
+        "scope_note": "용인공원라이프 전사 실적",
+        "tab_label": "용인공원라이프"
+      }
+    ]
+  }
+}

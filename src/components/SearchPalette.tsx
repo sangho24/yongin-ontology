@@ -2,25 +2,15 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Hash, Database, FolderOpen, ArrowRight } from "lucide-react";
-import evidenceData from "@/data/evidence_index.json";
-import tboxData from "@/data/tbox.json";
-import catalogData from "@/data/data_catalog.json";
-import type { EvidenceIndex, DataCatalog } from "@/types";
+import { Search, BarChart3, Target, ArrowRight } from "lucide-react";
+import { uniqueKpis, plData } from "@/lib/exec";
 
 // =============================================================================
 // SearchPalette — ⌘K (Cmd/Ctrl + K) 글로벌 검색 모달
-// 인덱스: 슬롯(evidence_index) + T-Box(Class·Property) + Dataset + 라우트
+// 인덱스: 라우트 + 손익 항목 + KPI
 // =============================================================================
 
-const evidence = evidenceData as unknown as EvidenceIndex;
-const tbox = tboxData as unknown as {
-  classes: { id: string; label: string; definition: string }[];
-  properties: { id: string; label: string; from?: string; to?: string }[];
-};
-const catalog = catalogData as unknown as DataCatalog;
-
-type ResultKind = "page" | "slot" | "tbox-class" | "tbox-property" | "dataset";
+type ResultKind = "page" | "account" | "kpi";
 
 type SearchItem = {
   id: string;
@@ -28,71 +18,42 @@ type SearchItem = {
   title: string;
   sub?: string;
   href: string; // navigate target
-  hash?: string; // optional anchor (#slot-id) for in-page focus
+  hash?: string; // optional anchor for in-page focus
   hint?: string; // tertiary info (page label, category, etc.)
 };
 
 const ROUTES: SearchItem[] = [
-  { id: "p-/", kind: "page", title: "Overview", sub: "그룹 PI 종합", href: "/" },
-  { id: "p-/mutual", kind: "page", title: "상조 VC", sub: "라이프 · 회원 master", href: "/mutual" },
-  { id: "p-/cemetery", kind: "page", title: "장지 VC", sub: "용인공원·YPL · 객체 master", href: "/cemetery" },
-  { id: "p-/root-cause", kind: "page", title: "Root Cause", sub: "근원 분석 · 가설", href: "/root-cause" },
-  { id: "p-/data-model", kind: "page", title: "Data Model", sub: "T-Box · As-is 로직", href: "/data-model" },
-  { id: "p-/data-catalog", kind: "page", title: "Data Catalog", sub: "보유 자료 인벤토리", href: "/data-catalog" },
+  { id: "p-/", kind: "page", title: "Overview", sub: "그룹 수지현황", href: "/" },
+  { id: "p-/pl", kind: "page", title: "손익", sub: "조직별 원가 및 손익", href: "/pl" },
+  { id: "p-/kpi", kind: "page", title: "KPI", sub: "조직별 지표 추이", href: "/kpi" },
 ];
 
 function buildIndex(): SearchItem[] {
   const items: SearchItem[] = [...ROUTES];
 
-  // Slots
-  Object.entries(evidence.slots).forEach(([slotId, slot]) => {
-    items.push({
-      id: `s-${slotId}`,
-      kind: "slot",
-      title: slot.title,
-      sub: `${slot.page} · ${slot.kind}`,
-      href: slot.page,
-      hash: slotId,
-      hint: slot.kind,
+  // 손익 항목 — 블록별 수입·지출·손익 행
+  plData.pl.blocks.forEach((b) => {
+    b.rows.forEach((r) => {
+      items.push({
+        id: `a-${b.id}-${r.id}`,
+        kind: "account",
+        title: r.label,
+        sub: b.tab_label,
+        href: "/pl",
+        hint: r.kind === "ratio" ? "비율" : r.level === 0 ? "총계" : "세부",
+      });
     });
   });
 
-  // T-Box classes
-  tbox.classes?.forEach((c) => {
+  // KPI
+  uniqueKpis.forEach((k) => {
     items.push({
-      id: `tc-${c.id}`,
-      kind: "tbox-class",
-      title: c.label,
-      sub: c.definition?.slice(0, 60),
-      href: "/data-model",
-      hash: c.id,
-      hint: "Class",
-    });
-  });
-
-  // T-Box properties
-  tbox.properties?.forEach((p) => {
-    items.push({
-      id: `tp-${p.id}`,
-      kind: "tbox-property",
-      title: p.label,
-      sub: p.from && p.to ? `${p.from} → ${p.to}` : undefined,
-      href: "/data-model",
-      hash: p.id,
-      hint: "Property",
-    });
-  });
-
-  // Datasets
-  catalog.datasets.forEach((d) => {
-    items.push({
-      id: `d-${d.id}`,
-      kind: "dataset",
-      title: d.name,
-      sub: d.scope,
-      href: "/data-catalog",
-      hash: d.id,
-      hint: d.natureCode,
+      id: `k-${k.lineage}`,
+      kind: "kpi",
+      title: k.label,
+      sub: `${k.company} · ${k.team}`,
+      href: "/kpi",
+      hint: k.type === "new" ? "신규" : "기존",
     });
   });
 
@@ -101,23 +62,51 @@ function buildIndex(): SearchItem[] {
 
 const KIND_ICON: Record<ResultKind, typeof Search> = {
   page: ArrowRight,
-  slot: Hash,
-  "tbox-class": Database,
-  "tbox-property": Database,
-  dataset: FolderOpen,
+  account: BarChart3,
+  kpi: Target,
 };
 
 const KIND_LABEL: Record<ResultKind, string> = {
   page: "페이지",
-  slot: "KPI · 슬롯",
-  "tbox-class": "Class",
-  "tbox-property": "Property",
-  dataset: "보유 자료",
+  account: "손익 항목",
+  kpi: "KPI",
 };
 
 // 한글·영문 정규화 (대소문자·공백 무시)
 function norm(s: string): string {
   return (s ?? "").toLowerCase().replace(/\s+/g, "");
+}
+
+// hash 앵커 대상 탐색 — id 직접 부여(dataset 행) → data-slot-id(Card·NumberCell의
+// evidence 슬롯 마커) → data-id(ReactFlow 노드·엣지) 순으로 조회
+function findAnchorTarget(hash: string): Element | null {
+  const esc = CSS.escape(hash);
+  return (
+    document.getElementById(hash) ??
+    document.querySelector(`[data-slot-id="${esc}"]`) ??
+    document.querySelector(`[data-id="${esc}"]`)
+  );
+}
+
+// 라우팅 직후 대상 DOM이 mount될 때까지 rAF 폴링 후 scrollIntoView
+// — 페이지 전환·lazy 렌더 시간 감안해 최대 3초까지 재시도.
+// 목적지 pathname 도착 전에는 탐색하지 않음 (다른 페이지의 동일 마커 오작동 방지)
+function scrollToAnchor(href: string, hash: string) {
+  const deadline = Date.now() + 3000;
+  const targetPath = href.split("#")[0] || "/";
+  const tryScroll = () => {
+    if (window.location.pathname === targetPath) {
+      const el = findAnchorTarget(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+    }
+    if (Date.now() < deadline) {
+      requestAnimationFrame(tryScroll);
+    }
+  };
+  requestAnimationFrame(tryScroll);
 }
 
 export function SearchPalette({
@@ -137,8 +126,10 @@ export function SearchPalette({
   const results = useMemo(() => {
     const q = norm(query);
     if (!q) {
-      // 빈 query: 페이지 + 인기 슬롯 (PRIMARY 박혀있는 것 위주)
-      return index.filter((i) => i.kind === "page").concat(index.filter((i) => i.kind === "slot").slice(0, 8));
+      // 빈 query: 페이지 + 대표 손익 항목
+      return index
+        .filter((i) => i.kind === "page")
+        .concat(index.filter((i) => i.kind === "account").slice(0, 8));
     }
     const matches = index.filter(
       (i) => norm(i.title).includes(q) || norm(i.sub ?? "").includes(q) || norm(i.id).includes(q)
@@ -194,6 +185,11 @@ export function SearchPalette({
     onClose();
     const target = item.hash ? `${item.href}#${item.hash}` : item.href;
     router.push(target);
+    // hash 앵커는 대응 id가 없는 슬롯이 많아 native 점프가 무동작 →
+    // 라우팅 후 대상 요소를 폴링으로 찾아 직접 스크롤
+    if (item.hash) {
+      scrollToAnchor(item.href, item.hash);
+    }
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -240,7 +236,7 @@ export function SearchPalette({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
-            placeholder="구역·계정·KPI·자료 검색"
+            placeholder="손익 항목 · KPI 검색"
             className="h-12 w-full bg-transparent text-[14px] text-stone-900 placeholder:text-stone-400 focus:outline-none"
             autoComplete="off"
             spellCheck={false}

@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { ReactNode } from "react";
-import { Search, HelpCircle } from "lucide-react";
+import { Search } from "lucide-react";
 import { useSearchPalette } from "./SiteShell";
-import { startTour } from "./TourOverlay";
 
 // =============================================================================
 // AppLayout — 페이지 헤더 + main + narration
@@ -16,11 +15,11 @@ export function AppLayout({
   children,
   pageTitle,
   pageSubtitle,
-  narration,
 }: {
   children: ReactNode;
   pageTitle?: string;
   pageSubtitle?: string;
+  /** 사이드바에서 내린 legacy 화면들이 아직 넘기는 prop — 렌더하지 않는다 */
   narration?: ReactNode;
 }) {
   const search = useSearchPalette();
@@ -28,7 +27,7 @@ export function AppLayout({
   return (
     <>
       {/* z-10: sidebar(z-20)보다 낮게 유지 → page transition 시에도 sidebar 가림 방지 */}
-      <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-6 border-b border-stone-200/80 bg-[#fafaf7]/85 px-12 backdrop-blur-md">
+      <header className="no-print sticky top-0 z-10 flex h-16 items-center justify-between gap-6 border-b border-stone-200/80 bg-[#fafaf7]/85 px-12 backdrop-blur-md">
         <div className="flex min-w-0 items-baseline gap-3">
           <h2 className="truncate text-[18px] font-semibold tracking-tight text-stone-900">
             {pageTitle ?? ""}
@@ -47,20 +46,10 @@ export function AppLayout({
               className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-stone-400 group-hover:text-stone-500"
               strokeWidth={2}
             />
-            <span className="truncate">구역·계정·KPI·자료 검색</span>
+            <span className="truncate">손익 항목 · KPI 검색</span>
             <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-stone-200 bg-stone-50 px-1.5 py-0.5 text-[10px] font-medium tracking-wide text-stone-500">
               ⌘K
             </kbd>
-          </button>
-          {/* 가이드 모드 재시작 */}
-          <button
-            type="button"
-            onClick={() => startTour()}
-            aria-label="가이드 모드 시작"
-            title="가이드 모드"
-            className="flex h-9 w-9 items-center justify-center rounded-md border border-stone-200 bg-white/60 text-stone-500 transition-colors hover:border-[#0095A9]/40 hover:bg-white hover:text-[#0095A9]"
-          >
-            <HelpCircle className="h-4 w-4" strokeWidth={1.75} />
           </button>
         </div>
 
@@ -68,7 +57,7 @@ export function AppLayout({
         <div className="flex shrink-0 items-center gap-4 text-[11px]">
           <div className="text-stone-500">
             <span className="text-stone-400">Period</span>
-            <span className="ml-1.5 font-medium text-stone-700 tnum">FY 2025</span>
+            <span className="ml-1.5 font-medium text-stone-700 tnum">26년 4월</span>
           </div>
           <div className="hidden h-3 w-px bg-stone-200 sm:block" />
           <div className="hidden text-stone-500 sm:block">v0.1</div>
@@ -85,26 +74,14 @@ export function AppLayout({
         </div>
       </header>
 
-      <main className="px-12 py-10">
-        <div className="grid gap-12 xl:grid-cols-[1fr_260px]">
-          <div className="min-w-0 fade-in">
-            {pageSubtitle && (
-              <p className="mb-8 max-w-3xl text-[14px] leading-relaxed text-stone-600">{pageSubtitle}</p>
-            )}
-            {children}
-          </div>
-          {narration && (
-            <aside className="hidden xl:block">
-              <div className="sticky top-24 border-l border-stone-300 pl-4">
-                <div className="text-[11px] font-semibold tracking-[0.14em] text-stone-400">
-                  NOTES
-                </div>
-                <div className="mt-2.5 space-y-2 text-[12px] leading-relaxed text-stone-600">
-                  {narration}
-                </div>
-              </div>
-            </aside>
+      <main className="print-main px-12 py-10">
+        <div className="print-body min-w-0 fade-in">
+          {pageSubtitle && (
+            <p className="no-print mb-8 max-w-3xl text-[14px] leading-relaxed text-stone-600">
+              {pageSubtitle}
+            </p>
           )}
+          {children}
         </div>
       </main>
     </>

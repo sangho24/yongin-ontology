@@ -30,6 +30,10 @@ import asisLogic from "@/data/asis_logic.json";
 import { autoUnit, formatPct } from "@/lib/format";
 import type { NumberLineage } from "@/types";
 
+// 납부만기(YF) 상태 행 — 배열 순서 의존 대신 코드 기반 조회, 미발견 시 0 fallback
+const matureShareOfRevenue =
+  lifeKpi.memberStatus.find((s) => s.code === "YF")?.shareOfRevenue ?? 0;
+
 // -----------------------------------------------------------------------------
 // Root Cause inline 가설 카드 (root-cause 페이지 H1~H4 컴팩트 버전)
 // LLM 분석·추천 액션 같은 고급 인터랙션은 root-cause 페이지에서만 — 본 페이지는
@@ -753,7 +757,7 @@ export default function MutualPage() {
                 id: "H1",
                 title:
                   "회비정산차익이 영업외수익으로 흡수되어 영업이익 view에서 손실 과대 표시",
-                evidence: `만기해약 ${lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명의 정산차익 ${autoUnit(lifeKpi.wowMetrics.potentialFromMature)} → 영업외 인식. 매출의 ${formatPct(lifeKpi.memberStatus[0].shareOfRevenue)} 비중. 조정후이익(영업이익+회비정산차익) view에서 재해석 필요.`,
+                evidence: `만기해약 ${lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명의 정산차익 ${autoUnit(lifeKpi.wowMetrics.potentialFromMature)} → 영업외 인식. 매출의 ${formatPct(matureShareOfRevenue)} 비중. 조정후이익(영업이익+회비정산차익) view에서 재해석 필요.`,
                 signal: "high" as const,
               },
               {

@@ -19,7 +19,6 @@ import {
   ZAxis,
 } from "recharts";
 import {
-  BookOpen,
   ChevronDown,
   ChevronUp,
   ExternalLink,
@@ -32,6 +31,10 @@ import { NumberCell } from "@/components/NumberCell";
 import lifeKpi from "@/data/life_kpi.json";
 import zoneKpi from "@/data/zone_kpi.json";
 import { autoUnit, formatPct } from "@/lib/format";
+
+// 납부만기(YF) 상태 행 — 배열 순서 의존 대신 코드 기반 조회, 미발견 시 0 fallback
+const matureShareOfRevenue =
+  lifeKpi.memberStatus.find((s) => s.code === "YF")?.shareOfRevenue ?? 0;
 
 // =============================================================================
 // 가설 타입 + mock LLM 분석 / 추천 액션
@@ -50,7 +53,7 @@ const MUTUAL_HYPOTHESES: Hypothesis[] = [
   {
     id: "H1",
     title: "회비정산차익이 영업외수익으로 흡수되어 영업이익 view에서 손실 과대 표시",
-    evidence: `만기해약 ${lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명의 정산차익 ${autoUnit(lifeKpi.wowMetrics.potentialFromMature)} → 영업외 인식. 매출의 ${formatPct(lifeKpi.memberStatus[0].shareOfRevenue)} 비중`,
+    evidence: `만기해약 ${lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명의 정산차익 ${autoUnit(lifeKpi.wowMetrics.potentialFromMature)} → 영업외 인식. 매출의 ${formatPct(matureShareOfRevenue)} 비중`,
     signal: "high",
     llmAnalysis:
       "회비정산차익이 영업외수익으로 분류되는 것은 K-IFRS 1115(고객과의 계약에서 생기는 수익) 적용 결과로, 상조 만기해약은 의무이행 종료 후 잔여 부채 환입 성격이라 매출 인식 요건을 충족하지 못합니다. 다만 그룹 관점에서는 이 환입이 회원 lifecycle의 종착점에서 발생하는 경제적 cash flow이기 때문에, 영업이익 + 회비정산차익을 묶은 'Adjusted Operating Income' view가 사업 실질을 더 정확히 반영합니다. 동종업계 프리드·보람도 동일한 회계처리를 적용하지만 IR 자료에서는 별도 KPI로 보정 공시하는 사례가 다수입니다. 즉 손실 자체보다 view의 선택이 의사결정 왜곡 요인입니다.",
@@ -315,13 +318,6 @@ function StatCellWithActions({
           type="button"
           className="inline-flex items-center gap-1.5 rounded-md border border-[#0095A9]/30 px-2.5 py-1 text-[11px] font-medium text-[#007a8c] transition-colors hover:bg-[#e6f4f6]"
         >
-          <BookOpen className="h-3 w-3" />
-          원장 보기
-        </button>
-        <button
-          type="button"
-          className="inline-flex items-center gap-1.5 rounded-md border border-[#0095A9]/30 px-2.5 py-1 text-[11px] font-medium text-[#007a8c] transition-colors hover:bg-[#e6f4f6]"
-        >
           <ExternalLink className="h-3 w-3" />
           ERP 열기
         </button>
@@ -382,7 +378,7 @@ export default function RootCausePage() {
       <section className="grid gap-6 sm:grid-cols-3">
         <StatCellWithActions
           label="라이프 만기 회원 매출 비중"
-          value={Math.round(lifeKpi.memberStatus[0].shareOfRevenue * 1000) / 10}
+          value={Math.round(matureShareOfRevenue * 1000) / 10}
           unit="%"
           sub={`${lifeKpi.matureAnalysis.totalMatureMembers.toLocaleString()}명 회비정산차익 → 영업외 인식`}
           slotId="rc_stat_mature_member"

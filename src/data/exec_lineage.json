@@ -1,0 +1,2477 @@
+{
+  "meta": {
+    "title": "화면 컴포넌트별 데이터 리니지",
+    "note": "화면의 각 컴포넌트가 어떤 값을 쓰고, 그 값이 분자·분모 단위로 어떻게 분해되며, 최말단이 어느 시스템의 어느 컬럼에서 오는지 정리한다. derived=true인 항목은 장표에 없는 값을 화면용으로 가공한 단계이므로 원천 확보 시 대체 대상이다.",
+    "unit": "백만원 (비율 지표는 %)",
+    "screen_version": "2026-08-18 개편본 (Overview · 손익 · KPI 3화면)"
+  },
+  "systems": [
+    {
+      "id": "dozone_erp",
+      "label": "더존 아마란스10 — 회계(전표·원장)",
+      "kind": "ERP",
+      "owner": "더존",
+      "desc": "전표 입력 → 계정별원장 → 시산표·재무제표. 손익 항목의 1차 원천.",
+      "color": "#0095A9"
+    },
+    {
+      "id": "dozone_budget",
+      "label": "더존 아마란스10 — 예산·자금관리",
+      "kind": "ERP",
+      "owner": "더존",
+      "desc": "월별 목표(예산) 및 자금수지. 경영손익의 목표 칼럼·자금현황 원천 후보.",
+      "color": "#65B3B1"
+    },
+    {
+      "id": "dozone_cost",
+      "label": "더존 아마란스10 — 원가모듈 (추가개발)",
+      "kind": "ERP",
+      "owner": "더존",
+      "desc": "구역(SKU) 단위 재공품·배부. 26년 전표에 프로젝트/구역 코드 재입력이 선행되어야 가동.",
+      "color": "#007a8c"
+    },
+    {
+      "id": "crm_yongin",
+      "label": "장지 계약·묘역 관리 시스템",
+      "kind": "CRM",
+      "owner": "용인공원재단",
+      "desc": "묘역·구역 마스터, 계약·사용자 정보, 관리비 부과·수납 대장.",
+      "color": "#b45309"
+    },
+    {
+      "id": "crm_life",
+      "label": "상조 회원관리 시스템",
+      "kind": "CRM",
+      "owner": "용인공원라이프",
+      "desc": "회원 마스터, 부금 납입, 해약, 행사 시행 이력, 채널 구분.",
+      "color": "#9a3412"
+    },
+    {
+      "id": "mkt_channel",
+      "label": "마케팅 채널·상담 데이터",
+      "kind": "CRM/외부",
+      "owner": "마케팅팀 · 광고매체",
+      "desc": "인입 DB, 방문 예약·상담, 유효 DB, 조사 DB. 매체별 리드 유입 로그.",
+      "color": "#78716c"
+    },
+    {
+      "id": "manual",
+      "label": "수기 엑셀 (경영관리)",
+      "kind": "수기입력",
+      "owner": "재무회계팀 · 경영지원팀",
+      "desc": "월 경영회의 보고 원본 엑셀. 자금수지 집계, 고정/변동/투자비 분류 기준, 목표 수립.",
+      "color": "#a8a29e"
+    },
+    {
+      "id": "dkbmc",
+      "label": "DKBMC Data Lake · Tableau",
+      "kind": "BI",
+      "owner": "DK BMC",
+      "desc": "구축 중인 데이터 레이크. 손익은 아마란스10에서 I/F 수신, 비손익 지표는 자체 적재 후 결합 산출.",
+      "color": "#44403c"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "cash.group.profit",
+      "label": "그룹 수지손익",
+      "page": "Overview",
+      "component": "Overview · 요약 지표",
+      "unit": "백만원",
+      "value": 1871,
+      "formula": "그룹 수입 − 그룹 지출",
+      "basis": "현금주의 (발생주의 손익 장표와 모수 상이)",
+      "children": [
+        {
+          "role": "피감수",
+          "ref": "cash.group.income"
+        },
+        {
+          "role": "감수",
+          "ref": "cash.group.expense"
+        }
+      ],
+      "used_by": [
+        "ov.summary"
+      ]
+    },
+    {
+      "id": "cash.group.margin",
+      "label": "그룹 수지손익율",
+      "page": "Overview",
+      "component": "Overview · 요약 지표",
+      "unit": "%",
+      "value": 24,
+      "formula": "그룹 수지손익 ÷ 그룹 수입",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "cash.group.profit"
+        },
+        {
+          "role": "분모",
+          "ref": "cash.group.income"
+        }
+      ],
+      "used_by": [
+        "ov.summary"
+      ]
+    },
+    {
+      "id": "cash.group.income",
+      "label": "그룹 수입 (현금)",
+      "page": "Overview",
+      "component": "Overview · 수지현황 표",
+      "unit": "백만원",
+      "value": 7694,
+      "formula": "용인공원 + 용인공원라이프 + 와이피엘 수입",
+      "children": [
+        {
+          "role": "합산",
+          "ref": "cash.yongin.income"
+        },
+        {
+          "role": "합산",
+          "ref": "cash.life.income"
+        },
+        {
+          "role": "합산",
+          "ref": "cash.ypl.income"
+        }
+      ],
+      "used_by": [
+        "ov.summary",
+        "ov.trend"
+      ]
+    },
+    {
+      "id": "cash.group.expense",
+      "label": "그룹 지출 (현금)",
+      "page": "Overview",
+      "component": "Overview · 수지현황 표",
+      "unit": "백만원",
+      "value": 5823,
+      "formula": "용인공원 + 용인공원라이프 + 와이피엘 지출",
+      "children": [
+        {
+          "role": "합산",
+          "ref": "cash.yongin.expense"
+        },
+        {
+          "role": "합산",
+          "ref": "cash.life.expense"
+        },
+        {
+          "role": "합산",
+          "ref": "cash.ypl.expense"
+        }
+      ],
+      "used_by": [
+        "ov.summary",
+        "ov.trend"
+      ]
+    },
+    {
+      "id": "cash.yongin.income",
+      "label": "용인공원 수입 (현금)",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 5231,
+      "source": {
+        "system": "manual",
+        "alt_system": "dozone_budget",
+        "object": "월 경영회의 원본 엑셀 — 자금수지 집계 시트",
+        "columns": [
+          "입금일자",
+          "거래처/입금처",
+          "입금계좌",
+          "수입 구분(분양·관리비·기타)",
+          "입금액",
+          "법인코드"
+        ],
+        "confidence": "추정",
+        "gap": "집계 원천이 자금일보인지 은행 거래내역인지 미확인. 법인 간 내부거래 상계 여부도 미확인. 더존 예산·자금관리 모듈로 대체 가능한지 확인 필요."
+      },
+      "used_by": [
+        "ov.cash_table"
+      ]
+    },
+    {
+      "id": "cash.yongin.expense",
+      "label": "용인공원 지출 (현금)",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 3590,
+      "source": {
+        "system": "manual",
+        "alt_system": "dozone_budget",
+        "object": "월 경영회의 원본 엑셀 — 자금수지 집계 시트",
+        "columns": [
+          "출금일자",
+          "지급처",
+          "지출 구분(인건비·공사비·판관비 등)",
+          "출금액",
+          "법인코드",
+          "예산항목코드"
+        ],
+        "confidence": "추정",
+        "gap": "지출 분류 기준표 미보유. 예산항목과의 매핑 필요."
+      },
+      "used_by": [
+        "ov.cash_table"
+      ]
+    },
+    {
+      "id": "cash.life.income",
+      "label": "용인공원라이프 수입 (현금)",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 944,
+      "source": {
+        "system": "manual",
+        "alt_system": "crm_life",
+        "object": "자금수지 집계 시트 (부금 수납은 회원관리 시스템 연계 추정)",
+        "columns": [
+          "입금일자",
+          "회원번호",
+          "수입 구분(부금·행사·장지수수료)",
+          "입금액",
+          "채널구분"
+        ],
+        "confidence": "추정",
+        "gap": "부금 수납액이 CRM 수납 대장 기준인지 은행 입금 기준인지 확인 필요."
+      },
+      "used_by": [
+        "ov.cash_table"
+      ]
+    },
+    {
+      "id": "cash.life.expense",
+      "label": "용인공원라이프 지출 (현금)",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 820,
+      "source": {
+        "system": "manual",
+        "object": "자금수지 집계 시트",
+        "columns": [
+          "출금일자",
+          "지급처",
+          "지출 구분",
+          "출금액",
+          "예산항목코드"
+        ],
+        "confidence": "추정",
+        "gap": "해약환급금·공제담보 출금의 포함 여부 확인 필요."
+      },
+      "used_by": [
+        "ov.cash_table"
+      ]
+    },
+    {
+      "id": "cash.ypl.income",
+      "label": "와이피엘 수입 (현금)",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 1519,
+      "source": {
+        "system": "manual",
+        "object": "자금수지 집계 시트",
+        "columns": [
+          "입금일자",
+          "거래처",
+          "수입 구분",
+          "입금액",
+          "내부거래 여부"
+        ],
+        "confidence": "추정",
+        "gap": "와이피엘 수입 대부분이 용인공원 대상 마케팅 대행비(내부거래)이므로, 그룹계 합산 시 상계 여부가 손익과 직결됨."
+      },
+      "used_by": [
+        "ov.cash_table"
+      ]
+    },
+    {
+      "id": "cash.ypl.expense",
+      "label": "와이피엘 지출 (현금)",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 1413,
+      "source": {
+        "system": "manual",
+        "object": "자금수지 집계 시트",
+        "columns": [
+          "출금일자",
+          "지급처",
+          "지출 구분(광고선전비·인건비 등)",
+          "출금액"
+        ],
+        "confidence": "추정",
+        "gap": "광고매체 지급분의 계상 시점(집행 vs 정산) 확인 필요."
+      },
+      "used_by": [
+        "ov.cash_table"
+      ]
+    },
+    {
+      "id": "cash.forecast.gap",
+      "label": "예상 대비 달성률",
+      "page": "Overview",
+      "component": "Overview · 수지현황 표 (예상 대비)",
+      "unit": "%",
+      "value": 82,
+      "formula": "실적 수입 ÷ 예상 수입",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "cash.group.income"
+        },
+        {
+          "role": "분모",
+          "ref": "cash.forecast.income"
+        }
+      ]
+    },
+    {
+      "id": "cash.forecast.income",
+      "label": "그룹 예상수입",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 9349,
+      "source": {
+        "system": "manual",
+        "alt_system": "dozone_budget",
+        "object": "월 경영회의 원본 엑셀 — 예상수지 시트",
+        "columns": [
+          "법인",
+          "예상 수입",
+          "예상 지출",
+          "작성기준일",
+          "전망 가정"
+        ],
+        "confidence": "추정",
+        "gap": "'예상' 산출 시점과 전망 방법(잔여일 추정·계약 파이프라인 반영 등) 미확인."
+      },
+      "used_by": [
+        "ov.cash_table",
+        "ov.trend"
+      ]
+    },
+    {
+      "id": "pl.yongin_ops.cost_ratio",
+      "label": "원가율 — 용인공원·와이피엘 영업",
+      "page": "손익",
+      "component": "손익 · 요약 지표 (원가율)",
+      "unit": "%",
+      "value": 33,
+      "formula": "총지출 ÷ 총수입",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "pl.yongin_ops.exp_total"
+        },
+        {
+          "role": "분모",
+          "ref": "pl.yongin_ops.rev_total"
+        }
+      ],
+      "used_by": [
+        "pl.summary"
+      ]
+    },
+    {
+      "id": "pl.yongin_ops.margin",
+      "label": "손익율 — 용인공원·와이피엘 영업",
+      "page": "손익",
+      "component": "손익 · 요약 지표",
+      "unit": "%",
+      "value": 67,
+      "formula": "손익 ÷ 총수입 (= 100 − 원가율)",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "pl.yongin_ops.profit"
+        },
+        {
+          "role": "분모",
+          "ref": "pl.yongin_ops.rev_total"
+        }
+      ]
+    },
+    {
+      "id": "pl.yongin_ops.profit",
+      "label": "손익 — 용인공원·와이피엘 영업",
+      "page": "손익",
+      "component": "손익 · 요약 지표",
+      "unit": "백만원",
+      "value": 2837,
+      "formula": "총수입 − 총지출",
+      "children": [
+        {
+          "role": "피감수",
+          "ref": "pl.yongin_ops.rev_total"
+        },
+        {
+          "role": "감수",
+          "ref": "pl.yongin_ops.exp_total"
+        }
+      ],
+      "used_by": [
+        "pl.summary"
+      ]
+    },
+    {
+      "id": "pl.yongin_ops.rev_total",
+      "label": "총수입 — 용인공원·와이피엘 영업",
+      "page": "손익",
+      "component": "손익 · 손익 브릿지 (수입)",
+      "unit": "백만원",
+      "value": 4211,
+      "formula": "야외묘소 + 아너스톤 + 상조/석재",
+      "children": [
+        {
+          "role": "합산",
+          "ref": "pl.yongin_ops.rev_outdoor"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.yongin_ops.rev_honorstone"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.yongin_ops.rev_mutual_stone"
+        }
+      ],
+      "used_by": [
+        "pl.summary",
+        "pl.table"
+      ]
+    },
+    {
+      "id": "pl.yongin_ops.rev_outdoor",
+      "label": "야외묘소 수입",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 1128,
+      "source": {
+        "system": "dozone_erp",
+        "join": "crm_yongin",
+        "object": "계정별원장 — 사용료수입(일반) 40400, 석축비수입 41500, 사초비수입 41700 등",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "계정명",
+          "적요",
+          "차변/대변금액",
+          "부서코드",
+          "프로젝트(구역)코드"
+        ],
+        "confidence": "추정",
+        "gap": "장표의 '야외묘소' 구분이 계정 기준인지 구역 기준인지 미확인. 전표에 구역코드가 없으면 적요 텍스트 파싱 또는 계약 시스템 조인이 필요 — 26년 전표 프로젝트 코드 재입력의 핵심 대상."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.yongin_ops.rev_honorstone",
+      "label": "아너스톤 수입",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 3032,
+      "source": {
+        "system": "dozone_erp",
+        "join": "crm_yongin",
+        "object": "계정별원장 — 사용료수입(아너) 41100",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "적요",
+          "금액",
+          "구역코드(1R/2R/3R·1N/2N/3N·3H)",
+          "계약번호"
+        ],
+        "confidence": "추정",
+        "gap": "로얄/노블/아너 등급 구분은 계약 시스템의 구역코드 prefix로만 식별 가능. 원장 단독으로는 등급 분해 불가."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.yongin_ops.rev_mutual_stone",
+      "label": "상조/석재 수입",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 51,
+      "source": {
+        "system": "dozone_erp",
+        "object": "계정별원장 — 장례비수입 41400, 석축비수입 41500 등",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "적요",
+          "금액",
+          "거래처코드"
+        ],
+        "confidence": "추정",
+        "gap": "상조·석재 각각의 계정 매핑 미확정. 용인공원라이프와의 내부거래분 포함 여부 확인 필요."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.yongin_ops.exp_total",
+      "label": "총지출 — 용인공원·와이피엘 영업",
+      "page": "손익",
+      "component": "손익 · 손익 브릿지 (비용)",
+      "unit": "백만원",
+      "value": 1374,
+      "formula": "고정비 + 변동비",
+      "children": [
+        {
+          "role": "합산",
+          "ref": "pl.yongin_ops.exp_fixed"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.yongin_ops.exp_var"
+        }
+      ],
+      "used_by": [
+        "pl.summary"
+      ]
+    },
+    {
+      "id": "pl.yongin_ops.exp_fixed",
+      "label": "고정비 — 영업",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 159,
+      "source": {
+        "system": "dozone_erp",
+        "join": "manual",
+        "object": "계정별원장(비용 계정) × 고정/변동 분류 기준표",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "계정명",
+          "금액",
+          "부서코드",
+          "고정/변동 구분"
+        ],
+        "confidence": "추정",
+        "gap": "고정/변동 분류 기준표 미보유. PwC as-is 로직은 직접/활동/간접 배부 축이라 고정/변동 축과 직접 대응하지 않음 — 계정별 분류표 수령 필수."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.yongin_ops.exp_var",
+      "label": "변동비 — 영업",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 1215,
+      "source": {
+        "system": "dozone_erp",
+        "join": "manual",
+        "object": "계정별원장(비용 계정) × 고정/변동 분류 기준표",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "계정명",
+          "금액",
+          "부서코드",
+          "고정/변동 구분",
+          "프로젝트(구역)코드"
+        ],
+        "confidence": "추정",
+        "gap": "구역별 원가 표시를 위해서는 변동비의 구역 귀속(직접 부과 또는 배부기준)이 필요. 현재 전표에 구역 정보 부재."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.yongin_ops.target",
+      "label": "4월 목표 — 영업",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 5013,
+      "source": {
+        "system": "dozone_budget",
+        "alt_system": "manual",
+        "object": "26년 목표(예산) 수립 파일",
+        "columns": [
+          "연도",
+          "월",
+          "법인",
+          "조직",
+          "수입/지출 항목",
+          "목표금액"
+        ],
+        "confidence": "추정",
+        "gap": "목표가 더존 예산 모듈에 등재되어 있는지, 별도 엑셀로만 관리되는지 미확인."
+      }
+    },
+    {
+      "id": "pl.yongin_ops.yoy",
+      "label": "전년 동월 실적 (YOY 기준)",
+      "leaf": true,
+      "unit": "백만원",
+      "source": {
+        "system": "dozone_erp",
+        "object": "25년 계정별원장 (PwC 보유)",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "적요",
+          "금액"
+        ],
+        "confidence": "확인",
+        "gap": "베이스 자료는 보유. 다만 MOM/YOY 칼럼이 증감액인지 증감률인지 표기 확인 필요(값 분포상 증감액 추정)."
+      },
+      "used_by": [
+        "pl.table"
+      ]
+    },
+    {
+      "id": "pl.yongin_cs.cost_ratio",
+      "label": "원가율 — 고객센터+경영",
+      "page": "손익",
+      "component": "손익 · 요약 지표 (원가율)",
+      "unit": "%",
+      "value": 76,
+      "formula": "총지출 ÷ 총수입",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "pl.yongin_cs.exp_total"
+        },
+        {
+          "role": "분모",
+          "ref": "pl.yongin_cs.rev_total"
+        }
+      ],
+      "used_by": [
+        "pl.summary"
+      ]
+    },
+    {
+      "id": "pl.yongin_cs.rev_total",
+      "label": "총수입 — 고객센터+경영",
+      "page": "손익",
+      "component": "손익 · 손익 브릿지 (수입)",
+      "unit": "백만원",
+      "value": 822,
+      "formula": "관리비 + 서비스매출 + 임대료",
+      "children": [
+        {
+          "role": "합산",
+          "ref": "pl.yongin_cs.rev_mgmt_fee"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.yongin_cs.rev_service"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.yongin_cs.rev_rent"
+        }
+      ],
+      "used_by": [
+        "pl.summary"
+      ]
+    },
+    {
+      "id": "pl.yongin_cs.rev_mgmt_fee",
+      "label": "관리비 수입",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 573,
+      "source": {
+        "system": "dozone_erp",
+        "join": "crm_yongin",
+        "object": "계정별원장 — 관리비수입 41200 (선수관리비 대체 포함)",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "적요",
+          "금액",
+          "계약번호",
+          "부과연도"
+        ],
+        "confidence": "추정",
+        "gap": "선수관리비 대체·미수 처리분이 수입에 포함되는지(발생주의) 확인 필요. 관리비 유지율 KPI를 쓰려면 계약 단위 부과·수납 대장 필요."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.yongin_cs.rev_service",
+      "label": "서비스매출",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 243,
+      "source": {
+        "system": "dozone_erp",
+        "join": "crm_yongin",
+        "object": "계정별원장 — 안치료수입 41800, 이장비수입 40900, 사초비수입 41700 등",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "적요",
+          "금액",
+          "서비스상품 구분"
+        ],
+        "confidence": "추정",
+        "gap": "'서비스상품수입'의 계정 구성 미확정. 상품 단위 구분이 원장에 없어 KPI(서비스상품 전환율) 산출 불가."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.yongin_cs.rev_rent",
+      "label": "임대료 수입",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 6,
+      "source": {
+        "system": "dozone_erp",
+        "object": "계정별원장 — 임대료수입 41600",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "적요",
+          "금액",
+          "거래처코드"
+        ],
+        "confidence": "확인",
+        "gap": "계정 대응 명확. 26년 원장만 입수하면 재현 가능."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.yongin_cs.exp_total",
+      "label": "총지출 — 고객센터+경영",
+      "page": "손익",
+      "component": "손익 · 손익 브릿지 (비용)",
+      "unit": "백만원",
+      "value": 621,
+      "formula": "고정비 + 변동비",
+      "children": [
+        {
+          "role": "합산",
+          "ref": "pl.yongin_cs.exp_fixed"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.yongin_cs.exp_var"
+        }
+      ],
+      "used_by": [
+        "pl.summary"
+      ]
+    },
+    {
+      "id": "pl.yongin_cs.exp_fixed",
+      "label": "고정비 — 고객센터+경영",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 414,
+      "source": {
+        "system": "dozone_erp",
+        "join": "manual",
+        "object": "계정별원장(판관비) × 고정/변동 분류 기준표 × 조직 귀속 기준",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "금액",
+          "부서코드",
+          "고정/변동 구분"
+        ],
+        "confidence": "추정",
+        "gap": "'영업' vs '고객센터+경영' 조직 구분의 부서 귀속 기준 미확인. 원본 엑셀 해당 셀에 작성자 메모가 있어 예외처리 존재 가능성 있음."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.yongin_cs.exp_var",
+      "label": "변동비 — 고객센터+경영",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 207,
+      "source": {
+        "system": "dozone_erp",
+        "join": "manual",
+        "object": "계정별원장(판관비) × 고정/변동 분류 기준표",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "금액",
+          "부서코드",
+          "고정/변동 구분"
+        ],
+        "confidence": "추정",
+        "gap": "분류 기준표 미보유."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.life.op_margin",
+      "label": "영업손익율 — 용인공원라이프",
+      "page": "손익",
+      "component": "손익 · 요약 지표 (영업손익율)",
+      "unit": "%",
+      "value": -48,
+      "formula": "영업손익 ÷ (총수입 − 부금 − 영업외수입)",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "pl.life.op_profit"
+        },
+        {
+          "role": "분모",
+          "ref": "pl.life.op_revenue"
+        }
+      ],
+      "used_by": [
+        "pl.summary"
+      ]
+    },
+    {
+      "id": "pl.life.op_profit",
+      "label": "영업손익 — 용인공원라이프",
+      "page": "손익",
+      "component": "손익 · 요약 지표 (영업손익)",
+      "unit": "백만원",
+      "value": -183,
+      "formula": "(총수입 − 부금 − 영업외수입) − (총지출 − 영업외비용Ⅰ)",
+      "basis": "부금(선수금성)을 제외하고 행사매출 중심으로 인식 — PwC 확정 상조 채널손익의 '행사매출 인식 기준'과 동일 철학",
+      "children": [
+        {
+          "role": "피감수",
+          "ref": "pl.life.op_revenue"
+        },
+        {
+          "role": "감수",
+          "ref": "pl.life.op_expense"
+        }
+      ],
+      "used_by": [
+        "pl.summary"
+      ]
+    },
+    {
+      "id": "pl.life.op_revenue",
+      "label": "영업수입 (부금·영업외 제외)",
+      "page": "손익",
+      "component": "손익 · 요약 지표 (영업손익 산식)",
+      "unit": "백만원",
+      "value": 382,
+      "formula": "총수입 − 부금 − 영업외수입",
+      "children": [
+        {
+          "role": "피감수",
+          "ref": "pl.life.rev_total"
+        },
+        {
+          "role": "감수",
+          "ref": "pl.life.rev_installment"
+        },
+        {
+          "role": "감수",
+          "ref": "pl.life.rev_nonop"
+        }
+      ]
+    },
+    {
+      "id": "pl.life.op_expense",
+      "label": "영업지출 (영업외비용Ⅰ 제외)",
+      "page": "손익",
+      "component": "손익 · 요약 지표 (영업손익 산식)",
+      "unit": "백만원",
+      "value": 565,
+      "formula": "총지출 − 영업외비용Ⅰ",
+      "children": [
+        {
+          "role": "피감수",
+          "ref": "pl.life.exp_total"
+        },
+        {
+          "role": "감수",
+          "ref": "pl.life.exp_nonop1"
+        }
+      ]
+    },
+    {
+      "id": "pl.life.rev_total",
+      "label": "총수입 — 용인공원라이프",
+      "page": "손익",
+      "component": "손익 · 손익 브릿지 (수입)",
+      "unit": "백만원",
+      "value": 1014,
+      "formula": "부금 + 행사 + 장지판매 + 이장용품 + 영업외수입",
+      "children": [
+        {
+          "role": "합산",
+          "ref": "pl.life.rev_installment"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.life.rev_event"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.life.rev_cemetery"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.life.rev_relocation"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.life.rev_nonop"
+        }
+      ],
+      "used_by": [
+        "pl.summary"
+      ]
+    },
+    {
+      "id": "pl.life.rev_installment",
+      "label": "부금 수입",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 632,
+      "source": {
+        "system": "crm_life",
+        "join": "dozone_erp",
+        "object": "회원관리 시스템 부금 수납 대장 (회계는 선수금 계정)",
+        "columns": [
+          "수납일자",
+          "회원번호",
+          "회차",
+          "납입액",
+          "상품코드",
+          "채널구분",
+          "계약상태"
+        ],
+        "confidence": "추정",
+        "gap": "월 납입액 기준(현금주의) 추정. 회계상 선수금이므로 원장의 매출 계정과 직접 대응하지 않음 — 집계 기준 확인 필수."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.life.rev_event",
+      "label": "행사 수입",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 345,
+      "source": {
+        "system": "dozone_erp",
+        "join": "crm_life",
+        "object": "계정별원장 — 행사(상품)매출 + 상향매출",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "금액",
+          "행사번호",
+          "회원번호",
+          "채널구분",
+          "상품/상향 구분"
+        ],
+        "confidence": "추정",
+        "gap": "상품매출과 상향매출의 계정 분리 여부 확인 필요. 상향매출 원가율 KPI를 위해서는 행사 단위 원가 데이터가 필요."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.life.rev_cemetery",
+      "label": "장지판매 수입",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 34,
+      "source": {
+        "system": "dozone_erp",
+        "object": "계정별원장 — 장지 알선 수수료수입",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "금액",
+          "거래처(용인공원)",
+          "계약번호"
+        ],
+        "confidence": "추정",
+        "gap": "용인공원과의 내부거래이므로 그룹 합산 시 상계 대상. 장표가 상계 전인지 후인지 확인 필요."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.life.rev_relocation",
+      "label": "이장용품 수입",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 3,
+      "source": {
+        "system": "dozone_erp",
+        "object": "계정별원장 — 용품 판매 매출",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "금액",
+          "품목코드"
+        ],
+        "confidence": "추정",
+        "gap": "장례용품 매출 KPI와의 관계(동일 계정인지) 확인 필요."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.life.rev_nonop",
+      "label": "영업외수입",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 0,
+      "source": {
+        "system": "dozone_erp",
+        "object": "계정별원장 — 영업외수익 계정군",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "금액",
+          "적요"
+        ],
+        "confidence": "확인",
+        "gap": "계정 대응 명확. 4월 실적은 0."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.life.exp_total",
+      "label": "총지출 — 용인공원라이프",
+      "page": "손익",
+      "component": "손익 · 손익 브릿지 (비용)",
+      "unit": "백만원",
+      "value": 809,
+      "formula": "고정비 + 변동비 + 투자비 + 영업외비용Ⅰ + 영업외비용Ⅱ",
+      "children": [
+        {
+          "role": "합산",
+          "ref": "pl.life.exp_fixed"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.life.exp_var"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.life.exp_invest"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.life.exp_nonop1"
+        },
+        {
+          "role": "합산",
+          "ref": "pl.life.exp_nonop2"
+        }
+      ],
+      "used_by": [
+        "pl.summary"
+      ]
+    },
+    {
+      "id": "pl.life.exp_fixed",
+      "label": "고정비 — 용인공원라이프",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 117,
+      "source": {
+        "system": "dozone_erp",
+        "join": "manual",
+        "object": "계정별원장 × 고정/변동/투자 분류 기준표",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "금액",
+          "부서코드",
+          "고정/변동/투자 구분"
+        ],
+        "confidence": "추정",
+        "gap": "분류 기준표 미보유."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.life.exp_var",
+      "label": "변동비 — 용인공원라이프",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 366,
+      "source": {
+        "system": "dozone_erp",
+        "join": "manual",
+        "object": "계정별원장 × 고정/변동/투자 분류 기준표",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "금액",
+          "부서코드",
+          "채널구분",
+          "고정/변동/투자 구분"
+        ],
+        "confidence": "추정",
+        "gap": "채널별 손익 표시를 위해서는 변동비의 채널 귀속 기준이 추가로 필요."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.life.exp_invest",
+      "label": "투자비",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 18,
+      "source": {
+        "system": "manual",
+        "join": "dozone_erp",
+        "object": "관리 목적 '투자비' 분류 — 회계상 별도 계정 부재 추정",
+        "columns": [
+          "집행일자",
+          "투자 항목",
+          "금액",
+          "예산항목코드",
+          "자산화 여부"
+        ],
+        "confidence": "추정",
+        "gap": "순수 관리 개념으로 보유 자료에 부재. 비용 계정 중 어떤 것을 투자비로 보는지 정의 필요."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.life.exp_nonop1",
+      "label": "영업외비용Ⅰ (해약+공제담보)",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 244,
+      "source": {
+        "system": "crm_life",
+        "join": "dozone_erp",
+        "object": "해약 처리 대장 + 공제조합 담보 출연 내역",
+        "columns": [
+          "해약일자",
+          "회원번호",
+          "해약환급금",
+          "위약금",
+          "공제담보 납입액",
+          "채널구분"
+        ],
+        "confidence": "추정",
+        "gap": "해약율 KPI와 동일 원천. 해약 건수·기초 회원수까지 확보되어야 KPI 산출 가능."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "pl.life.exp_nonop2",
+      "label": "영업외비용Ⅱ",
+      "leaf": true,
+      "unit": "백만원",
+      "value": 64,
+      "source": {
+        "system": "dozone_erp",
+        "object": "계정별원장 — 영업외비용 계정군(이자비용 등)",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "금액",
+          "적요"
+        ],
+        "confidence": "추정",
+        "gap": "Ⅰ·Ⅱ 구분 기준(구성 계정 목록) 미확인."
+      },
+      "used_by": [
+        "pl.bridge"
+      ]
+    },
+    {
+      "id": "kpi.yongin.inbound_db",
+      "label": "인입 DB",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (온라인마케팅팀 · 기존 KPI)",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "mkt_channel",
+        "join": "dkbmc",
+        "object": "광고매체 리드 로그 · 상담 접수 대장",
+        "columns": [
+          "유입일시",
+          "리드ID",
+          "매체(채널)",
+          "캠페인",
+          "관심 상품/구역",
+          "상담 접수 여부",
+          "중복 제거 키"
+        ],
+        "confidence": "추정",
+        "gap": "손익 시스템 밖 데이터. DKBMC Data Lake 적재 여부·정의(중복 제거 기준)를 확인해야 함."
+      },
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.honorstone_inflow_share",
+      "label": "아너스톤 유입비중",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (온라인마케팅팀 · 신규 KPI)",
+      "unit": "%",
+      "formula": "아너스톤 관심 인입 DB ÷ 전체 인입 DB",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.yongin.inbound_db_honorstone"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.yongin.inbound_db"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.inbound_db_honorstone",
+      "label": "아너스톤 관심 인입 DB",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "mkt_channel",
+        "object": "리드 로그의 관심 상품/구역 태그",
+        "columns": [
+          "리드ID",
+          "관심 상품/구역",
+          "캠페인 상품군"
+        ],
+        "confidence": "추정",
+        "gap": "리드 단계에서 구역 관심도를 태깅하고 있는지 자체가 미확인. 태깅 없으면 캠페인 상품군으로 대리 측정 필요."
+      }
+    },
+    {
+      "id": "kpi.yongin.db_to_visit",
+      "label": "DB→방문 전환율",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (온라인마케팅팀 · 신규 KPI)",
+      "unit": "%",
+      "formula": "방문 DB ÷ 인입 DB",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.yongin.visit_db"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.yongin.inbound_db"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.visit_db",
+      "label": "방문 DB",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (T&SM 팀 · 기존 KPI)",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "mkt_channel",
+        "join": "crm_yongin",
+        "object": "방문 예약·현장 상담 대장",
+        "columns": [
+          "방문일자",
+          "리드ID",
+          "고객명",
+          "담당자",
+          "관심 구역",
+          "상담 결과"
+        ],
+        "confidence": "추정",
+        "gap": "인입 리드ID와 방문 기록의 키 연결 가능 여부가 전환율 산출의 전제."
+      },
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.db_to_contract",
+      "label": "DB→계약 전환율",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (온라인마케팅팀 · 신규 KPI)",
+      "unit": "%",
+      "formula": "계약 건수 ÷ 인입 DB",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.yongin.contract_count"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.yongin.inbound_db"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.visit_to_contract",
+      "label": "방문→계약 전환율",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (T&SM 팀 · 신규 KPI)",
+      "unit": "%",
+      "formula": "계약 건수 ÷ 방문 건수",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.yongin.contract_count"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.yongin.visit_db"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.contract_count",
+      "label": "계약 건수 (장지)",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "crm_yongin",
+        "object": "장지 계약 마스터",
+        "columns": [
+          "계약일자",
+          "계약번호",
+          "구역코드",
+          "장법 구분",
+          "계약금액",
+          "유입 리드ID",
+          "담당 조직"
+        ],
+        "confidence": "추정",
+        "gap": "계약 시스템 보유는 확실하나 리드ID 연결 필드 존재 여부 미확인. 계약 취소·환불 반영 시점도 정의 필요."
+      },
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.honorstone_contract_share",
+      "label": "아너스톤 계약비중",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (영업본부 · T&SM 팀 신규 KPI)",
+      "unit": "%",
+      "formula": "아너스톤 계약 건수 ÷ 전체 계약 건수",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.yongin.contract_count_honorstone"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.yongin.contract_count"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.contract_count_honorstone",
+      "label": "아너스톤 계약 건수",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "crm_yongin",
+        "object": "장지 계약 마스터 — 구역코드 prefix 1R/2R/3R·1N/2N/3N·3H",
+        "columns": [
+          "계약번호",
+          "구역코드",
+          "등급(로얄/노블/아너)",
+          "계약일자"
+        ],
+        "confidence": "확인",
+        "gap": "PwC가 25년 원장 기준으로 등급 분해 방식을 확립함(코드 prefix). 26년 데이터도 동일 체계인지 확인 필요."
+      }
+    },
+    {
+      "id": "kpi.yongin.op_achieve_honorstone",
+      "label": "아너스톤 영업이익 달성률",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (영업본부 · 신규 KPI)",
+      "unit": "%",
+      "formula": "아너스톤 영업이익 실적 ÷ 아너스톤 영업이익 목표",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.yongin.op_honorstone"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.yongin.op_target_honorstone"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.op_honorstone",
+      "label": "아너스톤 영업이익",
+      "unit": "백만원",
+      "formula": "아너스톤 수입 − 아너스톤 귀속 원가·판관비 배부액",
+      "children": [
+        {
+          "role": "피감수",
+          "ref": "pl.yongin_ops.rev_honorstone"
+        },
+        {
+          "role": "감수",
+          "ref": "kpi.yongin.cost_honorstone"
+        }
+      ]
+    },
+    {
+      "id": "kpi.yongin.cost_honorstone",
+      "label": "아너스톤 귀속 원가·판관비",
+      "leaf": true,
+      "unit": "백만원",
+      "source": {
+        "system": "dozone_cost",
+        "join": "manual",
+        "object": "원가 배부 결과 (추가개발 대상) · PwC as-is 배부기준표",
+        "columns": [
+          "구역코드",
+          "원가 항목",
+          "직접비/배부비 구분",
+          "배부기준(면적·기수·매출)",
+          "배부액"
+        ],
+        "confidence": "추정",
+        "gap": "구역 단위 원가는 현재 계산되지 않음. 전표 구역코드 입력 + 배부기준 확정이 선행되어야 KPI 가동."
+      }
+    },
+    {
+      "id": "kpi.yongin.op_target_honorstone",
+      "label": "아너스톤 영업이익 목표",
+      "leaf": true,
+      "unit": "백만원",
+      "source": {
+        "system": "dozone_budget",
+        "alt_system": "manual",
+        "object": "26년 목표 수립 파일 — 구역군 단위 목표",
+        "columns": [
+          "연도",
+          "월",
+          "구역군",
+          "매출 목표",
+          "영업이익 목표"
+        ],
+        "confidence": "추정",
+        "gap": "현재 목표가 구역군 단위까지 세분되어 있는지 미확인(장표는 야외묘소/아너스톤 2분류까지만 존재)."
+      }
+    },
+    {
+      "id": "kpi.yongin.op_achieve_outdoor",
+      "label": "야외묘역 영업이익 달성률",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (영업본부 · 신규 KPI)",
+      "unit": "%",
+      "formula": "야외묘역 영업이익 실적 ÷ 야외묘역 영업이익 목표",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.yongin.op_outdoor"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.yongin.op_target_outdoor"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.op_outdoor",
+      "label": "야외묘역 영업이익",
+      "unit": "백만원",
+      "formula": "야외묘소 수입 − 야외묘역 귀속 원가·판관비 배부액",
+      "children": [
+        {
+          "role": "피감수",
+          "ref": "pl.yongin_ops.rev_outdoor"
+        },
+        {
+          "role": "감수",
+          "ref": "kpi.yongin.cost_honorstone"
+        }
+      ]
+    },
+    {
+      "id": "kpi.yongin.op_target_outdoor",
+      "label": "야외묘역 영업이익 목표",
+      "leaf": true,
+      "unit": "백만원",
+      "source": {
+        "system": "dozone_budget",
+        "alt_system": "manual",
+        "object": "26년 목표 수립 파일",
+        "columns": [
+          "연도",
+          "월",
+          "구역군",
+          "매출 목표",
+          "영업이익 목표"
+        ],
+        "confidence": "추정",
+        "gap": "영업이익 단위 목표 존재 여부 미확인."
+      }
+    },
+    {
+      "id": "kpi.yongin.rev_per_zone",
+      "label": "구역당 평균 매출",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (영업본부 · 신규 KPI)",
+      "unit": "백만원",
+      "formula": "세부 구역별 매출 합 ÷ 판매 활동 구역 수",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "pl.yongin_ops.rev_total"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.yongin.zone_count"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.op_per_zone",
+      "label": "구역당 평균 영업이익",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (영업본부 · 신규 KPI)",
+      "unit": "백만원",
+      "formula": "세부 구역별 영업이익 합 ÷ 판매 활동 구역 수",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.yongin.op_honorstone"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.yongin.zone_count"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.zone_count",
+      "label": "판매 활동 구역 수",
+      "leaf": true,
+      "unit": "개",
+      "source": {
+        "system": "crm_yongin",
+        "object": "묘역 마스터 — 구역·번호 단위",
+        "columns": [
+          "구역코드",
+          "구역명",
+          "중간집계 구역(세수연·정명지 등)",
+          "총 기수",
+          "판매 기수",
+          "잔여 기수",
+          "상태"
+        ],
+        "confidence": "확인",
+        "gap": "PwC가 묘역 raw 자료(26.4 기준)를 보유. 다만 '판매 활동 구역'의 정의(잔여 기수>0 기준 등) 확정 필요. 더존 원가모듈의 SKU 단위와 동일 마스터를 써야 함."
+      }
+    },
+    {
+      "id": "kpi.yongin.service_conversion",
+      "label": "서비스상품 전환율",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (고객센터 · 신규 KPI)",
+      "unit": "%",
+      "formula": "서비스상품 계약 건수 ÷ 고객센터 접촉 고객 수",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.yongin.service_contract_count"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.yongin.cs_contact_count"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.service_contract_count",
+      "label": "서비스상품 계약 건수",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "crm_yongin",
+        "object": "부가 서비스(안치·사초·이장 등) 신청 대장",
+        "columns": [
+          "신청일자",
+          "계약번호",
+          "서비스 상품코드",
+          "금액",
+          "접수 조직"
+        ],
+        "confidence": "추정",
+        "gap": "서비스상품이 별도 마스터로 관리되는지, 원장 적요로만 남는지 미확인."
+      }
+    },
+    {
+      "id": "kpi.yongin.cs_contact_count",
+      "label": "고객센터 접촉 고객 수",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "mkt_channel",
+        "object": "고객센터 상담 이력(콜·방문·온라인)",
+        "columns": [
+          "접촉일시",
+          "고객/계약번호",
+          "채널",
+          "상담 유형",
+          "처리 결과",
+          "상담원"
+        ],
+        "confidence": "추정",
+        "gap": "콜 인프라(CTI) 로그의 존재·보존 여부 미확인. 분모 정의(고유 고객 기준 vs 접촉 건 기준) 확정 필요."
+      }
+    },
+    {
+      "id": "kpi.yongin.mgmt_fee_retention",
+      "label": "관리비수입 유지율",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (고객센터 · 신규 KPI)",
+      "unit": "%",
+      "formula": "당기 관리비 수납 계좌 수 ÷ 전기 관리비 부과 대상 계좌 수",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.yongin.mgmt_fee_paid_count"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.yongin.mgmt_fee_billed_count"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.yongin.mgmt_fee_paid_count",
+      "label": "관리비 수납 계좌 수",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "crm_yongin",
+        "join": "dozone_erp",
+        "object": "관리비 부과·수납 대장",
+        "columns": [
+          "부과연도",
+          "계약번호",
+          "부과액",
+          "수납일자",
+          "수납액",
+          "미수 여부",
+          "면제 사유"
+        ],
+        "confidence": "추정",
+        "gap": "원장에는 금액만 남고 계좌 수가 없음. 계약 단위 부과·수납 대장이 반드시 필요."
+      }
+    },
+    {
+      "id": "kpi.yongin.mgmt_fee_billed_count",
+      "label": "관리비 부과 대상 계좌 수",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "crm_yongin",
+        "object": "관리비 부과 대상 마스터",
+        "columns": [
+          "부과연도",
+          "계약번호",
+          "부과 대상 여부",
+          "선납 여부",
+          "계약 상태"
+        ],
+        "confidence": "추정",
+        "gap": "선수관리비(선납) 계약의 처리 방식이 유지율 정의에 영향."
+      }
+    },
+    {
+      "id": "kpi.yongin.op_per_visit",
+      "label": "방문당 영업이익",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (T&SM 팀 · 신규 KPI)",
+      "unit": "백만원",
+      "formula": "영업 조직 영업이익 ÷ 방문 건수",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "pl.yongin_ops.profit"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.yongin.visit_db"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.valid_db",
+      "label": "유효 DB",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (T&SM·마케팅팀 · 기존 KPI)",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "mkt_channel",
+        "join": "crm_life",
+        "object": "상조 리드 로그 — 유효 판정 후",
+        "columns": [
+          "유입일시",
+          "리드ID",
+          "채널(온라인/오프라인)",
+          "유효 판정 결과",
+          "판정일자",
+          "캠페인"
+        ],
+        "confidence": "추정",
+        "gap": "'유효' 판정 기준(연락 성공·상담 동의 등)이 시스템 필드인지 담당자 판단인지 확인 필요."
+      },
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.direct_contract",
+      "label": "다이렉트 계약",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (T&SM·마케팅팀 · 기존 KPI)",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "crm_life",
+        "object": "회원 계약 마스터 — 채널구분 = 다이렉트",
+        "columns": [
+          "계약일자",
+          "회원번호",
+          "채널구분",
+          "상품코드",
+          "상품금액",
+          "월 부금액",
+          "모집인"
+        ],
+        "confidence": "추정",
+        "gap": "채널구분 코드 체계(다이렉트/오프라인/온라인/법인) 정의 확인 필요."
+      },
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.avg_product_price",
+      "label": "평균상품단가",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (T&SM·마케팅팀 · 신규 KPI)",
+      "unit": "백만원",
+      "formula": "신규계약 상품금액 합 ÷ 신규계약 건수",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.life.new_contract_amount"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.life.new_contract_count"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.new_contract_amount",
+      "label": "신규계약 상품금액 합",
+      "leaf": true,
+      "unit": "백만원",
+      "source": {
+        "system": "crm_life",
+        "object": "회원 계약 마스터",
+        "columns": [
+          "계약일자",
+          "회원번호",
+          "상품코드",
+          "상품금액(총 계약액)",
+          "채널구분"
+        ],
+        "confidence": "추정",
+        "gap": "회계상 매출이 아닌 계약액 기준이므로 원장과 대사 불가. 계약액 정의(총액 vs 부금 총액) 확정 필요."
+      }
+    },
+    {
+      "id": "kpi.life.new_contract_count",
+      "label": "신규계약 건수",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "crm_life",
+        "object": "회원 계약 마스터",
+        "columns": [
+          "계약일자",
+          "회원번호",
+          "계약상태",
+          "채널구분"
+        ],
+        "confidence": "추정",
+        "gap": "청약철회·초기 해약 건의 차감 여부 확정 필요."
+      }
+    },
+    {
+      "id": "kpi.life.upsell_cost_ratio",
+      "label": "상향매출 원가율",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (행사서비스팀·법인영업팀 · 신규 KPI)",
+      "unit": "%",
+      "formula": "상향매출 원가 ÷ 상향매출",
+      "basis": "상향 수수료 = 원가 + (매출 − 원가) × 수수료율 구조 → 원가율이 오르면 명목 수수료율 대비 실질 수수료율이 상승",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.life.upsell_cost"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.life.upsell_revenue"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.upsell_revenue",
+      "label": "상향매출",
+      "leaf": true,
+      "unit": "백만원",
+      "source": {
+        "system": "dozone_erp",
+        "join": "crm_life",
+        "object": "계정별원장 — 상향매출 계정 / 행사 정산 내역",
+        "columns": [
+          "전표일자",
+          "행사번호",
+          "계정코드",
+          "상품/상향 구분",
+          "매출액",
+          "채널구분"
+        ],
+        "confidence": "추정",
+        "gap": "원장에서 상품매출과 상향매출이 계정으로 분리되어 있는지, 행사 정산 시스템에서만 구분되는지 확인 필요."
+      },
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.upsell_cost",
+      "label": "상향매출 원가",
+      "leaf": true,
+      "unit": "백만원",
+      "source": {
+        "system": "crm_life",
+        "join": "dozone_erp",
+        "object": "행사 정산 내역 — 품목별 매입원가",
+        "columns": [
+          "행사번호",
+          "품목코드",
+          "품목명",
+          "매입단가",
+          "수량",
+          "매입처",
+          "상향 여부"
+        ],
+        "confidence": "추정",
+        "gap": "행사 건별 원가가 시스템에 기록되는지가 관건. 원장 매출원가 총액만 있으면 상향분 분리 불가."
+      }
+    },
+    {
+      "id": "kpi.life.product_sales",
+      "label": "상품매출",
+      "leaf": true,
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (행사서비스팀 · 기존 KPI)",
+      "unit": "백만원",
+      "source": {
+        "system": "dozone_erp",
+        "object": "계정별원장 — 행사 상품매출 계정",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "금액",
+          "행사번호",
+          "채널구분"
+        ],
+        "confidence": "확인",
+        "gap": "PwC 상조 채널손익에서 채널별 행사매출을 산출한 실적 있음. 26년 원장 입수 시 재현 가능."
+      },
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.cemetery_fee",
+      "label": "장지수수료",
+      "leaf": true,
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (행사서비스팀 · 기존 KPI)",
+      "unit": "백만원",
+      "source": {
+        "system": "dozone_erp",
+        "object": "계정별원장 — 장지 알선 수수료수입",
+        "columns": [
+          "전표일자",
+          "계정코드",
+          "금액",
+          "계약번호",
+          "거래처(용인공원)"
+        ],
+        "confidence": "확인",
+        "gap": "내부거래 상계 대상 — VC 통합 손익에서는 제거됨. 팀 KPI로는 총액 기준 사용."
+      },
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.corp_event_count",
+      "label": "법인행사 건수",
+      "leaf": true,
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (법인영업팀 · 기존 KPI)",
+      "unit": "건",
+      "source": {
+        "system": "crm_life",
+        "object": "행사 시행 대장 — 채널구분 = 법인",
+        "columns": [
+          "행사일자",
+          "행사번호",
+          "회원번호",
+          "채널구분",
+          "제휴처코드",
+          "행사 상태"
+        ],
+        "confidence": "추정",
+        "gap": "제휴처(법인) 마스터와의 연결 필드 확인 필요."
+      },
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.corp_funeral_conv",
+      "label": "법인장례 전환율",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (법인영업팀 · 기존 KPI)",
+      "unit": "%",
+      "formula": "법인 채널 행사 건수 ÷ 법인 채널 유효 회원 수",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.life.corp_event_count"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.life.corp_member_count"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.corp_member_count",
+      "label": "법인 채널 유효 회원 수",
+      "leaf": true,
+      "unit": "명",
+      "source": {
+        "system": "crm_life",
+        "object": "회원 마스터 — 채널구분 = 법인, 상태 = 유효",
+        "columns": [
+          "회원번호",
+          "채널구분",
+          "제휴처코드",
+          "계약상태",
+          "가입일자",
+          "만기/해약일자"
+        ],
+        "confidence": "추정",
+        "gap": "'유효' 상태 코드 정의(납입 중·완납·휴면 포함 범위) 확정 필요."
+      }
+    },
+    {
+      "id": "kpi.life.funeral_goods_revenue",
+      "label": "장례용품 매출",
+      "leaf": true,
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (행사서비스팀 · 신규 KPI)",
+      "unit": "백만원",
+      "source": {
+        "system": "dozone_erp",
+        "join": "crm_life",
+        "object": "계정별원장 + 행사 정산 품목 내역",
+        "columns": [
+          "전표일자",
+          "행사번호",
+          "품목 대분류(장례용품)",
+          "품목코드",
+          "판매액",
+          "수량"
+        ],
+        "confidence": "추정",
+        "gap": "원장에 품목 구분이 없을 가능성이 높아 행사 정산 시스템의 품목 마스터가 필요."
+      },
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.survey_db",
+      "label": "조사 DB",
+      "leaf": true,
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (법인영업팀 · 기존 KPI)",
+      "unit": "건",
+      "source": {
+        "system": "mkt_channel",
+        "object": "법인 제휴처 대상 조사(설문) 수집 데이터",
+        "columns": [
+          "조사일자",
+          "제휴처코드",
+          "응답자ID",
+          "동의 여부",
+          "유효 판정"
+        ],
+        "confidence": "추정",
+        "gap": "수집 채널·보관 위치 미확인. 개인정보 동의 범위 확인 필요."
+      },
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.churn_rate",
+      "label": "기존고객 해약율",
+      "page": "KPI",
+      "component": "KPI · 조직별 지표 (T&SM 팀 · 신규 KPI)",
+      "unit": "%",
+      "formula": "당월 해약 건수 ÷ 기초 유효 회원 수",
+      "basis": "해약은 위약금 수익만 인식한 채 고객이 이탈하는 비정상 경로 — 행사매출 전환의 반대 지표",
+      "children": [
+        {
+          "role": "분자",
+          "ref": "kpi.life.churn_count"
+        },
+        {
+          "role": "분모",
+          "ref": "kpi.life.member_count_bop"
+        }
+      ],
+      "used_by": [
+        "kpi.cards"
+      ]
+    },
+    {
+      "id": "kpi.life.churn_count",
+      "label": "당월 해약 건수",
+      "leaf": true,
+      "unit": "건",
+      "source": {
+        "system": "crm_life",
+        "object": "해약 처리 대장",
+        "columns": [
+          "해약일자",
+          "회원번호",
+          "해약 사유",
+          "납입회차",
+          "해약환급금",
+          "위약금",
+          "채널구분"
+        ],
+        "confidence": "추정",
+        "gap": "영업외비용Ⅰ(해약+공제담보)과 동일 원천 — 금액은 손익에 반영되나 건수는 미집계. 만기해약·중도해약 구분 필요."
+      }
+    },
+    {
+      "id": "kpi.life.member_count_bop",
+      "label": "기초 유효 회원 수",
+      "leaf": true,
+      "unit": "명",
+      "source": {
+        "system": "crm_life",
+        "object": "회원 마스터 — 월초 스냅샷",
+        "columns": [
+          "기준일자",
+          "회원번호",
+          "계약상태",
+          "채널구분",
+          "납입 상태"
+        ],
+        "confidence": "추정",
+        "gap": "월초 시점 스냅샷이 보관되는지가 관건. 현재 상태만 관리되면 과거 시점 재현 불가 — 스냅샷 적재 요건 신설 필요."
+      }
+    },
+    {
+      "id": "cash.monthly.series",
+      "label": "자금 수지 월별 계열",
+      "unit": "백만원",
+      "derived": true,
+      "formula": "법인별 4월 실적 × (손익 총수입의 각 월 ÷ 4월)",
+      "basis": "장표 slide 4에는 월별 수치가 없어 손익 총수입의 월 변동 패턴으로 배분",
+      "children": [
+        {
+          "role": "앵커",
+          "ref": "cash.yongin.income"
+        },
+        {
+          "role": "배분기준",
+          "ref": "pl.monthly.series"
+        }
+      ],
+      "confidence_note": "26.04만 장표 실측. 나머지 4개월은 추정치이므로 대외 인용 불가.",
+      "used_by": [
+        "ov.trend"
+      ]
+    },
+    {
+      "id": "pl.monthly.series",
+      "label": "손익 월별 계열",
+      "unit": "백만원",
+      "derived": true,
+      "formula": "4월 = 장표 실적 / 3월 = 4월 − MOM / 25.12~26.02 = (누계 − 4월 − 3월) ÷ 3",
+      "basis": "장표 slide 9·10의 4월 실적·MOM 증감액·누계 실적 세 값으로 역산",
+      "children": [
+        {
+          "role": "실측",
+          "ref": "pl.yongin_ops.rev_total"
+        },
+        {
+          "role": "역산 근거",
+          "ref": "pl.yongin_ops.yoy"
+        }
+      ],
+      "confidence_note": "3월은 MOM이 증감액이라는 전제에 의존(R-09). 앞 3개월은 균등 배분 가정.",
+      "used_by": [
+        "pl.trend",
+        "pl.table"
+      ]
+    },
+    {
+      "id": "pl.target.series",
+      "label": "목표 계열 (월별·누계)",
+      "unit": "백만원",
+      "derived": true,
+      "formula": "4월 = 장표 목표 / 누계 = 장표 누계 목표 / 그 외 월 = (누계 목표 − 4월 목표) ÷ 4",
+      "basis": "장표의 4월 목표·누계 목표",
+      "children": [
+        {
+          "role": "원천",
+          "ref": "pl.yongin_ops.target"
+        }
+      ],
+      "confidence_note": "월별 목표 원본이 없어 균등 배분. 목표선의 의미는 4월·누계에서만 확정적.",
+      "used_by": [
+        "pl.summary",
+        "pl.bridge",
+        "pl.trend",
+        "pl.table"
+      ]
+    },
+    {
+      "id": "kpi.series.mock",
+      "label": "KPI 월별 계열 (대표값)",
+      "unit": "지표별 상이",
+      "derived": true,
+      "formula": "-",
+      "basis": "0814 회의자료 6p·7p에는 지표명·선정 사유만 있고 실측치가 없음",
+      "leaf": true,
+      "source": {
+        "system": "dkbmc",
+        "join": "mkt_channel",
+        "object": "미확보 — 화면 표시값은 전부 대표값(mock)",
+        "columns": [
+          "기준월",
+          "조직",
+          "지표코드",
+          "값"
+        ],
+        "confidence": "추정",
+        "gap": "KPI는 손익 시스템 밖 데이터라 Data Lake 적재 여부가 곧 가동 여부(R-24·R-25). 값·시계열 모두 확보 후 교체 대상."
+      },
+      "used_by": [
+        "ov.pinned_kpi",
+        "kpi.summary",
+        "kpi.cards",
+        "kpi.table"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "ov.summary",
+      "page": "Overview",
+      "section": "요약 지표",
+      "label": "그룹 수지손익 · 수입 · 지출 · 손익율",
+      "form": "KPI 카드 4매",
+      "metrics": [
+        "cash.group.profit",
+        "cash.group.income",
+        "cash.group.expense",
+        "cash.group.margin"
+      ],
+      "note": "선택 기간의 그룹계 현금 수지. 예상 대비 달성률을 보조 문구로 표시."
+    },
+    {
+      "id": "ov.cash_table",
+      "page": "Overview",
+      "section": "수지현황",
+      "label": "예상수지 표 · 수지현황(실적) 표",
+      "form": "표 2매 (장표 slide 4 원형)",
+      "metrics": [
+        "cash.yongin.income",
+        "cash.yongin.expense",
+        "cash.life.income",
+        "cash.life.expense",
+        "cash.ypl.income",
+        "cash.ypl.expense",
+        "cash.forecast.income"
+      ],
+      "note": "법인별 수입·지출·손익·손익율. 손익 = 수입 − 지출, 손익율 = 손익 ÷ 수입으로 화면에서 계산."
+    },
+    {
+      "id": "ov.trend",
+      "page": "Overview",
+      "section": "월별 추이",
+      "label": "그룹계 수입·지출 막대 + 손익 선 + 예상수입 점선",
+      "form": "복합 차트",
+      "metrics": [
+        "cash.monthly.series",
+        "cash.group.income",
+        "cash.group.expense",
+        "cash.forecast.income"
+      ],
+      "note": "장표에 월별 수치가 없어 배분한 추정 구간을 음영으로 구분. 26.04만 실측."
+    },
+    {
+      "id": "ov.pinned_kpi",
+      "page": "Overview",
+      "section": "고정 KPI",
+      "label": "사용자가 KPI 화면에서 고정한 지표",
+      "form": "KPI 카드 (가변)",
+      "metrics": [
+        "kpi.series.mock"
+      ],
+      "note": "표시 대상은 사용자 선택(localStorage). 값은 KPI 화면과 동일 원천."
+    },
+    {
+      "id": "pl.summary",
+      "page": "손익",
+      "section": "요약 지표",
+      "label": "총수입 · 총지출 · 손익 · 원가율(용인공원라이프는 영업손익율)",
+      "form": "KPI 카드 4매",
+      "metrics": [
+        "pl.yongin_ops.rev_total",
+        "pl.yongin_ops.exp_total",
+        "pl.yongin_ops.profit",
+        "pl.yongin_ops.cost_ratio",
+        "pl.yongin_cs.rev_total",
+        "pl.yongin_cs.exp_total",
+        "pl.yongin_cs.cost_ratio",
+        "pl.life.rev_total",
+        "pl.life.exp_total",
+        "pl.life.op_profit",
+        "pl.life.op_margin",
+        "pl.target.series"
+      ],
+      "note": "조직 탭에 따라 대응 블록의 값을 표시. 목표 대비 달성률을 보조 문구로 표시."
+    },
+    {
+      "id": "pl.bridge",
+      "page": "손익",
+      "section": "손익 브릿지",
+      "label": "수입 항목 가산 → 비용 항목 차감 → 손익, 손익 목표선",
+      "form": "워터폴 차트",
+      "metrics": [
+        "pl.yongin_ops.rev_outdoor",
+        "pl.yongin_ops.rev_honorstone",
+        "pl.yongin_ops.rev_mutual_stone",
+        "pl.yongin_ops.exp_fixed",
+        "pl.yongin_ops.exp_var",
+        "pl.yongin_cs.rev_mgmt_fee",
+        "pl.yongin_cs.rev_service",
+        "pl.yongin_cs.rev_rent",
+        "pl.yongin_cs.exp_fixed",
+        "pl.yongin_cs.exp_var",
+        "pl.life.rev_installment",
+        "pl.life.rev_event",
+        "pl.life.rev_cemetery",
+        "pl.life.rev_relocation",
+        "pl.life.rev_nonop",
+        "pl.life.exp_fixed",
+        "pl.life.exp_var",
+        "pl.life.exp_invest",
+        "pl.life.exp_nonop1",
+        "pl.life.exp_nonop2",
+        "pl.target.series"
+      ],
+      "note": "막대 순서는 장표 표의 항목 순서와 동일. 종착점은 총수입 − 총지출(표의 손익 행)."
+    },
+    {
+      "id": "pl.trend",
+      "page": "손익",
+      "section": "월별 추이",
+      "label": "총수입·총지출 막대 + 손익 선 + 수입 목표 점선",
+      "form": "복합 차트",
+      "metrics": [
+        "pl.monthly.series",
+        "pl.target.series"
+      ],
+      "note": "26.04는 장표 실측, 26.03은 MOM 역산, 그 앞은 누계 잔여 배분."
+    },
+    {
+      "id": "pl.table",
+      "page": "손익",
+      "section": "손익 상세표",
+      "label": "장표 원형 표 (목표·실적·MOM·YOY·누계)",
+      "form": "표 (장표 slide 9·10 원형)",
+      "metrics": [
+        "pl.monthly.series",
+        "pl.target.series",
+        "pl.yongin_ops.yoy",
+        "pl.yongin_ops.rev_total"
+      ],
+      "note": "선택 월이 4월이면 장표값 그대로, 다른 월이면 월별 계열에서 조회하고 YOY는 표시하지 않는다."
+    },
+    {
+      "id": "kpi.summary",
+      "page": "KPI",
+      "section": "요약 지표",
+      "label": "관리 지표 수 · 전월 대비 개선 수 · 조직 수 · 고정 수",
+      "form": "KPI 카드 4매",
+      "metrics": [
+        "kpi.series.mock"
+      ],
+      "note": "필터(법인·팀·구분) 적용 후의 집계. 지표 정의 자체는 0814 회의자료 6p·7p."
+    },
+    {
+      "id": "kpi.cards",
+      "page": "KPI",
+      "section": "조직별 지표",
+      "label": "팀별 KPI 카드 (값 · 전월 대비 · 최저/최고 · 추이)",
+      "form": "카드 그리드 + 스파크라인",
+      "metrics": [
+        "kpi.series.mock",
+        "kpi.yongin.inbound_db",
+        "kpi.yongin.visit_db",
+        "kpi.yongin.contract_count",
+        "kpi.yongin.honorstone_inflow_share",
+        "kpi.yongin.db_to_visit",
+        "kpi.yongin.db_to_contract",
+        "kpi.yongin.visit_to_contract",
+        "kpi.yongin.honorstone_contract_share",
+        "kpi.yongin.op_achieve_honorstone",
+        "kpi.yongin.op_achieve_outdoor",
+        "kpi.yongin.rev_per_zone",
+        "kpi.yongin.op_per_zone",
+        "kpi.yongin.op_per_visit",
+        "kpi.yongin.service_conversion",
+        "kpi.yongin.mgmt_fee_retention",
+        "kpi.life.valid_db",
+        "kpi.life.direct_contract",
+        "kpi.life.avg_product_price",
+        "kpi.life.product_sales",
+        "kpi.life.upsell_revenue",
+        "kpi.life.upsell_cost_ratio",
+        "kpi.life.corp_event_count",
+        "kpi.life.corp_funeral_conv",
+        "kpi.life.cemetery_fee",
+        "kpi.life.funeral_goods_revenue",
+        "kpi.life.survey_db",
+        "kpi.life.churn_rate"
+      ],
+      "note": "지표별 산식·원천은 각 metric 참조. 화면 수치는 전부 대표값."
+    },
+    {
+      "id": "kpi.table",
+      "page": "KPI",
+      "section": "지표 추이",
+      "label": "KPI × 월별 값 표",
+      "form": "표",
+      "metrics": [
+        "kpi.series.mock"
+      ],
+      "note": "카드와 동일 원천을 표로 재배열."
+    }
+  ]
+}

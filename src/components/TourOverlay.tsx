@@ -233,13 +233,13 @@ export function TourOverlay() {
   }, []);
 
   const next = useCallback(() => {
-    setStepIdx((idx) => {
-      if (idx < TOUR_STEPS.length - 1) return idx + 1;
-      // 마지막 단계 — 완료 처리
+    if (stepIdx < TOUR_STEPS.length - 1) {
+      setStepIdx(stepIdx + 1);
+    } else {
+      // 마지막 단계 — 완료 처리 (updater 밖에서 부수효과 호출)
       finish();
-      return idx;
-    });
-  }, [finish]);
+    }
+  }, [stepIdx, finish]);
 
   const prev = useCallback(() => {
     setStepIdx((idx) => (idx > 0 ? idx - 1 : idx));
@@ -274,7 +274,7 @@ export function TourOverlay() {
   const maskColor = "rgba(15, 23, 42, 0.55)";
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[100]">
+    <div className="pointer-events-none fixed inset-0 z-[100]" data-tour-active="">
       {/* spotlight 마스크 — 4면 div 방식 (clip-path 대비 호환성 우수) */}
       {hasSpotlight && rect ? (
         <>

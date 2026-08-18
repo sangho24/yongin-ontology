@@ -91,6 +91,12 @@ const DEPT_RELATED_SLOTS: Record<string, { id: string; label: string }[]> = {
   ],
 };
 
+// CSV 셀 이스케이프 — 쉼표·따옴표·줄바꿈 포함 시 따옴표로 감싸고 내부 따옴표 이중화
+function csvCell(v: string | number): string {
+  const s = String(v);
+  return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }
@@ -161,6 +167,28 @@ export default function DeptDetailPage({ params }: PageProps) {
       </AppLayout>
     );
   }
+
+  // 채널 배부 비용 표 → CSV 다운로드 (UTF-8 BOM 포함, 파일명에 부서명)
+  const downloadCsv = () => {
+    const headers = deptKpi.channelCostAlloc.headers as readonly string[];
+    const lines: string[] = [];
+    lines.push(["계정", ...headers, "합계"].map(csvCell).join(","));
+    deptKpi.channelCostAlloc.rows.forEach((row) => {
+      const sum = row.values.reduce((a, b) => a + b, 0);
+      lines.push([row.account, ...row.values, sum].map(csvCell).join(","));
+    });
+    // BOM(U+FEFF) — Excel에서 한글 깨짐 방지
+    const csv = String.fromCharCode(0xfeff) + lines.join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${dept.dept}_채널배부비용.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <AppLayout
@@ -588,9 +616,7 @@ export default function DeptDetailPage({ params }: PageProps) {
             </p>
             <button
               type="button"
-              onClick={() => {
-                // CSV export 연동 전 — 버튼 노출만
-              }}
+              onClick={downloadCsv}
               className="mt-4 inline-flex items-center justify-center gap-1.5 rounded-md border border-stone-200 bg-white px-3 py-2 text-[12px] font-medium text-stone-700 transition-colors hover:border-[#0095A9]/40 hover:text-[#007a8c]"
             >
               CSV 다운로드

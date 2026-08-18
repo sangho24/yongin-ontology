@@ -86,3 +86,131 @@ html, body {
   to { opacity: 1; transform: translateY(0); }
 }
 .fade-in { animation: fade-in 0.18s ease-out; }
+
+/* ===========================================================================
+   인쇄 — 경영회의 보고 장표 형식(슬라이드 1장 = 섹션 1개)으로 전환
+   .no-print 화면 전용 / .print-only 인쇄 전용 / .report-off 출력 제외 섹션
+   =========================================================================== */
+.print-only { display: none; }
+.slide-head { display: none; }
+
+@media print {
+  @page { size: A4 landscape; margin: 10mm 9mm 12mm; }
+
+  html, body { background: #ffffff; }
+
+  .no-print { display: none !important; }
+  .print-only { display: block; }
+  .report-off { display: none !important; }
+
+  /* 사이드바 오프셋 해제 — 전체 폭 사용 */
+  .print-root {
+    margin-left: 0 !important;
+    width: auto !important;
+    background: #ffffff !important;
+  }
+  .print-main { padding: 0 !important; }
+  .print-body { display: block !important; width: 100% !important; }
+
+  /* --- 표지 (첫 장 상단) --- */
+  .report-cover { margin-bottom: 8mm; }
+  .report-cover-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #0095A9;
+    padding: 7px 12px;
+  }
+  .report-cover-mark {
+    width: 9px;
+    height: 9px;
+    background: #ffffff;
+    flex: none;
+  }
+  .report-cover-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+  }
+  .report-cover-unit {
+    margin-left: auto;
+    font-size: 9.5px;
+    color: #cdebef;
+    letter-spacing: -0.01em;
+  }
+  .report-cover-scope {
+    margin-top: 5px;
+    font-size: 10.5px;
+    color: #57534e;
+  }
+
+  /* --- 섹션 = 슬라이드 --- */
+  .report-section { break-inside: avoid-page; }
+  .print-slide:not(.report-off) { break-before: page; }
+  .report-section { margin-top: 0 !important; }
+
+  .slide-head {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1.5px solid #0095A9;
+    padding-bottom: 5px;
+    margin-bottom: 7mm;
+  }
+  .slide-head-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #1a1a1a;
+  }
+  .slide-head-mark {
+    width: 8px;
+    height: 8px;
+    background: #0095A9;
+    flex: none;
+  }
+  .slide-head-meta {
+    font-size: 9.5px;
+    color: #78716c;
+  }
+
+  /* 카드는 경계선만 남기고 그림자·hover 제거 */
+  .print-card {
+    border: 1px solid #d6d3c9 !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  /* 인쇄 시 그리드 붕괴 방지 — 화면 폭에 의존하는 반응형 대신 고정 열 */
+  .print-cols-2 { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 5mm !important; }
+  .print-cols-3 { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 4mm !important; }
+  .print-cols-4 { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 4mm !important; }
+
+  /* 차트의 hover 잔상(툴팁·커서 하이라이트)이 출력물에 찍히지 않도록 */
+  .recharts-tooltip-wrapper,
+  .recharts-tooltip-cursor,
+  .recharts-active-dot { display: none !important; }
+
+  /* 섹션(=슬라이드) 하단 푸터. position:fixed는 Chrome 인쇄에서 첫 장에만
+     찍히므로 섹션마다 정적 요소로 둔다. */
+  .slide-foot {
+    display: flex !important;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 5mm;
+    border-top: 1px solid #e7e5dc;
+    padding-top: 2mm;
+    font-size: 8.5px;
+    color: #a8a29e;
+    letter-spacing: -0.01em;
+  }
+
+  table { break-inside: auto; }
+  tr { break-inside: avoid; }
+  thead { display: table-header-group; }
+}

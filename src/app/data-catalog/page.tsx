@@ -99,7 +99,8 @@ export default function DataCatalogPage() {
           return (
             <div
               key={d.id}
-              className="rounded-md border border-stone-200/80 bg-white transition-colors duration-150 hover:border-stone-300"
+              id={d.id}
+              className="scroll-mt-24 rounded-md border border-stone-200/80 bg-white transition-colors duration-150 hover:border-stone-300"
             >
               <button
                 type="button"

@@ -244,23 +244,32 @@ export function KnowledgeGraphNetwork({
 
   // -----------------------------------------------------------------------------
   // 줌·팬 — wheel zoom, drag pan
+  // React onWheel은 passive 등록이라 preventDefault가 무시됨 →
+  // 네이티브 wheel 리스너를 { passive: false }로 직접 등록해 그래프 위에서
+  // 페이지 스크롤을 막고 줌만 동작시킴.
   // -----------------------------------------------------------------------------
-  const onWheel = useCallback((e: React.WheelEvent<SVGSVGElement>) => {
-    e.preventDefault();
-    const scaleFactor = e.deltaY < 0 ? 1.1 : 0.9;
-    setView((v) => {
-      const nextK = Math.max(0.3, Math.min(2.5, v.k * scaleFactor));
-      // 마우스 위치 기준 줌
-      const svg = svgRef.current;
-      if (!svg) return { ...v, k: nextK };
-      const rect = svg.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
-      // 줌 후에도 마우스 아래 지점이 그대로 있도록 x,y 보정
-      const nx = mx - ((mx - v.x) / v.k) * nextK;
-      const ny = my - ((my - v.y) / v.k) * nextK;
-      return { x: nx, y: ny, k: nextK };
-    });
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const scaleFactor = e.deltaY < 0 ? 1.1 : 0.9;
+      setView((v) => {
+        const nextK = Math.max(0.3, Math.min(2.5, v.k * scaleFactor));
+        // 마우스 위치 기준 줌
+        const svg = svgRef.current;
+        if (!svg) return { ...v, k: nextK };
+        const rect = svg.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        // 줌 후에도 마우스 아래 지점이 그대로 있도록 x,y 보정
+        const nx = mx - ((mx - v.x) / v.k) * nextK;
+        const ny = my - ((my - v.y) / v.k) * nextK;
+        return { x: nx, y: ny, k: nextK };
+      });
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
   }, []);
 
   // 팬 처리 — 빈 영역 mousedown 후 드래그
@@ -434,7 +443,6 @@ export function KnowledgeGraphNetwork({
         ref={svgRef}
         width={dim.w}
         height={dim.h}
-        onWheel={onWheel}
         onMouseDown={onSvgMouseDown}
         className={draggingId ? "cursor-grabbing" : "cursor-grab"}
         style={{ display: "block" }}

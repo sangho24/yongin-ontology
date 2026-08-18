@@ -149,6 +149,7 @@ export function NumberCell({
                 }
               }}
               disabled={!interactive}
+              data-slot-id={useEvidenceMode ? slotId : undefined}
               className={`inline-flex items-baseline gap-1 rounded-md border bg-white transition-colors duration-150 ${styles.box} ${borderCls} ${hoverCls} ${
                 !interactive ? "cursor-default" : ""
               }`}

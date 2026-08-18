@@ -1,458 +1,424 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Sparkles } from "lucide-react";
-import { AppLayout, SubNav } from "@/components/AppLayout";
-import { SourceCaption, EvidenceButton } from "@/components/Card";
-import { NumberCell } from "@/components/NumberCell";
-import lifeKpi from "@/data/life_kpi.json";
-import zoneKpi from "@/data/zone_kpi.json";
-import deptKpi from "@/data/dept_kpi.json";
-import asisLogic from "@/data/asis_logic.json";
-import { autoUnit } from "@/lib/format";
-import type { NumberLineage } from "@/types";
+import { ArrowRight, Pin } from "lucide-react";
+import {
+  ComposedChart,
+  Bar,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ReferenceLine,
+  ReferenceArea,
+  Cell,
+} from "recharts";
+import { AppLayout } from "@/components/AppLayout";
+import { Card, StatCard, WowCard } from "@/components/Card";
+import { PeriodFilter, Delta, InfoTip, TipRow } from "@/components/exec/Bits";
+import { ReportSection, ReportCover, ReportActions, type SectionDef } from "@/components/exec/Report";
+import { useReportSections, usePinnedKpis } from "@/store/prefs";
+import { downloadCsv, stamp } from "@/lib/export";
+import {
+  plData,
+  MONTHS,
+  LATEST,
+  scenario,
+  cashValue,
+  periodLabel,
+  allKpis,
+  mn,
+  type Period,
+  type CashScenario,
+} from "@/lib/exec";
 
-const SECTIONS = [
-  { href: "/mutual", tag: "MUTUAL", title: "상조 VC 분석", desc: "회원 9,930명 lifecycle · 채널 LTV · Root Cause" },
-  { href: "/cemetery", tag: "CEMETERY", title: "장지 VC 분석", desc: "묘역 55,711기 · 잠재가치 · Root Cause" },
-  { href: "/data-model", tag: "DATA-MODEL", title: "Data Model (T-Box)", desc: "그룹 데이터 모델 · 미활성 KPI 식별" },
+// =============================================================================
+// Overview — 경영회의 보고 slide 4(매출 및 집행예산 Cash flow) 중심 그룹 현황
+// =============================================================================
+
+const SECTIONS: SectionDef[] = [
+  { id: "summary", label: "요약 지표", note: "그룹 수입 · 지출 · 손익 · 손익율" },
+  { id: "cash", label: "수지현황 표", note: "장표 원형 (예상 · 실적)" },
+  { id: "trend", label: "월별 추이", note: "그룹 수입 · 지출 · 손익" },
+  { id: "kpi", label: "고정 KPI", note: "KPI 화면에서 고정한 지표" },
 ];
 
-export default function Home() {
-  const totalLifecycle = lifeKpi.wowMetrics.totalLifecycleRevenue;
-  // 잠재가치 = 미판매분 + 이장지분 합계 (totalSaleableValue) — 산식과 정합
-  const totalPotential = zoneKpi.potentialValue.totalSaleableValue;
-  const totalCost = deptKpi.channelCostAlloc.totals.reduce((a, b) => a + b, 0);
-  // 채널 배부 합계는 천원 단위(JSON spec)이므로 "원"으로 환산 시 ×1000
-  const totalCostKRW = totalCost * 1000;
-  // 0528 회의 as-is 확정 슬라이드 수 (장지 8 + 상조 6)
-  const confirmedSlideCount =
-    asisLogic.meta.scopeSlides.cemetery.length + asisLogic.meta.scopeSlides.mutual.length;
+export default function OverviewPage() {
+  const [period, setPeriod] = useState<Period>(LATEST);
+  const { isOn } = useReportSections("overview", SECTIONS.map((s) => s.id));
+  const { pinned } = usePinnedKpis();
 
-  // -------------------------------------------------------------------
-  // Hero 3카드 lineage 정의
-  // -------------------------------------------------------------------
-  const lifecycleLineage: NumberLineage = {
-    source: "라이프_회원DB_backdata.xlsx / 매출합계",
-    formula: "Σ 매출합계 (전체 회원 9,930명)",
-    verified: true,
-    unit: "원",
-    asOf: "2025-12-31",
-    steps: [
-      {
-        label: "회원 master 로드",
-        detail: "라이프_회원DB_backdata.xlsx · 35열 × 9,930행",
-        rowCount: 9930,
-      },
-      {
-        label: "매출합계 컬럼 합산",
-        detail: "가입 이후 25년말까지 누적 매출",
-        amount: totalLifecycle,
-      },
-    ],
-    notes: "회원 lifecycle (가입~25년말) 누적 기준",
-  };
+  const actual = scenario("actual");
+  const forecast = scenario("forecast");
+  const groupActual = actual.rows.find((r) => r.total)!;
+  const groupForecast = forecast.rows.find((r) => r.total)!;
 
-  const potentialLineage: NumberLineage = {
-    source: "260401_용인공원 전체 묘역_raw.xlsx",
-    formula: "(미판매 8,173 + 이장지 4,325) × 등급 평균가",
-    verified: false,
-    unit: "원",
-    asOf: "2026-04-01",
-    steps: [
-      {
-        label: "묘역 master 로드",
-        detail: "전체 묘역 raw · 27열 × 55,711행",
-        rowCount: 55711,
-      },
-      {
-        label: "가용재고 필터",
-        detail: "미판매 8,173기 + 이장지 4,325기 = 12,498기",
-        rowCount: 12498,
-      },
-      {
-        label: "미판매분 잠재가치",
-        detail: "미판매 8,173기 × 등급 평균가 (proxy)",
-        amount: zoneKpi.wowMetrics.potentialFromAvailable,
-      },
-      {
-        label: "이장지분 잠재가치",
-        detail: "이장지 4,325기 × 등급 평균가 (proxy)",
-        amount: zoneKpi.wowMetrics.potentialFromTransfer,
-      },
-      {
-        label: "합산 (totalSaleableValue)",
-        detail: `미판매 ${autoUnit(zoneKpi.wowMetrics.potentialFromAvailable)} + 이장지 ${autoUnit(zoneKpi.wowMetrics.potentialFromTransfer)}`,
-        amount: totalPotential,
-      },
-    ],
-    notes: "proxy 추정 — 실제 판매가는 거래 시점 단가에 따라 변동",
-  };
+  const inc = cashValue(groupActual, "income", period);
+  const exp = cashValue(groupActual, "expense", period);
+  const profit = inc - exp;
+  const margin = inc ? Math.round((profit / inc) * 100) : 0;
+  const fcInc = cashValue(groupForecast, "income", period);
+  const fcExp = cashValue(groupForecast, "expense", period);
+  const fcProfit = fcInc - fcExp;
+  const fcMargin = fcInc ? Math.round((fcProfit / fcInc) * 100) : 0;
+  const achieveRate = fcInc ? Math.round((inc / fcInc) * 100) : 0;
 
-  const channelCostLineage: NumberLineage = {
-    source: "PPT 41p 채널 배부 표",
-    formula: "Σ 인건비+지급수수료+광고선전비 채널별 배부값",
-    verified: true,
-    unit: "원",
-    asOf: "2025-12-31",
-    steps: [
-      {
-        label: "원장 비용 추출",
-        detail: "인건비 · 지급수수료 · 광고선전비 (FY25)",
-      },
-      {
-        label: "채널 배부 적용",
-        detail: "① 직접 귀속 ② 채널 전담 ③ 매출 기준 간접 배부",
-        amount: totalCostKRW,
-      },
-    ],
-    notes: "단위 환산: 원장 합계(원) = 채널 합계(천원) × 1,000",
+  const trend = MONTHS.map((m, i) => ({
+    month: m,
+    수입: groupActual.monthly.income[i],
+    지출: groupActual.monthly.expense[i],
+    손익: groupActual.monthly.profit[i],
+    예상수입: groupForecast.monthly.income[i],
+  }));
+
+  const pinnedKpis = allKpis.filter(
+    (k, i, arr) => pinned.includes(k.lineage) && arr.findIndex((x) => x.lineage === k.lineage) === i
+  );
+
+  const handleCsv = () => {
+    const rows: (string | number)[][] = [];
+    rows.push(["용인공원 그룹 수지현황", `기준 ${periodLabel(period)}`, "단위 백만원, %"]);
+    rows.push([plData.cash.basis]);
+    rows.push([]);
+    (["forecast", "actual"] as const).forEach((sid) => {
+      const sc = scenario(sid);
+      rows.push([`${sc.label} (${sc.asof})`]);
+      rows.push(["구분", "수입", "지출", "손익", "손익율", ...MONTHS.map((m) => `${m} 수입`)]);
+      sc.rows.forEach((r) =>
+        rows.push([
+          r.entity,
+          cashValue(r, "income", period),
+          cashValue(r, "expense", period),
+          cashValue(r, "income", period) - cashValue(r, "expense", period),
+          r.margin,
+          ...r.monthly.income,
+        ])
+      );
+      rows.push([]);
+    });
+    rows.push(["데이터 기준", plData.meta.monthly_basis]);
+    downloadCsv(`용인공원그룹_수지현황_${stamp()}`, rows);
   };
 
   return (
     <AppLayout
       pageTitle="Overview"
-      pageSubtitle="용인공원 그룹(라이프 · 용인공원 · YPL) 관리손익 BI · 부서별 KPI 매핑 + 채널 배부 결과"
-      narration={
-        <div className="space-y-2.5">
-          <p>
-            <strong>핵심 화면:</strong> PPT 23p 부서×KPI 매핑과 41p 채널별 비용 배부 결과를 통합.
-          </p>
-          <p>
-            기존 KPI는 검정, <strong>신규 KPI</strong>는 teal로 강조.
-          </p>
-          <p>좌측 메뉴로 세부 분석 이동.</p>
-        </div>
-      }
+      pageSubtitle="경영회의 보고 장표(slide 4)의 그룹 3사 수지현황. 현금 기준이라 조직별 손익(발생 기준)과 모수가 다르다."
     >
-      {/* SubNav — 페이지 내부 섹션 점프 */}
-      <SubNav
-        items={[
-          { id: "headline", label: "그룹 현황" },
-          { id: "department", label: "부서별 KPI" },
-          { id: "channel-cost", label: "채널 배부" },
-          { id: "sections", label: "세부 분석" },
-        ]}
-        className="mb-8"
+      <ReportCover
+        title="매출 및 집행예산 Cash flow"
+        period={periodLabel(period)}
+        scope="용인공원 · 용인공원라이프 · 와이피엘"
       />
 
-      {/* 1줄 헤드라인 — 4 KPI hero (분리 박스 톤, 모두 white) */}
-      <section
-        id="headline"
-        data-tour-id="hero-kpi"
-        className="grid gap-6 scroll-mt-32 sm:grid-cols-2 lg:grid-cols-4"
+      <div className="no-print mb-6 flex flex-wrap items-center justify-end gap-3">
+        <PeriodFilter value={period} onChange={setPeriod} />
+        <ReportActions page="overview" sections={SECTIONS} onCsv={handleCsv} />
+      </div>
+
+      {/* 요약 지표 */}
+      <ReportSection
+        id="summary"
+        title="요약 지표"
+        meta={`${periodLabel(period)} · 현금 기준 · 백만원`}
+        enabled={isOn("summary")}
+        first
       >
-        {/* 카드 1: 회원 누적 납입액 (스냅샷) — P0-4 정정 (2026-05-11) */}
-        <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
-          <div className="flex items-start justify-between gap-2">
-            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
-              회원 누적 납입액 (스냅샷)
-            </div>
-            <EvidenceButton slotId="ovw_lifecycle_revenue" label="회원 누적 납입액 (스냅샷)" variant="subtle" />
-          </div>
-          <div className="mt-2.5">
-            <NumberCell
-              value={totalLifecycle}
-              unit="원"
-              lineage={lifecycleLineage}
-              size="lg"
-              emphasis
-            />
-          </div>
-          <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
-            9,930명 회원의 가입~25년말 누적
-          </div>
+        <div className="grid gap-4 md:grid-cols-4 print-cols-4">
+          <WowCard
+            label="그룹 수지손익"
+            value={mn(profit)}
+            unit="백만원"
+            sub={`수입 ${mn(inc)} − 지출 ${mn(exp)} 백만원`}
+            footnote={`손익율 ${margin}% · 현금 기준`}
+          />
+          <StatCard
+            label="그룹 수입"
+            value={mn(inc)}
+            unit="백만원"
+            sub={`예상 ${mn(fcInc)} 백만원 대비 ${achieveRate}%`}
+          />
+          <StatCard
+            label="그룹 지출"
+            value={mn(exp)}
+            unit="백만원"
+            sub={`예상 ${mn(fcExp)} 백만원 대비 ${fcExp ? Math.round((exp / fcExp) * 100) : 0}%`}
+          />
+          <StatCard
+            label="그룹 손익율"
+            value={`${margin}%`}
+            sub={`예상 ${fcMargin}% 대비 ${margin - fcMargin >= 0 ? "+" : ""}${margin - fcMargin}%p`}
+          />
         </div>
+      </ReportSection>
 
-        {/* 카드 2: 장지 가용재고 잠재가치 */}
-        <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
-          <div className="flex items-start justify-between gap-2">
-            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
-              장지 가용재고 잠재가치
-            </div>
-            <EvidenceButton slotId="ovw_potential_inventory" label="장지 가용재고 잠재가치" variant="subtle" />
-          </div>
-          <div className="mt-2.5">
-            <NumberCell
-              value={totalPotential}
-              unit="원"
-              lineage={potentialLineage}
-              size="lg"
-            />
-          </div>
-          <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
-            미판매 {autoUnit(zoneKpi.wowMetrics.potentialFromAvailable)} + 이장지{" "}
-            {autoUnit(zoneKpi.wowMetrics.potentialFromTransfer)} (proxy)
-          </div>
+      {/* 수지현황 표 — 장표 원형 */}
+      <ReportSection
+        id="cash"
+        title="수지현황"
+        meta={`${periodLabel(period)} · 단위 백만원, %`}
+        enabled={isOn("cash")}
+        info={
+          <InfoTip title="기준" align="left">
+            <TipRow label="현금 기준">
+              입출금 기준 수지라 발생 기준인 손익 화면과 모수가 다르다. 26.04 용인공원 수입은 여기서
+              5,231이고 손익 화면 기준으로는 5,033이다.
+            </TipRow>
+            <TipRow label="예상수지">
+              월 마감 전 시점의 전망치. 실적 표와 나란히 두고 달성 수준을 본다.
+            </TipRow>
+            <TipRow label="법인 구분">
+              여기서는 3사를 각각 표시한다. 손익 화면은 장표를 따라 용인공원과 와이피엘을 합산한다.
+            </TipRow>
+          </InfoTip>
+        }
+      >
+        <div className="grid gap-4 lg:grid-cols-2 print-cols-2">
+          <CashTable scenario={forecast} period={period} />
+          <CashTable scenario={actual} period={period} highlight />
         </div>
+      </ReportSection>
 
-        {/* 카드 3: 라이프 채널 배부 비용 (white로 통일) */}
-        <div className="rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-stone-300">
-          <div className="flex items-start justify-between gap-2">
-            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-500">
-              라이프 채널 배부 비용 (FY25)
-            </div>
-            <EvidenceButton slotId="ovw_channel_cost" label="라이프 채널 배부 비용 (FY25)" variant="subtle" />
+      {/* 월별 추이 */}
+      <ReportSection
+        id="trend"
+        title="월별 추이"
+        meta="그룹계 · 현금 기준 · 백만원"
+        enabled={isOn("trend")}
+        info={
+          <InfoTip title="읽는 법" align="left">
+            <TipRow label="축">
+              막대(수입·지출)는 왼쪽 축, 선(손익)은 오른쪽 축. 자릿수가 달라 축을 나눴다.
+            </TipRow>
+            <TipRow label="진한 막대">상단 필터에서 선택한 기간.</TipRow>
+            <TipRow label="음영 구간">
+              장표에 월별 수치가 없어 채운 추정 구간. 26.04만 장표 실측이고, 그 앞은 손익 총수입의
+              월별 구성비로 배분했다.
+            </TipRow>
+          </InfoTip>
+        }
+        right={
+          <span className="flex flex-wrap items-center gap-3 text-[11px] text-stone-500">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-sm bg-[#0095A9]" /> 수입
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-sm bg-[#a8a29e]" /> 지출
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-0 w-4" style={{ borderTop: "2px solid #b45309" }} /> 손익
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-0 w-4" style={{ borderTop: "2px dashed #d6d3c9" }} /> 예상 수입
+            </span>
+          </span>
+        }
+      >
+        <Card>
+          <div className="h-[280px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart
+                data={trend}
+                margin={{ top: 12, right: 4, bottom: 0, left: -8 }}
+                barCategoryGap="28%"
+                barGap={2}
+              >
+                <CartesianGrid strokeDasharray="2 4" stroke="#e7e5dc" vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tick={{ fontSize: 11, fill: "#78716c" }}
+                  axisLine={{ stroke: "#e7e5dc" }}
+                  tickLine={false}
+                />
+                <YAxis
+                  yAxisId="amount"
+                  tick={{ fontSize: 10, fill: "#a8a29e" }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={46}
+                  tickFormatter={(v) => Math.round(Number(v ?? 0)).toLocaleString("ko-KR")}
+                />
+                <YAxis
+                  yAxisId="profit"
+                  orientation="right"
+                  tick={{ fontSize: 10, fill: "#c8a27a" }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={44}
+                  tickFormatter={(v) => Math.round(Number(v ?? 0)).toLocaleString("ko-KR")}
+                />
+                {/* 장표 실측은 마지막 달뿐 — 앞 구간은 추정임을 음영으로 구분 */}
+                <ReferenceArea
+                  yAxisId="amount"
+                  x1={MONTHS[0]}
+                  x2={MONTHS[LATEST - 1]}
+                  fill="#78716c"
+                  fillOpacity={0.05}
+                  label={{ value: "추정 구간", position: "insideTopLeft", fontSize: 9.5, fill: "#a8a29e" }}
+                />
+                <Tooltip
+                  cursor={{ fill: "#f5f5f0" }}
+                  contentStyle={{
+                    fontSize: 11,
+                    borderRadius: 6,
+                    border: "1px solid #e7e5dc",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+                  }}
+                  formatter={(v, n) => [Math.round(Number(v ?? 0)).toLocaleString("ko-KR"), String(n)]}
+                />
+                <Bar yAxisId="amount" dataKey="수입" radius={[3, 3, 0, 0]} maxBarSize={48}>
+                  {trend.map((d, i) => (
+                    <Cell key={d.month} fill={period === "cum" || period === i ? "#0095A9" : "#b3dde0"} />
+                  ))}
+                </Bar>
+                <Bar yAxisId="amount" dataKey="지출" radius={[3, 3, 0, 0]} maxBarSize={48}>
+                  {trend.map((d, i) => (
+                    <Cell key={d.month} fill={period === "cum" || period === i ? "#78716c" : "#e7e5dc"} />
+                  ))}
+                </Bar>
+                <Line
+                  yAxisId="amount"
+                  type="monotone"
+                  dataKey="예상수입"
+                  name="예상 수입"
+                  stroke="#d6d3c9"
+                  strokeWidth={1.5}
+                  strokeDasharray="4 3"
+                  dot={false}
+                />
+                <Line
+                  yAxisId="profit"
+                  type="monotone"
+                  dataKey="손익"
+                  stroke="#b45309"
+                  strokeWidth={2}
+                  dot={{ r: 2.5, fill: "#b45309", strokeWidth: 0 }}
+                />
+                <ReferenceLine yAxisId="profit" y={0} stroke="#d6d3c9" />
+              </ComposedChart>
+            </ResponsiveContainer>
           </div>
-          <div className="mt-2.5">
-            <NumberCell
-              value={totalCostKRW}
-              unit="원"
-              lineage={channelCostLineage}
-              size="lg"
-            />
-          </div>
-          <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
-            인건비 · 지급수수료 · 광고선전비 합산
-          </div>
-        </div>
+        </Card>
+      </ReportSection>
 
-        {/* 카드 4: As-is 확정 로직 (0528 확정 · 더존 전달) */}
-        <div className="group relative rounded-md border border-[#0095A9]/30 bg-[#e6f4f6]/40 p-6 transition-colors hover:border-[#0095A9]/50 hover:bg-[#e6f4f6]">
-          <div className="flex items-start justify-between gap-2">
-            <Link
-              href="/cemetery#asis-pl"
-              className="flex flex-1 items-center justify-between gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[#007a8c]"
-            >
-              <span>As-is 확정 로직</span>
-              <ArrowUpRight className="h-3.5 w-3.5 text-[#0095A9] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </Link>
-          </div>
-          <Link href="/cemetery#asis-pl" className="block">
-            <div className="mt-2.5 flex items-baseline gap-1">
-              <span className="headline text-[24px] leading-none text-[#007a8c] tnum">
-                {confirmedSlideCount}
-              </span>
-              <span className="text-[12px] font-medium text-stone-500">장 확정</span>
-            </div>
-            <div className="mt-2 text-[11px] leading-relaxed text-stone-500">
-              0528 확정 · 더존 전달(6/3) — 장지 {asisLogic.meta.scopeSlides.cemetery.length} ·
-              상조 {asisLogic.meta.scopeSlides.mutual.length} 슬라이드
-            </div>
+      {/* 고정 KPI */}
+      <ReportSection
+        id="kpi"
+        title="고정 KPI"
+        meta={periodLabel(period)}
+        enabled={isOn("kpi") && pinnedKpis.length > 0}
+        right={
+          <Link
+            href="/kpi"
+            className="no-print inline-flex items-center gap-1 text-[12px] font-medium text-[#0095A9] hover:text-[#007a8c]"
+          >
+            KPI 화면에서 고정 <ArrowRight className="h-3 w-3" />
           </Link>
-        </div>
-      </section>
-
-      {/* 부서별 KPI 매핑 — 메인 컨텐츠 */}
-      <section id="department" className="mt-10 scroll-mt-32">
-        <div className="mb-4 flex items-baseline justify-between gap-2 border-b border-stone-200 pb-2">
-          <div className="flex items-center gap-2">
-            <h2 className="section-h">부서별 KPI 매핑 — 상조 VC</h2>
-            <EvidenceButton slotId="ovw_dept_kpi_cards" label="부서별 KPI 매핑 — 상조 VC" variant="subtle" />
+        }
+      >
+        {pinnedKpis.length === 0 ? (
+          <div className="no-print rounded-md border border-dashed border-stone-300 bg-white px-5 py-7 text-center">
+            <Pin className="mx-auto h-4 w-4 text-stone-300" strokeWidth={1.75} />
+            <p className="mt-2 text-[12.5px] text-stone-500">
+              KPI 화면에서 지표를 고정하면 이 자리에 표시된다.
+            </p>
           </div>
-          <span className="text-[11px] tracking-wider text-stone-400">PPT 23p</span>
-        </div>
-        <p className="mb-5 max-w-3xl text-[13px] leading-relaxed text-stone-600">
-          현행 KPI 체계에서 포착되지 않는 수익성 관리 영역을 보완하기 위해 4가지 신규 KPI를 추가 설정.
-          각 부서의 손익 그룹·기존 KPI·신규 KPI를 매핑.
-        </p>
-        <div className="grid gap-6 md:grid-cols-2" data-tour-id="dept-grid">
-          {deptKpi.deptKpiMatrix.map((d) => (
-            <Link
-              key={d.id}
-              href={`/dept/${d.id}`}
-              className="group block rounded-md border border-stone-200/80 bg-white p-6 transition-colors hover:border-[#0095A9]/30 hover:bg-[#fafaf7]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-stone-400">
-                    {d.revenueGroup}
-                  </div>
-                  <h3 className="mt-1 text-[15px] font-semibold text-stone-900 group-hover:text-[#007a8c]">
-                    {d.dept}
-                  </h3>
-                </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  {d.newKpi.length > 0 && (
-                    <span className="flex items-center gap-1 rounded-sm bg-[#e6f4f6] px-1.5 py-0.5 text-[10px] font-semibold text-[#0095A9]">
-                      <Sparkles className="h-3 w-3" />
-                      NEW
+        ) : (
+          <div className="grid gap-4 md:grid-cols-4 print-cols-4">
+            {pinnedKpis.map((k) => {
+              const idx = period === "cum" ? LATEST : period;
+              const v = k.series[idx];
+              const d = Number((v - k.series[Math.max(0, idx - 1)]).toFixed(2));
+              return (
+                <div
+                  key={k.lineage}
+                  className="print-card rounded-md border border-stone-200/80 bg-white p-4 transition-colors hover:border-stone-300"
+                >
+                  <div className="truncate text-[12px] font-medium text-stone-800">{k.label}</div>
+                  <div className="mt-0.5 truncate text-[10px] text-stone-400">{k.team}</div>
+                  <div className="mt-3 flex items-baseline gap-2">
+                    <span className="headline text-[22px] leading-none text-stone-900 tnum">
+                      {v.toLocaleString("ko-KR")}
                     </span>
-                  )}
-                  <ArrowUpRight className="h-4 w-4 text-stone-300 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#0095A9]" />
-                </div>
-              </div>
-
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <div>
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-stone-400">
-                    기존 KPI
+                    <span className="text-[11px] text-stone-400">{k.unit}</span>
+                    <span className="ml-auto text-[11px]">
+                      <Delta value={d} invert={k.invert} suffix={k.unit === "%" ? "%p" : ""} />
+                    </span>
                   </div>
-                  <ul className="mt-1.5 space-y-1">
-                    {d.existingKpi.length > 0 ? (
-                      d.existingKpi.map((k, i) => (
-                        <li key={i} className="flex items-start gap-1.5 text-[12px] text-stone-700">
-                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-stone-400" />
-                          {k}
-                        </li>
-                      ))
-                    ) : (
-                      <li className="text-[12px] text-stone-400">—</li>
-                    )}
-                  </ul>
                 </div>
-                <div>
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#0095A9]">
-                    신규 KPI
-                  </div>
-                  <ul className="mt-1.5 space-y-1">
-                    {d.newKpi.length > 0 ? (
-                      d.newKpi.map((k, i) => (
-                        <li key={i} className="flex items-start gap-1.5 text-[12px] font-medium text-[#007a8c]">
-                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#0095A9]" />
-                          {k}
-                        </li>
-                      ))
-                    ) : (
-                      <li className="text-[12px] text-stone-400">—</li>
-                    )}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="mt-4 border-t border-stone-100 pt-3 text-[11px] leading-relaxed text-stone-500">
-                {d.rationale}
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* 채널별 비용 배부 결과 — Heatmap-like table */}
-      <section id="channel-cost" className="mt-10 scroll-mt-32">
-        <div className="mb-4 flex items-baseline justify-between gap-2 border-b border-stone-200 pb-2">
-          <div className="flex items-center gap-2">
-            <h2 className="section-h">채널별 비용 배부 결과 — 상조 VC</h2>
-            <EvidenceButton slotId="ovw_channel_cost_table" label="채널별 비용 배부 결과" variant="subtle" />
+              );
+            })}
           </div>
-          <span className="text-[11px] tracking-wider text-stone-400">PPT 41p · FY25 · 천원</span>
-        </div>
-        <p className="mb-5 max-w-3xl text-[13px] leading-relaxed text-stone-600">
-          비용 발생 목적에 따라 ① 고객 단위 직접 귀속, ② 채널 전담 귀속, ③ 간접 배부(매출 기준)로 구분 적용.
-        </p>
-        <div className="overflow-hidden rounded-md border border-stone-200/80 bg-white">
-          <table className="w-full text-sm">
-            <thead className="bg-stone-50/60 text-[11px] uppercase tracking-[0.08em] text-stone-500">
-              <tr>
-                <th className="p-4 text-left font-medium">계정</th>
-                <th className="p-4 text-left font-medium">배부 원칙</th>
-                {deptKpi.channelCostAlloc.headers.map((h) => (
-                  <th key={h} className="p-4 text-right font-medium tnum">
-                    {h}
-                  </th>
-                ))}
-                <th className="p-4 text-right font-medium tnum">합계</th>
-              </tr>
-            </thead>
-            <tbody>
-              {deptKpi.channelCostAlloc.rows.map((row) => {
-                const sum = row.values.reduce((a, b) => a + b, 0);
-                const max = Math.max(...row.values);
-                return (
-                  <tr key={row.account} className="border-t border-stone-100 transition-colors hover:bg-[#fafaf7]">
-                    <td className="p-4 font-semibold text-stone-900">{row.account}</td>
-                    <td className="p-4 text-[12px] text-stone-500">{row.principle}</td>
-                    {row.values.map((v, i) => {
-                      const ratio = max > 0 ? v / max : 0;
-                      const intensity = v > 0 ? Math.max(0.08, ratio * 0.45) : 0;
-                      return (
-                        <td
-                          key={i}
-                          className="p-4 text-right tnum text-stone-800"
-                          style={{
-                            backgroundColor:
-                              v > 0 ? `rgba(0, 149, 169, ${intensity})` : "transparent",
-                          }}
-                        >
-                          {v > 0 ? v.toLocaleString() : "—"}
-                        </td>
-                      );
-                    })}
-                    <td className="p-4 text-right font-semibold tnum text-stone-900">
-                      {sum.toLocaleString()}
-                    </td>
-                  </tr>
-                );
-              })}
-              <tr className="border-t-2 border-stone-300 bg-stone-50">
-                <td className="p-4 text-[12px] font-semibold uppercase tracking-[0.06em] text-stone-700" colSpan={2}>
-                  채널 합계
-                </td>
-                {deptKpi.channelCostAlloc.totals.map((t, i) => (
-                  <td key={i} className="p-4 text-right font-bold tnum text-stone-900">
-                    {t.toLocaleString()}
-                  </td>
-                ))}
-                <td className="p-4 text-right font-bold tnum text-[#0095A9]">
-                  {deptKpi.channelCostAlloc.totals.reduce((a, b) => a + b, 0).toLocaleString()}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+        )}
+      </ReportSection>
 
-      {/* 신규 KPI 정당화 */}
-      <section className="mt-10">
-        <div className="mb-3 flex items-center gap-2">
-          <h3 className="section-label">NEW KPI · 도입 사유</h3>
-          <EvidenceButton slotId="ovw_new_kpi_rationale" label="NEW KPI 도입 사유" variant="subtle" />
-        </div>
-        <div className="grid gap-px overflow-hidden rounded-md bg-stone-200/60 md:grid-cols-2">
-          {deptKpi.newKpiRationale.map((k) => (
-            <div key={k.kpi} className="bg-white p-4">
-              <div className="flex items-baseline justify-between gap-2">
-                <h4 className="text-[14px] font-semibold text-[#007a8c]">{k.kpi}</h4>
-                <span className="text-[10px] tracking-wider text-stone-400">{k.appliesTo}</span>
-              </div>
-              <p className="mt-1.5 text-[12px] leading-relaxed text-stone-600">{k.purpose}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Sections */}
-      <section id="sections" className="mt-10 scroll-mt-32">
-        <h3 className="section-label mb-3">SECTIONS</h3>
-        <div className="grid gap-px overflow-hidden rounded-md bg-stone-200/60 md:grid-cols-2">
-          {SECTIONS.map((q) => (
-            <Link
-              key={q.href}
-              href={q.href}
-              className="group flex items-start justify-between bg-white p-4 transition-colors hover:bg-[#e6f4f6]"
-            >
-              <div className="min-w-0">
-                <div className="text-[11px] font-medium tracking-[0.1em] text-stone-400">{q.tag}</div>
-                <div className="mt-1 text-[14px] font-semibold text-stone-900">{q.title}</div>
-                <div className="mt-0.5 text-[12px] text-stone-500">{q.desc}</div>
-              </div>
-              <ArrowUpRight className="h-4 w-4 shrink-0 text-stone-300 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#0095A9]" />
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Data Sources */}
-      <section className="mt-10 border-t border-stone-200/80 pt-6">
-        <h3 className="section-label mb-3">DATA SOURCES</h3>
-        <div className="space-y-2">
-          <SourceCaption>
-            부서·채널 배부 · {deptKpi.meta.source}
-          </SourceCaption>
-          <SourceCaption>
-            라이프 회원 master · {lifeKpi.meta.source} · {lifeKpi.meta.totalMembers.toLocaleString()}행 × 35열
-          </SourceCaption>
-          <SourceCaption>
-            장지 묘역 master · {zoneKpi.meta.source} · {zoneKpi.meta.totalZones.toLocaleString()}행 × 27열
-          </SourceCaption>
-          <SourceCaption>
-            As-is 확정 로직 · {asisLogic.meta.sources[0]} · {asisLogic.meta.sources[1]} — 0528 확정 · 더존 전달(260603)
-          </SourceCaption>
-          <SourceCaption>
-            T-Box 의미층 · 13 Class · 26 Property · 6 Axiom
-          </SourceCaption>
-        </div>
-      </section>
+      <p className="no-print mt-8 text-[11px] leading-relaxed text-stone-400">
+        {plData.meta.monthly_basis}
+      </p>
     </AppLayout>
+  );
+}
+
+// ---------------------------------------------------------------------------
+
+/** 장표 4p의 수지현황 표 */
+function CashTable({
+  scenario: sc,
+  period,
+  highlight = false,
+}: {
+  scenario: CashScenario;
+  period: Period;
+  highlight?: boolean;
+}) {
+  return (
+    <div className="print-card rounded-md border border-stone-200/80 bg-white p-5">
+      <div className="mb-3 flex items-baseline justify-between gap-3 border-b-2 border-stone-800 pb-2">
+        <h4 className="text-[13.5px] font-bold tracking-tight text-stone-900">
+          <span className="mr-1.5 inline-block h-2 w-2 translate-y-[-1px] bg-stone-800" />
+          {periodLabel(period)} {sc.label}
+        </h4>
+        <span className="text-[10.5px] text-stone-500">{sc.asof}</span>
+      </div>
+      <table className="w-full text-[12.5px]">
+        <thead>
+          <tr className="border-b border-stone-300 text-[11px] text-stone-500">
+            <th className="pb-2 text-left font-medium">구분</th>
+            <th className="pb-2 text-right font-medium">수입</th>
+            <th className="pb-2 text-right font-medium">지출</th>
+            <th className="pb-2 text-right font-medium">손익</th>
+            <th className="pb-2 text-right font-medium">손익율</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sc.rows.map((r) => {
+            const i = cashValue(r, "income", period);
+            const e = cashValue(r, "expense", period);
+            const p = i - e;
+            return (
+              <tr
+                key={r.entity}
+                className={
+                  r.total
+                    ? `${highlight ? "bg-[#e6f4f6]" : "bg-stone-100/70"} font-semibold`
+                    : "border-b border-stone-100"
+                }
+              >
+                <td className="px-1 py-2.5 text-stone-800">{r.entity}</td>
+                <td className="px-1 py-2.5 text-right tnum text-stone-800">{mn(i)}</td>
+                <td className="px-1 py-2.5 text-right tnum text-stone-600">{mn(e)}</td>
+                <td className="px-1 py-2.5 text-right tnum font-medium text-[#9a3412]">{mn(p)}</td>
+                <td className="px-1 py-2.5 text-right tnum text-stone-800">
+                  {i ? Math.round((p / i) * 100) : 0}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
