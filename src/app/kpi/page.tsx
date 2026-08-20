@@ -85,7 +85,6 @@ export default function KpiPage() {
   return (
     <AppLayout
       pageTitle="KPI"
-      pageSubtitle="조직별 관리 지표의 월별 추이. 카드의 핀을 누르면 Overview 화면에 고정된다."
     >
       <ReportCover
         title="조직별 KPI"

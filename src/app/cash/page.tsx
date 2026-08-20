@@ -129,7 +129,7 @@ export default function CashPage() {
   };
 
   return (
-    <AppLayout pageTitle="자금현황" pageSubtitle="현금 기준 수지. 계좌간 이체를 제거한 순액이다." period={label}>
+    <AppLayout pageTitle="자금현황" period={label}>
       <ReportCover
         title="매출 및 집행예산 Cash flow"
         period={label}

@@ -150,7 +150,6 @@ export default function PlPage() {
   return (
     <AppLayout
       pageTitle="법인별 손익"
-      pageSubtitle="발생 기준 손익. 내부거래를 제거하지 않은 법인 합산이다."
       period={label}
     >
       <ReportCover

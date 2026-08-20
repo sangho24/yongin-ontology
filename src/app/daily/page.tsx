@@ -118,7 +118,7 @@ export default function DailyPage() {
   };
 
   return (
-    <AppLayout pageTitle="일일마감" pageSubtitle={`기준 ${D.yongin.base}`}>
+    <AppLayout pageTitle="일일마감">
       <ReportCover
         title={tab === "yongin" ? "용인공원 일일 업무 보고" : "용인공원라이프 일일 업무 보고"}
         period={tab === "yongin" ? D.yongin.base : D.life.base}
@@ -136,10 +136,6 @@ export default function DailyPage() {
           onChange={setTab}
         />
         <ReportActions page={`daily-${tab}`} sections={sections} onCsv={handleCsv} />
-      </div>
-
-      <div className="no-print mb-6 text-[11.5px] text-stone-500">
-        기준 {tab === "yongin" ? D.yongin.base : D.life.base} · 단위 백만원, 건, %
       </div>
 
       {tab === "yongin" ? (

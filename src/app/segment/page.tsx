@@ -124,7 +124,7 @@ export default function SegmentPage() {
   };
 
   return (
-    <AppLayout pageTitle="부문별 손익" pageSubtitle={`${screens.meta.base} · 분양 · 관리비 · 상조`}>
+    <AppLayout pageTitle="부문별 손익">
       <ReportCover
         title="부문별 손익"
         period={label}
@@ -142,10 +142,6 @@ export default function SegmentPage() {
           <Segmented items={SEG_ITEMS} value={seg} onChange={setSeg} />
         </div>
         <ReportActions page="segment" sections={SECTIONS} onCsv={handleCsv} />
-      </div>
-
-      <div className="no-print mb-6 text-[11.5px] text-stone-500">
-        {screens.meta.base} · 단위 {screens.meta.unit}
       </div>
 
       <ReportSection

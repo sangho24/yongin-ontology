@@ -102,7 +102,7 @@ export default function CostPage() {
   };
 
   return (
-    <AppLayout pageTitle="26년 원가 및 손익" pageSubtitle={screens.meta.base}>
+    <AppLayout pageTitle="26년 원가 및 손익">
       <ReportCover
         title="26년 원가 및 손익"
         period="26년 7월"
@@ -119,10 +119,6 @@ export default function CostPage() {
           onChange={setTab}
         />
         <ReportActions page="cost" sections={SECTIONS} onCsv={handleCsv} />
-      </div>
-
-      <div className="no-print mb-6 text-[11.5px] text-stone-500">
-        {screens.meta.base} · 단위 {screens.meta.unit}, %
       </div>
 
       <ReportSection

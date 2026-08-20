@@ -108,7 +108,7 @@ export default function SalesPage() {
   };
 
   return (
-    <AppLayout pageTitle="법인별 매출실적" pageSubtitle={screens.meta.base}>
+    <AppLayout pageTitle="법인별 매출실적">
       <ReportCover
         title="용인공원그룹 매출실적"
         period={periodLabel}
@@ -126,10 +126,6 @@ export default function SalesPage() {
           onChange={setPeriod}
         />
         <ReportActions page="sales" sections={SECTIONS} onCsv={handleCsv} />
-      </div>
-
-      <div className="no-print mb-6 text-[11.5px] text-stone-500">
-        {screens.meta.base} · 단위 {screens.meta.unit}
       </div>
 
       {/* 차트 */}
