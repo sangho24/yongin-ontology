@@ -24,6 +24,10 @@ const SECTIONS: SectionDef[] = [
   { id: "table", label: "지표 추이표", note: "월별 값 · 전월 대비" },
 ];
 
+/** 회의자료 6·7p는 같은 팀이 손익 그룹별로 여러 행에 나온다. 겹치는 행만 구분자를 병기한다. */
+const teamName = (t: { label: string; scope?: string }) =>
+  t.scope ? `${t.label} (${t.scope})` : t.label;
+
 export default function KpiPage() {
   const [companyId, setCompanyId] = useState(kpiData.companies[0].id);
   const [teamId, setTeamId] = useState<string>("all");
@@ -45,7 +49,7 @@ export default function KpiPage() {
       teams.flatMap((t) =>
         t.kpis
           .filter((k) => typeFilter === "all" || k.type === typeFilter)
-          .map((k) => ({ ...k, team: t.label }))
+          .map((k) => ({ ...k, team: teamName(t) }))
       ),
     [teams, typeFilter]
   );
@@ -64,7 +68,7 @@ export default function KpiPage() {
     company.teams.forEach((t) => {
       t.kpis.forEach((k) => {
         rows.push([
-          t.label,
+          teamName(t),
           t.pl_group.join(" / "),
           k.type === "new" ? "신규 제안" : "기존",
           k.label,
@@ -86,7 +90,11 @@ export default function KpiPage() {
       <ReportCover
         title="조직별 KPI"
         period={periodLabel(period)}
-        scope={teamId === "all" ? company.label : `${company.label} · ${teams[0]?.label ?? ""}`}
+        scope={
+          teamId === "all"
+            ? company.label
+            : `${company.label} · ${teams[0] ? teamName(teams[0]) : ""}`
+        }
         unit="지표별 단위 상이"
       />
 
@@ -110,7 +118,7 @@ export default function KpiPage() {
         <Segmented
           items={[
             { id: "all", label: "전체 팀" },
-            ...company.teams.map((t) => ({ id: t.id, label: t.label })),
+            ...company.teams.map((t) => ({ id: t.id, label: teamName(t) })),
           ]}
           value={teamId}
           onChange={setTeamId}
@@ -155,7 +163,7 @@ export default function KpiPage() {
             label="조직"
             value={`${teams.length}`}
             unit="개 팀"
-            sub={teams.map((t) => t.label).join(" · ")}
+            sub={teams.map(teamName).join(" · ")}
           />
           <StatCard
             label="Overview 고정"
@@ -198,7 +206,7 @@ export default function KpiPage() {
               >
                 <div className="flex flex-wrap items-baseline justify-between gap-3">
                   <h3 className="text-[14px] font-semibold tracking-tight text-stone-900">
-                    {team.label}
+                    {teamName(team)}
                   </h3>
                   <div className="flex flex-wrap gap-1">
                     {team.pl_group.map((g) => (

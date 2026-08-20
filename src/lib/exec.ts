@@ -77,6 +77,8 @@ export type Kpi = {
 export type KpiTeam = {
   id: string;
   label: string;
+  /** 같은 팀명이 손익 그룹별로 여러 행에 나오는 경우의 구분자 (회의자료 6·7p 원본 구조) */
+  scope?: string;
   pl_group: string[];
   rationale: string;
   kpis: Kpi[];
