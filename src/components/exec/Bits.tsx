@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useState, useRef, useEffect } from "react";
-import { ArrowUp, ArrowDown, Download, Printer, Info } from "lucide-react";
+import { ArrowUp, ArrowDown, ChevronDown, Download, Printer, Info } from "lucide-react";
 import { MONTHS, delta, type Period, periodLabel } from "@/lib/exec";
 
 // =============================================================================
@@ -126,27 +126,17 @@ export function PeriodFilter({
   value: Period;
   onChange: (p: Period) => void;
 }) {
-  const items: Period[] = [...MONTHS.map((_, i) => i as Period), "cum"];
+  const items = [...MONTHS.map((_, i) => i as Period), "cum" as Period].map((p) => ({
+    id: String(p),
+    label: periodLabel(p),
+  }));
   return (
-    <div className="no-print inline-flex rounded-md border border-stone-200 bg-white p-0.5">
-      {items.map((p) => {
-        const active = p === value;
-        return (
-          <button
-            key={String(p)}
-            type="button"
-            onClick={() => onChange(p)}
-            className={`rounded px-2.5 py-1.5 text-[12px] font-medium tabular-nums transition-colors ${
-              active
-                ? "bg-stone-800 text-white"
-                : "text-stone-500 hover:bg-stone-50 hover:text-stone-800"
-            }`}
-          >
-            {periodLabel(p)}
-          </button>
-        );
-      })}
-    </div>
+    <Dropdown
+      label="기간"
+      items={items}
+      value={String(value)}
+      onChange={(v) => onChange(v === "cum" ? "cum" : (Number(v) as Period))}
+    />
   );
 }
 
@@ -183,6 +173,51 @@ export function Segmented<T extends string>({
           </button>
         );
       })}
+    </div>
+  );
+}
+
+/**
+ * 항목이 많아 한 줄로 늘어놓기 어려운 축(기간 등)에 쓰는 드롭다운.
+ * Segmented와 같은 인터페이스라 서로 바꿔 끼울 수 있다.
+ */
+export function Dropdown<T extends string>({
+  items,
+  value,
+  onChange,
+  label,
+}: {
+  items: { id: T; label: string }[];
+  value: T;
+  onChange: (v: T) => void;
+  /** 좌측에 붙는 설명 (예: 기간) */
+  label?: string;
+}) {
+  return (
+    <div className="no-print relative inline-flex items-center">
+      {label && (
+        <span className="pointer-events-none absolute left-3 text-[12px] text-stone-400">
+          {label}
+        </span>
+      )}
+      <select
+        value={value}
+        aria-label={label ?? "선택"}
+        onChange={(e) => onChange(e.target.value as T)}
+        className={`h-[34px] cursor-pointer appearance-none rounded-md border border-stone-200 bg-white py-1.5 pr-8 text-[12.5px] font-medium tracking-tight text-stone-800 transition-colors hover:border-stone-300 focus:border-[#0095A9] focus:outline-none ${
+          label ? "pl-[52px]" : "pl-3"
+        }`}
+      >
+        {items.map((it) => (
+          <option key={it.id} value={it.id}>
+            {it.label}
+          </option>
+        ))}
+      </select>
+      <ChevronDown
+        className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-stone-400"
+        strokeWidth={1.75}
+      />
     </div>
   );
 }

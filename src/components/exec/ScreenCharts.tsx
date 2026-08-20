@@ -20,7 +20,32 @@ import {
   YAxis,
 } from "recharts";
 import type { RenderableText } from "recharts/types/component/Text";
-import { num, rate, rateTone } from "@/lib/screens";
+import { num, rate, rateTone, type CoaHint } from "@/lib/screens";
+
+// -----------------------------------------------------------------------------
+// 계정코드 병기 — 화면에는 항목명만 두고, 구성 계정은 hover로만 펼친다.
+// (DK BMC 요청: BI 목업 테이블에 더존 계정코드 병기)
+// -----------------------------------------------------------------------------
+export type CoaHints = Record<string, CoaHint[]>;
+
+export function CoaList({ items }: { items: CoaHint[] }) {
+  return (
+    <div className="mt-1.5 border-t border-stone-100 pt-1.5">
+      <div className="mb-1 text-[9.5px] font-semibold uppercase tracking-[0.1em] text-stone-400">
+        더존 계정
+      </div>
+      <div className="space-y-0.5">
+        {items.map((a) => (
+          <div key={`${a.account}-${a.code}`} className="flex items-baseline gap-2 text-[10.5px]">
+            <span className="tnum shrink-0 text-stone-400">{a.code || "코드 미확정"}</span>
+            <span className="min-w-0 flex-1 truncate text-stone-600">{a.account}</span>
+            <span className="tnum shrink-0 text-stone-500">{num(a.amount ?? 0)}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const TEAL = "#0095A9";
 const TEAL_2 = "#65B3B1";
@@ -68,10 +93,12 @@ export function Waterfall({
   steps,
   height = 260,
   unit = "백만원",
+  hints,
 }: {
   steps: WaterfallStep[];
   height?: number;
   unit?: string;
+  hints?: CoaHints;
 }) {
   const data = buildWaterfall(steps);
 
@@ -92,13 +119,19 @@ export function Waterfall({
             content={({ active, payload }) => {
               if (!active || !payload?.length) return null;
               const d = payload[0].payload as Bar1;
+              const accounts = hints?.[d.name];
               return (
-                <div className="rounded-md border border-[var(--line)] bg-white px-2.5 py-1.5 text-[11.5px] shadow-sm">
+                <div
+                  className={`rounded-md border border-[var(--line)] bg-white px-2.5 py-1.5 text-[11.5px] shadow-sm ${
+                    accounts ? "w-[260px]" : ""
+                  }`}
+                >
                   <div className="font-medium text-stone-700">{d.name}</div>
                   <div className="tnum mt-0.5 text-stone-900">
                     {d.value > 0 ? "+" : ""}
                     {num(d.value)} {unit}
                   </div>
+                  {accounts && <CoaList items={accounts} />}
                 </div>
               );
             }}
@@ -358,10 +391,12 @@ export function ProfitStructureBars({
   rows,
   unit = "백만원",
   costLabel = "판관비",
+  hints,
 }: {
   rows: ProfitRow[];
   unit?: string;
   costLabel?: string;
+  hints?: CoaHints;
 }) {
   // 매출과 비용 중 큰 쪽을 기준으로 폭을 잡아야 적자 구간이 잘리지 않는다
   const max = Math.max(...rows.flatMap((r) => [r.revenue, r.cost]), 1);
@@ -379,7 +414,25 @@ export function ProfitStructureBars({
         return (
           <div key={r.name}>
             <div className="mb-1 flex items-baseline justify-between gap-3">
-              <span className="text-[12px] font-medium text-stone-700">{r.name}</span>
+              <span className="group relative text-[12px] font-medium text-stone-700">
+                <span
+                  className={
+                    hints?.[r.name]
+                      ? "cursor-help underline decoration-stone-300 decoration-dotted underline-offset-[3px]"
+                      : ""
+                  }
+                >
+                  {r.name}
+                </span>
+                {hints?.[r.name] && (
+                  <span className="no-print pointer-events-none absolute left-0 top-full z-30 hidden w-[260px] rounded-md border border-[var(--line)] bg-white px-2.5 py-1.5 shadow-lg group-hover:block">
+                    <span className="block text-[11.5px] font-medium text-stone-700">
+                      {r.name} 매출
+                    </span>
+                    <CoaList items={hints[r.name]} />
+                  </span>
+                )}
+              </span>
               <span className="flex items-baseline gap-2.5 text-[11px] text-stone-400">
                 <span className="tnum">매출 {num(r.revenue)}</span>
                 <span className="tnum">
@@ -463,11 +516,13 @@ export function RankBars({
   unit = "백만원",
   tone = "teal",
   digits = 0,
+  hints,
 }: {
   rows: { label: string; sub?: string; value: number }[];
   unit?: string;
   tone?: "teal" | "brick";
   digits?: number;
+  hints?: CoaHints;
 }) {
   const max = Math.max(...rows.map((r) => Math.abs(r.value)), 1);
   const color = tone === "brick" ? BRICK_2 : TEAL;
@@ -476,9 +531,23 @@ export function RankBars({
     <div className="space-y-2">
       {rows.map((r) => (
         <div key={r.label} className="grid grid-cols-[128px_1fr_74px] items-center gap-3">
-          <div className="min-w-0">
-            <div className="truncate text-[11.5px] text-stone-700">{r.label}</div>
+          <div className="group relative min-w-0">
+            <div
+              className={`truncate text-[11.5px] text-stone-700 ${
+                hints?.[r.label]
+                  ? "cursor-help underline decoration-stone-300 decoration-dotted underline-offset-[3px]"
+                  : ""
+              }`}
+            >
+              {r.label}
+            </div>
             {r.sub && <div className="truncate text-[10px] text-stone-400">{r.sub}</div>}
+            {hints?.[r.label] && (
+              <div className="no-print pointer-events-none absolute left-0 top-full z-30 hidden w-[260px] rounded-md border border-[var(--line)] bg-white px-2.5 py-1.5 shadow-lg group-hover:block">
+                <div className="text-[11.5px] font-medium text-stone-700">{r.label}</div>
+                <CoaList items={hints[r.label]} />
+              </div>
+            )}
           </div>
           <div className="h-3.5 rounded bg-stone-100">
             <div

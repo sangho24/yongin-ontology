@@ -227,6 +227,9 @@ export type CoaRow = {
   reason: string;
 };
 
+/** 화면 항목 ↔ 더존 계정코드 (DK BMC 병기 요청). 금액 대사가 맞는 항목만 싣는다. */
+export type CoaHint = { account: string; code: string; amount: number | null };
+
 export type ScreensData = {
   meta: {
     base: string;
@@ -267,6 +270,8 @@ export type ScreensData = {
   };
   rfi: Record<string, RfiItem>;
   coa: CoaRow[];
+  /** 화면 → 축(법인 · 부문) → 항목명 → 구성 계정. 금액 대사가 맞는 항목만 들어 있다. */
+  coa_map: Record<"pl" | "segment", Record<string, Record<string, CoaHint[]>>>;
 };
 
 export const screens = raw as unknown as ScreensData;

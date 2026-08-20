@@ -10,7 +10,7 @@
 import { useMemo, useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { Card, StatCard } from "@/components/Card";
-import { NoFigures, Segmented } from "@/components/exec/Bits";
+import { InfoTip, NoFigures, Dropdown, Segmented, TipRow } from "@/components/exec/Bits";
 import { ReportActions, ReportCover, ReportSection, type SectionDef } from "@/components/exec/Report";
 import {
   Waterfall,
@@ -111,6 +111,12 @@ export default function PlPage() {
   );
 
   // 선택 법인의 매출 구성
+  // 계정코드 병기 — 누계는 월 계정 구성과 모수가 달라 월 실적일 때만 붙인다
+  const coaHints = useMemo(
+    () => (cum ? undefined : screens.coa_map.pl[company]),
+    [company, cum],
+  );
+
   const mix = useMemo(
     () =>
       P.company
@@ -155,7 +161,8 @@ export default function PlPage() {
 
       <div className="no-print mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <Segmented
+          <Dropdown
+            label="기간"
             items={PERIOD_ITEMS}
             value={periodId(period)}
             onChange={(v) => setPeriod(parsePeriod(v))}
@@ -231,11 +238,21 @@ export default function PlPage() {
         id="bridge"
         title="손익 구조"
         meta={`${company} · 매출에서 비용 차감까지`}
+        info={
+          <InfoTip title="계정코드" align="left">
+            <TipRow label="보는 법">
+              막대에 마우스를 올리면 그 항목을 구성하는 더존 계정과 코드가 함께 펼쳐진다.
+            </TipRow>
+            <TipRow label="범위">
+              26.07 실적에 한한다. 누계는 계정 구성의 모수가 달라 붙이지 않는다.
+            </TipRow>
+          </InfoTip>
+        }
         enabled={isOn("bridge")}
       >
         {figures && !cum ? (
           <Card>
-            <Waterfall steps={bridge} height={252} />
+            <Waterfall steps={bridge} height={252} hints={coaHints} />
           </Card>
         ) : (
           <NoFigures note={cum ? "판관비 · 이익의 누계 자료를 받지 못했습니다." : NO_MONTHLY} />
@@ -246,11 +263,21 @@ export default function PlPage() {
         id="mix"
         title="매출 구성"
         meta={`${company} · 항목별 실적`}
+        info={
+          <InfoTip title="계정코드" align="left">
+            <TipRow label="보는 법">
+              항목 이름(점선)에 마우스를 올리면 그 항목을 구성하는 더존 계정과 코드가 펼쳐진다.
+            </TipRow>
+            <TipRow label="범위">
+              26.07 실적에 한한다. 누계는 계정 구성의 모수가 달라 붙이지 않는다.
+            </TipRow>
+          </InfoTip>
+        }
         enabled={isOn("mix")}
       >
         {figures && !cum && mix.length > 0 ? (
           <Card>
-            <RankBars rows={mix} />
+            <RankBars rows={mix} hints={coaHints} />
           </Card>
         ) : (
           <NoFigures note={cum ? "항목별 누계 자료를 받지 못했습니다." : NO_MONTHLY} />

@@ -18,10 +18,10 @@ import {
 } from "recharts";
 import { AppLayout } from "@/components/AppLayout";
 import { Card, StatCard, WowCard } from "@/components/Card";
-import { Gauge, NoFigures, Segmented } from "@/components/exec/Bits";
+import { Gauge, NoFigures, Dropdown } from "@/components/exec/Bits";
 import { ReportSection, ReportCover, ReportActions, type SectionDef } from "@/components/exec/Report";
 import { CashBlockCard, BalanceTable, buildCashBlocks } from "@/components/exec/CashBlocks";
-import { ProfitStructureBars, TargetBars } from "@/components/exec/ScreenCharts";
+import { CoaList, ProfitStructureBars, TargetBars } from "@/components/exec/ScreenCharts";
 import { useReportSections, usePinnedKpis } from "@/store/prefs";
 import { downloadCsv, stamp } from "@/lib/export";
 import { allKpis, kpiNumber } from "@/lib/exec";
@@ -150,6 +150,10 @@ export default function OverviewPage() {
   // ---------------------------------------------------------------------------
   // 손익 · 매출 · 원가 — 26.07(월)과 누계 두 벌만 있다
   // ---------------------------------------------------------------------------
+  /** 계정코드 병기 — 월 실적일 때만 */
+  const plHints = cum ? undefined : screens.coa_map.pl;
+  const segHints = cum ? undefined : screens.coa_map.segment;
+
   const plRows = useMemo(
     () =>
       (["용인공원", "YPL", "라이프"] as const).map((c) => ({
@@ -329,7 +333,6 @@ export default function OverviewPage() {
   return (
     <AppLayout
       pageTitle="Overview"
-      pageSubtitle="그룹 3사 전체를 한 장에 담는다. 자금은 현금, 손익은 발생 기준이라 모수가 다르다."
       period={label}
     >
       <ReportCover
@@ -339,7 +342,8 @@ export default function OverviewPage() {
       />
 
       <div className="no-print mb-6 flex flex-wrap items-center justify-between gap-3">
-        <Segmented
+        <Dropdown
+          label="기간"
           items={PERIOD_ITEMS}
           value={periodId(period)}
           onChange={(v) => setPeriod(parsePeriod(v))}
@@ -547,7 +551,7 @@ export default function OverviewPage() {
       >
         {figures ? (
           <Card title="매출 구성" subtitle="막대 길이는 매출 규모, 내부는 판관비와 이익">
-            <ProfitStructureBars rows={plRows} />
+            <ProfitStructureBars rows={plRows} hints={plHints && Object.fromEntries(Object.entries(plHints).map(([k, v]) => [k, v["매출"]]).filter(([, v]) => v))} />
           </Card>
         ) : (
           <NoFigures note={NO_MONTHLY} />
@@ -574,6 +578,9 @@ export default function OverviewPage() {
                   value={num(prof)}
                   unit="백만원"
                   sub={`매출 ${num(rev)} · 이익률 ${rev ? pct((prof / rev) * 100, 0) : "-"}`}
+                  hint={
+                    segHints?.[s]?.["매출액"] ? <CoaList items={segHints[s]["매출액"]} /> : undefined
+                  }
                 />
               );
             })}

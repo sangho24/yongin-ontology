@@ -109,6 +109,7 @@ export function StatCard({
   trendValue,
   footnote,
   slotId,
+  hint,
 }: {
   label: string;
   value: string;
@@ -118,6 +119,8 @@ export function StatCard({
   trendValue?: string;
   footnote?: string;
   slotId?: string;
+  /** 라벨에 hover하면 펼쳐지는 보조 정보 (계정코드 등) */
+  hint?: ReactNode;
 }) {
   const TrendIcon = trend === "up" ? ArrowUp : trend === "down" ? ArrowDown : Minus;
   const trendClr =
@@ -126,7 +129,21 @@ export function StatCard({
   return (
     <div className="print-card group rounded-md border border-stone-200/80 bg-white p-5 transition-colors duration-150 hover:border-stone-300">
       <div className="flex items-start justify-between gap-2">
-        <div className="text-[12px] font-medium uppercase tracking-[0.08em] text-stone-500">{label}</div>
+        <div className="group/hint relative text-[12px] font-medium uppercase tracking-[0.08em] text-stone-500">
+          <span
+            className={
+              hint ? "cursor-help underline decoration-stone-300 decoration-dotted underline-offset-[3px]" : ""
+            }
+          >
+            {label}
+          </span>
+          {hint && (
+            <div className="no-print pointer-events-none absolute left-0 top-full z-30 hidden w-[260px] rounded-md border border-[var(--line)] bg-white px-2.5 py-1.5 normal-case tracking-normal shadow-lg group-hover/hint:block">
+              <div className="text-[11.5px] font-medium text-stone-700">{label}</div>
+              {hint}
+            </div>
+          )}
+        </div>
         {slotId && <EvidenceButton slotId={slotId} label={label} variant="subtle" />}
       </div>
       <div className="mt-2 flex items-baseline gap-1.5">

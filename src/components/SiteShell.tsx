@@ -48,7 +48,7 @@ const NAV: { group: string; items: { path: string; label: string; sub?: string; 
     items: [{ path: "/", label: "Overview", sub: "자금 · 손익 · KPI 요약" }],
   },
   {
-    group: "손익 (발생 기준)",
+    group: "손익",
     items: [
       { path: "/pl", label: "법인별 손익", sub: "용인공원 · YPL · 라이프" },
       { path: "/segment", label: "부문별 손익", sub: "분양 · 관리비 · 상조" },
@@ -57,7 +57,7 @@ const NAV: { group: string; items: { path: string; label: string; sub?: string; 
     ],
   },
   {
-    group: "자금 (현금 기준)",
+    group: "자금",
     items: [{ path: "/cash", label: "자금현황", sub: "법인별 Cash flow" }],
   },
   {

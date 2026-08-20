@@ -9,7 +9,7 @@
 import { useMemo, useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { Card, StatCard } from "@/components/Card";
-import { NoFigures, Segmented } from "@/components/exec/Bits";
+import { NoFigures, Dropdown, Segmented } from "@/components/exec/Bits";
 import { ReportActions, ReportCover, ReportSection, type SectionDef } from "@/components/exec/Report";
 import { CashBlockCard, BalanceTable, buildCashBlocks } from "@/components/exec/CashBlocks";
 import { Waterfall, RankBars, type WaterfallStep } from "@/components/exec/ScreenCharts";
@@ -138,7 +138,8 @@ export default function CashPage() {
 
       <div className="no-print mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <Segmented
+          <Dropdown
+            label="기간"
             items={PERIOD_ITEMS}
             value={periodId(period)}
             onChange={(v) => setPeriod(parsePeriod(v))}
