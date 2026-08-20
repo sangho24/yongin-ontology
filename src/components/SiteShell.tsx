@@ -39,7 +39,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
 // -----------------------------------------------------------------------------
 // 메뉴는 보고 층위 그대로 쌓는다.
 //   그룹 전체(Overview) → 법인 → 부문 → 상품·채널 → 조직 순으로 내려가고,
-//   기준이 다른 자금(현금주의) · 지표 · 일 단위는 아래에 따로 둔다.
+//   기준이 다른 자금(현금주의)과 지표(KPI · 일일마감)는 아래에 따로 둔다.
 // Overview는 아래 모든 화면의 요약을 한 장에 담는다.
 // -----------------------------------------------------------------------------
 const NAV: { group: string; items: { path: string; label: string; sub?: string; badge?: string }[] }[] = [
@@ -61,7 +61,7 @@ const NAV: { group: string; items: { path: string; label: string; sub?: string; 
     items: [{ path: "/cash", label: "자금현황", sub: "법인별 Cash flow" }],
   },
   {
-    group: "지표 · 일 단위",
+    group: "지표",
     items: [
       { path: "/kpi", label: "KPI", sub: "조직별 지표 추이" },
       { path: "/daily", label: "일일마감", sub: "장지 · 상조" },
