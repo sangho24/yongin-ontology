@@ -609,7 +609,7 @@ export default function OverviewPage() {
                 : undefined
             }
           >
-            <TargetBars rows={salesBars} />
+            <TargetBars rows={salesBars} sortable />
           </Card>
         ) : (
           <NoFigures note={NO_MONTHLY} />
@@ -696,10 +696,10 @@ export default function OverviewPage() {
       >
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2 print-cols-2">
           <Card title="장지 (용인공원)" subtitle="월 누적 실적 · 목표">
-            <TargetBars rows={dailyYongin} />
+            <TargetBars rows={dailyYongin} sortable />
           </Card>
           <Card title="상조 (온유상조)" subtitle="사업현황 · 월 누적">
-            <TargetBars rows={dailyLife} />
+            <TargetBars rows={dailyLife} sortable />
           </Card>
         </div>
       </ReportSection>

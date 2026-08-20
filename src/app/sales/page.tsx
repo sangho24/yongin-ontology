@@ -148,7 +148,7 @@ export default function SalesPage() {
         enabled={isOn("bullet")}
       >
         <Card>
-          <TargetBars rows={bulletRows} />
+          <TargetBars rows={bulletRows} sortable />
         </Card>
       </ReportSection>
     </AppLayout>

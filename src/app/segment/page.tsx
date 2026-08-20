@@ -225,6 +225,8 @@ export default function SegmentPage() {
         <div className="grid grid-cols-1 gap-5">
           <Card title="부서별 손익" subtitle="아마란스 「부문별 손익현황 [부서]」">
             <TargetBars
+              sortable
+              rateLabel="매출 대비 이익"
               rows={P.dept
                 .filter((d) => d.profit !== null && d.code !== "0000")
                 .map((d) => ({

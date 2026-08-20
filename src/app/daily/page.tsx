@@ -194,7 +194,7 @@ function YonginDaily({ isOn }: { isOn: (id: string) => boolean }) {
         first
       >
         <Card>
-          <TargetBars rows={bullets} />
+          <TargetBars rows={bullets} sortable />
         </Card>
       </ReportSection>
 
@@ -283,7 +283,7 @@ function LifeDaily({ isOn }: { isOn: (id: string) => boolean }) {
         enabled={isOn("biz")}
       >
         <Card>
-          <TargetBars rows={bizBullets} />
+          <TargetBars rows={bizBullets} sortable />
         </Card>
       </ReportSection>
     </>

@@ -9,6 +9,8 @@
 //   FunnelSteps 단계별 전환
 //   CompareBars 계열 비교 (목표 · 수정전망 · 실행)
 // =============================================================================
+import { useState } from "react";
+import { ArrowDownWideNarrow, ArrowUpNarrowWide } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -163,15 +165,52 @@ export function Waterfall({
 export function TargetBars({
   rows,
   max: maxProp,
+  sortable = false,
+  rateLabel = "달성률",
 }: {
   rows: { label: string; sub?: string; target: number; actual: number }[];
   max?: number;
+  /** 비율 기준 정렬 토글을 노출한다 (달성률이 의미 있는 화면에서만) */
+  sortable?: boolean;
+  rateLabel?: string;
 }) {
+  const [sort, setSort] = useState<"none" | "desc" | "asc">("none");
   const max = maxProp ?? Math.max(...rows.flatMap((r) => [r.target, r.actual]), 1);
+
+  const shown =
+    sort === "none"
+      ? rows
+      : [...rows].sort((a, b) => {
+          const ra = rate(a.actual, a.target) ?? -Infinity;
+          const rb = rate(b.actual, b.target) ?? -Infinity;
+          return sort === "desc" ? rb - ra : ra - rb;
+        });
+
+  const nextSort = () => setSort(sort === "none" ? "desc" : sort === "desc" ? "asc" : "none");
+  const SortIcon = sort === "asc" ? ArrowUpNarrowWide : ArrowDownWideNarrow;
 
   return (
     <div className="space-y-2">
-      {rows.map((r) => {
+      {sortable && (
+        <div className="no-print flex justify-end">
+          <button
+            type="button"
+            onClick={nextSort}
+            aria-label={`${rateLabel} 정렬`}
+            className={`inline-flex items-center gap-1 rounded border px-2 py-1 text-[10.5px] font-medium transition-colors ${
+              sort === "none"
+                ? "border-stone-200 text-stone-400 hover:border-stone-300 hover:text-stone-600"
+                : "border-[#0095A9] bg-[#0095A9]/5 text-[#0095A9]"
+            }`}
+          >
+            <SortIcon className="h-3 w-3" strokeWidth={1.75} />
+            {rateLabel}
+            {sort !== "none" && (sort === "desc" ? " 높은 순" : " 낮은 순")}
+          </button>
+        </div>
+      )}
+
+      {shown.map((r) => {
         const rr = rate(r.actual, r.target);
         const aw = Math.max(0, (r.actual / max) * 100);
         const tw = Math.max(0, (r.target / max) * 100);
@@ -182,27 +221,51 @@ export function TargetBars({
               <div className="truncate text-[11.5px] text-stone-700">{r.label}</div>
               {r.sub && <div className="truncate text-[10px] text-stone-400">{r.sub}</div>}
             </div>
-            <div className="relative h-4 rounded bg-stone-100">
-              {/* 목표 마커 */}
+
+            <div
+              className="group relative h-4 rounded bg-stone-100"
+              title={`실적 ${num(r.actual)} / 목표 ${num(r.target)}`}
+            >
+              {/* 목표 구간 — 어디까지 채워야 100%인지 바탕으로 보여준다 */}
               <div
-                className="absolute top-[-2px] z-10 h-[20px] w-px bg-stone-500"
-                style={{ left: `${Math.min(100, tw)}%` }}
-                title={`목표 ${num(r.target)}`}
+                className="absolute inset-y-0 left-0 rounded bg-stone-200/70"
+                style={{ width: `${Math.min(100, tw)}%` }}
               />
+              {/* 실적 */}
               <div
-                className="h-full rounded transition-all duration-500"
+                className="absolute inset-y-0 left-0 rounded transition-all duration-500"
                 style={{
                   width: `${Math.min(100, aw)}%`,
                   backgroundColor: over ? TEAL : BRICK_2,
                 }}
               />
+              {/* 목표선 — 구간의 끝 */}
+              <div
+                className="absolute -top-1 z-10 h-6 w-[1.5px] rounded-full bg-stone-600"
+                style={{ left: `${Math.min(100, tw)}%` }}
+              />
+              <div
+                className="absolute -top-[7px] z-10 -translate-x-1/2 text-[7px] leading-none text-stone-600"
+                style={{ left: `${Math.min(100, tw)}%` }}
+              >
+                ▼
+              </div>
+              {/* 목표 금액 — hover 시에만 */}
+              <div
+                className="no-print pointer-events-none absolute -top-6 z-20 hidden -translate-x-1/2 whitespace-nowrap rounded border border-stone-200 bg-white px-1.5 py-0.5 text-[10px] tabular-nums text-stone-600 shadow-sm group-hover:block"
+                style={{ left: `${Math.min(100, tw)}%` }}
+              >
+                목표 {num(r.target)}
+              </div>
             </div>
+
             <div className={`tnum text-right text-[11.5px] font-medium ${rateTone(rr)}`}>
               {rr === null ? "-" : `${rr.toFixed(0)}%`}
             </div>
           </div>
         );
       })}
+
       <div className="flex items-center gap-3 pt-1 text-[10px] text-stone-400">
         <span className="inline-flex items-center gap-1">
           <span className="h-2 w-3 rounded-sm" style={{ backgroundColor: TEAL }} />
@@ -213,8 +276,12 @@ export function TargetBars({
           미달
         </span>
         <span className="inline-flex items-center gap-1">
-          <span className="h-3 w-px bg-stone-500" />
-          목표
+          <span className="h-2 w-3 rounded-sm bg-stone-200" />
+          목표 구간
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <span className="h-3 w-[1.5px] rounded-full bg-stone-600" />
+          목표선
         </span>
       </div>
     </div>
