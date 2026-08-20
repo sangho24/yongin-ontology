@@ -1,0 +1,5300 @@
+{
+  "meta": {
+    "base": "2026년 7월 마감 기준 (26.07.31)",
+    "cum_label": "26년 누계 (25.12~26.07)",
+    "unit": "백만원",
+    "version": "v1.0 (2026-08-19)",
+    "source": "재무회계팀 제공 FC Dashboard(260818) + 경영진 보고 화면 4종 + 일일보고 2종",
+    "note": "화면은 현업 보고 양식을 그대로 재현하였습니다. 각 수치의 판정 배지를 누르면 더존 계정까지의 추적 결과와 확인요청 번호를 확인할 수 있습니다."
+  },
+  "verdicts": {
+    "confirmed": "원장 확인",
+    "reclass": "재분류 필요",
+    "gap": "차액 미확인",
+    "external": "원장 밖",
+    "unset": "기준 미확정",
+    "derived": "계산값"
+  },
+  "sales": {
+    "rows": [
+      {
+        "company": "용인공원",
+        "cat": "분양",
+        "detail": "묘 지",
+        "t_m": 1116,
+        "a_m": 1354,
+        "t_c": 9450,
+        "a_c": 9136,
+        "trace": {
+          "verdict": "confirmed",
+          "label": "원장 확인",
+          "ledger": 1354.25,
+          "diff": 0.25,
+          "accounts": [
+            {
+              "account": "사용료수입(일반)",
+              "code": "4040000",
+              "amount": 1354.25,
+              "confidence": "high"
+            }
+          ],
+          "note": "더존 사용료수입(일반) 계정과 1:1로 일치합니다.",
+          "rfi": [],
+          "formula": "사용료수입(일반)"
+        }
+      },
+      {
+        "company": "용인공원",
+        "cat": "분양",
+        "detail": "봉안당",
+        "t_m": 3380,
+        "a_m": 3499,
+        "t_c": 25686,
+        "a_c": 22737,
+        "trace": {
+          "verdict": "reclass",
+          "label": "재분류 필요",
+          "ledger": 3522.36,
+          "diff": 23.36,
+          "accounts": [
+            {
+              "account": "사용료수입(아너)",
+              "code": "4110000",
+              "amount": 3522.36,
+              "confidence": "high"
+            }
+          ],
+          "note": "원장 사용료수입(아너) 3,522.36 대비 화면 3,499로 23.36 적습니다. 아너 계정에 계상된 서비스상품을 서비스매출로 옮긴 것으로 추정되며 기준 확인이 필요합니다.",
+          "rfi": [
+            "F-04"
+          ],
+          "formula": "사용료수입(아너) - 서비스 재분류분"
+        }
+      },
+      {
+        "company": "용인공원",
+        "cat": "관리비",
+        "detail": "묘지",
+        "t_m": 400,
+        "a_m": 468,
+        "t_c": 3293,
+        "a_c": 3530,
+        "trace": {
+          "verdict": "confirmed",
+          "label": "원장 확인",
+          "ledger": 467.63,
+          "diff": null,
+          "accounts": [
+            {
+              "account": "관리비수입(야외)",
+              "code": "4120002",
+              "amount": 400.3,
+              "confidence": "high"
+            },
+            {
+              "account": "신규관리비수입(야외)",
+              "code": "4120004",
+              "amount": 33.24,
+              "confidence": "high"
+            },
+            {
+              "account": "조경관리비수입",
+              "code": "4120005",
+              "amount": 23.33,
+              "confidence": "high"
+            },
+            {
+              "account": "신규조경관리비수입",
+              "code": "4120006",
+              "amount": 8.56,
+              "confidence": "high"
+            }
+          ],
+          "note": "야외 관리비 계열 4개 계정의 합과 일치합니다.",
+          "rfi": [],
+          "formula": "관리비수입(야외) + 신규관리비수입(야외) + 조경관리비수입 + 신규조경관리비수입"
+        }
+      },
+      {
+        "company": "용인공원",
+        "cat": "관리비",
+        "detail": "봉안당",
+        "t_m": 130,
+        "a_m": 133,
+        "t_c": 1115,
+        "a_c": 981,
+        "trace": {
+          "verdict": "confirmed",
+          "label": "원장 확인",
+          "ledger": 133.44,
+          "diff": null,
+          "accounts": [
+            {
+              "account": "관리비수입(아너)",
+              "code": "4120001",
+              "amount": 36.54,
+              "confidence": "high"
+            },
+            {
+              "account": "신규관리비수입(아너)",
+              "code": "4120003",
+              "amount": 96.9,
+              "confidence": "high"
+            }
+          ],
+          "note": "아너 관리비 계열 2개 계정의 합과 일치합니다.",
+          "rfi": [],
+          "formula": "관리비수입(아너) + 신규관리비수입(아너)"
+        }
+      },
+      {
+        "company": "용인공원",
+        "cat": "서비스(온+오프)",
+        "detail": "",
+        "t_m": 203,
+        "a_m": 160,
+        "t_c": 1801,
+        "a_c": 1358,
+        "trace": {
+          "verdict": "reclass",
+          "label": "재분류 필요",
+          "ledger": 137.26,
+          "diff": -22.74,
+          "accounts": [
+            {
+              "account": "이장비수입",
+              "code": "4090000",
+              "amount": 24.3,
+              "confidence": "high"
+            },
+            {
+              "account": "장례비수입",
+              "code": "4140000",
+              "amount": 35.15,
+              "confidence": "high"
+            },
+            {
+              "account": "사초비수입",
+              "code": "4170000",
+              "amount": 0.7,
+              "confidence": "high"
+            },
+            {
+              "account": "안치료수입",
+              "code": "4180000",
+              "amount": 31.25,
+              "confidence": "high"
+            },
+            {
+              "account": "기타수입",
+              "code": "4190000",
+              "amount": 45.86,
+              "confidence": "high"
+            }
+          ],
+          "note": "원장 서비스 계열 5개 계정 합 137.26 대비 화면 160으로 22.74 많습니다. 봉안당(아너) 계정에서 이관된 것으로 추정됩니다.",
+          "rfi": [
+            "F-04"
+          ],
+          "formula": "이장비 + 장례비 + 사초비 + 안치료 + 기타수입 + 아너 이관분"
+        }
+      },
+      {
+        "company": "용인공원",
+        "cat": "기타",
+        "detail": "",
+        "t_m": 6,
+        "a_m": 6,
+        "t_c": 48,
+        "a_c": 49,
+        "trace": {
+          "verdict": "confirmed",
+          "label": "원장 확인",
+          "ledger": 6.3,
+          "diff": null,
+          "accounts": [
+            {
+              "account": "임대료수입",
+              "code": "4160000",
+              "amount": 6.3,
+              "confidence": "high"
+            }
+          ],
+          "note": "임대료수입과 일치합니다. 다만 「원가 및 손익」 화면에서는 같은 항목이 25로 표기됩니다.",
+          "rfi": [
+            "F-05"
+          ],
+          "formula": "임대료수입"
+        }
+      },
+      {
+        "company": "라이프",
+        "cat": "부금·행사",
+        "detail": "부금",
+        "t_m": 808,
+        "a_m": 627,
+        "t_c": 6419,
+        "a_c": 5080,
+        "trace": {
+          "verdict": "external",
+          "label": "원장 밖",
+          "ledger": null,
+          "diff": null,
+          "accounts": [],
+          "note": "상조 부금은 회계상 선수금으로 처리되어 재무제표 매출에 포함되지 않습니다. 상조 회원관리 시스템의 관리회계 수치입니다.",
+          "rfi": [
+            "F-10",
+            "B-03"
+          ],
+          "formula": "상조 회원관리 - 부금 매출"
+        }
+      },
+      {
+        "company": "라이프",
+        "cat": "부금·행사",
+        "detail": "행사",
+        "t_m": 686,
+        "a_m": 356,
+        "t_c": 4396,
+        "a_c": 3212,
+        "trace": {
+          "verdict": "external",
+          "label": "원장 밖",
+          "ledger": null,
+          "diff": null,
+          "accounts": [
+            {
+              "account": "장례지원서비스매출",
+              "code": "4120005",
+              "amount": 387.07,
+              "confidence": "high"
+            }
+          ],
+          "note": "재무제표 장례지원서비스매출은 387.07이나 화면은 356입니다. 「원가 및 손익」 화면에서는 같은 항목이 377(용품 포함)로 표기됩니다.",
+          "rfi": [
+            "F-10",
+            "F-15"
+          ],
+          "formula": "상조 회원관리 - 행사 매출"
+        }
+      },
+      {
+        "company": "라이프",
+        "cat": "부금·행사",
+        "detail": "기타/장지수수료",
+        "t_m": 238,
+        "a_m": 28,
+        "t_c": 1403,
+        "a_c": 261,
+        "trace": {
+          "verdict": "external",
+          "label": "원장 밖",
+          "ledger": null,
+          "diff": null,
+          "accounts": [
+            {
+              "account": "묘지매출",
+              "code": "4120003",
+              "amount": 7.6,
+              "confidence": "high"
+            }
+          ],
+          "note": "재무제표 묘지매출 7.60과 차이가 있습니다. 장지 수수료·이장용품 등이 포함된 관리회계 수치입니다.",
+          "rfi": [
+            "F-10",
+            "F-15"
+          ],
+          "formula": "상조 회원관리 - 장지 + 이장용품"
+        }
+      },
+      {
+        "company": "YPL",
+        "cat": "판매수수료",
+        "detail": "마케팅대행",
+        "t_m": 1978,
+        "a_m": 1601,
+        "t_c": 15432,
+        "a_c": 12382,
+        "trace": {
+          "verdict": "gap",
+          "label": "차액 미확인",
+          "ledger": 1917.63,
+          "diff": 316.63,
+          "accounts": [
+            {
+              "account": "수입수수료",
+              "code": "4130000",
+              "amount": 1917.63,
+              "confidence": "high"
+            }
+          ],
+          "note": "YPL 재무제표 수입수수료는 1,917.63이나 화면은 1,601입니다. 용인공원 마케팅수수료(1,563.13)와도 차이가 있어 집계 기준 확인이 필요합니다. 그룹계 산출 시 제거되는 내부거래 기준 금액입니다.",
+          "rfi": [
+            "D-05"
+          ],
+          "formula": "수입수수료 중 마케팅대행분"
+        }
+      },
+      {
+        "company": "YPL",
+        "cat": "판매수수료",
+        "detail": "기타",
+        "t_m": 5,
+        "a_m": 10,
+        "t_c": 40,
+        "a_c": 101,
+        "trace": {
+          "verdict": "confirmed",
+          "label": "원장 확인",
+          "ledger": 6.07,
+          "diff": null,
+          "accounts": [
+            {
+              "account": "임대료수입",
+              "code": "4110000",
+              "amount": 6.07,
+              "confidence": "high"
+            }
+          ],
+          "note": "임대료수입 기준입니다.",
+          "rfi": [],
+          "formula": "임대료수입"
+        }
+      }
+    ],
+    "totals": [
+      {
+        "company": "용인공원",
+        "t_m": 5235,
+        "a_m": 5620,
+        "t_c": 41393,
+        "a_c": 37791,
+        "trace": {
+          "verdict": "derived",
+          "label": "계산값",
+          "ledger": 5621.24,
+          "diff": null,
+          "accounts": [],
+          "note": "용인공원 7월 매출액 5,621.24와 일치합니다(반올림 1 차이).",
+          "rfi": [],
+          "formula": "분양 + 관리비 + 서비스 + 기타"
+        }
+      },
+      {
+        "company": "라이프",
+        "t_m": 1732,
+        "a_m": 1011,
+        "t_c": 12218,
+        "a_c": 8553,
+        "trace": {
+          "verdict": "external",
+          "label": "원장 밖",
+          "ledger": 394.67,
+          "diff": null,
+          "accounts": [],
+          "note": "재무제표 매출액은 394.67입니다. 화면은 부금 기준 관리회계로 1,011입니다.",
+          "rfi": [
+            "F-10"
+          ],
+          "formula": "부금 + 행사 + 기타/장지수수료"
+        }
+      },
+      {
+        "company": "YPL",
+        "t_m": 1983,
+        "a_m": 1611,
+        "t_c": 15472,
+        "a_c": 12483,
+        "trace": {
+          "verdict": "gap",
+          "label": "차액 미확인",
+          "ledger": 1923.69,
+          "diff": null,
+          "accounts": [],
+          "note": "재무제표 매출액 1,923.69와 차이가 있습니다.",
+          "rfi": [
+            "D-05"
+          ],
+          "formula": "마케팅대행 + 기타"
+        }
+      },
+      {
+        "company": "용인공원그룹계",
+        "t_m": 6972,
+        "a_m": 6641,
+        "t_c": 53651,
+        "a_c": 46445,
+        "trace": {
+          "verdict": "confirmed",
+          "label": "원장 확인",
+          "ledger": null,
+          "diff": null,
+          "accounts": [],
+          "note": "3사 단순합에서 YPL 마케팅대행을 제거한 값과 정확히 일치합니다. 목표·실적·누계 4개 지점 모두 검증되었습니다.",
+          "rfi": [],
+          "formula": "3사 합계 - YPL 마케팅대행 (내부거래 제거)"
+        }
+      }
+    ],
+    "channels": [
+      {
+        "company": "용인공원",
+        "org": "영업",
+        "item": "온라인",
+        "target": 1808,
+        "actual": 1859
+      },
+      {
+        "company": "용인공원",
+        "org": "영업",
+        "item": "회원",
+        "target": 1101,
+        "actual": 999
+      },
+      {
+        "company": "용인공원",
+        "org": "영업",
+        "item": "업체",
+        "target": 1404,
+        "actual": 1951
+      },
+      {
+        "company": "용인공원",
+        "org": "영업",
+        "item": "법인",
+        "target": 90,
+        "actual": 0
+      },
+      {
+        "company": "용인공원",
+        "org": "영업",
+        "item": "기타",
+        "target": 93,
+        "actual": 45
+      },
+      {
+        "company": "용인공원",
+        "org": "고객센터",
+        "item": "고객센터",
+        "target": 733,
+        "actual": 762
+      },
+      {
+        "company": "용인공원",
+        "org": "경영관리",
+        "item": "기타",
+        "target": 6,
+        "actual": 6
+      },
+      {
+        "company": "라이프",
+        "org": "T S&M팀(마케팅)",
+        "item": "부금(계약납)",
+        "target": 120,
+        "actual": 1
+      },
+      {
+        "company": "라이프",
+        "org": "T S&M팀(마케팅)",
+        "item": "부금(기존)",
+        "target": 80,
+        "actual": 91
+      },
+      {
+        "company": "라이프",
+        "org": "T S&M팀(마케팅)",
+        "item": "행사",
+        "target": 171,
+        "actual": 3
+      },
+      {
+        "company": "라이프",
+        "org": "T S&M팀(마케팅)",
+        "item": "장지판매",
+        "target": 102,
+        "actual": 0
+      },
+      {
+        "company": "라이프",
+        "org": "영업(YPL)",
+        "item": "부금",
+        "target": 608,
+        "actual": 535
+      },
+      {
+        "company": "라이프",
+        "org": "영업(YPL)",
+        "item": "행사",
+        "target": 243,
+        "actual": 187
+      },
+      {
+        "company": "라이프",
+        "org": "법인영업",
+        "item": "행사",
+        "target": 90,
+        "actual": 59
+      },
+      {
+        "company": "라이프",
+        "org": "법인영업",
+        "item": "장지판매",
+        "target": 72,
+        "actual": 4
+      },
+      {
+        "company": "라이프",
+        "org": "상향매출",
+        "item": "행사",
+        "target": 183,
+        "actual": 107
+      },
+      {
+        "company": "라이프",
+        "org": "조사용품/기타",
+        "item": "기타",
+        "target": 64,
+        "actual": 24
+      }
+    ],
+    "channel_trace": {
+      "verdict": "external",
+      "label": "원장 밖",
+      "ledger": null,
+      "diff": null,
+      "accounts": [],
+      "note": "채널·부서 구분은 회계 원장에 존재하지 않습니다. 장지 CRM(용인공원) 및 상조 회원관리(라이프)의 계약 데이터에서만 산출 가능하며, 현재 연계 현황이 확인되지 않았습니다.",
+      "rfi": [
+        "B-02",
+        "B-03",
+        "O-02",
+        "O-04"
+      ],
+      "formula": "CRM 계약 데이터의 채널 구분 필드 기준 집계"
+    }
+  },
+  "cost": {
+    "yongin": {
+      "title": "용인공원 · 와이피엘",
+      "groups": [
+        {
+          "org": "영업",
+          "rows": [
+            {
+              "label": "총수입",
+              "t_m": 4557,
+              "a_m": 4971,
+              "mom": 1079,
+              "yoy": 1294,
+              "t_c": 35625,
+              "a_c": 32383,
+              "yoy_c": 904,
+              "kind": "total",
+              "trace": {
+                "verdict": "derived",
+                "label": "계산값",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "야외묘소 + 아너스톤 + 상조/석재",
+                "rfi": [],
+                "formula": "야외묘소 + 아너스톤 + 상조/석재"
+              }
+            },
+            {
+              "label": "야외묘소",
+              "t_m": 1116,
+              "a_m": 1354,
+              "mom": 359,
+              "yoy": 309,
+              "t_c": 9450,
+              "a_c": 9136,
+              "yoy_c": -883,
+              "kind": "item",
+              "trace": {
+                "verdict": "confirmed",
+                "label": "원장 확인",
+                "ledger": 1354.25,
+                "diff": 0.25,
+                "accounts": [
+                  {
+                    "account": "사용료수입(일반)",
+                    "code": "4040000",
+                    "amount": 1354.25,
+                    "confidence": "high"
+                  }
+                ],
+                "note": "더존 사용료수입(일반)과 1:1 일치합니다.",
+                "rfi": [],
+                "formula": "사용료수입(일반)"
+              }
+            },
+            {
+              "label": "아너스톤",
+              "t_m": 3380,
+              "a_m": 3499,
+              "mom": 655,
+              "yoy": 870,
+              "t_c": 25685,
+              "a_c": 22737,
+              "yoy_c": 1539,
+              "kind": "item",
+              "trace": {
+                "verdict": "reclass",
+                "label": "재분류 필요",
+                "ledger": 3522.36,
+                "diff": 23.36,
+                "accounts": [
+                  {
+                    "account": "사용료수입(아너)",
+                    "code": "4110000",
+                    "amount": 3522.36,
+                    "confidence": "high"
+                  }
+                ],
+                "note": "원장 3,522.36 대비 23.36 적습니다. 서비스매출로의 재분류 기준 확인이 필요합니다.",
+                "rfi": [
+                  "F-04"
+                ],
+                "formula": "사용료수입(아너) - 서비스 재분류분"
+              }
+            },
+            {
+              "label": "상조/석재",
+              "t_m": 61,
+              "a_m": 118,
+              "mom": 65,
+              "yoy": 115,
+              "t_c": 490,
+              "a_c": 510,
+              "yoy_c": 248,
+              "kind": "item",
+              "trace": {
+                "verdict": "external",
+                "label": "원장 밖",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "용인공원 손익계산서에 대응 계정이 없습니다. 석축비수입 계정은 26년 7월 잔액이 없습니다. 라이프 상조 판매수수료 또는 석재 매출로 추정되나 원천이 확인되지 않았습니다.",
+                "rfi": [
+                  "F-02"
+                ],
+                "formula": "미확인"
+              }
+            },
+            {
+              "label": "총지출",
+              "t_m": 1318,
+              "a_m": 1328,
+              "mom": 172,
+              "yoy": -117,
+              "t_c": 9456,
+              "a_c": 9388,
+              "yoy_c": 112,
+              "kind": "total",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "고정비·변동비 구분은 계정 속성이 아니라 별도 재분류 규칙으로 산출됩니다. 용인공원 판매비와관리비 23개 계정(합계 2,064.55)을 어떤 조합으로도 화면 금액으로 재현하지 못했습니다. 분류 기준표 수령 후 확정됩니다.",
+                "rfi": [
+                  "F-01",
+                  "F-03"
+                ],
+                "formula": "고정비 + 변동비"
+              }
+            },
+            {
+              "label": "고정비",
+              "t_m": 170,
+              "a_m": 216,
+              "mom": -15,
+              "yoy": 9,
+              "t_c": 1368,
+              "a_c": 1493,
+              "yoy_c": -85,
+              "kind": "item",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "고정비·변동비 구분은 계정 속성이 아니라 별도 재분류 규칙으로 산출됩니다. 용인공원 판매비와관리비 23개 계정(합계 2,064.55)을 어떤 조합으로도 화면 금액으로 재현하지 못했습니다. 분류 기준표 수령 후 확정됩니다.",
+                "rfi": [
+                  "F-01",
+                  "F-03"
+                ],
+                "formula": "계정별 고정비 분류 기준 미확보"
+              }
+            },
+            {
+              "label": "변동비",
+              "t_m": 1148,
+              "a_m": 1112,
+              "mom": 187,
+              "yoy": -126,
+              "t_c": 8088,
+              "a_c": 7895,
+              "yoy_c": 197,
+              "kind": "item",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "고정비·변동비 구분은 계정 속성이 아니라 별도 재분류 규칙으로 산출됩니다. 용인공원 판매비와관리비 23개 계정(합계 2,064.55)을 어떤 조합으로도 화면 금액으로 재현하지 못했습니다. 분류 기준표 수령 후 확정됩니다. 다만 변동비 1,112는 YPL 판매비와관리비 총액 1,114.34와 근접합니다(차 2.34). 조직란이 '용인공원 / 와이피엘' 묶음인 점을 함께 고려하면 YPL 집행 실비가 용인공원 영업 변동비로 계상되는 연결 관점일 가능성이 있습니다.",
+                "rfi": [
+                  "F-01",
+                  "F-03"
+                ],
+                "formula": "계정별 변동비 분류 기준 미확보"
+              }
+            },
+            {
+              "label": "손익",
+              "t_m": 3239,
+              "a_m": 3643,
+              "mom": 907,
+              "yoy": 1411,
+              "t_c": 26169,
+              "a_c": 22995,
+              "yoy_c": 792,
+              "kind": "profit",
+              "trace": {
+                "verdict": "derived",
+                "label": "계산값",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "총수입 - 총지출",
+                "rfi": [],
+                "formula": "총수입 - 총지출"
+              }
+            }
+          ],
+          "ratios": [
+            {
+              "label": "손익율",
+              "t_m": 71,
+              "a_m": 73,
+              "t_c": 73,
+              "a_c": 71,
+              "goal": null
+            },
+            {
+              "label": "원가율",
+              "t_m": 29,
+              "a_m": 27,
+              "t_c": 27,
+              "a_c": 29,
+              "goal": 27
+            }
+          ]
+        },
+        {
+          "org": "고객센터+경영",
+          "rows": [
+            {
+              "label": "총수입",
+              "t_m": 739,
+              "a_m": 786,
+              "mom": 30,
+              "yoy": 92,
+              "t_c": 6258,
+              "a_c": 5938,
+              "yoy_c": 396,
+              "kind": "total",
+              "trace": {
+                "verdict": "derived",
+                "label": "계산값",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "관리비 + 서비스매출 + 임대료",
+                "rfi": [],
+                "formula": "관리비 + 서비스매출 + 임대료"
+              }
+            },
+            {
+              "label": "관리비",
+              "t_m": 530,
+              "a_m": 601,
+              "mom": 3,
+              "yoy": 108,
+              "t_c": 4408,
+              "a_c": 4512,
+              "yoy_c": 801,
+              "kind": "item",
+              "trace": {
+                "verdict": "confirmed",
+                "label": "원장 확인",
+                "ledger": 601.07,
+                "diff": 0.07,
+                "accounts": [
+                  {
+                    "account": "관리비수입(아너)",
+                    "code": "4120001",
+                    "amount": 36.54,
+                    "confidence": "high"
+                  },
+                  {
+                    "account": "관리비수입(야외)",
+                    "code": "4120002",
+                    "amount": 400.3,
+                    "confidence": "high"
+                  },
+                  {
+                    "account": "신규관리비수입(아너)",
+                    "code": "4120003",
+                    "amount": 96.9,
+                    "confidence": "high"
+                  },
+                  {
+                    "account": "신규관리비수입(야외)",
+                    "code": "4120004",
+                    "amount": 33.24,
+                    "confidence": "high"
+                  },
+                  {
+                    "account": "조경관리비수입",
+                    "code": "4120005",
+                    "amount": 23.33,
+                    "confidence": "high"
+                  },
+                  {
+                    "account": "신규조경관리비수입",
+                    "code": "4120006",
+                    "amount": 8.56,
+                    "confidence": "high"
+                  },
+                  {
+                    "account": "법비용및지연이자수입",
+                    "code": "4190001",
+                    "amount": 2.2,
+                    "confidence": "high"
+                  }
+                ],
+                "note": "관리비 6개 계정과 법비용및지연이자수입의 합(601.07)과 일치합니다.",
+                "rfi": [],
+                "formula": "관리비수입(아너) + 관리비수입(야외) + 신규관리비수입(아너) + 신규관리비수입(야외) + 조경관리비수입 + 신규조경관리비수입 + 법비용및지연이자수입"
+              }
+            },
+            {
+              "label": "서비스매출",
+              "t_m": 203,
+              "a_m": 160,
+              "mom": 8,
+              "yoy": -29,
+              "t_c": 1801,
+              "a_c": 1358,
+              "yoy_c": -227,
+              "kind": "item",
+              "trace": {
+                "verdict": "reclass",
+                "label": "재분류 필요",
+                "ledger": 137.26,
+                "diff": -22.74,
+                "accounts": [
+                  {
+                    "account": "이장비수입",
+                    "code": "4090000",
+                    "amount": 24.3,
+                    "confidence": "high"
+                  },
+                  {
+                    "account": "장례비수입",
+                    "code": "4140000",
+                    "amount": 35.15,
+                    "confidence": "high"
+                  },
+                  {
+                    "account": "사초비수입",
+                    "code": "4170000",
+                    "amount": 0.7,
+                    "confidence": "high"
+                  },
+                  {
+                    "account": "안치료수입",
+                    "code": "4180000",
+                    "amount": 31.25,
+                    "confidence": "high"
+                  },
+                  {
+                    "account": "기타수입",
+                    "code": "4190000",
+                    "amount": 45.86,
+                    "confidence": "high"
+                  }
+                ],
+                "note": "원장 5개 계정 합 137.26에 아너스톤 이관 추정분 약 22.7이 더해진 값입니다.",
+                "rfi": [
+                  "F-04"
+                ],
+                "formula": "이장비 + 장례비 + 사초비 + 안치료 + 기타수입 + 아너 이관분"
+              }
+            },
+            {
+              "label": "임대료",
+              "t_m": 6,
+              "a_m": 25,
+              "mom": 19,
+              "yoy": 13,
+              "t_c": 49,
+              "a_c": 68,
+              "yoy_c": -178,
+              "kind": "item",
+              "trace": {
+                "verdict": "gap",
+                "label": "차액 미확인",
+                "ledger": 6.3,
+                "diff": -18.7,
+                "accounts": [
+                  {
+                    "account": "임대료수입",
+                    "code": "4160000",
+                    "amount": 6.3,
+                    "confidence": "high"
+                  }
+                ],
+                "note": "원장 임대료수입은 6.30입니다. 목표(6)는 원장과 일치하나 실적만 25로 18.70이 추가되어 있어 구성 확인이 필요합니다. 용인공원 7월 영업외수익은 32.87(유형자산처분이익 31.85 포함)입니다.",
+                "rfi": [
+                  "F-05"
+                ],
+                "formula": "임대료수입 + 미확인 18.70"
+              }
+            },
+            {
+              "label": "총지출",
+              "t_m": 646,
+              "a_m": 834,
+              "mom": 38,
+              "yoy": 101,
+              "t_c": 5227,
+              "a_c": 5129,
+              "yoy_c": -157,
+              "kind": "total",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "고정비·변동비 구분은 계정 속성이 아니라 별도 재분류 규칙으로 산출됩니다. 용인공원 판매비와관리비 23개 계정(합계 2,064.55)을 어떤 조합으로도 화면 금액으로 재현하지 못했습니다. 분류 기준표 수령 후 확정됩니다.",
+                "rfi": [
+                  "F-01",
+                  "F-03"
+                ],
+                "formula": "고정비 + 변동비"
+              }
+            },
+            {
+              "label": "고정비",
+              "t_m": 471,
+              "a_m": 570,
+              "mom": -98,
+              "yoy": 51,
+              "t_c": 4047,
+              "a_c": 3805,
+              "yoy_c": -198,
+              "kind": "item",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "고정비·변동비 구분은 계정 속성이 아니라 별도 재분류 규칙으로 산출됩니다. 용인공원 판매비와관리비 23개 계정(합계 2,064.55)을 어떤 조합으로도 화면 금액으로 재현하지 못했습니다. 분류 기준표 수령 후 확정됩니다.",
+                "rfi": [
+                  "F-01",
+                  "F-03"
+                ],
+                "formula": "계정별 고정비 분류 기준 미확보"
+              }
+            },
+            {
+              "label": "변동비",
+              "t_m": 175,
+              "a_m": 264,
+              "mom": 136,
+              "yoy": 50,
+              "t_c": 1180,
+              "a_c": 1324,
+              "yoy_c": 41,
+              "kind": "item",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "고정비·변동비 구분은 계정 속성이 아니라 별도 재분류 규칙으로 산출됩니다. 용인공원 판매비와관리비 23개 계정(합계 2,064.55)을 어떤 조합으로도 화면 금액으로 재현하지 못했습니다. 분류 기준표 수령 후 확정됩니다.",
+                "rfi": [
+                  "F-01",
+                  "F-03"
+                ],
+                "formula": "계정별 변동비 분류 기준 미확보"
+              }
+            },
+            {
+              "label": "손익",
+              "t_m": 93,
+              "a_m": -48,
+              "mom": -8,
+              "yoy": -9,
+              "t_c": 1031,
+              "a_c": 809,
+              "yoy_c": 553,
+              "kind": "profit",
+              "trace": {
+                "verdict": "derived",
+                "label": "계산값",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "총수입 - 총지출",
+                "rfi": [],
+                "formula": "총수입 - 총지출"
+              }
+            }
+          ],
+          "ratios": [
+            {
+              "label": "손익율",
+              "t_m": 13,
+              "a_m": -6,
+              "t_c": 16,
+              "a_c": 14,
+              "goal": null
+            },
+            {
+              "label": "원가율",
+              "t_m": 87,
+              "a_m": 106,
+              "t_c": 84,
+              "a_c": 86,
+              "goal": 85
+            }
+          ]
+        }
+      ]
+    },
+    "life": {
+      "title": "용인공원라이프",
+      "groups": [
+        {
+          "org": "라이프",
+          "rows": [
+            {
+              "label": "총수입",
+              "t_m": 1733,
+              "a_m": 1011,
+              "mom": 61,
+              "yoy": 234,
+              "t_c": 12219,
+              "a_c": 8564,
+              "yoy_c": 2245,
+              "kind": "total",
+              "trace": {
+                "verdict": "external",
+                "label": "원장 밖",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "부금 기준 관리회계 수치입니다. 재무제표 매출액은 394.67로 부금(627)이 선수금 처리되어 포함되지 않습니다.",
+                "rfi": [
+                  "F-10",
+                  "B-03"
+                ],
+                "formula": "부금 + 행사 + 장지판매 + 이장용품 + 영업외수입"
+              }
+            },
+            {
+              "label": "부금",
+              "t_m": 808,
+              "a_m": 627,
+              "mom": 21,
+              "yoy": 240,
+              "t_c": 6419,
+              "a_c": 5081,
+              "yoy_c": 1637,
+              "kind": "item",
+              "trace": {
+                "verdict": "external",
+                "label": "원장 밖",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "상조 회원관리의 부금 매출입니다. 회계상 선수금으로 재무제표 매출에 없습니다.",
+                "rfi": [
+                  "F-10",
+                  "B-03"
+                ],
+                "formula": "상조 회원관리 - 부금"
+              }
+            },
+            {
+              "label": "행사(용품포함)",
+              "t_m": 728,
+              "a_m": 377,
+              "mom": 47,
+              "yoy": 37,
+              "t_c": 4702,
+              "a_c": 3330,
+              "yoy_c": 708,
+              "kind": "item",
+              "trace": {
+                "verdict": "external",
+                "label": "원장 밖",
+                "ledger": 387.07,
+                "diff": null,
+                "accounts": [
+                  {
+                    "account": "장례지원서비스매출",
+                    "code": "4120005",
+                    "amount": 387.07,
+                    "confidence": "high"
+                  }
+                ],
+                "note": "재무제표 장례지원서비스매출 387.07과 차이가 있습니다. 「법인별 매출실적」 화면에서는 같은 항목이 356으로 표기되어 두 화면이 다릅니다.",
+                "rfi": [
+                  "F-15",
+                  "B-03"
+                ],
+                "formula": "상조 회원관리 - 행사 + 용품"
+              }
+            },
+            {
+              "label": "장지판매",
+              "t_m": 174,
+              "a_m": 4,
+              "mom": -2,
+              "yoy": -29,
+              "t_c": 992,
+              "a_c": 123,
+              "yoy_c": -44,
+              "kind": "item",
+              "trace": {
+                "verdict": "external",
+                "label": "원장 밖",
+                "ledger": 7.6,
+                "diff": null,
+                "accounts": [
+                  {
+                    "account": "묘지매출",
+                    "code": "4120003",
+                    "amount": 7.6,
+                    "confidence": "high"
+                  }
+                ],
+                "note": "재무제표 묘지매출은 7.60입니다.",
+                "rfi": [
+                  "B-03"
+                ],
+                "formula": "상조 회원관리 - 장지"
+              }
+            },
+            {
+              "label": "이장용품",
+              "t_m": 23,
+              "a_m": 3,
+              "mom": 1,
+              "yoy": -14,
+              "t_c": 106,
+              "a_c": 19,
+              "yoy_c": -48,
+              "kind": "item",
+              "trace": {
+                "verdict": "external",
+                "label": "원장 밖",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "상조 회원관리의 이장·조사용품 매출입니다.",
+                "rfi": [
+                  "B-03"
+                ],
+                "formula": "상조 회원관리 - 이장조사용품"
+              }
+            },
+            {
+              "label": "영업외수입",
+              "t_m": null,
+              "a_m": null,
+              "mom": -6,
+              "yoy": 0,
+              "t_c": null,
+              "a_c": 11,
+              "yoy_c": -8,
+              "kind": "item",
+              "trace": {
+                "verdict": "external",
+                "label": "원장 밖",
+                "ledger": 11.8,
+                "diff": null,
+                "accounts": [
+                  {
+                    "account": "회비정산차익",
+                    "code": "",
+                    "amount": 11.8,
+                    "confidence": "none"
+                  }
+                ],
+                "note": "재무제표 회비정산차익 11.80으로 추정되나 계정코드가 COA 마스터에 없습니다.",
+                "rfi": [
+                  "D-05"
+                ],
+                "formula": "회비정산차익"
+              }
+            },
+            {
+              "label": "총지출",
+              "t_m": 1250,
+              "a_m": 1003,
+              "mom": 54,
+              "yoy": -14,
+              "t_c": 9020,
+              "a_c": 7862,
+              "yoy_c": 1182,
+              "kind": "total",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "고정비·변동비·투자비·영업외비용Ⅰ·Ⅱ 구분 기준이 확인되지 않았습니다. 라이프 재무제표에는 영업외비용이 0으로 계상되어 있습니다.",
+                "rfi": [
+                  "F-01",
+                  "F-12"
+                ],
+                "formula": "고정비 + 변동비 + 투자비 + 영업외비용Ⅰ + Ⅱ"
+              }
+            },
+            {
+              "label": "고정비",
+              "t_m": 150,
+              "a_m": 140,
+              "mom": -8,
+              "yoy": 35,
+              "t_c": 1174,
+              "a_c": 1067,
+              "yoy_c": 96,
+              "kind": "item",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "분류 기준 미확보",
+                "rfi": [
+                  "F-01"
+                ],
+                "formula": "계정별 고정비 분류 기준 미확보"
+              }
+            },
+            {
+              "label": "변동비",
+              "t_m": 522,
+              "a_m": 356,
+              "mom": 113,
+              "yoy": -26,
+              "t_c": 3535,
+              "a_c": 2653,
+              "yoy_c": 341,
+              "kind": "item",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "분류 기준 미확보",
+                "rfi": [
+                  "F-01"
+                ],
+                "formula": "계정별 변동비 분류 기준 미확보"
+              }
+            },
+            {
+              "label": "투자비",
+              "t_m": 186,
+              "a_m": 122,
+              "mom": 17,
+              "yoy": 68,
+              "t_c": 1197,
+              "a_c": 926,
+              "yoy_c": 493,
+              "kind": "item",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "투자비의 정의와 회계처리(비용/자산계상)가 확인되지 않았습니다.",
+                "rfi": [
+                  "F-12"
+                ],
+                "formula": "미확인"
+              }
+            },
+            {
+              "label": "영업외비용Ⅰ",
+              "t_m": 320,
+              "a_m": 309,
+              "mom": -66,
+              "yoy": -111,
+              "t_c": 2553,
+              "a_c": 2606,
+              "yoy_c": 175,
+              "kind": "item",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "해약 + 공제담보로 표기되어 있으나 구성 계정이 확인되지 않았습니다. 라이프 재무제표 영업외비용은 0입니다.",
+                "rfi": [
+                  "F-12"
+                ],
+                "formula": "해약 + 공제담보"
+              }
+            },
+            {
+              "label": "영업외비용Ⅱ",
+              "t_m": 72,
+              "a_m": 76,
+              "mom": -2,
+              "yoy": 20,
+              "t_c": 561,
+              "a_c": 610,
+              "yoy_c": 77,
+              "kind": "item",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "구성 계정이 확인되지 않았습니다.",
+                "rfi": [
+                  "F-12"
+                ],
+                "formula": "미확인"
+              }
+            },
+            {
+              "label": "손익",
+              "t_m": 483,
+              "a_m": 8,
+              "mom": 7,
+              "yoy": 248,
+              "t_c": 3199,
+              "a_c": 702,
+              "yoy_c": 1063,
+              "kind": "profit",
+              "trace": {
+                "verdict": "derived",
+                "label": "계산값",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "총수입 - 총지출",
+                "rfi": [],
+                "formula": "총수입 - 총지출"
+              }
+            },
+            {
+              "label": "영업손익",
+              "t_m": -5,
+              "a_m": -310,
+              "mom": -74,
+              "yoy": -98,
+              "t_c": -667,
+              "a_c": -1784,
+              "yoy_c": -392,
+              "kind": "profit",
+              "trace": {
+                "verdict": "unset",
+                "label": "기준 미확정",
+                "ledger": null,
+                "diff": null,
+                "accounts": [],
+                "note": "총수입 - 총지출 = 8인데 영업손익은 -310으로 표기됩니다. 영업외비용Ⅰ(309)·Ⅱ(76)을 가감하는 어떤 조합으로도 재현되지 않아 산식 확인이 필요합니다.",
+                "rfi": [
+                  "F-11"
+                ],
+                "formula": "미확인"
+              }
+            }
+          ],
+          "ratios": [
+            {
+              "label": "손익율",
+              "t_m": 28,
+              "a_m": 0.8,
+              "t_c": 26,
+              "a_c": 8,
+              "goal": null
+            },
+            {
+              "label": "영업손익율",
+              "t_m": -1,
+              "a_m": -81,
+              "t_c": -12,
+              "a_c": -51,
+              "goal": 80
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "pl": {
+    "company": [
+      {
+        "label": "매출",
+        "level": 0,
+        "companies": {
+          "용인공원": {
+            "target": 5235.34,
+            "actual": 5621.24
+          },
+          "YPL": {
+            "target": 0.0,
+            "actual": 1923.69
+          },
+          "라이프": {
+            "target": 0.0,
+            "actual": 394.67
+          },
+          "그룹계": {
+            "target": 5235.34,
+            "actual": 7939.6
+          }
+        }
+      },
+      {
+        "label": "분양_야외",
+        "level": 1,
+        "companies": {
+          "용인공원": {
+            "target": 1116.0,
+            "actual": 1354.25
+          },
+          "YPL": {
+            "target": null,
+            "actual": null
+          },
+          "라이프": {
+            "target": null,
+            "actual": null
+          },
+          "그룹계": {
+            "target": 1116.0,
+            "actual": 1354.25
+          }
+        }
+      },
+      {
+        "label": "분양_아너",
+        "level": 1,
+        "companies": {
+          "용인공원": {
+            "target": 3380.0,
+            "actual": 3522.36
+          },
+          "YPL": {
+            "target": null,
+            "actual": null
+          },
+          "라이프": {
+            "target": null,
+            "actual": null
+          },
+          "그룹계": {
+            "target": 3380.0,
+            "actual": 3522.36
+          }
+        }
+      },
+      {
+        "label": "관리비_야외",
+        "level": 1,
+        "companies": {
+          "용인공원": {
+            "target": 400.0,
+            "actual": 467.63
+          },
+          "YPL": {
+            "target": null,
+            "actual": null
+          },
+          "라이프": {
+            "target": null,
+            "actual": null
+          },
+          "그룹계": {
+            "target": 400.0,
+            "actual": 467.63
+          }
+        }
+      },
+      {
+        "label": "관리비_아너",
+        "level": 1,
+        "companies": {
+          "용인공원": {
+            "target": 130.0,
+            "actual": 133.44
+          },
+          "YPL": {
+            "target": null,
+            "actual": null
+          },
+          "라이프": {
+            "target": null,
+            "actual": null
+          },
+          "그룹계": {
+            "target": 130.0,
+            "actual": 133.44
+          }
+        }
+      },
+      {
+        "label": "수입수수료",
+        "level": 1,
+        "companies": {
+          "용인공원": {
+            "target": null,
+            "actual": null
+          },
+          "YPL": {
+            "target": null,
+            "actual": 1917.63
+          },
+          "라이프": {
+            "target": null,
+            "actual": 7.6
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 1925.23
+          }
+        }
+      },
+      {
+        "label": "행사매출",
+        "level": 1,
+        "companies": {
+          "용인공원": {
+            "target": null,
+            "actual": null
+          },
+          "YPL": {
+            "target": null,
+            "actual": null
+          },
+          "라이프": {
+            "target": null,
+            "actual": 387.07
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 387.07
+          }
+        }
+      },
+      {
+        "label": "서비스",
+        "level": 1,
+        "companies": {
+          "용인공원": {
+            "target": 203.04,
+            "actual": 137.26
+          },
+          "YPL": {
+            "target": null,
+            "actual": null
+          },
+          "라이프": {
+            "target": null,
+            "actual": null
+          },
+          "그룹계": {
+            "target": 203.04,
+            "actual": 137.26
+          }
+        }
+      },
+      {
+        "label": "기타",
+        "level": 1,
+        "companies": {
+          "용인공원": {
+            "target": 6.3,
+            "actual": 6.3
+          },
+          "YPL": {
+            "target": null,
+            "actual": 6.07
+          },
+          "라이프": {
+            "target": null,
+            "actual": null
+          },
+          "그룹계": {
+            "target": 6.3,
+            "actual": 12.37
+          }
+        }
+      },
+      {
+        "label": "현장원가",
+        "level": 0,
+        "companies": {
+          "용인공원": {
+            "target": 0.0,
+            "actual": 0.0
+          },
+          "YPL": {
+            "target": null,
+            "actual": null
+          },
+          "라이프": {
+            "target": null,
+            "actual": null
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": null
+          }
+        }
+      },
+      {
+        "label": "판관비",
+        "level": 0,
+        "companies": {
+          "용인공원": {
+            "target": null,
+            "actual": 2064.55
+          },
+          "YPL": {
+            "target": null,
+            "actual": 1114.34
+          },
+          "라이프": {
+            "target": null,
+            "actual": 638.99
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 3817.87
+          }
+        }
+      },
+      {
+        "label": "급여",
+        "level": 1,
+        "companies": {
+          "용인공원": {
+            "target": null,
+            "actual": 203.07
+          },
+          "YPL": {
+            "target": null,
+            "actual": 189.24
+          },
+          "라이프": {
+            "target": null,
+            "actual": 128.44
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 520.75
+          }
+        }
+      },
+      {
+        "label": "판매수수료",
+        "level": 1,
+        "companies": {
+          "용인공원": {
+            "target": null,
+            "actual": 1565.08
+          },
+          "YPL": {
+            "target": null,
+            "actual": 519.46
+          },
+          "라이프": {
+            "target": null,
+            "actual": 51.35
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 2135.88
+          }
+        }
+      },
+      {
+        "label": "광고선전비",
+        "level": 1,
+        "companies": {
+          "용인공원": {
+            "target": null,
+            "actual": 5.07
+          },
+          "YPL": {
+            "target": null,
+            "actual": 170.42
+          },
+          "라이프": {
+            "target": null,
+            "actual": 62.29
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 237.78
+          }
+        }
+      },
+      {
+        "label": "기타",
+        "level": 1,
+        "companies": {
+          "용인공원": {
+            "target": null,
+            "actual": 291.32
+          },
+          "YPL": {
+            "target": null,
+            "actual": 235.22
+          },
+          "라이프": {
+            "target": null,
+            "actual": 396.91
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 923.45
+          }
+        }
+      },
+      {
+        "label": "영업 외 손익",
+        "level": 0,
+        "companies": {
+          "용인공원": {
+            "target": null,
+            "actual": 15.14
+          },
+          "YPL": {
+            "target": null,
+            "actual": 0.01
+          },
+          "라이프": {
+            "target": null,
+            "actual": 11.8
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 26.95
+          }
+        }
+      },
+      {
+        "label": "이익",
+        "level": 0,
+        "companies": {
+          "용인공원": {
+            "target": null,
+            "actual": 3571.84
+          },
+          "YPL": {
+            "target": null,
+            "actual": 809.36
+          },
+          "라이프": {
+            "target": null,
+            "actual": -232.52
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 4148.68
+          }
+        }
+      }
+    ],
+    "segment": [
+      {
+        "label": "매출액",
+        "level": 0,
+        "segments": {
+          "분양손익": {
+            "target": 4496.0,
+            "actual": 4876.61
+          },
+          "관리비손익": {
+            "target": 739.34,
+            "actual": 2668.33
+          },
+          "상조손익": {
+            "target": 0.0,
+            "actual": 394.67
+          },
+          "그룹계": {
+            "target": 5235.34,
+            "actual": 7939.6
+          }
+        }
+      },
+      {
+        "label": "야외묘소",
+        "level": 1,
+        "segments": {
+          "분양손익": {
+            "target": 1116.0,
+            "actual": 1354.25
+          },
+          "관리비손익": {
+            "target": 400.0,
+            "actual": 467.63
+          },
+          "상조손익": {
+            "target": null,
+            "actual": null
+          },
+          "그룹계": {
+            "target": 1516.0,
+            "actual": 1821.88
+          }
+        }
+      },
+      {
+        "label": "아너스톤",
+        "level": 1,
+        "segments": {
+          "분양손익": {
+            "target": 3380.0,
+            "actual": 3522.36
+          },
+          "관리비손익": {
+            "target": 130.0,
+            "actual": 133.44
+          },
+          "상조손익": {
+            "target": null,
+            "actual": null
+          },
+          "그룹계": {
+            "target": 3510.0,
+            "actual": 3655.8
+          }
+        }
+      },
+      {
+        "label": "수입수수료",
+        "level": 1,
+        "segments": {
+          "분양손익": {
+            "target": null,
+            "actual": null
+          },
+          "관리비손익": {
+            "target": null,
+            "actual": 1917.63
+          },
+          "상조손익": {
+            "target": null,
+            "actual": 7.6
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 1925.23
+          }
+        }
+      },
+      {
+        "label": "행사매출",
+        "level": 1,
+        "segments": {
+          "분양손익": {
+            "target": null,
+            "actual": null
+          },
+          "관리비손익": {
+            "target": null,
+            "actual": null
+          },
+          "상조손익": {
+            "target": null,
+            "actual": 387.07
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 387.07
+          }
+        }
+      },
+      {
+        "label": "서비스",
+        "level": 1,
+        "segments": {
+          "분양손익": {
+            "target": null,
+            "actual": null
+          },
+          "관리비손익": {
+            "target": 203.04,
+            "actual": 137.26
+          },
+          "상조손익": {
+            "target": null,
+            "actual": null
+          },
+          "그룹계": {
+            "target": 203.04,
+            "actual": 137.26
+          }
+        }
+      },
+      {
+        "label": "상조/석재",
+        "level": 1,
+        "segments": {
+          "분양손익": {
+            "target": null,
+            "actual": null
+          },
+          "관리비손익": {
+            "target": null,
+            "actual": null
+          },
+          "상조손익": {
+            "target": null,
+            "actual": null
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 0.0
+          }
+        }
+      },
+      {
+        "label": "기타",
+        "level": 1,
+        "segments": {
+          "분양손익": {
+            "target": null,
+            "actual": null
+          },
+          "관리비손익": {
+            "target": 6.3,
+            "actual": 12.37
+          },
+          "상조손익": {
+            "target": null,
+            "actual": null
+          },
+          "그룹계": {
+            "target": 6.3,
+            "actual": 12.37
+          }
+        }
+      },
+      {
+        "label": "매출원가",
+        "level": 0,
+        "segments": {
+          "분양손익": {
+            "target": 0.0,
+            "actual": 0.0
+          },
+          "관리비손익": {
+            "target": 0.0,
+            "actual": 0.0
+          },
+          "상조손익": {
+            "target": 0.0,
+            "actual": 0.0
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 0.0
+          }
+        }
+      },
+      {
+        "label": "판관비",
+        "level": 0,
+        "segments": {
+          "분양손익": {
+            "target": 0.0,
+            "actual": 1114.34
+          },
+          "관리비손익": {
+            "target": 0.0,
+            "actual": 0.0
+          },
+          "상조손익": {
+            "target": 0.0,
+            "actual": 638.99
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 1753.32
+          }
+        }
+      },
+      {
+        "label": "급여",
+        "level": 1,
+        "segments": {
+          "분양손익": {
+            "target": null,
+            "actual": 189.24
+          },
+          "관리비손익": {
+            "target": null,
+            "actual": null
+          },
+          "상조손익": {
+            "target": null,
+            "actual": 128.44
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 317.68
+          }
+        }
+      },
+      {
+        "label": "판매수수료",
+        "level": 1,
+        "segments": {
+          "분양손익": {
+            "target": null,
+            "actual": 519.46
+          },
+          "관리비손익": {
+            "target": null,
+            "actual": null
+          },
+          "상조손익": {
+            "target": null,
+            "actual": 51.35
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 570.81
+          }
+        }
+      },
+      {
+        "label": "광고선전비",
+        "level": 1,
+        "segments": {
+          "분양손익": {
+            "target": null,
+            "actual": 170.42
+          },
+          "관리비손익": {
+            "target": null,
+            "actual": null
+          },
+          "상조손익": {
+            "target": null,
+            "actual": 62.29
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 232.71
+          }
+        }
+      },
+      {
+        "label": "기타",
+        "level": 1,
+        "segments": {
+          "분양손익": {
+            "target": null,
+            "actual": 235.22
+          },
+          "관리비손익": {
+            "target": null,
+            "actual": null
+          },
+          "상조손익": {
+            "target": null,
+            "actual": 396.91
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 632.13
+          }
+        }
+      },
+      {
+        "label": "영업 외 손익",
+        "level": 0,
+        "segments": {
+          "분양손익": {
+            "target": null,
+            "actual": 15.14
+          },
+          "관리비손익": {
+            "target": null,
+            "actual": 0.01
+          },
+          "상조손익": {
+            "target": null,
+            "actual": 11.8
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 26.95
+          }
+        }
+      },
+      {
+        "label": "이익",
+        "level": 0,
+        "segments": {
+          "분양손익": {
+            "target": null,
+            "actual": 3777.41
+          },
+          "관리비손익": {
+            "target": null,
+            "actual": 2668.33
+          },
+          "상조손익": {
+            "target": null,
+            "actual": -232.52
+          },
+          "그룹계": {
+            "target": 0.0,
+            "actual": 6213.23
+          }
+        }
+      }
+    ],
+    "dept_matrix": [
+      {
+        "company": "YPL",
+        "dept": "경영총괄",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "용인공원",
+        "dept": "이사장",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "YPL",
+        "dept": "경영지원",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "용인공원",
+        "dept": "경영총괄",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "YPL",
+        "dept": "재무",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "용인공원",
+        "dept": "비서",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "YPL",
+        "dept": "서비스기획",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "용인공원",
+        "dept": "건설개발",
+        "분양원가": true,
+        "관리비원가": false
+      },
+      {
+        "company": "YPL",
+        "dept": "T S$M",
+        "분양원가": true,
+        "관리비원가": false
+      },
+      {
+        "company": "용인공원",
+        "dept": "공원조성",
+        "분양원가": true,
+        "관리비원가": false
+      },
+      {
+        "company": "YPL",
+        "dept": "TM2",
+        "분양원가": true,
+        "관리비원가": false
+      },
+      {
+        "company": "용인공원",
+        "dept": "경영지원",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "YPL",
+        "dept": "마케팅",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "용인공원",
+        "dept": "시설관리",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "YPL",
+        "dept": "디자인",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "용인공원",
+        "dept": "송무",
+        "분양원가": false,
+        "관리비원가": true
+      },
+      {
+        "company": "YPL",
+        "dept": "영업본부",
+        "분양원가": true,
+        "관리비원가": false
+      },
+      {
+        "company": "용인공원",
+        "dept": "재무",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "YPL",
+        "dept": "사업총괄",
+        "분양원가": true,
+        "관리비원가": true
+      },
+      {
+        "company": "용인공원",
+        "dept": "고객센터",
+        "분양원가": false,
+        "관리비원가": true
+      },
+      {
+        "company": "용인공원",
+        "dept": "고객상담",
+        "분양원가": false,
+        "관리비원가": true
+      },
+      {
+        "company": "용인공원",
+        "dept": "고객지원",
+        "분양원가": false,
+        "관리비원가": true
+      },
+      {
+        "company": "용인공원",
+        "dept": "리셉션",
+        "분양원가": false,
+        "관리비원가": true
+      },
+      {
+        "company": "용인공원",
+        "dept": "TM",
+        "분양원가": false,
+        "관리비원가": true
+      }
+    ],
+    "dept": [
+      {
+        "code": "0001",
+        "name": "회원사업팀",
+        "revenue": 996.63,
+        "sga": null,
+        "profit": 997.63
+      },
+      {
+        "code": "0002",
+        "name": "고객센터",
+        "revenue": 763.42,
+        "sga": 84.09,
+        "profit": 679.33
+      },
+      {
+        "code": "0003",
+        "name": "경영지원팀",
+        "revenue": 6.3,
+        "sga": 211.5,
+        "profit": -178.35
+      },
+      {
+        "code": "0004",
+        "name": "재무회계팀",
+        "revenue": null,
+        "sga": 19.43,
+        "profit": -23.38
+      },
+      {
+        "code": "0012",
+        "name": "디자인마케팅파트",
+        "revenue": null,
+        "sga": 5.56,
+        "profit": -5.56
+      },
+      {
+        "code": "0116",
+        "name": "영업팀",
+        "revenue": 1951.24,
+        "sga": 1620.01,
+        "profit": 331.24
+      },
+      {
+        "code": "0117",
+        "name": "VIP",
+        "revenue": 44.86,
+        "sga": 123.79,
+        "profit": -79.93
+      },
+      {
+        "code": "0118",
+        "name": "온라인사업",
+        "revenue": 1858.78,
+        "sga": null,
+        "profit": 1858.78
+      },
+      {
+        "code": "0119",
+        "name": "자본적지출",
+        "revenue": null,
+        "sga": null,
+        "profit": -7.76
+      },
+      {
+        "code": "0121",
+        "name": "법인영업팀",
+        "revenue": null,
+        "sga": null,
+        "profit": null
+      },
+      {
+        "code": "0000",
+        "name": "누락코드",
+        "revenue": null,
+        "sga": null,
+        "profit": 0.0
+      }
+    ],
+    "trace": {
+      "unalloc": {
+        "verdict": "unset",
+        "label": "기준 미확정",
+        "ledger": 2064.55,
+        "diff": null,
+        "accounts": [],
+        "note": "용인공원 판매비와관리비 2,064.55가 어느 부문에도 배부되지 않았습니다. 그 결과 부문 합계 이익 6,213.23이 법인 합계 이익 4,148.68보다 정확히 2,064.55 큽니다. 회사에서 '공통비용 부서별 배분 필요'로 기재하신 부분이며, 부서 → 부문 배부 기준이 정해져야 채워집니다.",
+        "rfi": [
+          "C-03",
+          "C-04"
+        ],
+        "formula": "부서별 손익 → 부문 배부 (기준 미확정)"
+      },
+      "ypl_split": {
+        "verdict": "gap",
+        "label": "차액 미확인",
+        "ledger": null,
+        "diff": null,
+        "accounts": [],
+        "note": "YPL의 수익(수입수수료 1,917.63)은 관리비손익, 비용(판관비 1,114.34)은 분양손익으로 배정되어 있습니다. 그 결과 관리비손익은 판관비가 0이 되어 이익률 100%로 표시됩니다.",
+        "rfi": [
+          "C-05"
+        ],
+        "formula": "YPL 수익 → 관리비손익 / YPL 비용 → 분양손익"
+      },
+      "life": {
+        "verdict": "external",
+        "label": "원장 밖",
+        "ledger": 394.67,
+        "diff": null,
+        "accounts": [],
+        "note": "상조손익은 라이프 재무제표 기준(394.67)입니다. 「법인별 매출실적」과 「원가및손익2」는 부금 기준 관리회계(1,011)를 쓰고 있어 같은 라이프가 자료마다 다르게 나타납니다.",
+        "rfi": [
+          "C-07"
+        ],
+        "formula": "라이프 재무제표 매출액"
+      }
+    },
+    "note": "법인별 손익은 2.손익, 부문별 손익은 3.부문별손익, 부서별 손익은 아마란스 「부문별 손익현황 [부서]」 출력물입니다."
+  },
+  "cash": {
+    "blocks": [
+      {
+        "id": "jul_target",
+        "title": "26년 7월 목표 예상수지현황",
+        "kind": "target",
+        "rows": [
+          {
+            "company": "용인공원",
+            "income": 5235,
+            "expense": 3970,
+            "profit": 1265,
+            "margin": 24
+          },
+          {
+            "company": "라이프",
+            "income": 1499,
+            "expense": 1260,
+            "profit": 239,
+            "margin": 16
+          },
+          {
+            "company": "YPL",
+            "income": 1983,
+            "expense": 1401,
+            "profit": 582,
+            "margin": 29
+          },
+          {
+            "company": "그룹계",
+            "income": 8717,
+            "expense": 6631,
+            "profit": 2086,
+            "margin": 24
+          }
+        ],
+        "alt": [
+          {
+            "company": "용인공원",
+            "income": 4712,
+            "expense": 3536,
+            "profit": 1176,
+            "margin": 25
+          },
+          {
+            "company": "라이프",
+            "income": 750,
+            "expense": 900,
+            "profit": -150,
+            "margin": -20
+          },
+          {
+            "company": "YPL",
+            "income": 1483,
+            "expense": 1401,
+            "profit": 82,
+            "margin": 6
+          },
+          {
+            "company": "그룹계",
+            "income": 6945,
+            "expense": 5837,
+            "profit": 1108,
+            "margin": 16
+          }
+        ],
+        "trace": {
+          "verdict": "unset",
+          "label": "기준 미확정",
+          "ledger": null,
+          "diff": null,
+          "accounts": [],
+          "note": "목표는 현재 재무회계팀 수기 엑셀로 관리되며 아마란스 예산메뉴 등록이 예정되어 있습니다. 각 법인 아래 한 줄 더 표기된 수치(음영)는 정의가 확인되지 않았습니다.",
+          "rfi": [
+            "F-08",
+            "F-13",
+            "D-03"
+          ],
+          "formula": "26년 예산 (수기 관리)"
+        }
+      },
+      {
+        "id": "jul_actual",
+        "title": "26년 7월 그룹사별 수지현황",
+        "kind": "actual",
+        "rows": [
+          {
+            "company": "용인공원",
+            "income": 6137,
+            "expense": 3669,
+            "profit": 2468,
+            "margin": 40
+          },
+          {
+            "company": "라이프",
+            "income": 883,
+            "expense": 1035,
+            "profit": -152,
+            "margin": -17
+          },
+          {
+            "company": "YPL",
+            "income": 1611,
+            "expense": 1983,
+            "profit": -372,
+            "margin": -23
+          },
+          {
+            "company": "그룹계",
+            "income": 8631,
+            "expense": 6646,
+            "profit": 1944,
+            "margin": 23
+          }
+        ],
+        "alt": [],
+        "trace": null,
+        "row_trace": {
+          "용인공원": {
+            "verdict": "confirmed",
+            "label": "원장 확인",
+            "ledger": 8133,
+            "diff": -4,
+            "accounts": [],
+            "note": "자금일보 총액 수입 8,133 / 지출 5,665에서 계좌간 이체(예금대체) 2,000 / 2,000를 제거하면 6,133 / 3,665가 되어 화면 값과 수입·지출 잔차가 동일하여 순액 영향이 없습니다.",
+            "rfi": [
+              "F-07"
+            ],
+            "formula": "자금일보 총액 - 계좌간 이체"
+          },
+          "라이프": {
+            "verdict": "gap",
+            "label": "차액 미확인",
+            "ledger": 2145,
+            "diff": -38,
+            "accounts": [],
+            "note": "자금일보 총액 수입 2,145 / 지출 2,342에서 계좌간 이체(자기법인 계좌이체) 1,300 / 1,300를 제거하면 845 / 1,042가 되어 화면 값과 수입 -38 / 지출 +7 차이가 남습니다. 순액 기준 45백만이 어긋납니다.",
+            "rfi": [
+              "F-06",
+              "F-07",
+              "F-09"
+            ],
+            "formula": "자금일보 총액 - 계좌간 이체"
+          },
+          "YPL": {
+            "verdict": "gap",
+            "label": "차액 미확인",
+            "ledger": 1915,
+            "diff": 4,
+            "accounts": [],
+            "note": "자금일보 총액 수입 1,915 / 지출 2,288에서 계좌간 이체(통장이동) 300 / 300를 제거하면 1,615 / 1,988가 되어 화면 값과 수입 +4 / 지출 +5 차이가 남습니다. 순액 기준 45백만이 어긋납니다.",
+            "rfi": [
+              "F-06",
+              "F-07",
+              "F-09"
+            ],
+            "formula": "자금일보 총액 - 계좌간 이체"
+          }
+        },
+        "note": "그룹계 지출 6,646은 법인별 합계 6,687과 41 차이가 있습니다. (확인요청 F-09)"
+      },
+      {
+        "id": "aug_target",
+        "title": "26년 8월 목표 예상수지현황",
+        "kind": "target",
+        "rows": [
+          {
+            "company": "용인공원",
+            "income": 5317,
+            "expense": 4691,
+            "profit": 626,
+            "margin": 12
+          },
+          {
+            "company": "라이프",
+            "income": 1558,
+            "expense": 1218,
+            "profit": 340,
+            "margin": 22
+          },
+          {
+            "company": "YPL",
+            "income": 1983,
+            "expense": 1278,
+            "profit": 705,
+            "margin": 36
+          },
+          {
+            "company": "그룹계",
+            "income": 8858,
+            "expense": 7187,
+            "profit": 1671,
+            "margin": 19
+          }
+        ],
+        "alt": [
+          {
+            "company": "라이프",
+            "income": 900,
+            "expense": 966,
+            "profit": -66,
+            "margin": -7
+          },
+          {
+            "company": "YPL",
+            "income": 2000,
+            "expense": 1578,
+            "profit": 422,
+            "margin": 21
+          },
+          {
+            "company": "그룹계",
+            "income": 8217,
+            "expense": 7235,
+            "profit": 982,
+            "margin": 12
+          }
+        ],
+        "trace": {
+          "verdict": "unset",
+          "label": "기준 미확정",
+          "ledger": null,
+          "diff": null,
+          "accounts": [],
+          "note": "8월 목표 역시 수기 엑셀 기준입니다. 음영 행은 라이프·YPL에만 존재합니다.",
+          "rfi": [
+            "F-08",
+            "F-13",
+            "D-03"
+          ],
+          "formula": "26년 예산 (수기 관리)"
+        }
+      }
+    ],
+    "balance": [
+      {
+        "company": "용인공원",
+        "opening": 16830,
+        "income": 8133,
+        "expense": 5665,
+        "closing": 19299
+      },
+      {
+        "company": "라이프",
+        "opening": 3102,
+        "income": 2145,
+        "expense": 2342,
+        "closing": 2905
+      },
+      {
+        "company": "YPL",
+        "opening": 1811,
+        "income": 1915,
+        "expense": 2288,
+        "closing": 1439
+      },
+      {
+        "company": "그룹계",
+        "opening": 21744,
+        "income": 12194,
+        "expense": 10295,
+        "closing": 23643
+      }
+    ],
+    "trace_detail": [
+      {
+        "company": "용인공원",
+        "sheet": "수지_용공",
+        "rule": "예금대체",
+        "gross_in": 8133,
+        "gross_out": 5665,
+        "transfer_in": 2000,
+        "transfer_out": 2000,
+        "net_in": 6133,
+        "net_out": 3665,
+        "jpg_in": 6137,
+        "jpg_out": 3669,
+        "resid_in": -4,
+        "resid_out": -4,
+        "rows": 982
+      },
+      {
+        "company": "YPL",
+        "sheet": "수지_와피",
+        "rule": "통장이동",
+        "gross_in": 1915,
+        "gross_out": 2288,
+        "transfer_in": 300,
+        "transfer_out": 300,
+        "net_in": 1615,
+        "net_out": 1988,
+        "jpg_in": 1611,
+        "jpg_out": 1983,
+        "resid_in": 4,
+        "resid_out": 5,
+        "rows": 214
+      },
+      {
+        "company": "라이프",
+        "sheet": "수지_용라",
+        "rule": "용인공원라",
+        "gross_in": 2145,
+        "gross_out": 2342,
+        "transfer_in": 1300,
+        "transfer_out": 1300,
+        "net_in": 845,
+        "net_out": 1042,
+        "jpg_in": 883,
+        "jpg_out": 1035,
+        "resid_in": -38,
+        "resid_out": 7,
+        "rows": 254
+      }
+    ],
+    "months": [
+      "25.12",
+      "26.01",
+      "26.02",
+      "26.03",
+      "26.04",
+      "26.05",
+      "26.06",
+      "26.07",
+      "26.08"
+    ],
+    "monthly": [
+      {
+        "month": "25.12",
+        "actual": {
+          "용인공원": {
+            "income": 4294,
+            "expense": 3598
+          },
+          "라이프": {
+            "income": 1230,
+            "expense": 1142
+          },
+          "YPL": {
+            "income": 1626,
+            "expense": 1269
+          }
+        },
+        "target": {
+          "용인공원": {
+            "income": 4568,
+            "expense": 3464
+          },
+          "라이프": {
+            "income": 1308,
+            "expense": 1099
+          },
+          "YPL": {
+            "income": 1730,
+            "expense": 1222
+          }
+        },
+        "mock": true
+      },
+      {
+        "month": "26.01",
+        "actual": {
+          "용인공원": {
+            "income": 4060,
+            "expense": 3614
+          },
+          "라이프": {
+            "income": 1162,
+            "expense": 1147
+          },
+          "YPL": {
+            "income": 1538,
+            "expense": 1275
+          }
+        },
+        "target": {
+          "용인공원": {
+            "income": 4461,
+            "expense": 3383
+          },
+          "라이프": {
+            "income": 1277,
+            "expense": 1074
+          },
+          "YPL": {
+            "income": 1690,
+            "expense": 1194
+          }
+        },
+        "mock": true
+      },
+      {
+        "month": "26.02",
+        "actual": {
+          "용인공원": {
+            "income": 4339,
+            "expense": 3494
+          },
+          "라이프": {
+            "income": 1242,
+            "expense": 1109
+          },
+          "YPL": {
+            "income": 1644,
+            "expense": 1233
+          }
+        },
+        "target": {
+          "용인공원": {
+            "income": 4520,
+            "expense": 3428
+          },
+          "라이프": {
+            "income": 1294,
+            "expense": 1088
+          },
+          "YPL": {
+            "income": 1712,
+            "expense": 1210
+          }
+        },
+        "mock": true
+      },
+      {
+        "month": "26.03",
+        "actual": {
+          "용인공원": {
+            "income": 5391,
+            "expense": 3773
+          },
+          "라이프": {
+            "income": 1544,
+            "expense": 1198
+          },
+          "YPL": {
+            "income": 2042,
+            "expense": 1332
+          }
+        },
+        "target": {
+          "용인공원": {
+            "income": 5234,
+            "expense": 3969
+          },
+          "라이프": {
+            "income": 1499,
+            "expense": 1260
+          },
+          "YPL": {
+            "income": 1983,
+            "expense": 1401
+          }
+        },
+        "mock": true
+      },
+      {
+        "month": "26.04",
+        "actual": {
+          "용인공원": {
+            "income": 6293,
+            "expense": 3984
+          },
+          "라이프": {
+            "income": 1803,
+            "expense": 1264
+          },
+          "YPL": {
+            "income": 2384,
+            "expense": 1406
+          }
+        },
+        "target": {
+          "용인공원": {
+            "income": 5827,
+            "expense": 4419
+          },
+          "라이프": {
+            "income": 1669,
+            "expense": 1402
+          },
+          "YPL": {
+            "income": 2207,
+            "expense": 1559
+          }
+        },
+        "mock": true
+      },
+      {
+        "month": "26.05",
+        "actual": {
+          "용인공원": {
+            "income": 6301,
+            "expense": 4237
+          },
+          "라이프": {
+            "income": 1804,
+            "expense": 1344
+          },
+          "YPL": {
+            "income": 2387,
+            "expense": 1495
+          }
+        },
+        "target": {
+          "용인공원": {
+            "income": 6001,
+            "expense": 4551
+          },
+          "라이프": {
+            "income": 1718,
+            "expense": 1444
+          },
+          "YPL": {
+            "income": 2273,
+            "expense": 1606
+          }
+        },
+        "mock": true
+      },
+      {
+        "month": "26.06",
+        "actual": {
+          "용인공원": {
+            "income": 5363,
+            "expense": 4232
+          },
+          "라이프": {
+            "income": 1536,
+            "expense": 1344
+          },
+          "YPL": {
+            "income": 2031,
+            "expense": 1494
+          }
+        },
+        "target": {
+          "용인공원": {
+            "income": 5529,
+            "expense": 4193
+          },
+          "라이프": {
+            "income": 1583,
+            "expense": 1331
+          },
+          "YPL": {
+            "income": 2094,
+            "expense": 1480
+          }
+        },
+        "mock": true
+      },
+      {
+        "month": "26.07",
+        "actual": {
+          "용인공원": {
+            "income": 6137,
+            "expense": 3669
+          },
+          "라이프": {
+            "income": 883,
+            "expense": 1035
+          },
+          "YPL": {
+            "income": 1611,
+            "expense": 1983
+          }
+        },
+        "target": {
+          "용인공원": {
+            "income": 5235,
+            "expense": 3970
+          },
+          "라이프": {
+            "income": 1499,
+            "expense": 1260
+          },
+          "YPL": {
+            "income": 1983,
+            "expense": 1401
+          }
+        },
+        "mock": false
+      },
+      {
+        "month": "26.08",
+        "actual": {
+          "용인공원": {
+            "income": null,
+            "expense": null
+          },
+          "라이프": {
+            "income": null,
+            "expense": null
+          },
+          "YPL": {
+            "income": null,
+            "expense": null
+          }
+        },
+        "target": {
+          "용인공원": {
+            "income": 5317,
+            "expense": 4691
+          },
+          "라이프": {
+            "income": 1558,
+            "expense": 1218
+          },
+          "YPL": {
+            "income": 1983,
+            "expense": 1278
+          }
+        },
+        "mock": false
+      }
+    ],
+    "monthly_basis": "26.07 실행과 26.07 · 26.08 목표는 재무회계팀 제공 자료 기준입니다. 그 앞 구간은 자금 자료를 수령하지 못해 예시값으로 채웠습니다."
+  },
+  "daily": {
+    "yongin": {
+      "base": "2026-06-28",
+      "rows": [
+        {
+          "group": "아너스톤",
+          "detail": "",
+          "day_cnt": 8,
+          "day_amt": 106.3,
+          "mtd_cnt": 136,
+          "mtd_amt": 2656.3,
+          "mtd_target": 3427.5,
+          "mtd_rate": 77.5,
+          "ytd_cnt": 930,
+          "ytd_amt": 19050.8,
+          "ytd_target": null,
+          "ytd_rate": 4214200000000.0,
+          "is_total": false
+        },
+        {
+          "group": "용인공원",
+          "detail": "",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 55,
+          "mtd_amt": 911.7,
+          "mtd_target": 1260.0,
+          "mtd_rate": 72.4,
+          "ytd_cnt": 462,
+          "ytd_amt": 7699.2,
+          "ytd_target": null,
+          "ytd_rate": 1476000000000.0,
+          "is_total": false
+        },
+        {
+          "group": "소계",
+          "detail": "",
+          "day_cnt": 8,
+          "day_amt": 106.3,
+          "mtd_cnt": 191,
+          "mtd_amt": 3568.0,
+          "mtd_target": 4687.5,
+          "mtd_rate": 76.1,
+          "ytd_cnt": 1392,
+          "ytd_amt": 26750.0,
+          "ytd_target": null,
+          "ytd_rate": 5690200000000.0,
+          "is_total": true
+        },
+        {
+          "group": "관리비",
+          "detail": "",
+          "day_cnt": 22,
+          "day_amt": 11.1,
+          "mtd_cnt": 1070,
+          "mtd_amt": 562.4,
+          "mtd_target": 626.4,
+          "mtd_rate": 89.8,
+          "ytd_cnt": 6862,
+          "ytd_amt": 3874.8,
+          "ytd_target": null,
+          "ytd_rate": 667490000000.0,
+          "is_total": false
+        },
+        {
+          "group": "서비스상품",
+          "detail": "",
+          "day_cnt": 4,
+          "day_amt": 0.6,
+          "mtd_cnt": 285,
+          "mtd_amt": 144.7,
+          "mtd_target": 227.2,
+          "mtd_rate": 63.7,
+          "ytd_cnt": 2233,
+          "ytd_amt": 1190.8,
+          "ytd_target": null,
+          "ytd_rate": 275082376000.0,
+          "is_total": false
+        },
+        {
+          "group": "소계",
+          "detail": "",
+          "day_cnt": 26,
+          "day_amt": 11.7,
+          "mtd_cnt": 1355,
+          "mtd_amt": 707.1,
+          "mtd_target": 853.6,
+          "mtd_rate": 82.8,
+          "ytd_cnt": 9095,
+          "ytd_amt": 5065.6,
+          "ytd_target": null,
+          "ytd_rate": 942572376000.0,
+          "is_total": true
+        },
+        {
+          "group": "합계",
+          "detail": "",
+          "day_cnt": 34,
+          "day_amt": 118.0,
+          "mtd_cnt": 1546,
+          "mtd_amt": 4275.1,
+          "mtd_target": 5541.1,
+          "mtd_rate": 77.2,
+          "ytd_cnt": 10487,
+          "ytd_amt": 31815.6,
+          "ytd_target": null,
+          "ytd_rate": 6632772376000.0,
+          "is_total": true
+        },
+        {
+          "group": "아너스톤",
+          "detail": "온라인",
+          "day_cnt": 4,
+          "day_amt": 41.6,
+          "mtd_cnt": 35,
+          "mtd_amt": 660.1,
+          "mtd_target": 1064.0,
+          "mtd_rate": 62.0,
+          "ytd_cnt": 263,
+          "ytd_amt": 5430.8,
+          "ytd_target": null,
+          "ytd_rate": 1438300000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "업체",
+          "day_cnt": 2,
+          "day_amt": 34.8,
+          "mtd_cnt": 58,
+          "mtd_amt": 1067.2,
+          "mtd_target": 1440.0,
+          "mtd_rate": 74.1,
+          "ytd_cnt": 425,
+          "ytd_amt": 8726.5,
+          "ytd_target": null,
+          "ytd_rate": 1641600000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "법인",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 4,
+          "mtd_amt": 121.6,
+          "mtd_target": 90.0,
+          "mtd_rate": 135.1,
+          "ytd_cnt": 15,
+          "ytd_amt": 227.4,
+          "ytd_target": null,
+          "ytd_rate": 108000000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "회원",
+          "day_cnt": 2,
+          "day_amt": 29.9,
+          "mtd_cnt": 38,
+          "mtd_amt": 781.0,
+          "mtd_target": 758.5,
+          "mtd_rate": 103.0,
+          "ytd_cnt": 213,
+          "ytd_amt": 4273.1,
+          "ytd_target": null,
+          "ytd_rate": 921300000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "기타",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 1,
+          "mtd_amt": 26.4,
+          "mtd_target": 75.0,
+          "mtd_rate": 35.2,
+          "ytd_cnt": 14,
+          "ytd_amt": 393.0,
+          "ytd_target": null,
+          "ytd_rate": 105000000000.0,
+          "is_total": false
+        },
+        {
+          "group": "용인공원",
+          "detail": "온라인",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 25,
+          "mtd_amt": 330.4,
+          "mtd_target": 684.0,
+          "mtd_rate": 48.3,
+          "ytd_cnt": 241,
+          "ytd_amt": 3929.9,
+          "ytd_target": null,
+          "ytd_rate": 801000000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "업체",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 10,
+          "mtd_amt": 289.9,
+          "mtd_target": 162.0,
+          "mtd_rate": 178.9,
+          "ytd_cnt": 63,
+          "ytd_amt": 1247.8,
+          "ytd_target": null,
+          "ytd_rate": 171000000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "법인",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 0,
+          "mtd_amt": 0.0,
+          "mtd_target": 0.0,
+          "mtd_rate": 0.0,
+          "ytd_cnt": 1,
+          "ytd_amt": 10.3,
+          "ytd_target": null,
+          "ytd_rate": 10800000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "회원",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 18,
+          "mtd_amt": 258.2,
+          "mtd_target": 396.0,
+          "mtd_rate": 65.2,
+          "ytd_cnt": 144,
+          "ytd_amt": 2050.1,
+          "ytd_target": null,
+          "ytd_rate": 471600000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "기타",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 2,
+          "mtd_amt": 33.2,
+          "mtd_target": 18.0,
+          "mtd_rate": 184.2,
+          "ytd_cnt": 13,
+          "ytd_amt": 461.1,
+          "ytd_target": null,
+          "ytd_rate": 21600000000.0,
+          "is_total": false
+        },
+        {
+          "group": "소계",
+          "detail": "",
+          "day_cnt": 8,
+          "day_amt": 106.3,
+          "mtd_cnt": 191,
+          "mtd_amt": 3568.0,
+          "mtd_target": 4687.5,
+          "mtd_rate": 76.1,
+          "ytd_cnt": 1392,
+          "ytd_amt": 26750.0,
+          "ytd_target": null,
+          "ytd_rate": 5690200000000.0,
+          "is_total": true
+        },
+        {
+          "group": "관리비",
+          "detail": "일반",
+          "day_cnt": 13,
+          "day_amt": 6.2,
+          "mtd_cnt": 701,
+          "mtd_amt": 358.1,
+          "mtd_target": 410.0,
+          "mtd_rate": 87.3,
+          "ytd_cnt": 4976,
+          "ytd_amt": 2595.3,
+          "ytd_target": null,
+          "ytd_rate": 444000000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "조경",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 39,
+          "mtd_amt": 24.0,
+          "mtd_target": 20.0,
+          "mtd_rate": 120.2,
+          "ytd_cnt": 229,
+          "ytd_amt": 184.1,
+          "ytd_target": null,
+          "ytd_rate": 22000000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "아너스톤",
+          "day_cnt": 7,
+          "day_amt": 4.4,
+          "mtd_cnt": 197,
+          "mtd_amt": 125.5,
+          "mtd_target": 158.4,
+          "mtd_rate": 79.3,
+          "ytd_cnt": 1222,
+          "ytd_amt": 839.0,
+          "ytd_target": null,
+          "ytd_rate": 167490000000.0,
+          "is_total": false
+        },
+        {
+          "group": "송무",
+          "detail": "관리비",
+          "day_cnt": 2,
+          "day_amt": 0.5,
+          "mtd_cnt": 133,
+          "mtd_amt": 54.7,
+          "mtd_target": 38.0,
+          "mtd_rate": 144.0,
+          "ytd_cnt": 435,
+          "ytd_amt": 256.3,
+          "ytd_target": null,
+          "ytd_rate": 34000000000.0,
+          "is_total": false
+        },
+        {
+          "group": "서비스상품",
+          "detail": "묘지서비스",
+          "day_cnt": 4,
+          "day_amt": 0.6,
+          "mtd_cnt": 231,
+          "mtd_amt": 107.5,
+          "mtd_target": 169.0,
+          "mtd_rate": 63.6,
+          "ytd_cnt": 1736,
+          "ytd_amt": 841.4,
+          "ytd_target": null,
+          "ytd_rate": 195000000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "아너스테이블",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 29,
+          "mtd_amt": 13.2,
+          "mtd_target": 24.1,
+          "mtd_rate": 55.0,
+          "ytd_cnt": 210,
+          "ytd_amt": 108.7,
+          "ytd_target": null,
+          "ytd_rate": 33508000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "봉안함",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 7,
+          "mtd_amt": 4.0,
+          "mtd_target": 11.4,
+          "mtd_rate": 35.2,
+          "ytd_cnt": 35,
+          "ytd_amt": 28.2,
+          "ytd_target": null,
+          "ytd_rate": 13634376000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "봉안함(련)",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 6,
+          "mtd_amt": 15.1,
+          "mtd_target": 18.9,
+          "mtd_rate": 80.0,
+          "ytd_cnt": 33,
+          "ytd_amt": 73.7,
+          "ytd_target": null,
+          "ytd_rate": 22680000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "상차림",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 12,
+          "mtd_amt": 4.8,
+          "mtd_target": 3.9,
+          "mtd_rate": 124.1,
+          "ytd_cnt": 219,
+          "ytd_amt": 48.6,
+          "ytd_target": null,
+          "ytd_rate": 10260000000.0,
+          "is_total": false
+        },
+        {
+          "group": "",
+          "detail": "기타",
+          "day_cnt": 0,
+          "day_amt": 0.0,
+          "mtd_cnt": 0,
+          "mtd_amt": 0.0,
+          "mtd_target": 0.0,
+          "mtd_rate": 0.0,
+          "ytd_cnt": 0,
+          "ytd_amt": 90.2,
+          "ytd_target": null,
+          "ytd_rate": 0.0,
+          "is_total": false
+        },
+        {
+          "group": "소계",
+          "detail": "",
+          "day_cnt": 26,
+          "day_amt": 11.7,
+          "mtd_cnt": 1355,
+          "mtd_amt": 707.1,
+          "mtd_target": 853.6,
+          "mtd_rate": 82.8,
+          "ytd_cnt": 9095,
+          "ytd_amt": 5065.6,
+          "ytd_target": null,
+          "ytd_rate": 942572376000.0,
+          "is_total": true
+        },
+        {
+          "group": "합계",
+          "detail": "",
+          "day_cnt": 34,
+          "day_amt": 118.0,
+          "mtd_cnt": 1546,
+          "mtd_amt": 4275.1,
+          "mtd_target": 5541.1,
+          "mtd_rate": 77.2,
+          "ytd_cnt": 10487,
+          "ytd_amt": 31815.6,
+          "ytd_target": null,
+          "ytd_rate": 6632772376000.0,
+          "is_total": true
+        }
+      ],
+      "funeral": [
+        {
+          "group": "아너스톤",
+          "detail": "장례",
+          "day": 4,
+          "mtd": 130,
+          "ytd": 857
+        },
+        {
+          "group": "",
+          "detail": "이장",
+          "day": 0,
+          "mtd": 3,
+          "ytd": 30
+        },
+        {
+          "group": "용인공원",
+          "detail": "장례",
+          "day": 6,
+          "mtd": 102,
+          "ytd": 744
+        },
+        {
+          "group": "",
+          "detail": "이장",
+          "day": 0,
+          "mtd": 38,
+          "ytd": 248
+        },
+        {
+          "group": "소계",
+          "detail": "",
+          "day": 10,
+          "mtd": 273,
+          "ytd": 1879
+        }
+      ]
+    },
+    "life": {
+      "base": "2026-06-28",
+      "sections": [
+        {
+          "title": "DB 현황",
+          "rows": [
+            {
+              "group": "유효 DB",
+              "detail": "유효 DB",
+              "unit": "cnt",
+              "day": 32.0,
+              "mtd": 747.0,
+              "mtd_target": 1000.0,
+              "mtd_rate": 74.7,
+              "ytd": 0.8,
+              "ytd_target": 4265.0,
+              "mom": 431835.7,
+              "yoy": 33.6
+            },
+            {
+              "group": "",
+              "detail": "인입 DB",
+              "unit": "cnt",
+              "day": 103.0,
+              "mtd": 2093.0,
+              "mtd_target": 2400.0,
+              "mtd_rate": 87.2,
+              "ytd": 1.0,
+              "ytd_target": 11629.0,
+              "mom": 1177850.0,
+              "yoy": 17.8
+            },
+            {
+              "group": "",
+              "detail": "유효 DB 전환율",
+              "unit": "rate",
+              "day": 31.1,
+              "mtd": 35.7,
+              "mtd_target": 41.7,
+              "mtd_rate": 85.7,
+              "ytd": 281.2,
+              "ytd_target": 36.7,
+              "mom": 36.7,
+              "yoy": 13.4
+            },
+            {
+              "group": "온라인 계약",
+              "detail": "ON 상조계약",
+              "unit": "cnt",
+              "day": 17.0,
+              "mtd": 762.0,
+              "mtd_target": 1000.0,
+              "mtd_rate": 76.2,
+              "ytd": 0.8,
+              "ytd_target": 3350.0,
+              "mom": 340442.9,
+              "yoy": -24.6
+            },
+            {
+              "group": "",
+              "detail": "ON 상조계약 (TSM)",
+              "unit": "cnt",
+              "day": 14.0,
+              "mtd": 599.0,
+              "mtd_target": 600.0,
+              "mtd_rate": 99.8,
+              "ytd": 1.0,
+              "ytd_target": 2176.0,
+              "mom": 221878.6,
+              "yoy": 35.4
+            },
+            {
+              "group": "",
+              "detail": "OFF 상조계약",
+              "unit": "cnt",
+              "day": 4.0,
+              "mtd": 82.0,
+              "mtd_target": 120.0,
+              "mtd_rate": 68.3,
+              "ytd": 0.8,
+              "ytd_target": 661.0,
+              "mom": 66685.7,
+              "yoy": -20.1
+            },
+            {
+              "group": "",
+              "detail": "ON 계약전환율",
+              "unit": "rate",
+              "day": 43.8,
+              "mtd": 80.2,
+              "mtd_target": 60.0,
+              "mtd_rate": 133.6,
+              "ytd": 410.2,
+              "ytd_target": 51.0,
+              "mom": 51.4,
+              "yoy": 1.3
+            },
+            {
+              "group": "방문 DB",
+              "detail": "ON 방문 DB",
+              "unit": "cnt",
+              "day": 0.0,
+              "mtd": 3.0,
+              "mtd_target": 29.2,
+              "mtd_rate": 10.3,
+              "ytd": 0.1,
+              "ytd_target": 23.0,
+              "mom": 2321.4,
+              "yoy": 60.7
+            },
+            {
+              "group": "",
+              "detail": "ON 장지계약",
+              "unit": "cnt",
+              "day": 0.0,
+              "mtd": 0.0,
+              "mtd_target": 14.6,
+              "mtd_rate": 0.0,
+              "ytd": 0.0,
+              "ytd_target": 3.0,
+              "mom": 300.0,
+              "yoy": null
+            },
+            {
+              "group": "",
+              "detail": "장지 계약전환율",
+              "unit": "rate",
+              "day": 0.0,
+              "mtd": null,
+              "mtd_target": 50.0,
+              "mtd_rate": null,
+              "ytd": 0.0,
+              "ytd_target": 13.0,
+              "mom": 12.9,
+              "yoy": null
+            },
+            {
+              "group": "법인 DB",
+              "detail": "법인조사 DB건",
+              "unit": "cnt",
+              "day": 5.0,
+              "mtd": 81.0,
+              "mtd_target": 140.0,
+              "mtd_rate": 57.9,
+              "ytd": 0.7,
+              "ytd_target": 694.0,
+              "mom": 69978.6,
+              "yoy": -0.2
+            },
+            {
+              "group": "",
+              "detail": "법인 행사",
+              "unit": "cnt",
+              "day": 0.0,
+              "mtd": 13.0,
+              "mtd_target": 28.0,
+              "mtd_rate": 46.4,
+              "ytd": 0.5,
+              "ytd_target": 140.0,
+              "mom": 14092.9,
+              "yoy": -44.3
+            },
+            {
+              "group": "",
+              "detail": "행사전환율",
+              "unit": "rate",
+              "day": 0.0,
+              "mtd": 16.0,
+              "mtd_target": 20.0,
+              "mtd_rate": 80.2,
+              "ytd": 229.5,
+              "ytd_target": 20.2,
+              "mom": 20.1,
+              "yoy": -44.1
+            }
+          ]
+        },
+        {
+          "title": "사업현황",
+          "rows": [
+            {
+              "group": "계약",
+              "detail": "부금 매출",
+              "unit": "amt",
+              "day": 23.6,
+              "mtd": 552.3,
+              "mtd_target": 863.0,
+              "mtd_rate": 64.0,
+              "ytd": 0.0,
+              "ytd_target": 4669.1,
+              "mom": 470853988571.4,
+              "yoy": -19.2
+            },
+            {
+              "group": "",
+              "detail": "장례 매출",
+              "unit": "amt",
+              "day": 10.8,
+              "mtd": 295.2,
+              "mtd_target": 645.0,
+              "mtd_rate": 45.8,
+              "ytd": 0.0,
+              "ytd_target": 2881.7,
+              "mom": 290275023371.4,
+              "yoy": -23.9
+            },
+            {
+              "group": "",
+              "detail": "장지 매출",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 22.5,
+              "mtd_target": 231.0,
+              "mtd_rate": 9.7,
+              "ytd": 0.0,
+              "ytd_target": 272.1,
+              "mom": 27374350242.2,
+              "yoy": -40.1
+            },
+            {
+              "group": "",
+              "detail": "해약 출금",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 276.2,
+              "mtd_target": 252.0,
+              "mtd_rate": 109.6,
+              "ytd": 0.0,
+              "ytd_target": 1605.9,
+              "mom": 162561560185.7,
+              "yoy": 19.9
+            }
+          ]
+        },
+        {
+          "title": "부서별 KPI",
+          "rows": [
+            {
+              "group": "ON마케팅",
+              "detail": "유효 DB 건",
+              "unit": "cnt",
+              "day": 32.0,
+              "mtd": 747.0,
+              "mtd_target": 1000.0,
+              "mtd_rate": 74.7,
+              "ytd": 0.8,
+              "ytd_target": 4265.0,
+              "mom": 431835.7,
+              "yoy": 33.6
+            },
+            {
+              "group": "",
+              "detail": "ON상조 다이렉트 건",
+              "unit": "cnt",
+              "day": 3.0,
+              "mtd": 163.0,
+              "mtd_target": 400.0,
+              "mtd_rate": 40.8,
+              "ytd": 0.4,
+              "ytd_target": 1174.0,
+              "mom": 118564.3,
+              "yoy": -71.3
+            },
+            {
+              "group": "T S&M",
+              "detail": "ON상조 계약 전환율",
+              "unit": "rate",
+              "day": 43.8,
+              "mtd": 80.2,
+              "mtd_target": 60.0,
+              "mtd_rate": 133.6,
+              "ytd": 410.2,
+              "ytd_target": 51.0,
+              "mom": 51.4,
+              "yoy": 8.6
+            },
+            {
+              "group": "",
+              "detail": "ON상조 상담계약 건",
+              "unit": "cnt",
+              "day": 14.0,
+              "mtd": 599.0,
+              "mtd_target": 600.0,
+              "mtd_rate": 99.8,
+              "ytd": 1.0,
+              "ytd_target": 2176.0,
+              "mom": 221878.6,
+              "yoy": 35.4
+            },
+            {
+              "group": "",
+              "detail": "ON상조 장지방문 건",
+              "unit": "cnt",
+              "day": 0.0,
+              "mtd": 3.0,
+              "mtd_target": 29.2,
+              "mtd_rate": 10.3,
+              "ytd": 0.1,
+              "ytd_target": 23.0,
+              "mom": 2321.4,
+              "yoy": 60.7
+            },
+            {
+              "group": "",
+              "detail": "ON상조 장지수수료 매출",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 0.0,
+              "mtd_target": 102.2,
+              "mtd_rate": 0.0,
+              "ytd": 0.0,
+              "ytd_target": 13.3,
+              "mom": 1333636400.0,
+              "yoy": null
+            },
+            {
+              "group": "",
+              "detail": "유지부금 매출",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 88.9,
+              "mtd_target": 80.0,
+              "mtd_rate": 111.1,
+              "ytd": 0.0,
+              "ytd_target": 693.3,
+              "mom": 69969574285.7,
+              "yoy": 2.7
+            },
+            {
+              "group": "",
+              "detail": "해약",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 276.2,
+              "mtd_target": 252.0,
+              "mtd_rate": 109.6,
+              "ytd": 0.0,
+              "ytd_target": 1605.9,
+              "mom": 162561560185.7,
+              "yoy": 19.9
+            },
+            {
+              "group": "행사팀",
+              "detail": "장례상품 매출",
+              "unit": "amt",
+              "day": 10.8,
+              "mtd": 230.3,
+              "mtd_target": 474.0,
+              "mtd_rate": 48.6,
+              "ytd": 0.0,
+              "ytd_target": 1988.1,
+              "mom": 200450184285.7,
+              "yoy": -17.7
+            },
+            {
+              "group": "",
+              "detail": "장례상향 매출",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 64.9,
+              "mtd_target": 171.0,
+              "mtd_rate": 38.0,
+              "ytd": 0.0,
+              "ytd_target": 893.6,
+              "mom": 89824839085.7,
+              "yoy": -39.9
+            },
+            {
+              "group": "",
+              "detail": "장지 매출",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 3.0,
+              "mtd_target": 65.0,
+              "mtd_rate": 4.6,
+              "ytd": 0.0,
+              "ytd_target": 99.4,
+              "mom": 9964005921.4,
+              "yoy": -84.2
+            },
+            {
+              "group": "",
+              "detail": "법인행사 건",
+              "unit": "cnt",
+              "day": 0.0,
+              "mtd": 13.0,
+              "mtd_target": 28.0,
+              "mtd_rate": 46.4,
+              "ytd": 0.5,
+              "ytd_target": 140.0,
+              "mom": 14092.9,
+              "yoy": -44.3
+            },
+            {
+              "group": "",
+              "detail": "법인행사 전환율",
+              "unit": "rate",
+              "day": 0.0,
+              "mtd": 16.0,
+              "mtd_target": 20.0,
+              "mtd_rate": 80.2,
+              "ytd": 229.5,
+              "ytd_target": 20.2,
+              "mom": 20.1,
+              "yoy": -40.2
+            },
+            {
+              "group": "법인팀",
+              "detail": "법인조사 DB 건",
+              "unit": "cnt",
+              "day": 5.0,
+              "mtd": 81.0,
+              "mtd_target": 140.0,
+              "mtd_rate": 57.9,
+              "ytd": 0.7,
+              "ytd_target": 694.0,
+              "mom": 69978.6,
+              "yoy": -0.2
+            },
+            {
+              "group": "OFF_YPL",
+              "detail": "상조부금 건",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 0.0,
+              "mtd_target": 0.0,
+              "mtd_rate": 68.3,
+              "ytd": 0.0,
+              "ytd_target": 0.0,
+              "mom": 66685.7,
+              "yoy": -20.1
+            },
+            {
+              "group": "",
+              "detail": "상조부금 매출",
+              "unit": "amt",
+              "day": 23.6,
+              "mtd": 462.9,
+              "mtd_target": 663.0,
+              "mtd_rate": 69.8,
+              "ytd": 0.0,
+              "ytd_target": 3766.0,
+              "mom": 379908828571.4,
+              "yoy": -22.3
+            }
+          ]
+        },
+        {
+          "title": "Cash Flow",
+          "rows": [
+            {
+              "group": "현금흐름",
+              "detail": "총입금-총출금",
+              "unit": "amt",
+              "day": 2.8,
+              "mtd": -161.5,
+              "mtd_target": 306.0,
+              "mtd_rate": -52.8,
+              "ytd": -0.0,
+              "ytd_target": -562.6,
+              "mom": -57411987550.0,
+              "yoy": -4570.9
+            },
+            {
+              "group": "",
+              "detail": "총입금",
+              "unit": "amt",
+              "day": 2.8,
+              "mtd": 748.1,
+              "mtd_target": 1457.0,
+              "mtd_rate": 51.3,
+              "ytd": -0.0,
+              "ytd_target": 6339.8,
+              "mom": 639318817000.0,
+              "yoy": -10.8
+            },
+            {
+              "group": "",
+              "detail": "행사매출 입금",
+              "unit": "amt",
+              "day": 2.8,
+              "mtd": 114.1,
+              "mtd_target": 412.0,
+              "mtd_rate": 27.7,
+              "ytd": -0.0,
+              "ytd_target": 1587.4,
+              "mom": 159550398128.6,
+              "yoy": -45.6
+            },
+            {
+              "group": "",
+              "detail": "장지매출 입금",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 8.7,
+              "mtd_target": 171.0,
+              "mtd_rate": 5.1,
+              "ytd": -0.0,
+              "ytd_target": 140.8,
+              "mom": 14144227142.9,
+              "yoy": -70.4
+            },
+            {
+              "group": "",
+              "detail": "부금 입금",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 586.7,
+              "mtd_target": 873.0,
+              "mtd_rate": 67.2,
+              "ytd": -0.0,
+              "ytd_target": 4337.7,
+              "mom": 437961852164.3,
+              "yoy": 3.2
+            },
+            {
+              "group": "",
+              "detail": "기타 입금",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 38.6,
+              "mtd_target": 0.0,
+              "mtd_rate": null,
+              "ytd": null,
+              "ytd_target": 273.9,
+              "mom": 27662339564.3,
+              "yoy": 23.5
+            },
+            {
+              "group": "",
+              "detail": "총출금",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 909.6,
+              "mtd_target": 1150.0,
+              "mtd_rate": 79.1,
+              "ytd": -0.0,
+              "ytd_target": 6902.3,
+              "mom": 696730804550.0,
+              "yoy": 8.9
+            },
+            {
+              "group": "",
+              "detail": "정산수수료 출금",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 211.3,
+              "mtd_target": 440.0,
+              "mtd_rate": 48.0,
+              "ytd": -0.0,
+              "ytd_target": 1760.0,
+              "mom": 177509086014.3,
+              "yoy": 19.3
+            },
+            {
+              "group": "",
+              "detail": "광고료 출금",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 98.7,
+              "mtd_target": 110.0,
+              "mtd_rate": 89.8,
+              "ytd": -0.0,
+              "ytd_target": 681.2,
+              "mom": 68827678571.4,
+              "yoy": -0.7
+            },
+            {
+              "group": "",
+              "detail": "해약금 출금",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 276.2,
+              "mtd_target": 252.0,
+              "mtd_rate": 109.6,
+              "ytd": -0.0,
+              "ytd_target": 1605.9,
+              "mom": 162561560185.7,
+              "yoy": 19.9
+            },
+            {
+              "group": "",
+              "detail": "예치금 출금",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 53.6,
+              "mtd_target": 79.0,
+              "mtd_rate": 67.8,
+              "ytd": -0.0,
+              "ytd_target": 614.2,
+              "mom": 61805104714.3,
+              "yoy": 7.5
+            },
+            {
+              "group": "",
+              "detail": "VIP 출금",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 0.0,
+              "mtd_target": 70.0,
+              "mtd_rate": 0.0,
+              "ytd": -0.0,
+              "ytd_target": 275.1,
+              "mom": 27513824500.0,
+              "yoy": null
+            },
+            {
+              "group": "",
+              "detail": "고정비_기타 출금",
+              "unit": "amt",
+              "day": 0.0,
+              "mtd": 269.8,
+              "mtd_target": 193.0,
+              "mtd_rate": 139.8,
+              "ytd": -0.0,
+              "ytd_target": 1965.9,
+              "mom": 198513550564.3,
+              "yoy": -3.2
+            }
+          ]
+        }
+      ]
+    },
+    "trace": {
+      "yongin": {
+        "verdict": "external",
+        "label": "원장 밖",
+        "ledger": null,
+        "diff": null,
+        "accounts": [],
+        "note": "일 단위 분양·관리비·서비스 실적과 장례 건수는 회계 원장에서 산출할 수 없습니다. 장지 CRM의 계약·관리비 부과·행사 대장이 원천이며, 채널 구분(온라인/회원/업체/법인/기타)도 CRM 필드에서만 확인 가능합니다. 작성 방식(시스템 추출 / 수기)이 확인되지 않았습니다.",
+        "rfi": [
+          "B-02",
+          "O-01",
+          "O-02"
+        ],
+        "formula": "장지 CRM 계약·부과·행사 대장 집계"
+      },
+      "life": {
+        "verdict": "external",
+        "label": "원장 밖",
+        "ledger": null,
+        "diff": null,
+        "accounts": [],
+        "note": "DB 퍼널(인입·유효 DB)은 마케팅 채널 시스템, 부금·행사·해약은 상조 회원관리, Cash Flow는 자금 데이터가 원천입니다. Data Lake 연계 현황이 확인되지 않았습니다.",
+        "rfi": [
+          "B-03",
+          "B-04",
+          "O-03"
+        ],
+        "formula": "상조 회원관리 + 마케팅 채널 DB + 자금"
+      }
+    }
+  },
+  "rfi": {
+    "C-01": {
+      "id": "C-01",
+      "title": "경영손익 보고서 작성 절차",
+      "target": "용인공원그룹 (재무회계팀 · 경영지원팀 · 현업)",
+      "priority": "P1",
+      "ask": "경영진 보고용 화면(자금현황 · 매출실적 · 원가 및 손익)을 매월 어떤 순서로 만드시는지 확인 부탁드립니다. 어느 리포트를 뽑아 어떤 가공을 거치는지가 핵심입니다."
+    },
+    "C-02": {
+      "id": "C-02",
+      "title": "부문 구분 축의 확정 (2개 안이 병존)",
+      "target": "용인공원그룹 (재무회계팀 · 경영지원팀 · 현업)",
+      "priority": "P1",
+      "ask": "원가 및 손익을 나누는 축이 자료마다 달라, 최종적으로 어느 쪽으로 가실지 확인 부탁드립니다."
+    },
+    "C-03": {
+      "id": "C-03",
+      "title": "부서 체계 매핑 (조직도 부서 ↔ 아마란스 부서코드)",
+      "target": "용인공원그룹 (재무회계팀 · 경영지원팀 · 현업)",
+      "priority": "P1",
+      "ask": "「3.부문별손익」 우측의 부서별 원가 배부표에 적힌 부서명과, 아마란스10 부서코드가 서로 달라 연결이 되지 않습니다. 매핑표를 요청드립니다."
+    },
+    "C-04": {
+      "id": "C-04",
+      "title": "공통비 배부 기준 (분양 · 관리비 양쪽에 해당하는 13개 부서)",
+      "target": "용인공원그룹 (재무회계팀 · 경영지원팀 · 현업)",
+      "priority": "P1",
+      "ask": "부서별 원가 배부표에서 분양원가와 관리비원가 양쪽에 모두 표시된 부서의 배부 비율과 그 산정 기준을 요청드립니다."
+    },
+    "C-05": {
+      "id": "C-05",
+      "title": "YPL의 수익과 비용이 서로 다른 부문에 배정된 사유",
+      "target": "용인공원그룹 (재무회계팀 · 경영지원팀 · 현업)",
+      "priority": "P1",
+      "ask": "「3.부문별손익」에서 YPL의 수익 · 비용 · 영업외손익이 각각 다른 부문으로 들어가 있어, 의도하신 배정인지 확인 부탁드립니다."
+    },
+    "C-06": {
+      "id": "C-06",
+      "title": "자금 수지 산출 시 계좌간 이체 제외 기준 및 라이프 차이",
+      "target": "용인공원그룹 (재무회계팀 · 경영지원팀 · 현업)",
+      "priority": "P1",
+      "ask": "자금 수지에서 제외하는 계좌간 이체의 판정 기준과, 라이프에서 남는 차이의 사유를 확인 부탁드립니다."
+    },
+    "C-07": {
+      "id": "C-07",
+      "title": "라이프 관리회계(부금 기준)와 재무회계(수익인식 기준)의 연결",
+      "target": "용인공원그룹 (재무회계팀 · 경영지원팀 · 현업)",
+      "priority": "P1",
+      "ask": "라이프의 경영보고 수치와 재무제표 수치를 잇는 조정표를 요청드립니다. 아울러 화면에 어느 기준을 정본으로 표시할지도 확인 부탁드립니다."
+    },
+    "C-08": {
+      "id": "C-08",
+      "title": "아너스톤 수입의 서비스매출 재분류 (23.4백만)",
+      "target": "용인공원그룹 (재무회계팀 · 경영지원팀 · 현업)",
+      "priority": "P2",
+      "ask": "원장의 사용료수입(아너)과 화면의 아너스톤 실적 차이가 어떤 기준으로 서비스매출로 옮겨지는지 확인 부탁드립니다."
+    },
+    "C-09": {
+      "id": "C-09",
+      "title": "일일보고의 원천과 채널 구분 기준",
+      "target": "용인공원그룹 (재무회계팀 · 경영지원팀 · 현업)",
+      "priority": "P2",
+      "ask": "용인공원 · 온유상조 일일 업무 보고의 각 수치를 어느 시스템에서 산출하는지와, 채널 구분(온라인 / 회원 / 업체 / 법인 / 기타)의 판정 기준을 확인 부탁드립니다."
+    },
+    "D-01": {
+      "id": "D-01",
+      "title": "계정 매핑 확인 및 26년 계정과목 마스터",
+      "target": "더존 (아마란스10)",
+      "priority": "P1",
+      "ask": "PwC가 작성한 계정 매핑표(별첨 '계정코드 매핑' 시트)가 아마란스10 기준과 일치하는지 확인 부탁드립니다. 아울러 26년 신설 계정을 포함한 마스터를 요청드립니다."
+    },
+    "D-02": {
+      "id": "D-02",
+      "title": "리포트 조회 인터페이스 (자금일보 · 손익계산서 · 부문별 손익현황 · 예산)",
+      "target": "더존 (아마란스10)",
+      "priority": "P1",
+      "ask": "경영보고 화면의 원천이 되는 아마란스10 리포트 4종을 외부에서 조회할 수 있는 방법(API 또는 DB View)과 제공 항목을 확인 부탁드립니다."
+    },
+    "D-03": {
+      "id": "D-03",
+      "title": "아마란스10 내에서 제공 가능한 경영보고 화면의 범위",
+      "target": "더존 (아마란스10)",
+      "priority": "P1",
+      "ask": "자금현황 · 매출실적 · 부문별 손익을 아마란스10의 표준 기능(예산 · 자금관리 · 부문별 손익현황)만으로 어느 수준까지 제공할 수 있는지 확인 부탁드립니다."
+    },
+    "D-04": {
+      "id": "D-04",
+      "title": "원가관리 모듈의 부문 배부 지원 범위 및 산출물 조회 방식",
+      "target": "더존 (아마란스10)",
+      "priority": "P2",
+      "ask": "구축 예정인 원가관리 모듈에서 부서 → 부문(분양 / 관리비) 배부를 처리할 수 있는지와, 산출물을 외부에서 조회하는 방법을 확인 부탁드립니다."
+    },
+    "B-01": {
+      "id": "B-01",
+      "title": "Data Lake 적재 현황 (테이블 · 스키마 · 원천)",
+      "target": "DK BMC (Data Lake · Tableau)",
+      "priority": "P1",
+      "ask": "현재 Data Lake에 적재되어 있거나 적재 예정인 데이터의 목록과 스키마를 공유 부탁드립니다."
+    },
+    "B-02": {
+      "id": "B-02",
+      "title": "자금현황 · 매출실적을 데이터 클라우드에서 처리 가능하다고 보신 근거",
+      "target": "DK BMC (Data Lake · Tableau)",
+      "priority": "P1",
+      "ask": "두 화면을 현재 확보된 데이터로 구현 가능하다고 판단하신 근거와, 구체적으로 어떤 데이터를 어떻게 결합해 표시하실 계획인지 공유 부탁드립니다."
+    },
+    "B-03": {
+      "id": "B-03",
+      "title": "원가 및 손익에만 아마란스10 신규 API 연동이 필요하다고 보신 사유",
+      "target": "DK BMC (Data Lake · Tableau)",
+      "priority": "P1",
+      "ask": "세 화면의 원천이 모두 아마란스10인데 원가 및 손익만 신규 연동이 필요하다고 판단하신 사유와, 필요한 데이터 항목을 구체적으로 공유 부탁드립니다."
+    },
+    "B-04": {
+      "id": "B-04",
+      "title": "구성 중인 BI 화면 및 설계 산출물",
+      "target": "DK BMC (Data Lake · Tableau)",
+      "priority": "P1",
+      "ask": "현재 기획 · 구성 중인 Tableau 대시보드의 화면 구성과 설계 산출물(view table · 지표 정의 · 화면 흐름)을 공유 부탁드립니다."
+    },
+    "B-05": {
+      "id": "B-05",
+      "title": "CRM · 상조 회원관리 · 마케팅 채널 데이터의 연계 현황",
+      "target": "DK BMC (Data Lake · Tableau)",
+      "priority": "P1",
+      "ask": "회계 시스템에서 산출되지 않는 영역의 데이터 연계 현황을 공유 부탁드립니다."
+    }
+  },
+  "coa": [
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "사용료수입(일반)",
+      "code": "4040000",
+      "amount": 1354.25,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "이장비수입",
+      "code": "4090000",
+      "amount": 24.3,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "사용료수입(아너)",
+      "code": "4110000",
+      "amount": 3522.36,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "관리비수입(아너)",
+      "code": "4120001",
+      "amount": 36.54,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "관리비수입(야외)",
+      "code": "4120002",
+      "amount": 400.3,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "신규관리비수입(아너)",
+      "code": "4120003",
+      "amount": 96.9,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "신규관리비수입(야외)",
+      "code": "4120004",
+      "amount": 33.24,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "조경관리비수입",
+      "code": "4120005",
+      "amount": 23.33,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "신규조경관리비수입",
+      "code": "4120006",
+      "amount": 8.56,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "장례비수입",
+      "code": "4140000",
+      "amount": 35.15,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "임대료수입",
+      "code": "4160000",
+      "amount": 6.3,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "사초비수입",
+      "code": "4170000",
+      "amount": 0.7,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "안치료수입",
+      "code": "4180000",
+      "amount": 31.25,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "기타수입",
+      "code": "4190000",
+      "amount": 45.86,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "매출액",
+      "account": "법비용및지연이자수입",
+      "code": "4190001",
+      "amount": 2.2,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "임원급여",
+      "code": "8010000",
+      "amount": 113.4,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "직원급여",
+      "code": "8020000",
+      "amount": 78.67,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "상여금",
+      "code": "8030000",
+      "amount": 11.0,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "복리후생비",
+      "code": "8110000",
+      "amount": 8.72,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "여비교통비",
+      "code": "8120000",
+      "amount": 5.06,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "접대비(기업업무추진비)",
+      "code": "8130000",
+      "amount": 2.15,
+      "confidence": "high",
+      "reason": "별칭 매칭(COA 표기: 접대비)"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "통신비",
+      "code": "8140000",
+      "amount": 3.13,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "수도광열비",
+      "code": "8150000",
+      "amount": 4.99,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "전력비",
+      "code": "8160000",
+      "amount": 17.24,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "세금과공과금",
+      "code": "8170000",
+      "amount": 17.96,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "지급임차료",
+      "code": "8190000",
+      "amount": 27.26,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "보험료",
+      "code": "8210000",
+      "amount": 1.66,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "차량유지비",
+      "code": "8220000",
+      "amount": 0.88,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "운반비",
+      "code": "8240000",
+      "amount": 0.03,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "교육훈련비",
+      "code": "8250000",
+      "amount": 7.92,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "도서인쇄비",
+      "code": "8260000",
+      "amount": 3.39,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "소모품비",
+      "code": "8300000",
+      "amount": 10.74,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "지급수수료",
+      "code": "8310000",
+      "amount": 177.58,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "광고선전비",
+      "code": "8330000",
+      "amount": 5.07,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "판매촉진비",
+      "code": "8340000",
+      "amount": 1.41,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "판매수수료",
+      "code": "8390000",
+      "amount": 1.95,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "협회비",
+      "code": "8460000",
+      "amount": 1.2,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "판매비와관리비",
+      "account": "마케팅수수료",
+      "code": "",
+      "amount": 1563.13,
+      "confidence": "none",
+      "reason": "용인공원 COA에 해당 계정명 없음 (26년 신설 계정 가능성)"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "영업외수익",
+      "account": "이자수익",
+      "code": "9010000",
+      "amount": 0.01,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "영업외수익",
+      "account": "유형자산처분이익",
+      "code": "9140000",
+      "amount": 31.85,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "영업외수익",
+      "account": "잡이익",
+      "code": "9300000",
+      "amount": 1.01,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "영업외비용",
+      "account": "이자비용",
+      "code": "9310000",
+      "amount": 11.73,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "영업외비용",
+      "account": "기부금",
+      "code": "9330000",
+      "amount": 6.0,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "용인공원",
+      "company_id": "yongin",
+      "section": "영업외비용",
+      "account": "잡손실",
+      "code": "9600000",
+      "amount": 0.0,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "매출액",
+      "account": "임대료수입",
+      "code": "4110000",
+      "amount": 6.07,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "매출액",
+      "account": "수입수수료",
+      "code": "4130000",
+      "amount": 1917.63,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "매출원가",
+      "account": "상품매출원가",
+      "code": "4510000",
+      "amount": 0.0,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "매출원가",
+      "account": "기초 상품 재고액",
+      "code": "",
+      "amount": 5.48,
+      "confidence": "n/a",
+      "reason": "매출원가 산식 구성요소로 계정과목이 아님"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "매출원가",
+      "account": "당기 상품 매입액",
+      "code": "",
+      "amount": 0.0,
+      "confidence": "n/a",
+      "reason": "매출원가 산식 구성요소로 계정과목이 아님"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "매출원가",
+      "account": "기말 상품 재고액",
+      "code": "",
+      "amount": 5.48,
+      "confidence": "n/a",
+      "reason": "매출원가 산식 구성요소로 계정과목이 아님"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "직원급여",
+      "code": "8020000",
+      "amount": 184.75,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "퇴직급여",
+      "code": "8060000",
+      "amount": 4.49,
+      "confidence": "medium",
+      "reason": "섹션 제한 후에도 후보 2개(8060000, 8080000). 최소코드 채택, 확인 필요"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "복리후생비",
+      "code": "8110000",
+      "amount": 13.59,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "여비교통비",
+      "code": "8120000",
+      "amount": 6.75,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "접대비(기업업무추진비)",
+      "code": "8130000",
+      "amount": 116.75,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "통신비",
+      "code": "8140000",
+      "amount": 0.37,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "수도광열비",
+      "code": "8150000",
+      "amount": 0.01,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "전력비",
+      "code": "8160000",
+      "amount": 0.71,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "세금과공과금",
+      "code": "8170000",
+      "amount": 3.4,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "지급임차료",
+      "code": "8190000",
+      "amount": 9.6,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "보험료",
+      "code": "8210000",
+      "amount": 2.22,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "차량유지비",
+      "code": "8220000",
+      "amount": 0.91,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "도서인쇄비",
+      "code": "8260000",
+      "amount": 0.04,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "소모품비",
+      "code": "8300000",
+      "amount": 0.45,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "지급수수료",
+      "code": "8310000",
+      "amount": 79.14,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "광고선전비",
+      "code": "8330000",
+      "amount": 170.42,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "건물관리비",
+      "code": "8370000",
+      "amount": 1.28,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "판매비와관리비",
+      "account": "판매수수료",
+      "code": "8390000",
+      "amount": 519.46,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "영업외수익",
+      "account": "이자수익",
+      "code": "9010000",
+      "amount": 0.01,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "영업외수익",
+      "account": "잡이익",
+      "code": "9300000",
+      "amount": 0.0,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "YPL",
+      "company_id": "ypl",
+      "section": "영업외비용",
+      "account": "잡손실",
+      "code": "9600000",
+      "amount": 0.0,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "매출액",
+      "account": "묘지매출",
+      "code": "4120003",
+      "amount": 7.6,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "매출액",
+      "account": "장례지원서비스매출",
+      "code": "4120005",
+      "amount": 387.07,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "매출원가",
+      "account": "상품매출원가",
+      "code": "4510000",
+      "amount": 0.0,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "매출원가",
+      "account": "기초 상품 재고액",
+      "code": "",
+      "amount": 0.0,
+      "confidence": "n/a",
+      "reason": "매출원가 산식 구성요소로 계정과목이 아님"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "매출원가",
+      "account": "당기 상품 매입액",
+      "code": "",
+      "amount": 0.04,
+      "confidence": "n/a",
+      "reason": "매출원가 산식 구성요소로 계정과목이 아님"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "매출원가",
+      "account": "기말 상품 재고액",
+      "code": "",
+      "amount": 0.04,
+      "confidence": "n/a",
+      "reason": "매출원가 산식 구성요소로 계정과목이 아님"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "직원급여",
+      "code": "8020000",
+      "amount": 128.44,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "복리후생비",
+      "code": "8110000",
+      "amount": 11.82,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "여비교통비",
+      "code": "8120000",
+      "amount": 0.6,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "접대비(기업업무추진비)",
+      "code": "8130000",
+      "amount": 13.58,
+      "confidence": "high",
+      "reason": "별칭 매칭(COA 표기: 접대비)"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "통신비",
+      "code": "8140000",
+      "amount": 0.96,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "세금과공과금",
+      "code": "8170000",
+      "amount": 2.88,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "지급임차료",
+      "code": "8190000",
+      "amount": 5.09,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "보험료",
+      "code": "8210000",
+      "amount": 0.65,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "임차차량유지비",
+      "code": "8220000",
+      "amount": 1.15,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "도서인쇄비",
+      "code": "8260000",
+      "amount": 0.09,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "소모품비",
+      "code": "8300000",
+      "amount": 0.02,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "장례장의용품",
+      "code": "8300001",
+      "amount": 13.37,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "지급수수료",
+      "code": "8310000",
+      "amount": 64.37,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "지급수수료(장례)",
+      "code": "8310001",
+      "amount": 281.69,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "cms수수료",
+      "code": "8310007",
+      "amount": 0.64,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "광고선전비",
+      "code": "8330000",
+      "amount": 62.29,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "판매비와관리비",
+      "account": "판매수수료",
+      "code": "8390000",
+      "amount": 51.35,
+      "confidence": "high",
+      "reason": "계정명 1:1"
+    },
+    {
+      "company": "라이프",
+      "company_id": "life",
+      "section": "영업외수익",
+      "account": "회비정산차익",
+      "code": "",
+      "amount": 11.8,
+      "confidence": "none",
+      "reason": "라이프 COA에 해당 계정명 없음 (26년 신설 계정 가능성)"
+    }
+  ]
+}

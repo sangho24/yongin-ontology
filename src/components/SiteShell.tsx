@@ -4,7 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, ReactNode } from "react";
-import { LayoutDashboard, BarChart3, Target, type LucideIcon } from "lucide-react";
+import {
+  LayoutDashboard,
+  BarChart3,
+  Target,
+  Wallet,
+  PieChart,
+  Receipt,
+  Layers,
+  CalendarDays,
+  type LucideIcon,
+} from "lucide-react";
 import { SearchPalette } from "./SearchPalette";
 import { EvidenceDrawerHost } from "./EvidenceDrawerHost";
 import { useEvidenceStore } from "@/store/evidence";
@@ -18,16 +28,43 @@ import { useEvidenceStore } from "@/store/evidence";
 const ICON_MAP: Record<string, LucideIcon> = {
   "/": LayoutDashboard,
   "/pl": BarChart3,
+  "/segment": PieChart,
+  "/sales": Receipt,
+  "/cost": Layers,
+  "/cash": Wallet,
   "/kpi": Target,
+  "/daily": CalendarDays,
 };
 
+// -----------------------------------------------------------------------------
+// 메뉴는 보고 층위 그대로 쌓는다.
+//   그룹 전체(Overview) → 법인 → 부문 → 상품·채널 → 조직 순으로 내려가고,
+//   기준이 다른 자금(현금주의) · 지표 · 일 단위는 아래에 따로 둔다.
+// Overview는 아래 모든 화면의 요약을 한 장에 담는다.
+// -----------------------------------------------------------------------------
 const NAV: { group: string; items: { path: string; label: string; sub?: string; badge?: string }[] }[] = [
   {
-    group: "경영손익",
+    group: "그룹 전체",
+    items: [{ path: "/", label: "Overview", sub: "자금 · 손익 · KPI 요약" }],
+  },
+  {
+    group: "손익 (발생 기준)",
     items: [
-      { path: "/", label: "Overview", sub: "그룹 수지현황" },
-      { path: "/pl", label: "손익", sub: "조직별 원가 및 손익" },
+      { path: "/pl", label: "법인별 손익", sub: "용인공원 · YPL · 라이프" },
+      { path: "/segment", label: "부문별 손익", sub: "분양 · 관리비 · 상조" },
+      { path: "/sales", label: "매출실적", sub: "상품 · 채널별" },
+      { path: "/cost", label: "원가 및 손익", sub: "조직별 원가율" },
+    ],
+  },
+  {
+    group: "자금 (현금 기준)",
+    items: [{ path: "/cash", label: "자금현황", sub: "법인별 Cash flow" }],
+  },
+  {
+    group: "지표 · 일 단위",
+    items: [
       { path: "/kpi", label: "KPI", sub: "조직별 지표 추이" },
+      { path: "/daily", label: "일일마감", sub: "장지 · 상조" },
     ],
   },
 ];

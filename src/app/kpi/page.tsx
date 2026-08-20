@@ -2,9 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { Pin } from "lucide-react";
-import { LineChart, Line, Area, AreaChart, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { Area, AreaChart, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { AppLayout } from "@/components/AppLayout";
-import { Card, StatCard } from "@/components/Card";
+import { StatCard } from "@/components/Card";
 import { Segmented, PeriodFilter, Delta, InfoTip, TipRow } from "@/components/exec/Bits";
 import { ReportSection, ReportCover, ReportActions, type SectionDef } from "@/components/exec/Report";
 import { useReportSections, usePinnedKpis } from "@/store/prefs";

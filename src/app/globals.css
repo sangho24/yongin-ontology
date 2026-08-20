@@ -95,7 +95,10 @@ html, body {
 .slide-head { display: none; }
 
 @media print {
-  @page { size: A4 landscape; margin: 10mm 9mm 12mm; }
+  /* 16:9 와이드스크린 슬라이드 (PowerPoint 기본 33.87 x 19.05cm)
+     margin을 0으로 두어야 브라우저가 얹는 머리말(제목 · URL)과
+     꼬리말(날짜 · 페이지)이 찍히지 않는다. 실제 여백은 .print-body가 갖는다. */
+  @page { size: 338mm 190mm; margin: 0; }
 
   html, body { background: #ffffff; }
 
@@ -110,7 +113,12 @@ html, body {
     background: #ffffff !important;
   }
   .print-main { padding: 0 !important; }
-  .print-body { display: block !important; width: 100% !important; }
+  /* @page margin을 0으로 뒀으므로 인쇄 여백은 여기서 준다 */
+  .print-body {
+    display: block !important;
+    width: 100% !important;
+    padding: 10mm 12mm 11mm !important;
+  }
 
   /* --- 표지 (첫 장 상단) --- */
   .report-cover { margin-bottom: 8mm; }
@@ -145,38 +153,63 @@ html, body {
     color: #57534e;
   }
 
-  /* --- 섹션 = 슬라이드 --- */
-  .report-section { break-inside: avoid-page; }
-  .print-slide:not(.report-off) { break-before: page; }
-  .report-section { margin-top: 0 !important; }
+  /* --- 섹션 배치 ---
+     섹션마다 새 장을 뽑으면 한 장에 표 하나만 남아 여백이 크게 뜬다.
+     섹션은 쪼개지지 않게만 잡아 두고 한 장에 들어가는 만큼 채워 넣는다.
+     한 장을 통째로 쓰고 싶은 섹션에는 print-page-break를 준다. */
+  .report-section { break-inside: avoid; margin-top: 0 !important; margin-bottom: 5mm; }
+  .print-page-break:not(.report-off) { break-before: page; }
 
+  /* 경영손익 보고서 장표 형식 — 청록 타이틀 바 + 우측 단위·그룹 표기 */
   .slide-head {
     display: flex !important;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    border-bottom: 1.5px solid #0095A9;
-    padding-bottom: 5px;
-    margin-bottom: 7mm;
+    background: #0095A9;
+    padding: 6px 11px;
+    margin-bottom: 6mm;
   }
   .slide-head-title {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    font-size: 13.5px;
+    gap: 8px;
+    font-size: 14px;
     font-weight: 700;
     letter-spacing: -0.02em;
-    color: #1a1a1a;
+    color: #ffffff;
   }
   .slide-head-mark {
-    width: 8px;
-    height: 8px;
-    background: #0095A9;
+    width: 9px;
+    height: 9px;
+    background: #ffffff;
     flex: none;
   }
+  .slide-head-right {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 9px;
+  }
   .slide-head-meta {
-    font-size: 9.5px;
-    color: #78716c;
+    font-size: 8.5px;
+    color: #d3edf1;
+    letter-spacing: -0.01em;
+  }
+  .slide-head-brand {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: #ffffff;
+  }
+  .slide-head-brand b {
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+
+  /* 장표 바깥 테두리 — 보고서 원형과 동일하게 한 장을 박스로 감싼다 */
+  .report-section:not(.report-off) {
+    border: 1px solid #b3dde0;
+    padding: 4mm 4mm 3mm;
   }
 
   /* 카드는 경계선만 남기고 그림자·hover 제거 */

@@ -1,0 +1,502 @@
+"use client";
+
+// =============================================================================
+// 경영보고 화면용 차트
+//
+// 표가 이미 원형을 담고 있으므로, 차트는 표에서 바로 읽히지 않는 것만 맡는다.
+//   Waterfall   구성 -> 차감 -> 결과의 흐름
+//   TargetBars  목표 대비 실적을 항목 순위로
+//   FunnelSteps 단계별 전환
+//   CompareBars 계열 비교 (목표 · 수정전망 · 실행)
+// =============================================================================
+import {
+  Bar,
+  BarChart,
+  Cell,
+  LabelList,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import type { RenderableText } from "recharts/types/component/Text";
+import { num, rate, rateTone } from "@/lib/screens";
+
+const TEAL = "#0095A9";
+const TEAL_2 = "#65B3B1";
+const TEAL_SOFT = "#b3dde0";
+const BRICK = "#b45309";
+const BRICK_2 = "#d9a066";
+const STONE = "#57534e";
+const STONE_SOFT = "#d6d3d1";
+
+// -----------------------------------------------------------------------------
+// 워터폴
+// -----------------------------------------------------------------------------
+export type WaterfallStep = {
+  name: string;
+  value: number;
+  kind: "add" | "sub" | "total";
+};
+
+type Bar1 = { name: string; base: number; span: number; value: number; kind: string };
+
+/**
+ * 각 막대가 직전 누계 높이에서 시작하도록 base/span을 계산한다.
+ * 렌더 밖 순수 함수로 두어 누계 변수를 렌더 중 재할당하지 않는다.
+ */
+function buildWaterfall(steps: WaterfallStep[]): Bar1[] {
+  const out: Bar1[] = [];
+  let running = 0;
+  for (const s of steps) {
+    if (s.kind === "total") {
+      out.push({ name: s.name, base: 0, span: running, value: running, kind: "total" });
+    } else if (s.kind === "add") {
+      out.push({ name: s.name, base: running, span: s.value, value: s.value, kind: "add" });
+      running += s.value;
+    } else {
+      running -= s.value;
+      out.push({ name: s.name, base: running, span: s.value, value: -s.value, kind: "sub" });
+    }
+  }
+  return out;
+}
+
+const barColor = (k: string) => (k === "add" ? TEAL : k === "sub" ? BRICK : STONE);
+
+export function Waterfall({
+  steps,
+  height = 260,
+  unit = "백만원",
+}: {
+  steps: WaterfallStep[];
+  height?: number;
+  unit?: string;
+}) {
+  const data = buildWaterfall(steps);
+
+  return (
+    <div style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+        <BarChart data={data} margin={{ top: 26, right: 8, bottom: 4, left: 8 }}>
+          <XAxis
+            dataKey="name"
+            tick={{ fontSize: 11, fill: "#78716c" }}
+            axisLine={{ stroke: "#e7e5dc" }}
+            tickLine={false}
+            interval={0}
+          />
+          <YAxis hide />
+          <Tooltip
+            cursor={{ fill: "rgba(0,0,0,0.03)" }}
+            content={({ active, payload }) => {
+              if (!active || !payload?.length) return null;
+              const d = payload[0].payload as Bar1;
+              return (
+                <div className="rounded-md border border-[var(--line)] bg-white px-2.5 py-1.5 text-[11.5px] shadow-sm">
+                  <div className="font-medium text-stone-700">{d.name}</div>
+                  <div className="tnum mt-0.5 text-stone-900">
+                    {d.value > 0 ? "+" : ""}
+                    {num(d.value)} {unit}
+                  </div>
+                </div>
+              );
+            }}
+          />
+          <Bar dataKey="base" stackId="a" fill="transparent" isAnimationActive={false} />
+          <Bar dataKey="span" stackId="a" radius={[2, 2, 0, 0]} maxBarSize={54}>
+            {data.map((d, i) => (
+              <Cell key={i} fill={barColor(d.kind)} fillOpacity={d.kind === "total" ? 1 : 0.88} />
+            ))}
+            <LabelList
+              dataKey="value"
+              position="top"
+              formatter={(v: RenderableText) => {
+                const n = Number(v);
+                return Number.isFinite(n) ? `${n > 0 ? "+" : ""}${num(n)}` : "";
+              }}
+              style={{ fontSize: 10.5, fill: "#57534e", fontVariantNumeric: "tabular-nums" }}
+            />
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// 목표 대비 실적 (가로 bullet)
+// -----------------------------------------------------------------------------
+export function TargetBars({
+  rows,
+  max: maxProp,
+}: {
+  rows: { label: string; sub?: string; target: number; actual: number }[];
+  max?: number;
+}) {
+  const max = maxProp ?? Math.max(...rows.flatMap((r) => [r.target, r.actual]), 1);
+
+  return (
+    <div className="space-y-2">
+      {rows.map((r) => {
+        const rr = rate(r.actual, r.target);
+        const aw = Math.max(0, (r.actual / max) * 100);
+        const tw = Math.max(0, (r.target / max) * 100);
+        const over = rr !== null && rr >= 100;
+        return (
+          <div key={r.label} className="grid grid-cols-[120px_1fr_58px] items-center gap-3">
+            <div className="min-w-0">
+              <div className="truncate text-[11.5px] text-stone-700">{r.label}</div>
+              {r.sub && <div className="truncate text-[10px] text-stone-400">{r.sub}</div>}
+            </div>
+            <div className="relative h-4 rounded bg-stone-100">
+              {/* 목표 마커 */}
+              <div
+                className="absolute top-[-2px] z-10 h-[20px] w-px bg-stone-500"
+                style={{ left: `${Math.min(100, tw)}%` }}
+                title={`목표 ${num(r.target)}`}
+              />
+              <div
+                className="h-full rounded transition-all duration-500"
+                style={{
+                  width: `${Math.min(100, aw)}%`,
+                  backgroundColor: over ? TEAL : BRICK_2,
+                }}
+              />
+            </div>
+            <div className={`tnum text-right text-[11.5px] font-medium ${rateTone(rr)}`}>
+              {rr === null ? "-" : `${rr.toFixed(0)}%`}
+            </div>
+          </div>
+        );
+      })}
+      <div className="flex items-center gap-3 pt-1 text-[10px] text-stone-400">
+        <span className="inline-flex items-center gap-1">
+          <span className="h-2 w-3 rounded-sm" style={{ backgroundColor: TEAL }} />
+          목표 달성
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <span className="h-2 w-3 rounded-sm" style={{ backgroundColor: BRICK_2 }} />
+          미달
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <span className="h-3 w-px bg-stone-500" />
+          목표
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// 퍼널
+// -----------------------------------------------------------------------------
+export function FunnelSteps({
+  steps,
+}: {
+  /** conv를 주면 그 값을 전환율로 쓰고, 없으면 직전 단계 대비로 계산한다 */
+  steps: { label: string; value: number; unit?: string; conv?: number | null }[];
+}) {
+  const head = steps[0]?.value || 1;
+  return (
+    <div className="space-y-1.5">
+      {steps.map((s, i) => {
+        const w = Math.max(6, (s.value / head) * 100);
+        const prev = i > 0 ? steps[i - 1].value : null;
+        const conv =
+          s.conv !== undefined && s.conv !== null
+            ? s.conv
+            : prev && prev > 0
+              ? (s.value / prev) * 100
+              : null;
+        return (
+          <div key={s.label}>
+            <div className="flex items-center gap-3">
+              <div className="w-[104px] shrink-0 truncate text-[11.5px] text-stone-700">
+                {s.label}
+              </div>
+              <div className="relative h-7 flex-1">
+                <div
+                  className="flex h-full items-center justify-end rounded pr-2 transition-all duration-500"
+                  style={{
+                    width: `${w}%`,
+                    background: `linear-gradient(90deg, ${TEAL} 0%, ${TEAL_2} 100%)`,
+                    opacity: 1 - i * 0.13,
+                  }}
+                >
+                  <span className="tnum text-[11px] font-semibold text-white">
+                    {num(s.value)}
+                    {s.unit ?? ""}
+                  </span>
+                </div>
+              </div>
+              <div className="w-[52px] shrink-0 text-right">
+                {conv !== null && (
+                  <span className="tnum text-[11px] font-medium text-stone-500">
+                    {conv.toFixed(1)}%
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// 계열 비교 바 (목표 · 수정전망 · 실행)
+// -----------------------------------------------------------------------------
+export type CompareSeries = { key: string; label: string; color?: string };
+
+export function CompareBars({
+  data,
+  series,
+  height = 240,
+  unit = "백만원",
+}: {
+  data: Record<string, string | number>[];
+  series: CompareSeries[];
+  height?: number;
+  unit?: string;
+}) {
+  const palette = [STONE_SOFT, TEAL_SOFT, TEAL];
+  return (
+    <div style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+        <BarChart data={data} margin={{ top: 22, right: 8, bottom: 4, left: 8 }} barGap={3}>
+          <XAxis
+            dataKey="name"
+            tick={{ fontSize: 11, fill: "#78716c" }}
+            axisLine={{ stroke: "#e7e5dc" }}
+            tickLine={false}
+          />
+          <YAxis hide />
+          <Tooltip
+            cursor={{ fill: "rgba(0,0,0,0.03)" }}
+            content={({ active, payload, label }) => {
+              if (!active || !payload?.length) return null;
+              return (
+                <div className="rounded-md border border-[var(--line)] bg-white px-2.5 py-1.5 text-[11.5px] shadow-sm">
+                  <div className="mb-1 font-medium text-stone-700">{label}</div>
+                  {payload.map((p) => (
+                    <div key={String(p.dataKey)} className="flex items-center gap-2">
+                      <span
+                        className="h-2 w-2 rounded-sm"
+                        style={{ backgroundColor: p.color as string }}
+                      />
+                      <span className="text-stone-500">
+                        {series.find((s) => s.key === p.dataKey)?.label}
+                      </span>
+                      <span className="tnum ml-auto font-medium text-stone-900">
+                        {num(Number(p.value))} {unit}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              );
+            }}
+          />
+          {series.map((s, i) => (
+            <Bar
+              key={s.key}
+              dataKey={s.key}
+              fill={s.color ?? palette[i % palette.length]}
+              radius={[2, 2, 0, 0]}
+              maxBarSize={26}
+            >
+              {i === series.length - 1 && (
+                <LabelList
+                  dataKey={s.key}
+                  position="top"
+                  formatter={(v: RenderableText) => {
+                    const n = Number(v);
+                    return Number.isFinite(n) ? num(n) : "";
+                  }}
+                  style={{
+                    fontSize: 10.5,
+                    fill: "#57534e",
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                />
+              )}
+            </Bar>
+          ))}
+        </BarChart>
+      </ResponsiveContainer>
+      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
+        {series.map((s, i) => (
+          <span key={s.key} className="inline-flex items-center gap-1.5 text-[10.5px] text-stone-500">
+            <span
+              className="h-2 w-3 rounded-sm"
+              style={{ backgroundColor: s.color ?? palette[i % palette.length] }}
+            />
+            {s.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// 손익 구조 바 — 법인 · 부문별 매출을 규모(막대 길이)와 구성(판관비 / 이익)으로
+// 동시에 읽는다. 계열 3개를 나란히 세우는 막대보다 한 줄에 담기는 정보가 많고,
+// 이익이 음수인 곳(매출보다 비용이 큰 경우)이 한눈에 드러난다.
+// -----------------------------------------------------------------------------
+export type ProfitRow = {
+  name: string;
+  revenue: number;
+  cost: number;
+  profit: number;
+  /** 매출 · 비용 밖에서 더해지는 값 (영업 외 손익 등) */
+  other?: number;
+};
+
+export function ProfitStructureBars({
+  rows,
+  unit = "백만원",
+  costLabel = "판관비",
+}: {
+  rows: ProfitRow[];
+  unit?: string;
+  costLabel?: string;
+}) {
+  // 매출과 비용 중 큰 쪽을 기준으로 폭을 잡아야 적자 구간이 잘리지 않는다
+  const max = Math.max(...rows.flatMap((r) => [r.revenue, r.cost]), 1);
+
+  return (
+    <div className="space-y-3.5">
+      {rows.map((r) => {
+        const loss = r.profit < 0;
+        const revW = (r.revenue / max) * 100;
+        const costW = (Math.min(r.cost, r.revenue) / max) * 100;
+        const overW = loss ? ((r.cost - r.revenue) / max) * 100 : 0;
+        const profitW = loss ? 0 : ((r.revenue - r.cost) / max) * 100;
+        const rateOfProfit = r.revenue ? (r.profit / r.revenue) * 100 : null;
+
+        return (
+          <div key={r.name}>
+            <div className="mb-1 flex items-baseline justify-between gap-3">
+              <span className="text-[12px] font-medium text-stone-700">{r.name}</span>
+              <span className="flex items-baseline gap-2.5 text-[11px] text-stone-400">
+                <span className="tnum">매출 {num(r.revenue)}</span>
+                <span className="tnum">
+                  {costLabel} {num(r.cost)}
+                </span>
+                <span
+                  className={`tnum text-[12.5px] font-semibold ${
+                    loss ? "text-[var(--bad)]" : "text-[var(--teal-deep)]"
+                  }`}
+                >
+                  이익 {num(r.profit)}
+                </span>
+                {rateOfProfit !== null && (
+                  <span className="tnum w-[42px] text-right">{rateOfProfit.toFixed(0)}%</span>
+                )}
+              </span>
+            </div>
+
+            <div className="relative h-5 w-full rounded bg-stone-100/70">
+              {/* 매출 폭 — 이 안을 비용과 이익이 나눠 갖는다 */}
+              <div
+                className="absolute inset-y-0 left-0 rounded-l"
+                style={{ width: `${revW}%`, backgroundColor: TEAL_SOFT }}
+              />
+              <div
+                className="absolute inset-y-0 left-0 rounded-l transition-all duration-500"
+                style={{ width: `${costW}%`, backgroundColor: STONE_SOFT }}
+              />
+              {profitW > 0 && (
+                <div
+                  className="absolute inset-y-0 transition-all duration-500"
+                  style={{ left: `${costW}%`, width: `${profitW}%`, backgroundColor: TEAL }}
+                />
+              )}
+              {overW > 0 && (
+                <div
+                  className="absolute inset-y-0 rounded-r transition-all duration-500"
+                  style={{ left: `${revW}%`, width: `${overW}%`, backgroundColor: BRICK }}
+                  title={`비용이 매출을 ${num(r.cost - r.revenue)} ${unit} 초과`}
+                />
+              )}
+              {/* 매출 끝선 */}
+              <div
+                className="absolute top-[-3px] h-[26px] w-px bg-stone-500"
+                style={{ left: `${revW}%` }}
+                aria-hidden
+              />
+            </div>
+          </div>
+        );
+      })}
+
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-0.5 text-[10px] text-stone-400">
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-3 rounded-sm" style={{ backgroundColor: STONE_SOFT }} />
+          {costLabel}
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-3 rounded-sm" style={{ backgroundColor: TEAL }} />
+          이익
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-3 rounded-sm" style={{ backgroundColor: BRICK }} />
+          매출 초과 비용
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-3 w-px bg-stone-500" />
+          매출
+        </span>
+        <span>단위 {unit}</span>
+      </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// 구성 막대 — 항목별 실적을 큰 순서로 눕혀 비교한다 (목표가 없는 자료용)
+// -----------------------------------------------------------------------------
+export function RankBars({
+  rows,
+  unit = "백만원",
+  tone = "teal",
+  digits = 0,
+}: {
+  rows: { label: string; sub?: string; value: number }[];
+  unit?: string;
+  tone?: "teal" | "brick";
+  digits?: number;
+}) {
+  const max = Math.max(...rows.map((r) => Math.abs(r.value)), 1);
+  const color = tone === "brick" ? BRICK_2 : TEAL;
+
+  return (
+    <div className="space-y-2">
+      {rows.map((r) => (
+        <div key={r.label} className="grid grid-cols-[128px_1fr_74px] items-center gap-3">
+          <div className="min-w-0">
+            <div className="truncate text-[11.5px] text-stone-700">{r.label}</div>
+            {r.sub && <div className="truncate text-[10px] text-stone-400">{r.sub}</div>}
+          </div>
+          <div className="h-3.5 rounded bg-stone-100">
+            <div
+              className="h-full rounded transition-all duration-500"
+              style={{
+                width: `${(Math.abs(r.value) / max) * 100}%`,
+                backgroundColor: r.value < 0 ? BRICK : color,
+              }}
+            />
+          </div>
+          <div className="tnum text-right text-[11.5px] font-medium text-stone-800">
+            {num(r.value, digits)}
+          </div>
+        </div>
+      ))}
+      <div className="pt-0.5 text-[10px] text-stone-400">단위 {unit}</div>
+    </div>
+  );
+}
+
+export const CHART_COLORS = { TEAL, TEAL_2, TEAL_SOFT, BRICK, BRICK_2, STONE, STONE_SOFT };

@@ -350,3 +350,12 @@ export function PrintHeader({
     </div>
   );
 }
+
+/** 값이 없는 기간을 골랐을 때 섹션 자리에 두는 안내 */
+export function NoFigures({ note }: { note: string }) {
+  return (
+    <div className="rounded-lg border border-dashed border-stone-300 bg-stone-50/60 px-4 py-8 text-center">
+      <div className="text-[12.5px] font-medium text-stone-500">{note}</div>
+    </div>
+  );
+}

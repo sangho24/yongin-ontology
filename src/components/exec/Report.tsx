@@ -20,6 +20,7 @@ export function ReportSection({
   info,
   enabled,
   first = false,
+  pageBreak = false,
   children,
 }: {
   id: string;
@@ -30,13 +31,15 @@ export function ReportSection({
   info?: ReactNode;
   enabled: boolean;
   first?: boolean;
+  /** 인쇄 시 이 섹션부터 새 장으로 넘긴다 (기본은 한 장에 이어서 채움) */
+  pageBreak?: boolean;
   children: ReactNode;
 }) {
   return (
     <section
       data-section={id}
       className={`report-section ${enabled ? "" : "report-off"} ${first ? "" : "mt-10"} ${
-        first ? "" : "print-slide"
+        pageBreak && !first ? "print-page-break" : ""
       }`}
     >
       {/* 화면 헤더 */}
@@ -49,22 +52,21 @@ export function ReportSection({
         {right}
       </div>
 
-      {/* 인쇄 헤더 — 경영회의 보고 장표의 타이틀 바 형식 */}
+      {/* 인쇄 헤더 — 경영손익 보고서 장표의 타이틀 바 형식 */}
       <div className="slide-head">
         <span className="slide-head-title">
           <span className="slide-head-mark" />
           {title}
         </span>
-        {meta && <span className="slide-head-meta">{meta}</span>}
+        <span className="slide-head-right">
+          {meta && <span className="slide-head-meta">[{meta}]</span>}
+          <span className="slide-head-brand">
+            <b>Y</b>ONGIN <b>M</b>EMORIAL <b>P</b>ARK <b>G</b>ROUP
+          </span>
+        </span>
       </div>
 
       {children}
-
-      {/* 인쇄 푸터 — 슬라이드마다 반복 */}
-      <div className="slide-foot print-only">
-        <span>용인공원 그룹 경영손익 보고</span>
-        <span>자료 : 26년 5월 경영회의 보고 · 0814 회의자료</span>
-      </div>
     </section>
   );
 }
@@ -87,7 +89,7 @@ export function ReportCover({
         <span className="report-cover-mark" />
         <span className="report-cover-title">{title}</span>
         <span className="report-cover-unit">
-          [단위 : {unit}, {period} 기준] 용인공원 그룹
+          [단위 : {unit} · {period}] 용인공원 그룹
         </span>
       </div>
       {scope && <div className="report-cover-scope">{scope}</div>}
