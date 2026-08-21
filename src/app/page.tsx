@@ -18,7 +18,7 @@ import {
 } from "recharts";
 import { AppLayout } from "@/components/AppLayout";
 import { Card, StatCard, WowCard } from "@/components/Card";
-import { Gauge, NoFigures, Dropdown } from "@/components/exec/Bits";
+import { Delta, Gauge, NoFigures, Dropdown } from "@/components/exec/Bits";
 import { ReportSection, ReportCover, ReportActions, type SectionDef } from "@/components/exec/Report";
 import { CashBlockCard, BalanceTable, buildCashBlocks } from "@/components/exec/CashBlocks";
 import { CoaList, ProfitStructureBars, TargetBars } from "@/components/exec/ScreenCharts";
@@ -129,6 +129,27 @@ export default function OverviewPage() {
   const margin = totals.inc ? Math.round((totals.profit / totals.inc) * 100) : 0;
   const tMargin = totals.tInc ? Math.round((totals.tProfit / totals.tInc) * 100) : 0;
   const achieve = totals.tInc ? Math.round((totals.inc / totals.tInc) * 100) : 0;
+
+  const previousTotals = useMemo(() => {
+    if (cum || mIdx <= 0) return null;
+    const row = CA.monthly[mIdx - 1];
+    if (!row) return null;
+    const hasActual = COMPANIES.some(
+      (company) =>
+        typeof row.actual[company]?.income === "number" ||
+        typeof row.actual[company]?.expense === "number",
+    );
+    if (!hasActual) return null;
+    const inc = COMPANIES.reduce((sum, company) => sum + (row.actual[company]?.income ?? 0), 0);
+    const exp = COMPANIES.reduce((sum, company) => sum + (row.actual[company]?.expense ?? 0), 0);
+    const profit = inc - exp;
+    return {
+      inc,
+      exp,
+      profit,
+      margin: inc ? Math.round((profit / inc) * 100) : 0,
+    };
+  }, [cum, mIdx]);
 
   const trend = useMemo(
     () =>
@@ -334,6 +355,14 @@ export default function OverviewPage() {
     <AppLayout
       pageTitle="Overview"
       period={label}
+      periodControl={
+        <Dropdown
+          label="기간"
+          items={PERIOD_ITEMS}
+          value={periodId(period)}
+          onChange={(value) => setPeriod(parsePeriod(value))}
+        />
+      }
     >
       <ReportCover
         title="용인공원그룹 경영 Overview"
@@ -341,13 +370,7 @@ export default function OverviewPage() {
         scope="용인공원 · 용인공원라이프 · 와이피엘"
       />
 
-      <div className="no-print mb-6 flex flex-wrap items-center justify-between gap-3">
-        <Dropdown
-          label="기간"
-          items={PERIOD_ITEMS}
-          value={periodId(period)}
-          onChange={(v) => setPeriod(parsePeriod(v))}
-        />
+      <div className="no-print mb-6 flex flex-wrap items-center justify-end gap-3">
         <ReportActions page="overview" sections={SECTIONS} onCsv={handleCsv} />
       </div>
 
@@ -366,12 +389,17 @@ export default function OverviewPage() {
             unit="백만원"
             sub={`수입 ${num(totals.inc)} − 지출 ${num(totals.exp)} 백만원`}
             footnote={`손익율 ${margin}% · 목표 ${num(totals.tProfit)} 대비`}
+            negative={totals.profit < 0}
+            delta={
+              previousTotals ? <Delta value={totals.profit - previousTotals.profit} /> : undefined
+            }
           />
           <StatCard
             label="그룹 수입"
             value={num(totals.inc)}
             unit="백만원"
             sub={`목표 ${num(totals.tInc)} 백만원 대비 ${achieve}%`}
+            delta={previousTotals ? <Delta value={totals.inc - previousTotals.inc} /> : undefined}
           />
           <StatCard
             label="그룹 지출"
@@ -380,11 +408,18 @@ export default function OverviewPage() {
             sub={`목표 ${num(totals.tExp)} 백만원 대비 ${
               totals.tExp ? Math.round((totals.exp / totals.tExp) * 100) : 0
             }%`}
+            delta={
+              previousTotals ? <Delta value={totals.exp - previousTotals.exp} invert /> : undefined
+            }
           />
           <StatCard
             label="그룹 손익율"
             value={`${margin}%`}
             sub={`목표 ${tMargin}% 대비 ${margin - tMargin >= 0 ? "+" : ""}${margin - tMargin}%p`}
+            negative={margin < 0}
+            delta={
+              previousTotals ? <Delta value={margin - previousTotals.margin} suffix="%p" /> : undefined
+            }
           />
         </div>
       </ReportSection>
@@ -437,7 +472,13 @@ export default function OverviewPage() {
       >
         <Card>
           <div className="h-[280px]">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+            <ResponsiveContainer
+              width="100%"
+              height="100%"
+              minWidth={1}
+              minHeight={1}
+              initialDimension={{ width: 1, height: 1 }}
+            >
               <ComposedChart
                 data={trend}
                 margin={{ top: 12, right: 4, bottom: 0, left: -8 }}
@@ -492,12 +533,24 @@ export default function OverviewPage() {
                   }}
                   formatter={(v, n) => [Math.round(Number(v ?? 0)).toLocaleString("ko-KR"), String(n)]}
                 />
-                <Bar yAxisId="amount" dataKey="수입" radius={[3, 3, 0, 0]} maxBarSize={48}>
+                <Bar
+                  yAxisId="amount"
+                  dataKey="수입"
+                  radius={[3, 3, 0, 0]}
+                  maxBarSize={48}
+                  isAnimationActive={false}
+                >
                   {trend.map((d, i) => (
                     <Cell key={d.month} fill={!cum && mIdx === i ? "#0095A9" : "#b3dde0"} />
                   ))}
                 </Bar>
-                <Bar yAxisId="amount" dataKey="지출" radius={[3, 3, 0, 0]} maxBarSize={48}>
+                <Bar
+                  yAxisId="amount"
+                  dataKey="지출"
+                  radius={[3, 3, 0, 0]}
+                  maxBarSize={48}
+                  isAnimationActive={false}
+                >
                   {trend.map((d, i) => (
                     <Cell key={d.month} fill={!cum && mIdx === i ? "#78716c" : "#e7e5dc"} />
                   ))}
@@ -511,6 +564,7 @@ export default function OverviewPage() {
                   strokeWidth={1.5}
                   strokeDasharray="4 3"
                   dot={false}
+                  isAnimationActive={false}
                 />
                 <Line
                   yAxisId="profit"
@@ -520,6 +574,7 @@ export default function OverviewPage() {
                   strokeWidth={2}
                   dot={{ r: 2.5, fill: "#b45309", strokeWidth: 0 }}
                   connectNulls
+                  isAnimationActive={false}
                 />
                 <ReferenceLine yAxisId="profit" y={0} stroke="#d6d3c9" />
               </ComposedChart>
@@ -577,6 +632,7 @@ export default function OverviewPage() {
                   label={s}
                   value={num(prof)}
                   unit="백만원"
+                  negative={prof < 0}
                   sub={`매출 ${num(rev)} · 이익률 ${rev ? pct((prof / rev) * 100, 0) : "-"}`}
                   hint={
                     segHints?.[s]?.["매출액"] ? <CoaList items={segHints[s]["매출액"]} /> : undefined
@@ -627,7 +683,13 @@ export default function OverviewPage() {
         {figures ? (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3 print-cols-3">
             {costRatios.map((g) => (
-              <Card key={g.org} title={g.org}>
+              <Card
+                key={g.org}
+                title={g.org}
+                negative={g.ratios.some(
+                  (ratio) => ratio.label.includes("손익") && (cum ? ratio.a_c : ratio.a_m) !== null && (cum ? ratio.a_c : ratio.a_m)! < 0,
+                )}
+              >
                 <div className="space-y-4 pt-1">
                   {g.ratios.map((r) => {
                     const v = cum ? r.a_c : r.a_m;
@@ -647,7 +709,11 @@ export default function OverviewPage() {
                           />
                         ) : (
                           <div className="flex items-baseline justify-between text-[11px] text-stone-400">
-                            <span className="tnum text-[13px] font-semibold text-stone-800">
+                            <span
+                              className={`tnum text-[13px] font-semibold ${
+                                (v ?? 0) < 0 ? "text-[#9a3412]" : "text-stone-800"
+                              }`}
+                            >
                               {pct(v, Math.abs(v ?? 0) < 10 ? 1 : 0)}
                             </span>
                             <span>목표 미설정</span>

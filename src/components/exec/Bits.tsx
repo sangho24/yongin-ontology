@@ -153,7 +153,7 @@ export function Segmented<T extends string>({
   tone?: "teal" | "dark";
 }) {
   return (
-    <div className="no-print inline-flex flex-wrap rounded-md border border-stone-200 bg-white p-0.5">
+    <div className="no-print inline-flex h-[30px] flex-wrap rounded-md border border-stone-200 bg-white p-0.5">
       {items.map((it) => {
         const active = it.id === value;
         return (
@@ -161,7 +161,7 @@ export function Segmented<T extends string>({
             key={it.id}
             type="button"
             onClick={() => onChange(it.id)}
-            className={`rounded px-3 py-1.5 text-[12.5px] font-medium tracking-tight transition-colors ${
+            className={`rounded px-3 py-1 text-[12px] font-medium tracking-tight transition-colors ${
               active
                 ? tone === "teal"
                   ? "bg-[#0095A9] text-white"
@@ -204,7 +204,7 @@ export function Dropdown<T extends string>({
         value={value}
         aria-label={label ?? "선택"}
         onChange={(e) => onChange(e.target.value as T)}
-        className={`h-[34px] cursor-pointer appearance-none rounded-md border border-stone-200 bg-white py-1.5 pr-8 text-[12.5px] font-medium tracking-tight text-stone-800 transition-colors hover:border-stone-300 focus:border-[#0095A9] focus:outline-none ${
+        className={`h-8 cursor-pointer appearance-none rounded-md border border-stone-200 bg-white py-1 pr-8 text-[12px] font-medium tracking-tight text-stone-800 transition-colors hover:border-stone-300 focus:border-[#0095A9] focus:outline-none ${
           label ? "pl-[52px]" : "pl-3"
         }`}
       >

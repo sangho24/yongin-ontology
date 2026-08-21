@@ -57,6 +57,7 @@ export function Card({
   subtitle,
   children,
   highlight = false,
+  negative = false,
   source,
   slotId,
 }: {
@@ -64,15 +65,18 @@ export function Card({
   subtitle?: string;
   children: ReactNode;
   highlight?: boolean;
+  negative?: boolean;
   source?: string;
   slotId?: string;
 }) {
   return (
     <div
-      className={`print-card rounded-md border bg-white p-5 transition-colors duration-150 ${
+      // negative여도 카드 외형은 일반 카드와 동일 (틴트 제거, 값 색상은 내부 콘텐츠가 처리)
+      data-negative={negative || undefined}
+      className={`print-card rounded-md border p-5 transition-colors duration-150 ${
         highlight
-          ? "border-[#0095A9]/30 ring-1 ring-[#0095A9]/10"
-          : "border-stone-200/80"
+          ? "border-[#0095A9]/30 bg-white ring-1 ring-[#0095A9]/10"
+          : "border-stone-200/80 bg-white"
       } hover:border-stone-300`}
     >
       {(title || slotId) && (
@@ -110,6 +114,8 @@ export function StatCard({
   footnote,
   slotId,
   hint,
+  negative = false,
+  delta,
 }: {
   label: string;
   value: string;
@@ -121,13 +127,18 @@ export function StatCard({
   slotId?: string;
   /** 라벨에 hover하면 펼쳐지는 보조 정보 (계정코드 등) */
   hint?: ReactNode;
+  negative?: boolean;
+  delta?: ReactNode;
 }) {
   const TrendIcon = trend === "up" ? ArrowUp : trend === "down" ? ArrowDown : Minus;
   const trendClr =
     trend === "up" ? "text-[#0095A9]" : trend === "down" ? "text-[#9a3412]" : "text-stone-500";
 
   return (
-    <div className="print-card group rounded-md border border-stone-200/80 bg-white p-5 transition-colors duration-150 hover:border-stone-300">
+    <div
+      // negative여도 카드 외형은 일반 카드와 동일 (틴트 제거, value 텍스트 색만 브릭)
+      className="print-card group rounded-md border border-stone-200/80 bg-white p-5 transition-colors duration-150 hover:border-stone-300"
+    >
       <div className="flex items-start justify-between gap-2">
         <div className="group/hint relative text-[12px] font-medium uppercase tracking-[0.08em] text-stone-500">
           <span
@@ -147,7 +158,14 @@ export function StatCard({
         {slotId && <EvidenceButton slotId={slotId} label={label} variant="subtle" />}
       </div>
       <div className="mt-2 flex items-baseline gap-1.5">
-        <span className="headline text-[28px] leading-none text-stone-900 tnum">{value}</span>
+        {/* 음수 지표는 value 텍스트만 브릭색으로 표시 */}
+        <span
+          className={`headline text-[28px] leading-none tnum ${
+            negative ? "text-[#9a3412]" : "text-stone-900"
+          }`}
+        >
+          {value}
+        </span>
         {unit && <span className="text-[12px] font-medium text-stone-400">{unit}</span>}
         {trend && trendValue && (
           <span className={`flex items-center gap-0.5 text-[11px] font-medium ${trendClr}`}>
@@ -155,6 +173,7 @@ export function StatCard({
             {trendValue}
           </span>
         )}
+        {delta && <span className="text-[11px] font-medium">{delta}</span>}
       </div>
       {sub && <div className="mt-2 text-[12px] text-stone-500 leading-relaxed">{sub}</div>}
       {footnote && <div className="mt-3 border-t border-stone-100 pt-2 text-[10px] text-stone-400">{footnote}</div>}
@@ -173,6 +192,8 @@ export function WowCard({
   variant = "mint",
   footnote,
   slotId,
+  negative = false,
+  delta,
 }: {
   label: string;
   value: string;
@@ -181,7 +202,10 @@ export function WowCard({
   variant?: "mint" | "outline" | "muted";
   footnote?: string;
   slotId?: string;
+  negative?: boolean;
+  delta?: ReactNode;
 }) {
+  // negative여도 외형·value 색은 variant 스타일 그대로 유지 (틴트 롤백)
   const styles = {
     mint: {
       wrap: "bg-[#0095A9] text-white",
@@ -210,7 +234,10 @@ export function WowCard({
   }[variant];
 
   return (
-    <div className={`print-card group rounded-md p-6 transition-colors duration-150 ${styles.wrap}`}>
+    <div
+      data-negative={negative || undefined}
+      className={`print-card group rounded-md p-6 transition-colors duration-150 ${styles.wrap}`}
+    >
       <div className="flex items-start justify-between gap-2">
         <div className={`text-[12px] font-medium uppercase tracking-[0.08em] ${styles.label}`}>{label}</div>
         {slotId && <EvidenceButton slotId={slotId} label={label} variant={styles.btn} />}
@@ -218,6 +245,15 @@ export function WowCard({
       <div className="mt-3 flex items-baseline gap-1.5">
         <span className={`headline text-[36px] leading-none tnum ${styles.value}`}>{value}</span>
         {unit && <span className={`text-[13px] font-medium ${styles.sub}`}>{unit}</span>}
+        {delta && (
+          <span
+            className={`text-[11px] font-medium ${
+              variant === "mint" ? "rounded bg-white/90 px-1.5 py-0.5 text-stone-700" : ""
+            }`}
+          >
+            {delta}
+          </span>
+        )}
       </div>
       {sub && <div className={`mt-2.5 text-[13px] leading-relaxed ${styles.sub}`}>{sub}</div>}
       {footnote && (

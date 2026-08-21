@@ -118,12 +118,25 @@ export default function PlPage() {
   );
 
   const mix = useMemo(
-    () =>
-      P.company
-        .filter((r) => r.level === 1 && isRevenueItem(r.label))
-        .map((r) => ({ label: r.label, value: r.companies[company]?.actual ?? 0 }))
+    () => {
+      const sgaIndex = P.company.findIndex((r) => r.label === "판관비" && r.level === 0);
+      return P.company
+        .map((r, index) => ({ row: r, index }))
+        .filter(({ row }) => row.level === 1 && isRevenueItem(row.label))
+        .map(({ row, index }) => {
+          const companies = (["용인공원", "YPL", "라이프"] as const)
+            .filter((name) => (row.companies[name]?.actual ?? 0) !== 0)
+            .join(" · ");
+          const accountGroup = index > sgaIndex ? "판매관리비 계정" : "매출 계정";
+          return {
+            label: row.label,
+            sub: row.label === "기타" ? `${accountGroup} · ${companies}` : undefined,
+            value: row.companies[company]?.actual ?? 0,
+          };
+        })
         .filter((r) => r.value !== 0)
-        .sort((a, b) => b.value - a.value),
+        .sort((a, b) => b.value - a.value);
+    },
     [company],
   );
 
@@ -151,6 +164,14 @@ export default function PlPage() {
     <AppLayout
       pageTitle="법인별 손익"
       period={label}
+      periodControl={
+        <Dropdown
+          label="기간"
+          items={PERIOD_ITEMS}
+          value={periodId(period)}
+          onChange={(value) => setPeriod(parsePeriod(value))}
+        />
+      }
     >
       <ReportCover
         title="법인별 손익"
@@ -160,12 +181,6 @@ export default function PlPage() {
 
       <div className="no-print mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <Dropdown
-            label="기간"
-            items={PERIOD_ITEMS}
-            value={periodId(period)}
-            onChange={(v) => setPeriod(parsePeriod(v))}
-          />
           <Segmented items={COMPANY_ITEMS} value={company} onChange={setCompany} />
         </div>
         <ReportActions page="pl" sections={SECTIONS} onCsv={handleCsv} />
@@ -205,6 +220,7 @@ export default function PlPage() {
               value={cum ? "-" : num(profit)}
               unit={cum ? undefined : "백만원"}
               sub={cum ? "누계 자료 미수령" : `이익률 ${rev ? pct((profit / rev) * 100, 0) : "-"}`}
+              negative={!cum && profit < 0}
             />
             <StatCard
               label="영업 외 손익"

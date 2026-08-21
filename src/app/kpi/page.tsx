@@ -85,6 +85,7 @@ export default function KpiPage() {
   return (
     <AppLayout
       pageTitle="KPI"
+      periodControl={<PeriodFilter value={period} onChange={setPeriod} />}
     >
       <ReportCover
         title="조직별 KPI"
@@ -108,7 +109,6 @@ export default function KpiPage() {
           }}
         />
         <div className="flex flex-wrap items-center gap-3">
-          <PeriodFilter value={period} onChange={setPeriod} />
           <ReportActions page="kpi" sections={SECTIONS} onCsv={handleCsv} />
         </div>
       </div>
@@ -396,7 +396,13 @@ function KpiTile({
 
       {/* 스파크라인 — 카드 하단을 채워 여백 제거 */}
       <div className="no-print h-[46px] w-full">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          minWidth={1}
+          minHeight={1}
+          initialDimension={{ width: 1, height: 1 }}
+        >
           <AreaChart data={data} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
             <defs>
               <linearGradient id={`g-${kpi.id}`} x1="0" y1="0" x2="0" y2="1">

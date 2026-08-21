@@ -124,7 +124,17 @@ export default function SegmentPage() {
   };
 
   return (
-    <AppLayout pageTitle="부문별 손익">
+    <AppLayout
+      pageTitle="부문별 손익"
+      periodControl={
+        <Dropdown
+          label="기간"
+          items={PERIOD_ITEMS}
+          value={periodId(period)}
+          onChange={(value) => setPeriod(parsePeriod(value))}
+        />
+      }
+    >
       <ReportCover
         title="부문별 손익"
         period={label}
@@ -133,12 +143,6 @@ export default function SegmentPage() {
 
       <div className="no-print mb-5 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3">
-          <Dropdown
-            label="기간"
-            items={PERIOD_ITEMS}
-            value={periodId(period)}
-            onChange={(v) => setPeriod(parsePeriod(v))}
-          />
           <Segmented items={SEG_ITEMS} value={seg} onChange={setSeg} />
         </div>
         <ReportActions page="segment" sections={SECTIONS} onCsv={handleCsv} />
@@ -179,6 +183,7 @@ export default function SegmentPage() {
                 label={s}
                 value={num(profit)}
                 unit="백만원"
+                negative={profit < 0}
                 sub={`매출 ${num(rev)} · 이익률 ${rev ? pct((profit / rev) * 100, 0) : "-"}`}
                 hint={
                   hintsOf(s)?.["매출액"] ? <CoaList items={hintsOf(s)["매출액"]} /> : undefined

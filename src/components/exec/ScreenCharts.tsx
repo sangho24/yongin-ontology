@@ -50,6 +50,7 @@ export function CoaList({ items }: { items: CoaHint[] }) {
 }
 
 const TEAL = "#0095A9";
+const TEAL_DEEP = "#006b7a"; // 목표 초과분 강조 (TargetBars)
 const TEAL_2 = "#65B3B1";
 const TEAL_SOFT = "#b3dde0";
 const BRICK = "#b45309";
@@ -106,7 +107,13 @@ export function Waterfall({
 
   return (
     <div style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+      <ResponsiveContainer
+        width="100%"
+        height="100%"
+        minWidth={1}
+        minHeight={1}
+        initialDimension={{ width: 1, height: 1 }}
+      >
         <BarChart data={data} margin={{ top: 26, right: 8, bottom: 4, left: 8 }}>
           <XAxis
             dataKey="name"
@@ -139,7 +146,13 @@ export function Waterfall({
             }}
           />
           <Bar dataKey="base" stackId="a" fill="transparent" isAnimationActive={false} />
-          <Bar dataKey="span" stackId="a" radius={[2, 2, 0, 0]} maxBarSize={54}>
+          <Bar
+            dataKey="span"
+            stackId="a"
+            radius={[2, 2, 0, 0]}
+            maxBarSize={54}
+            isAnimationActive={false}
+          >
             {data.map((d, i) => (
               <Cell key={i} fill={barColor(d.kind)} fillOpacity={d.kind === "total" ? 1 : 0.88} />
             ))}
@@ -164,18 +177,21 @@ export function Waterfall({
 // -----------------------------------------------------------------------------
 export function TargetBars({
   rows,
-  max: maxProp,
   sortable = false,
   rateLabel = "달성률",
 }: {
   rows: { label: string; sub?: string; target: number; actual: number }[];
-  max?: number;
   /** 비율 기준 정렬 토글을 노출한다 (달성률이 의미 있는 화면에서만) */
   sortable?: boolean;
   rateLabel?: string;
 }) {
   const [sort, setSort] = useState<"none" | "desc" | "asc">("none");
-  const max = maxProp ?? Math.max(...rows.flatMap((r) => [r.target, r.actual]), 1);
+  const rates = rows
+    .map((r) => rate(r.actual, r.target))
+    .filter((value): value is number => value !== null && Number.isFinite(value));
+  const maxRate = Math.max(...rates, 0);
+  const cap = Math.min(200, Math.max(120, Math.ceil(maxRate / 20) * 20));
+  const targetPosition = (100 / cap) * 100;
 
   const shown =
     sort === "none"
@@ -210,13 +226,31 @@ export function TargetBars({
         </div>
       )}
 
-      {shown.map((r) => {
+      <div className="grid grid-cols-[120px_1fr_124px] items-end gap-3" aria-hidden>
+        <span />
+        <div className="relative h-3 text-[9.5px] font-medium text-stone-400">
+          <span
+            className="absolute -translate-x-1/2 whitespace-nowrap"
+            style={{ left: `${targetPosition}%` }}
+          >
+            100%
+          </span>
+          {/* 우측 끝 cap 라벨 - 트랙 스케일의 상한을 표시 */}
+          <span className="absolute right-0 whitespace-nowrap">{cap}%</span>
+        </div>
+        <span />
+      </div>
+
+      {shown.map((r, index) => {
         const rr = rate(r.actual, r.target);
-        const aw = Math.max(0, (r.actual / max) * 100);
-        const tw = Math.max(0, (r.target / max) * 100);
+        const actualWidth = Math.max(0, (Math.min(rr ?? 0, cap) / cap) * 100);
         const over = rr !== null && rr >= 100;
+        const clipped = rr !== null && rr > cap;
         return (
-          <div key={r.label} className="grid grid-cols-[120px_1fr_58px] items-center gap-3">
+          <div
+            key={`${r.label}-${r.sub ?? index}`}
+            className="grid grid-cols-[120px_1fr_124px] items-center gap-3"
+          >
             <div className="min-w-0">
               <div className="truncate text-[11.5px] text-stone-700">{r.label}</div>
               {r.sub && <div className="truncate text-[10px] text-stone-400">{r.sub}</div>}
@@ -226,23 +260,50 @@ export function TargetBars({
               className="group relative h-4 rounded bg-stone-100"
               title={`실적 ${num(r.actual)} / 목표 ${num(r.target)}`}
             >
-              {/* 목표 구간 — 어디까지 채워야 100%인지 바탕으로 보여준다 */}
+              {/* 100%~cap 초과 영역 트랙 - 옅은 대각선 스트라이프로 구분 */}
               <div
-                className="absolute inset-y-0 left-0 rounded bg-stone-200/70"
-                style={{ width: `${Math.min(100, tw)}%` }}
-              />
-              {/* 실적 */}
-              <div
-                className="absolute inset-y-0 left-0 rounded transition-all duration-500"
+                aria-hidden
+                className="absolute inset-y-0 right-0 rounded-r"
                 style={{
-                  width: `${Math.min(100, aw)}%`,
-                  backgroundColor: over ? TEAL : BRICK_2,
+                  left: `${targetPosition}%`,
+                  backgroundImage:
+                    "repeating-linear-gradient(135deg, rgba(120,113,108,0.10) 0 3px, transparent 3px 7px)",
                 }}
               />
-              {/* 목표선 — 삼각형 캡과 선을 한 요소로 묶어 축을 맞춘다 */}
+              {/* 실적 - 100% 초과 시 두 구간(0~100% TEAL, 초과분 진한 teal)을 이어 그린다 */}
+              {over && actualWidth > targetPosition ? (
+                <>
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-l transition-all duration-500"
+                    style={{ width: `${targetPosition}%`, backgroundColor: TEAL }}
+                  />
+                  <div
+                    className="absolute inset-y-0 rounded-r transition-all duration-500"
+                    style={{
+                      left: `${targetPosition}%`,
+                      width: `${actualWidth - targetPosition}%`,
+                      backgroundColor: TEAL_DEEP,
+                    }}
+                  />
+                </>
+              ) : (
+                <div
+                  className="absolute inset-y-0 left-0 rounded transition-all duration-500"
+                  style={{
+                    width: `${actualWidth}%`,
+                    backgroundColor: over ? TEAL : BRICK_2,
+                  }}
+                />
+              )}
+              {clipped && (
+                <span className="absolute right-0 top-1/2 z-20 -translate-y-1/2 text-[13px] font-bold leading-none text-white">
+                  ›
+                </span>
+              )}
+              {/* 모든 행에 공통인 100% 기준선 */}
               <div
                 className="absolute -top-[5px] -bottom-[3px] z-10 flex -translate-x-1/2 flex-col items-center"
-                style={{ left: `${Math.min(100, tw)}%` }}
+                style={{ left: `${targetPosition}%` }}
               >
                 <span className="h-0 w-0 border-x-[3px] border-t-[4px] border-x-transparent border-t-stone-600" />
                 <span className="w-[2px] flex-1 bg-stone-600" />
@@ -250,14 +311,22 @@ export function TargetBars({
               {/* 목표 금액 — hover 시에만 */}
               <div
                 className="no-print pointer-events-none absolute -top-6 z-20 hidden -translate-x-1/2 whitespace-nowrap rounded border border-stone-200 bg-white px-1.5 py-0.5 text-[10px] tabular-nums text-stone-600 shadow-sm group-hover:block"
-                style={{ left: `${Math.min(100, tw)}%` }}
+                style={{ left: `${targetPosition}%` }}
               >
                 목표 {num(r.target)}
               </div>
             </div>
 
-            <div className={`tnum text-right text-[11.5px] font-medium ${rateTone(rr)}`}>
-              {rr === null ? "-" : `${rr.toFixed(0)}%`}
+            <div className="min-w-0 text-right">
+              <div className={`tnum text-[11.5px] font-medium ${rateTone(rr)}`}>
+                {rr === null ? "-" : `${rr.toFixed(0)}%`}
+              </div>
+              <div
+                className="tnum truncate text-[10px] text-stone-400"
+                title={`실적 ${num(r.actual)} / 목표 ${num(r.target)}`}
+              >
+                실적 {num(r.actual)} / 목표 {num(r.target)}
+              </div>
             </div>
           </div>
         );
@@ -269,19 +338,19 @@ export function TargetBars({
           목표 달성
         </span>
         <span className="inline-flex items-center gap-1">
-          <span className="h-2 w-3 rounded-sm" style={{ backgroundColor: BRICK_2 }} />
-          미달
+          <span className="h-2 w-3 rounded-sm" style={{ backgroundColor: TEAL_DEEP }} />
+          초과분
         </span>
         <span className="inline-flex items-center gap-1">
-          <span className="h-2 w-3 rounded-sm bg-stone-200" />
-          목표 구간
+          <span className="h-2 w-3 rounded-sm" style={{ backgroundColor: BRICK_2 }} />
+          미달
         </span>
         <span className="inline-flex items-center gap-1">
           <span className="flex flex-col items-center">
             <span className="h-0 w-0 border-x-[3px] border-t-[4px] border-x-transparent border-t-stone-600" />
             <span className="h-2 w-[2px] bg-stone-600" />
           </span>
-          목표선
+          100% 기준선
         </span>
       </div>
     </div>
@@ -364,7 +433,13 @@ export function CompareBars({
   const palette = [STONE_SOFT, TEAL_SOFT, TEAL];
   return (
     <div style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+      <ResponsiveContainer
+        width="100%"
+        height="100%"
+        minWidth={1}
+        minHeight={1}
+        initialDimension={{ width: 1, height: 1 }}
+      >
         <BarChart data={data} margin={{ top: 22, right: 8, bottom: 4, left: 8 }} barGap={3}>
           <XAxis
             dataKey="name"
@@ -405,6 +480,7 @@ export function CompareBars({
               fill={s.color ?? palette[i % palette.length]}
               radius={[2, 2, 0, 0]}
               maxBarSize={26}
+              isAnimationActive={false}
             >
               {i === series.length - 1 && (
                 <LabelList
@@ -596,8 +672,11 @@ export function RankBars({
 
   return (
     <div className="space-y-2">
-      {rows.map((r) => (
-        <div key={r.label} className="grid grid-cols-[128px_1fr_74px] items-center gap-3">
+      {rows.map((r, index) => (
+        <div
+          key={`${r.label}-${r.sub ?? index}`}
+          className="grid grid-cols-[128px_1fr_74px] items-center gap-3"
+        >
           <div className="group relative min-w-0">
             <div
               className={`truncate text-[11.5px] text-stone-700 ${

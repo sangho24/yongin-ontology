@@ -120,6 +120,15 @@ const MAP_TO_ACTIVITY_ZONES: Record<string, string[]> = {
   honor_royal: ["honor-royal-1R", "honor-royal-2R", "honor-royal-3R"],
   honor_noble: ["honor-noble-1N", "honor-noble-2N", "honor-noble-3N"],
   honor_honor: ["honor-honor-3H"],
+  honor_combined: [
+    "honor-royal-1R",
+    "honor-royal-2R",
+    "honor-royal-3R",
+    "honor-noble-1N",
+    "honor-noble-2N",
+    "honor-noble-3N",
+    "honor-honor-3H",
+  ],
   etc_zone: ["etc-1"],
 };
 
@@ -414,11 +423,17 @@ export default function CemeteryPage() {
 
       <section className="mt-12 grid gap-8 lg:grid-cols-2">
         <Card slotId="cemetery_status_distribution" title="분양상태 분포" subtitle="설묘·계약·예약·이장·미판매">
-          <ResponsiveContainer width="100%" height={280}>
+          <ResponsiveContainer
+            width="100%"
+            height={280}
+            minWidth={1}
+            minHeight={1}
+            initialDimension={{ width: 1, height: 280 }}
+          >
             <PieChart>
               <Pie
                 data={statusData}
-                dataKey="value"
+              dataKey="value"
                 nameKey="name"
                 cx="50%"
                 cy="50%"
@@ -429,7 +444,8 @@ export default function CemeteryPage() {
                   return p < 0.02 ? "" : `${name} ${(p * 100).toFixed(0)}%`;
                 }}
                 labelLine={false}
-                paddingAngle={2}
+              paddingAngle={2}
+              isAnimationActive={false}
                 onMouseEnter={(d) => setHoveredStatus(d.name ?? null)}
                 onMouseLeave={() => setHoveredStatus(null)}
               >
@@ -455,13 +471,24 @@ export default function CemeteryPage() {
         </Card>
 
         <Card slotId="cemetery_contract_velocity" title="연도별 계약 건수 추이" subtitle="장지 분양속도 trend">
-          <ResponsiveContainer width="100%" height={280}>
+          <ResponsiveContainer
+            width="100%"
+            height={280}
+            minWidth={1}
+            minHeight={1}
+            initialDimension={{ width: 1, height: 280 }}
+          >
             <BarChart data={yearVelocity}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="연도" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip formatter={(v) => (typeof v === "number" ? v.toLocaleString() + "건" : String(v ?? ""))} cursor={{ fill: "rgba(14,165,233,0.05)" }} />
-              <Bar dataKey="계약 건수" fill="#0095A9" radius={[3, 3, 0, 0]} />
+              <Bar
+                dataKey="계약 건수"
+                fill="#0095A9"
+                radius={[3, 3, 0, 0]}
+                isAnimationActive={false}
+              />
             </BarChart>
           </ResponsiveContainer>
         </Card>
@@ -469,13 +496,24 @@ export default function CemeteryPage() {
 
       <section className="mt-12">
         <Card slotId="cemetery_top10_districts" title="잠재가치 Top 10 단지" subtitle="가용재고 × 등급별 평균가 — 영업 우선순위">
-          <ResponsiveContainer width="100%" height={360}>
+          <ResponsiveContainer
+            width="100%"
+            height={360}
+            minWidth={1}
+            minHeight={1}
+            initialDimension={{ width: 1, height: 360 }}
+          >
             <BarChart data={top10Districts} layout="vertical" margin={{ left: 60 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis type="number" tick={{ fontSize: 11 }} />
               <YAxis type="category" dataKey="단지" tick={{ fontSize: 11 }} width={120} />
               <Tooltip cursor={{ fill: "rgba(245,158,11,0.05)" }} />
-              <Bar dataKey="잠재가치(억)" fill="#65B3B1" radius={[0, 3, 3, 0]} />
+              <Bar
+                dataKey="잠재가치(억)"
+                fill="#65B3B1"
+                radius={[0, 3, 3, 0]}
+                isAnimationActive={false}
+              />
             </BarChart>
           </ResponsiveContainer>
         </Card>

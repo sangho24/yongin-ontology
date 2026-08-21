@@ -327,7 +327,13 @@ function SummaryStat({
       {sub && <div className="mt-1.5 text-[11px] text-stone-500">{sub}</div>}
       {series && series.length > 1 && (
         <div className="mt-3 h-7 w-full max-w-[200px]">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            minWidth={1}
+            minHeight={1}
+            initialDimension={{ width: 1, height: 1 }}
+          >
             <LineChart data={series.map((v, i) => ({ i, v }))}>
               <Line
                 type="monotone"

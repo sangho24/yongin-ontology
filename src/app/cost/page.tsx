@@ -130,7 +130,14 @@ export default function CostPage() {
       >
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
           {block.groups.map((g) => (
-            <Card key={g.org} title={g.org}>
+            <Card
+              key={g.org}
+              title={g.org}
+              negative={g.ratios.some(
+                (ratio) =>
+                  ratio.label.includes("손익") && ratio.a_m !== null && ratio.a_m < 0,
+              )}
+            >
               <Waterfall steps={bridgeOf(g)} height={244} />
             </Card>
           ))}
@@ -145,7 +152,14 @@ export default function CostPage() {
       >
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
           {block.groups.map((g) => (
-            <Card key={g.org} title={g.org}>
+            <Card
+              key={g.org}
+              title={g.org}
+              negative={g.ratios.some(
+                (ratio) =>
+                  ratio.label.includes("손익") && ratio.a_m !== null && ratio.a_m < 0,
+              )}
+            >
               <div className="space-y-4 pt-1">
                 {g.ratios.map((r) => (
                   <div key={r.label}>
@@ -163,7 +177,11 @@ export default function CostPage() {
                       />
                     ) : (
                       <div className="flex items-baseline justify-between text-[11px] text-stone-400">
-                        <span className="tnum text-[13px] font-semibold text-stone-800">
+                        <span
+                          className={`tnum text-[13px] font-semibold ${
+                            (r.a_m ?? 0) < 0 ? "text-[#9a3412]" : "text-stone-800"
+                          }`}
+                        >
                           {pct(r.a_m, Math.abs(r.a_m ?? 0) < 10 ? 1 : 0)}
                         </span>
                         <span>목표 미설정</span>

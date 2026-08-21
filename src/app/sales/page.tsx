@@ -108,15 +108,9 @@ export default function SalesPage() {
   };
 
   return (
-    <AppLayout pageTitle="법인별 매출실적">
-      <ReportCover
-        title="용인공원그룹 매출실적"
-        period={periodLabel}
-        scope={`3사 · ${screens.meta.base}`}
-      />
-
-      {/* 컨트롤 */}
-      <div className="no-print mb-5 flex flex-wrap items-center justify-between gap-3">
+    <AppLayout
+      pageTitle="법인별 매출실적"
+      periodControl={
         <Segmented
           items={[
             { id: "month", label: "26년 7월" },
@@ -125,6 +119,16 @@ export default function SalesPage() {
           value={period}
           onChange={setPeriod}
         />
+      }
+    >
+      <ReportCover
+        title="용인공원그룹 매출실적"
+        period={periodLabel}
+        scope={`3사 · ${screens.meta.base}`}
+      />
+
+      {/* 컨트롤 */}
+      <div className="no-print mb-5 flex flex-wrap items-center justify-end gap-3">
         <ReportActions page="sales" sections={SECTIONS} onCsv={handleCsv} />
       </div>
 

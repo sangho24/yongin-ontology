@@ -16,12 +16,15 @@ export function AppLayout({
   pageTitle,
   pageSubtitle,
   period,
+  periodControl,
 }: {
   children: ReactNode;
   pageTitle?: string;
   pageSubtitle?: string;
   /** 헤더 우측에 표시할 기간. 화면의 기간 필터와 같은 값을 넘긴다. */
   period?: string;
+  /** 헤더 우측에 표시할 기간 선택 컨트롤 */
+  periodControl?: ReactNode;
   /** 사이드바에서 내린 legacy 화면들이 아직 넘기는 prop — 렌더하지 않는다 */
   narration?: ReactNode;
 }) {
@@ -58,12 +61,12 @@ export function AppLayout({
 
         {/* 우측: Period · v0.1 · user */}
         <div className="flex shrink-0 items-center gap-4 text-[11px]">
-          {period && (
+          {periodControl ?? (period ? (
             <div className="text-stone-500">
               <span className="text-stone-400">Period</span>
               <span className="ml-1.5 font-medium text-stone-700 tnum">{period}</span>
             </div>
-          )}
+          ) : null)}
           <div className="hidden h-3 w-px bg-stone-200 sm:block" />
           <div className="hidden text-stone-500 sm:block">v0.1</div>
           <div className="h-3 w-px bg-stone-200" />
@@ -125,7 +128,7 @@ export function SubNav({ items, activeId, onSelect, className }: SubNavProps) {
 
   return (
     <div
-      className={`sticky top-16 z-[5] -mx-12 border-b border-stone-200/80 bg-[#fafaf7]/85 px-12 backdrop-blur-md ${
+      className={`sticky top-16 z-[15] -mx-12 border-b border-stone-200/80 bg-[#fafaf7]/95 px-12 backdrop-blur-md ${
         className ?? ""
       }`}
     >

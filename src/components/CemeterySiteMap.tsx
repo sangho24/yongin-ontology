@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, X } from "lucide-react";
 import { Card } from "./Card";
 import districtMapData from "@/data/district_map_data.json";
 import districtPolygons from "@/data/district_polygons.json";
@@ -86,6 +86,12 @@ type DistrictRecord = {
   [key: string]: unknown;
 };
 
+type DistrictItem = DistrictMeta & {
+  fy25Revenue: number;
+  operatingProfit: number;
+  subDistrictCount: number;
+};
+
 // 장법명 → 데이터 lookup map (한글 name 키)
 const districtDataMap: Record<string, { metric: DistrictMetric; subDistrictCount: number }> = Object.fromEntries(
   (districtMapData.districts as DistrictRecord[]).map((d) => [
@@ -128,6 +134,7 @@ export function CemeterySiteMap({
 } = {}) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [selectedDistrictId, setSelectedDistrictId] = useState<string | null>(null);
   // plot view toggle: false=카테고리 view(기존 동작), true=plot view(v8 plot 단위 layer 활성화)
   const [plotViewActive, setPlotViewActive] = useState(false);
   // plot view 활성화 시 hover된 plot id
@@ -145,16 +152,19 @@ export function CemeterySiteMap({
     return plotsForHover.length > 0 ? hoveredId : null;
   }, [plotViewActive, hoveredId]);
 
-  // click → 활동원가 섹션 scroll + 외부 콜백 (단지 pre-select 등).
-  // 아너스톤 통합 카드는 sub 드롭다운 토글만 수행 — 활동원가 진입은 sub 카드 클릭에서.
+  // 카테고리 클릭은 상세 패널을 열고, 패널의 이동 버튼에서 활동원가 분석으로 진입한다.
   const handleDistrictClick = (districtId: string) => {
     const d = DISTRICTS.find((x) => x.id === districtId);
     if (!d) return;
+    setSelectedDistrictId(districtId);
+    setSelectedPlot(null);
     if (d.subIds && d.subIds.length > 0) {
       setExpandedId((prev) => (prev === districtId ? null : districtId));
-      return;
     }
-    onDistrictSelect?.(districtId, d.name);
+  };
+
+  const handleDistrictAnalysis = (districtId: string, districtName: string) => {
+    onDistrictSelect?.(districtId, districtName);
     scrollToActivityCost();
   };
 
@@ -173,7 +183,7 @@ export function CemeterySiteMap({
   };
 
   // 9개 1차 카드 + 데이터 병합 (매출 desc 정렬). 아너스톤은 sub 합산값 사용.
-  const items = useMemo(() => {
+  const items = useMemo<DistrictItem[]>(() => {
     return DISTRICTS
       .map((d) => {
         if (d.id === "honor_combined") {
@@ -181,7 +191,7 @@ export function CemeterySiteMap({
             ...d,
             fy25Revenue: honorCombinedMetric.fy25Revenue,
             operatingProfit: honorCombinedMetric.plOperatingProfit,
-            subDistrictCount: 0,
+            subDistrictCount: d.subIds?.length ?? 0,
           };
         }
         const data = districtDataMap[d.name];
@@ -194,6 +204,7 @@ export function CemeterySiteMap({
       })
       .sort((a, b) => b.fy25Revenue - a.fy25Revenue);
   }, []);
+  const selectedDistrict = items.find((item) => item.id === selectedDistrictId) ?? null;
 
   return (
     <Card
@@ -223,7 +234,10 @@ export function CemeterySiteMap({
             </button>
             <button
               type="button"
-              onClick={() => setPlotViewActive(true)}
+              onClick={() => {
+                setPlotViewActive(true);
+                setSelectedDistrictId(null);
+              }}
               className={`rounded px-2.5 py-1 transition-colors ${
                 plotViewActive
                   ? "bg-stone-900 text-white"
@@ -260,7 +274,7 @@ export function CemeterySiteMap({
                 {/*
                   지도 PNG의 색칠된 단지 영역을 그대로 보여주고, polygon은 invisible hotspot.
                   hover 시 mint glow + 약한 fill로 영역 떠오르는 효과 (subtle pulse).
-                  click → #activity-cost section scroll (해당 단지 분석으로 진입).
+                  click → 대구역 상세 패널 표시.
                 */}
                 {DISTRICTS.map((d) => {
                   if (!d.hasPolygon) return null;
@@ -292,7 +306,7 @@ export function CemeterySiteMap({
                           onMouseLeave={() => setHoveredId(null)}
                           onClick={() => handleDistrictClick(d.id)}
                           className="cursor-pointer"
-                          aria-label={`${d.name} — 클릭하여 활동원가 분석으로 이동`}
+                          aria-label={`${d.name} 상세 보기`}
                         />
                       ))}
                     </g>
@@ -308,7 +322,10 @@ export function CemeterySiteMap({
                   activeDistrictId={activeDistrictForPlots}
                   hoveredPlotId={hoveredPlotId}
                   onPlotHover={setHoveredPlotId}
-                  onPlotClick={(plot) => setSelectedPlot(plot)}
+                  onPlotClick={(plot) => {
+                    setSelectedPlot(plot);
+                    setSelectedDistrictId(null);
+                  }}
                 />
               </svg>
               {/* hover 시 단지명 라벨 — HTML로 표시해 SVG stretch(preserveAspectRatio=none) 영향 회피 */}
@@ -365,10 +382,22 @@ export function CemeterySiteMap({
                     </div>
                   );
                 })()}
+              {!plotViewActive && selectedDistrict && (
+                <div className="absolute right-4 top-4 z-20 w-[300px]">
+                  <DistrictDetailPanel
+                    district={selectedDistrict}
+                    onClose={() => setSelectedDistrictId(null)}
+                    onMove={() =>
+                      handleDistrictAnalysis(selectedDistrict.id, selectedDistrict.name)
+                    }
+                    onSubClick={handleSubClick}
+                  />
+                </div>
+              )}
             </div>
           </div>
           <p className="mt-2 px-1 text-[10px] leading-relaxed text-stone-400">
-            ※ 지도의 단지 색은 원본 안내도 그대로. hover 시 해당 장법 영역이 mint glow로 떠오르고, 클릭 시 활동원가 분석으로 이동합니다.
+            ※ 지도의 단지 색은 원본 안내도 그대로. hover 시 해당 장법 영역이 mint glow로 떠오르고, 클릭 시 구역 상세가 열립니다.
             {plotViewActive && (
               <>
                 {" "}Plot view: 56개 plot polygon 활성. <span className="text-stone-500">점선 외곽선</span> = OCR-only(매출 미매핑, 정명지4). <span className="text-stone-500">회색 dashed marker</span> = 추출 보류(정명·제2G).
@@ -478,6 +507,95 @@ function KpiLine({ label, value }: { label: string; value: string }) {
     <div className="flex flex-col">
       <span className="text-[9.5px] font-medium uppercase tracking-wider text-stone-400">{label}</span>
       <span className="text-[11.5px] font-semibold text-stone-800">{value}</span>
+    </div>
+  );
+}
+
+function DistrictDetailPanel({
+  district,
+  onClose,
+  onMove,
+  onSubClick,
+}: {
+  district: DistrictItem;
+  onClose: () => void;
+  onMove: () => void;
+  onSubClick: (subId: string, subName: string) => void;
+}) {
+  const margin = district.fy25Revenue
+    ? (district.operatingProfit / district.fy25Revenue) * 100
+    : 0;
+
+  return (
+    <div className="rounded-md border border-stone-200 bg-white/95 p-4 shadow-lg backdrop-blur-sm">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-3">
+          <span
+            className="mt-1 h-3 w-3 shrink-0 rounded-full ring-2 ring-white"
+            style={{ backgroundColor: district.color }}
+          />
+          <div>
+            <div className="text-[14px] font-semibold text-stone-900">{district.name}</div>
+            <div className="mt-0.5 text-[10.5px] text-stone-500">
+              FY25 구역 손익
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="구역 상세 닫기"
+          className="flex h-6 w-6 items-center justify-center rounded text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-700"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-3 tabular-nums">
+        <KpiLine label="FY25 매출" value={autoUnit(district.fy25Revenue)} />
+        <KpiLine label="영업이익" value={autoUnit(district.operatingProfit)} />
+        <KpiLine label="이익률" value={`${margin.toFixed(1)}%`} />
+        <KpiLine label="세부구역" value={`${district.subDistrictCount}개`} />
+      </div>
+
+      {district.subIds && district.subIds.length > 0 && (
+        <div className="mt-4 border-t border-stone-100 pt-3">
+          <div className="mb-2 text-[9.5px] font-semibold uppercase tracking-[0.1em] text-stone-400">
+            아너스톤 등급
+          </div>
+          <div className="space-y-1.5">
+            {district.subIds.map((subId) => {
+              const record = districtDataById[subId];
+              if (!record) return null;
+              const subMargin = record.metrics.fy25Revenue
+                ? (record.metrics.plOperatingProfit / record.metrics.fy25Revenue) * 100
+                : 0;
+              return (
+                <button
+                  key={subId}
+                  type="button"
+                  onClick={() => onSubClick(subId, record.name)}
+                  className="flex w-full items-center justify-between rounded border border-stone-200 px-2.5 py-2 text-left transition-colors hover:border-[#0095A9]/40 hover:bg-[#0095A9]/[0.04]"
+                >
+                  <span className="text-[11.5px] font-medium text-stone-800">{record.name}</span>
+                  <span className="tnum text-[10px] text-stone-500">
+                    {autoUnit(record.metrics.fy25Revenue)} · {subMargin.toFixed(1)}%
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      <button
+        type="button"
+        onClick={onMove}
+        className="mt-4 flex h-8 w-full items-center justify-center gap-1.5 rounded-md bg-[#0095A9] px-3 text-[11.5px] font-semibold text-white transition-colors hover:bg-[#007a8c]"
+      >
+        활동원가 분석으로 이동
+        <ArrowRight className="h-3.5 w-3.5" />
+      </button>
     </div>
   );
 }

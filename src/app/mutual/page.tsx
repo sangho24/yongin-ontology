@@ -534,7 +534,13 @@ export default function MutualPage() {
          =================================================================== */}
       <section id="channel" className="mt-12 grid gap-8 scroll-mt-32 lg:grid-cols-2">
         <Card title="채널별 회원당 LTV" subtitle="회원DB 누적 계약액 기준 — 확정 손익(행사매출 기준)과 집계 범위 다름" slotId="mutual_channel_ltv_chart">
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer
+            width="100%"
+            height={260}
+            minWidth={1}
+            minHeight={1}
+            initialDimension={{ width: 1, height: 260 }}
+          >
             <BarChart
               data={channelChartData}
               onMouseMove={(state) => {
@@ -546,7 +552,11 @@ export default function MutualPage() {
               <XAxis dataKey="채널" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 10000).toLocaleString()}만`} />
               <Tooltip formatter={(v) => (typeof v === "number" ? v.toLocaleString() + "원" : String(v ?? ""))} cursor={{ fill: "rgba(14,165,233,0.05)" }} />
-              <Bar dataKey="회원당 매출(원)" radius={[3, 3, 0, 0]}>
+              <Bar
+                dataKey="회원당 매출(원)"
+                radius={[3, 3, 0, 0]}
+                isAnimationActive={false}
+              >
                 {channelChartData.map((d, i) => (
                   <Cell
                     key={i}
@@ -573,9 +583,25 @@ export default function MutualPage() {
         </Card>
 
         <Card title="회원상태 분포" subtitle="납부만기/정상/연체/오류 — 만기 비중에 주목" slotId="mutual_member_status_pie">
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer
+            width="100%"
+            height={260}
+            minWidth={1}
+            minHeight={1}
+            initialDimension={{ width: 1, height: 260 }}
+          >
             <PieChart>
-              <Pie data={statusPie} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label paddingAngle={2}>
+              <Pie
+                data={statusPie}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={90}
+                label
+                paddingAngle={2}
+                isAnimationActive={false}
+              >
                 {statusPie.map((entry) => (
                   <Cell
                     key={entry.name}
@@ -597,7 +623,13 @@ export default function MutualPage() {
          =================================================================== */}
       <section className="mt-12">
         <Card title="가입연도별 코호트" subtitle="회원수·만기율·평균 LTV — 2022년 이후 만기율 급등 (회원DB 기준 잠정)" slotId="mutual_cohort_linechart">
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer
+            width="100%"
+            height={300}
+            minWidth={1}
+            minHeight={1}
+            initialDimension={{ width: 1, height: 300 }}
+          >
             <LineChart data={cohort}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="가입연도" tick={{ fontSize: 12 }} />
@@ -605,9 +637,9 @@ export default function MutualPage() {
               <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} unit="%" />
               <Tooltip />
               <Legend wrapperStyle={{ fontSize: "12px" }} />
-              <Line yAxisId="left" type="monotone" dataKey="회원 수" stroke="#0095A9" strokeWidth={1.5} dot={{ r: 3 }} activeDot={{ r: 6 }} />
-              <Line yAxisId="left" type="monotone" dataKey="평균 LTV(만원)" stroke="#78716c" strokeWidth={1.5} strokeDasharray="3 3" dot={{ r: 3 }} activeDot={{ r: 6 }} />
-              <Line yAxisId="right" type="monotone" dataKey="만기율(%)" stroke="#9a3412" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 6 }} />
+              <Line yAxisId="left" type="monotone" dataKey="회원 수" stroke="#0095A9" strokeWidth={1.5} dot={{ r: 3 }} activeDot={{ r: 6 }} isAnimationActive={false} />
+              <Line yAxisId="left" type="monotone" dataKey="평균 LTV(만원)" stroke="#78716c" strokeWidth={1.5} strokeDasharray="3 3" dot={{ r: 3 }} activeDot={{ r: 6 }} isAnimationActive={false} />
+              <Line yAxisId="right" type="monotone" dataKey="만기율(%)" stroke="#9a3412" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 6 }} isAnimationActive={false} />
             </LineChart>
           </ResponsiveContainer>
         </Card>
@@ -709,13 +741,24 @@ export default function MutualPage() {
         </Card>
 
         <Card title="채널별 납부만기 도달율" subtitle="회원상태=납부만기(YF) / 채널 전체 · 회원DB 기준. 해약율 아님 — 정상 납부완료 비율" slotId="mutual_mature_by_channel">
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer
+            width="100%"
+            height={260}
+            minWidth={1}
+            minHeight={1}
+            initialDimension={{ width: 1, height: 260 }}
+          >
             <BarChart data={lifeKpi.matureAnalysis.byChannel}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="channel" tick={{ fontSize: 12 }} />
               <YAxis tickFormatter={(v) => `${(v * 100).toFixed(0)}%`} tick={{ fontSize: 11 }} />
               <Tooltip formatter={(v) => (typeof v === "number" ? `${(v * 100).toFixed(1)}%` : String(v ?? ""))} cursor={{ fill: "rgba(245,158,11,0.05)" }} />
-              <Bar dataKey="matureRate" fill="#b45309" radius={[3, 3, 0, 0]} />
+              <Bar
+                dataKey="matureRate"
+                fill="#b45309"
+                radius={[3, 3, 0, 0]}
+                isAnimationActive={false}
+              />
             </BarChart>
           </ResponsiveContainer>
         </Card>

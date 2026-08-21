@@ -226,8 +226,8 @@ export function BalanceTable({ companies }: { companies?: readonly string[] }) {
                 </td>
                 <td className="px-3 py-2 text-[11.5px] text-stone-500">
                   {d ? (
-                    <span className="inline-flex items-center gap-1.5">
-                      <span className="rounded bg-stone-100 px-1.5 py-[1px] text-[10.5px] text-stone-600">
+                    <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                      <span className="whitespace-nowrap rounded bg-stone-100 px-1.5 py-[1px] text-[10.5px] text-stone-600">
                         {d.rule}
                       </span>
                       <span className="tnum">

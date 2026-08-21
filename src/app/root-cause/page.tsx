@@ -432,7 +432,13 @@ export default function RootCausePage() {
             subtitle="2022~2025년 가입자의 만기율 급등 — 단기 수익실현 패턴 강함"
             slotId="rc_chart_cohort_maturity"
           >
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+              minWidth={1}
+              minHeight={1}
+              initialDimension={{ width: 1, height: 300 }}
+            >
               <ComposedChart data={cohortChart}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis dataKey="가입연도" tick={{ fontSize: 11 }} />
@@ -440,7 +446,13 @@ export default function RootCausePage() {
                 <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} unit="%" />
                 <Tooltip />
                 <Legend wrapperStyle={{ fontSize: "11px" }} />
-                <Bar yAxisId="left" dataKey="회원 수" fill="#0095A9" radius={[3, 3, 0, 0]} />
+                <Bar
+                  yAxisId="left"
+                  dataKey="회원 수"
+                  fill="#0095A9"
+                  radius={[3, 3, 0, 0]}
+                  isAnimationActive={false}
+                />
                 <Line
                   yAxisId="right"
                   type="monotone"
@@ -449,19 +461,30 @@ export default function RootCausePage() {
                   strokeWidth={2}
                   dot={{ r: 3 }}
                   activeDot={{ r: 6 }}
+                  isAnimationActive={false}
                 />
               </ComposedChart>
             </ResponsiveContainer>
           </Card>
 
           <Card title="채널별 회원당 매출" subtitle="온라인 채널 LTV 의심" slotId="rc_chart_channel_ltv">
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+              minWidth={1}
+              minHeight={1}
+              initialDimension={{ width: 1, height: 300 }}
+            >
               <BarChart data={channelLTV}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis dataKey="채널" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip />
-                <Bar dataKey="회원당 매출(만원)" radius={[3, 3, 0, 0]}>
+                <Bar
+                  dataKey="회원당 매출(만원)"
+                  radius={[3, 3, 0, 0]}
+                  isAnimationActive={false}
+                >
                   {channelLTV.map((d, i) => (
                     <Cell key={i} fill={d.채널 === "온라인" ? "#9a3412" : "#0095A9"} />
                   ))}
@@ -490,7 +513,13 @@ export default function RootCausePage() {
           subtitle="우상단 → 잠재가치 큰데 분양 잘 됨 / 좌하단 → 정체 위험. 잠재가치 상위 12개 단지 라벨 표시"
           slotId="rc_chart_scatter_zone"
         >
-          <ResponsiveContainer width="100%" height={380}>
+          <ResponsiveContainer
+            width="100%"
+            height={380}
+            minWidth={1}
+            minHeight={1}
+            initialDimension={{ width: 1, height: 380 }}
+          >
             <ScatterChart margin={{ top: 20, right: 30, bottom: 30, left: 10 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis
@@ -519,7 +548,13 @@ export default function RootCausePage() {
               />
               <ZAxis type="number" dataKey="가용재고" range={[60, 400]} name="가용재고" />
               <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-              <Scatter name="단지" data={districtScatter} fill="#0095A9" fillOpacity={0.55}>
+              <Scatter
+                name="단지"
+                data={districtScatter}
+                fill="#0095A9"
+                fillOpacity={0.55}
+                isAnimationActive={false}
+              >
                 <LabelList
                   dataKey="labelName"
                   position="top"

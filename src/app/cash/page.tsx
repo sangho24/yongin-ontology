@@ -48,7 +48,10 @@ export default function CashPage() {
   const cum = isCum(period);
   const mIdx = monthIndex(period);
   const label = periodLabel(period);
-  const scope: readonly string[] = company === ALL ? COMPANIES : [company];
+  const scope = useMemo<readonly string[]>(
+    () => (company === ALL ? COMPANIES : [company]),
+    [company],
+  );
 
   const blocks = useMemo(() => buildCashBlocks(period, scope), [period, scope]);
 
@@ -129,7 +132,18 @@ export default function CashPage() {
   };
 
   return (
-    <AppLayout pageTitle="자금현황" period={label}>
+    <AppLayout
+      pageTitle="자금현황"
+      period={label}
+      periodControl={
+        <Dropdown
+          label="기간"
+          items={PERIOD_ITEMS}
+          value={periodId(period)}
+          onChange={(value) => setPeriod(parsePeriod(value))}
+        />
+      }
+    >
       <ReportCover
         title="매출 및 집행예산 Cash flow"
         period={label}
@@ -138,12 +152,6 @@ export default function CashPage() {
 
       <div className="no-print mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <Dropdown
-            label="기간"
-            items={PERIOD_ITEMS}
-            value={periodId(period)}
-            onChange={(v) => setPeriod(parsePeriod(v))}
-          />
           <Segmented items={COMPANY_ITEMS} value={company} onChange={setCompany} />
         </div>
         <ReportActions page="cash" sections={SECTIONS} onCsv={handleCsv} />
@@ -178,8 +186,14 @@ export default function CashPage() {
             value={num(totals.profit)}
             unit="백만원"
             sub={`목표 ${num(totals.tProfit)} 백만원`}
+            negative={totals.profit < 0}
           />
-          <StatCard label="손익율" value={`${margin}%`} sub="수지손익 ÷ 수입" />
+          <StatCard
+            label="손익율"
+            value={`${margin}%`}
+            sub="수지손익 ÷ 수입"
+            negative={margin < 0}
+          />
         </div>
       </ReportSection>
 
