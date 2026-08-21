@@ -239,16 +239,13 @@ export function TargetBars({
                   backgroundColor: over ? TEAL : BRICK_2,
                 }}
               />
-              {/* 목표선 — 구간의 끝 */}
+              {/* 목표선 — 삼각형 캡과 선을 한 요소로 묶어 축을 맞춘다 */}
               <div
-                className="absolute -top-1 z-10 h-6 w-[1.5px] rounded-full bg-stone-600"
-                style={{ left: `${Math.min(100, tw)}%` }}
-              />
-              <div
-                className="absolute -top-[7px] z-10 -translate-x-1/2 text-[7px] leading-none text-stone-600"
+                className="absolute -top-[5px] -bottom-[3px] z-10 flex -translate-x-1/2 flex-col items-center"
                 style={{ left: `${Math.min(100, tw)}%` }}
               >
-                ▼
+                <span className="h-0 w-0 border-x-[3px] border-t-[4px] border-x-transparent border-t-stone-600" />
+                <span className="w-[2px] flex-1 bg-stone-600" />
               </div>
               {/* 목표 금액 — hover 시에만 */}
               <div
@@ -280,7 +277,10 @@ export function TargetBars({
           목표 구간
         </span>
         <span className="inline-flex items-center gap-1">
-          <span className="h-3 w-[1.5px] rounded-full bg-stone-600" />
+          <span className="flex flex-col items-center">
+            <span className="h-0 w-0 border-x-[3px] border-t-[4px] border-x-transparent border-t-stone-600" />
+            <span className="h-2 w-[2px] bg-stone-600" />
+          </span>
           목표선
         </span>
       </div>
