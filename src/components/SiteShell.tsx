@@ -17,7 +17,10 @@ import {
 } from "lucide-react";
 import { SearchPalette } from "./SearchPalette";
 import { EvidenceDrawerHost } from "./EvidenceDrawerHost";
+import { SidebarAccount } from "./SidebarAccount";
+import { SessionProvider } from "./SessionProvider";
 import { useEvidenceStore } from "@/store/evidence";
+import type { SessionUser } from "@/lib/auth";
 
 // =============================================================================
 // SiteShell — 영구 mount되는 사이트 셸 (sidebar + 검색)
@@ -71,7 +74,13 @@ const NAV: { group: string; items: { path: string; label: string; sub?: string; 
 
 const FLAT = NAV.flatMap((g) => g.items);
 
-export function SiteShell({ children }: { children: ReactNode }) {
+export function SiteShell({
+  children,
+  user,
+}: {
+  children: ReactNode;
+  user: SessionUser | null;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
@@ -118,10 +127,14 @@ export function SiteShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [activeIdx, router, searchOpen]);
 
+  // 로그인 화면은 셸(사이드바·검색·Evidence Drawer) 없이 자체 레이아웃으로 렌더
+  if (pathname === "/login") return <>{children}</>;
+
   return (
+    <SessionProvider user={user}>
     <div className="min-h-screen bg-[#fafaf7] text-stone-900">
       {/* Sidebar — 영구 mount (인쇄 시 숨김) */}
-      <aside className="no-print fixed inset-y-0 left-0 z-20 w-56 border-r border-stone-200/80 bg-white">
+      <aside className="no-print fixed inset-y-0 left-0 z-20 flex w-56 flex-col border-r border-stone-200/80 bg-white">
         <div className="flex h-16 items-center border-b border-stone-100 px-4">
           <Link
             href="/"
@@ -142,7 +155,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           </Link>
         </div>
 
-        <nav className="px-3 py-5" data-tour-id="sidebar-nav">
+        <nav className="flex-1 overflow-y-auto px-3 py-5" data-tour-id="sidebar-nav">
           {NAV.map((group, gIdx) => (
             <div
               key={group.group}
@@ -199,6 +212,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           ))}
         </nav>
 
+        {user && <SidebarAccount user={user} />}
       </aside>
 
       <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />
@@ -212,6 +226,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           min-w-0은 grid/flex child의 의도치 않은 width overflow 차단. */}
       <div className="print-root relative isolate ml-56 min-w-0">{children}</div>
     </div>
+    </SessionProvider>
   );
 }
 

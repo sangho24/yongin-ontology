@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import { Search } from "lucide-react";
 import { useSearchPalette } from "./SiteShell";
+import { initialsOf, useSessionUser } from "./SessionProvider";
 
 // =============================================================================
 // AppLayout — 페이지 헤더 + main + narration
@@ -29,6 +30,7 @@ export function AppLayout({
   narration?: ReactNode;
 }) {
   const search = useSearchPalette();
+  const sessionUser = useSessionUser();
 
   return (
     <>
@@ -70,15 +72,19 @@ export function AppLayout({
           <div className="hidden h-3 w-px bg-stone-200 sm:block" />
           <div className="hidden text-stone-500 sm:block">v0.1</div>
           <div className="h-3 w-px bg-stone-200" />
-          <div className="flex items-center gap-2">
-            <div className="hidden text-right leading-tight md:block">
-              <div className="text-[11px] font-medium text-stone-700">Sangho Eum</div>
-              <div className="text-[10px] text-stone-400">PwC</div>
+          {sessionUser && (
+            <div className="flex items-center gap-2">
+              <div className="hidden text-right leading-tight md:block">
+                <div className="text-[11px] font-medium text-stone-700">{sessionUser.name}</div>
+                {sessionUser.org && (
+                  <div className="text-[10px] text-stone-400">{sessionUser.org}</div>
+                )}
+              </div>
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-100 text-[11px] font-medium text-stone-600">
+                {initialsOf(sessionUser)}
+              </div>
             </div>
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-100 text-[11px] font-medium text-stone-600">
-              SE
-            </div>
-          </div>
+          )}
         </div>
       </header>
 
