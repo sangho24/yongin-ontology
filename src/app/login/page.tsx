@@ -98,7 +98,7 @@ export default async function LoginPage({
                 내부 경영정보입니다.
               </p>
               <p className="shrink-0 text-right text-[10.5px] leading-relaxed text-stone-400">
-                <span className="block tracking-[0.08em] text-stone-500">Built by PwC</span>
+                <span className="block tracking-[0.08em] text-stone-500">Powered by PwC</span>
                 삼일회계법인
               </p>
             </div>
