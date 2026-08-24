@@ -91,11 +91,15 @@ export default async function LoginPage({
 
             <LoginForm next={target} />
 
-            <div className="mt-10 border-t border-stone-200/80 pt-5">
+            <div className="mt-10 flex items-end justify-between gap-4 border-t border-stone-200/80 pt-5">
               <p className="text-[11.5px] leading-relaxed text-stone-400">
-                계정 문의 · 접근 권한 요청은 재무팀 담당자에게 연락하세요.
+                본 시스템의 자료는 대외 공유가 금지된
                 <br />
-                본 시스템의 자료는 대외 공유가 금지된 내부 경영정보입니다.
+                내부 경영정보입니다.
+              </p>
+              <p className="shrink-0 text-right text-[10.5px] leading-relaxed text-stone-400">
+                <span className="block tracking-[0.08em] text-stone-500">Built by PwC</span>
+                삼일회계법인
               </p>
             </div>
           </div>
