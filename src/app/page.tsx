@@ -20,6 +20,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card, StatCard, WowCard } from "@/components/Card";
 import { Delta, Gauge, NoFigures, Dropdown } from "@/components/exec/Bits";
 import { ReportSection, ReportCover, ReportActions, type SectionDef } from "@/components/exec/Report";
+import { SourceTip } from "@/components/exec/SourceTip";
 import { CashBlockCard, BalanceTable, buildCashBlocks } from "@/components/exec/CashBlocks";
 import { CoaList, ProfitStructureBars, TargetBars } from "@/components/exec/ScreenCharts";
 import { useReportSections, usePinnedKpis } from "@/store/prefs";
@@ -381,6 +382,7 @@ export default function OverviewPage() {
         meta={`${label} · 현금 · 백만원`}
         enabled={isOn("summary")}
         first
+        right={<SourceTip route="/" id="summary" />}
       >
         <div className="grid gap-4 md:grid-cols-4 print-cols-4">
           <WowCard
@@ -430,7 +432,12 @@ export default function OverviewPage() {
         title="수지현황"
         meta={cum ? "누계 목표 · 실행" : "당월 목표 · 실행 · 차월 목표"}
         enabled={isOn("cash")}
-        right={<MoreLink href="/cash" label="자금현황" />}
+        right={
+          <>
+            <SourceTip route="/" id="cash" />
+            <MoreLink href="/cash" label="자금현황" />
+          </>
+        }
       >
         {blocks.length > 0 ? (
           <div
@@ -454,20 +461,23 @@ export default function OverviewPage() {
         meta="그룹계 · 현금 · 백만원"
         enabled={isOn("trend")}
         right={
-          <span className="flex flex-wrap items-center gap-3 text-[11px] text-stone-500">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-sm bg-[#0095A9]" /> 수입
+          <>
+            <SourceTip route="/" id="trend" />
+            <span className="flex flex-wrap items-center gap-3 text-[11px] text-stone-500">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-sm bg-[#0095A9]" /> 수입
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-sm bg-[#a8a29e]" /> 지출
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-0 w-4" style={{ borderTop: "2px solid #b45309" }} /> 손익
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-0 w-4" style={{ borderTop: "2px dashed #d6d3c9" }} /> 목표 수입
+              </span>
             </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-sm bg-[#a8a29e]" /> 지출
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-0 w-4" style={{ borderTop: "2px solid #b45309" }} /> 손익
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-0 w-4" style={{ borderTop: "2px dashed #d6d3c9" }} /> 목표 수입
-            </span>
-          </span>
+          </>
         }
       >
         <Card>
@@ -589,7 +599,12 @@ export default function OverviewPage() {
         title="법인별 자금 흐름"
         meta="이월잔액 → 수입 → 지출 → 당월잔액"
         enabled={isOn("flow")}
-        right={<MoreLink href="/cash" label="자금현황" />}
+        right={
+          <>
+            <SourceTip route="/" id="flow" />
+            <MoreLink href="/cash" label="자금현황" />
+          </>
+        }
       >
         <Card>
           <BalanceTable />
@@ -602,7 +617,12 @@ export default function OverviewPage() {
         title="법인별 손익"
         meta={`${label} · 발생 · 백만원`}
         enabled={isOn("pl")}
-        right={<MoreLink href="/pl" label="법인별 손익" />}
+        right={
+          <>
+            <SourceTip route="/" id="pl" />
+            <MoreLink href="/pl" label="법인별 손익" />
+          </>
+        }
       >
         {figures ? (
           <Card title="매출 구성" subtitle="막대 길이는 매출 규모, 내부는 판관비와 이익">
@@ -619,7 +639,12 @@ export default function OverviewPage() {
         title="부문별 손익"
         meta={`${label} · 분양 · 관리비 · 상조`}
         enabled={isOn("segment")}
-        right={<MoreLink href="/segment" label="부문별 손익" />}
+        right={
+          <>
+            <SourceTip route="/" id="segment" />
+            <MoreLink href="/segment" label="부문별 손익" />
+          </>
+        }
       >
         {figures ? (
           <div className="grid gap-4 md:grid-cols-4 print-cols-4">
@@ -652,7 +677,12 @@ export default function OverviewPage() {
         title="매출실적"
         meta={`${label} · 법인별 목표 대비`}
         enabled={isOn("sales")}
-        right={<MoreLink href="/sales" label="매출실적" />}
+        right={
+          <>
+            <SourceTip route="/" id="sales" />
+            <MoreLink href="/sales" label="매출실적" />
+          </>
+        }
       >
         {figures ? (
           <Card
@@ -678,7 +708,12 @@ export default function OverviewPage() {
         title="원가 및 손익"
         meta={`${label} · 조직별 손익율 · 원가율`}
         enabled={isOn("cost")}
-        right={<MoreLink href="/cost" label="원가 및 손익" />}
+        right={
+          <>
+            <SourceTip route="/" id="cost" />
+            <MoreLink href="/cost" label="원가 및 손익" />
+          </>
+        }
       >
         {figures ? (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3 print-cols-3">
@@ -737,7 +772,12 @@ export default function OverviewPage() {
         title="KPI"
         meta={pinnedKpis.length > 0 ? "KPI 화면에서 고정한 지표" : "조직별 주요 지표"}
         enabled={isOn("kpi")}
-        right={<MoreLink href="/kpi" label="KPI" />}
+        right={
+          <>
+            <SourceTip route="/" id="kpi" />
+            <MoreLink href="/kpi" label="KPI" />
+          </>
+        }
       >
         <div className="grid gap-4 md:grid-cols-4 print-cols-4">
           {overviewKpis.map((k) => (
@@ -758,7 +798,12 @@ export default function OverviewPage() {
         title="일일마감"
         meta={`장지 ${D.yongin.base} · 상조 ${D.life.base} · 월 누적 목표 대비`}
         enabled={isOn("daily")}
-        right={<MoreLink href="/daily" label="일일마감" />}
+        right={
+          <>
+            <SourceTip route="/" id="daily" />
+            <MoreLink href="/daily" label="일일마감" />
+          </>
+        }
       >
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2 print-cols-2">
           <Card title="장지 (용인공원)" subtitle="월 누적 실적 · 목표">

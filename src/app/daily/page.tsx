@@ -11,6 +11,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card } from "@/components/Card";
 import { Segmented, StackBar } from "@/components/exec/Bits";
 import { ReportActions, ReportCover, ReportSection, type SectionDef } from "@/components/exec/Report";
+import { SourceTip } from "@/components/exec/SourceTip";
 import { CHART_COLORS, FunnelSteps, TargetBars } from "@/components/exec/ScreenCharts";
 import { useReportSections } from "@/store/prefs";
 import { downloadCsv, stamp } from "@/lib/export";
@@ -192,6 +193,7 @@ function YonginDaily({ isOn }: { isOn: (id: string) => boolean }) {
         meta="달성률 하위 항목"
         enabled={isOn("bullet")}
         first
+        right={<SourceTip route="/daily" id="bullet" />}
       >
         <Card>
           <TargetBars rows={bullets} sortable />
@@ -203,6 +205,7 @@ function YonginDaily({ isOn }: { isOn: (id: string) => boolean }) {
         title="분양 채널 구성"
         meta="월 누적 실적"
         enabled={isOn("mix")}
+        right={<SourceTip route="/daily" id="mix" />}
       >
         <Card>
           <div className="pt-2">
@@ -265,6 +268,7 @@ function LifeDaily({ isOn }: { isOn: (id: string) => boolean }) {
         meta="월 누적 · 상조계약 / 장지계약"
         enabled={isOn("funnel")}
         first
+        right={<SourceTip route="/daily" id="funnel" />}
       >
         <Card>
           <div className="pt-1">
@@ -281,6 +285,7 @@ function LifeDaily({ isOn }: { isOn: (id: string) => boolean }) {
         title="사업현황 목표 대비"
         meta="부금 · 행사 · 장지 · 해약"
         enabled={isOn("biz")}
+        right={<SourceTip route="/daily" id="biz" />}
       >
         <Card>
           <TargetBars rows={bizBullets} sortable />

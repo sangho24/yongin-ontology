@@ -10,6 +10,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card } from "@/components/Card";
 import { Segmented } from "@/components/exec/Bits";
 import { ReportActions, ReportCover, ReportSection, type SectionDef } from "@/components/exec/Report";
+import { SourceTip } from "@/components/exec/SourceTip";
 import { TargetBars, Waterfall, type WaterfallStep } from "@/components/exec/ScreenCharts";
 import { useReportSections } from "@/store/prefs";
 import { downloadCsv, stamp } from "@/lib/export";
@@ -139,6 +140,7 @@ export default function SalesPage() {
         meta={`${periodLabel} 실적 · 내부거래 제거`}
         enabled={isOn("bridge")}
         first
+        right={<SourceTip route="/sales" id="bridge" />}
       >
         <Card>
           <Waterfall steps={groupBridge} height={252} />
@@ -150,6 +152,7 @@ export default function SalesPage() {
         title="목표 대비 실적"
         meta={`${periodLabel} · 달성률 낮은 순`}
         enabled={isOn("bullet")}
+        right={<SourceTip route="/sales" id="bullet" />}
       >
         <Card>
           <TargetBars rows={bulletRows} sortable />

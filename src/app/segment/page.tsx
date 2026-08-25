@@ -12,6 +12,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card, StatCard } from "@/components/Card";
 import { InfoTip, NoFigures, Dropdown, Segmented, TipRow } from "@/components/exec/Bits";
 import { ReportActions, ReportCover, ReportSection, type SectionDef } from "@/components/exec/Report";
+import { SourceTip } from "@/components/exec/SourceTip";
 import { CoaList, Waterfall, TargetBars, type WaterfallStep } from "@/components/exec/ScreenCharts";
 import { useReportSections } from "@/store/prefs";
 import { downloadCsv, stamp } from "@/lib/export";
@@ -165,6 +166,7 @@ export default function SegmentPage() {
         }
         enabled={isOn("summary")}
         first
+        right={<SourceTip route="/segment" id="summary" />}
       >
         {!figures ? (
           <NoFigures note={NO_FIGURES} />
@@ -200,6 +202,7 @@ export default function SegmentPage() {
         title="부문별 손익 구조"
         meta={`${label} 실적 · 매출에서 비용 차감까지`}
         enabled={isOn("bridge")}
+        right={<SourceTip route="/segment" id="bridge" />}
       >
         {!figures ? (
           <NoFigures note={NO_FIGURES} />
@@ -223,6 +226,7 @@ export default function SegmentPage() {
         title="부서 배부"
         meta="아마란스 부서별 손익 · 부서 × 원가 배부표"
         enabled={isOn("dept")}
+        right={<SourceTip route="/segment" id="dept" />}
       >
         {!figures ? (
           <NoFigures note={NO_FIGURES} />

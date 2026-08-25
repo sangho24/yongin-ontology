@@ -11,6 +11,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card, StatCard } from "@/components/Card";
 import { NoFigures, Dropdown, Segmented } from "@/components/exec/Bits";
 import { ReportActions, ReportCover, ReportSection, type SectionDef } from "@/components/exec/Report";
+import { SourceTip } from "@/components/exec/SourceTip";
 import { CashBlockCard, BalanceTable, buildCashBlocks } from "@/components/exec/CashBlocks";
 import { Waterfall, RankBars, type WaterfallStep } from "@/components/exec/ScreenCharts";
 import { useReportSections } from "@/store/prefs";
@@ -163,6 +164,7 @@ export default function CashPage() {
         meta={`${label} · ${company} · 백만원`}
         enabled={isOn("summary")}
         first
+        right={<SourceTip route="/cash" id="summary" />}
       >
         <div className="grid gap-4 md:grid-cols-4 print-cols-4">
           <StatCard
@@ -202,11 +204,7 @@ export default function CashPage() {
         title="수지현황"
         meta={cum ? "누계 목표 · 실행" : "당월 목표 · 실행 · 차월 목표"}
         enabled={isOn("blocks")}
-        right={
-          <span className="text-[11px] text-stone-400">
-            목표 아래 줄은 재무회계팀이 얹은 수정 전망
-          </span>
-        }
+        right={<SourceTip route="/cash" id="blocks" />}
       >
         {blocks.length > 0 ? (
           <div
@@ -228,6 +226,7 @@ export default function CashPage() {
         title="법인별 자금 흐름"
         meta={company === ALL ? "그룹계" : company}
         enabled={isOn("flow")}
+        right={<SourceTip route="/cash" id="flow" />}
       >
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] print-cols-2">
           <Card title="이월 → 수입 → 지출 → 잔액">

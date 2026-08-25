@@ -126,9 +126,6 @@ export function CashBlockCard({ block }: { block: CashBlock }) {
       title={block.title}
       subtitle={isActual ? "실행" : "목표"}
       highlight={isActual}
-      source={
-        isActual ? "더존 자금일보 - 계좌간 이체" : "재무회계팀 예산 (아마란스 예산메뉴 등록 예정)"
-      }
     >
       <table className="w-full text-[12.5px]">
         <thead>

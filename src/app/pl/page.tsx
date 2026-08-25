@@ -12,6 +12,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card, StatCard } from "@/components/Card";
 import { InfoTip, NoFigures, Dropdown, Segmented, TipRow } from "@/components/exec/Bits";
 import { ReportActions, ReportCover, ReportSection, type SectionDef } from "@/components/exec/Report";
+import { SourceTip } from "@/components/exec/SourceTip";
 import {
   Waterfall,
   ProfitStructureBars,
@@ -192,6 +193,7 @@ export default function PlPage() {
         meta={`${company} · ${label} · 백만원`}
         enabled={isOn("summary")}
         first
+        right={<SourceTip route="/pl" id="summary" />}
       >
         {figures ? (
           <div className="grid gap-4 md:grid-cols-4 print-cols-4">
@@ -239,6 +241,7 @@ export default function PlPage() {
         title="법인별 손익 구조"
         meta="막대 길이는 매출 규모, 내부는 판관비와 이익"
         enabled={isOn("structure")}
+        right={<SourceTip route="/pl" id="structure" />}
       >
         {figures && !cum ? (
           <Card>
@@ -264,6 +267,7 @@ export default function PlPage() {
           </InfoTip>
         }
         enabled={isOn("bridge")}
+        right={<SourceTip route="/pl" id="bridge" />}
       >
         {figures && !cum ? (
           <Card>
@@ -289,6 +293,7 @@ export default function PlPage() {
           </InfoTip>
         }
         enabled={isOn("mix")}
+        right={<SourceTip route="/pl" id="mix" />}
       >
         {figures && !cum && mix.length > 0 ? (
           <Card>

@@ -7,6 +7,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { StatCard } from "@/components/Card";
 import { Segmented, PeriodFilter, Delta, InfoTip, TipRow } from "@/components/exec/Bits";
 import { ReportSection, ReportCover, ReportActions, type SectionDef } from "@/components/exec/Report";
+import { SourceTip } from "@/components/exec/SourceTip";
 import { useReportSections, usePinnedKpis } from "@/store/prefs";
 import { downloadCsv, stamp } from "@/lib/export";
 import { kpiData, MONTHS, LATEST, periodLabel, type Period, type Kpi } from "@/lib/exec";
@@ -142,6 +143,7 @@ export default function KpiPage() {
         meta={`${periodLabel(period)} 기준`}
         enabled={isOn("summary")}
         first
+        right={<SourceTip route="/kpi" id="summary" />}
       >
         <div className="grid gap-4 md:grid-cols-4 print-cols-4">
           <StatCard
@@ -179,6 +181,7 @@ export default function KpiPage() {
         title="조직별 지표"
         meta={`${periodLabel(period)} 기준`}
         enabled={isOn("cards")}
+        right={<SourceTip route="/kpi" id="cards" />}
         info={
           <InfoTip title="읽는 법" align="left">
             <TipRow label="수치">
@@ -243,6 +246,7 @@ export default function KpiPage() {
           title="지표 추이"
           meta={`${MONTHS[0]} ~ ${MONTHS[LATEST]}`}
           enabled={isOn("table")}
+          right={<SourceTip route="/kpi" id="table" />}
         >
           <div className="print-card overflow-hidden rounded-md border border-stone-200/80 bg-white">
             <div className="overflow-x-auto">

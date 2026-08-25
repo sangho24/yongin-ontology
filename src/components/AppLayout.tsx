@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import { Search } from "lucide-react";
 import { useSearchPalette } from "./SiteShell";
+import { TabSourceTip } from "./exec/SourceTip";
 
 // =============================================================================
 // AppLayout — 페이지 헤더 + main + narration
@@ -34,10 +35,11 @@ export function AppLayout({
     <>
       {/* z-10: sidebar(z-20)보다 낮게 유지 → page transition 시에도 sidebar 가림 방지 */}
       <header className="no-print sticky top-0 z-10 flex h-16 items-center justify-between gap-6 border-b border-stone-200/80 bg-[#fafaf7]/85 px-12 backdrop-blur-md">
-        <div className="flex min-w-0 items-baseline gap-3">
+        <div className="flex min-w-0 items-center gap-2">
           <h2 className="truncate text-[18px] font-semibold tracking-tight text-stone-900">
             {pageTitle ?? ""}
           </h2>
+          <TabSourceTip />
         </div>
 
         {/* 중앙: 검색 — 클릭 또는 ⌘K로 SearchPalette 열림 · 옆에 가이드 모드 "?" 버튼 */}

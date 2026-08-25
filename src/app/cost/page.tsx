@@ -11,6 +11,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { Card } from "@/components/Card";
 import { Gauge, Segmented } from "@/components/exec/Bits";
 import { ReportActions, ReportCover, ReportSection, type SectionDef } from "@/components/exec/Report";
+import { SourceTip } from "@/components/exec/SourceTip";
 import { Waterfall, type WaterfallStep } from "@/components/exec/ScreenCharts";
 import { useReportSections } from "@/store/prefs";
 import { downloadCsv, stamp } from "@/lib/export";
@@ -127,6 +128,7 @@ export default function CostPage() {
         meta="26년 7월 실적 · 총수입에서 비용 차감까지"
         enabled={isOn("bridge")}
         first
+        right={<SourceTip route="/cost" id="bridge" />}
       >
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
           {block.groups.map((g) => (
@@ -149,6 +151,7 @@ export default function CostPage() {
         title="원가율"
         meta="26년 목표 대비"
         enabled={isOn("ratio")}
+        right={<SourceTip route="/cost" id="ratio" />}
       >
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
           {block.groups.map((g) => (
